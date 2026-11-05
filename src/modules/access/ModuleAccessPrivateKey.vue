@@ -24,7 +24,7 @@
             :submit-disabled="submitIsDisabled"
             :error-message="errorMessages"
           />
-          <div class="flex align-center justify-center">
+          <div class="flex align-center justify-center mt-6">
             <app-base-button
               @click="unlock"
               :disabled="submitIsDisabled"

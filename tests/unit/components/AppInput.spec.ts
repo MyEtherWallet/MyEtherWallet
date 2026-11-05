@@ -21,10 +21,14 @@ const i18n = createI18n({
   },
 })
 
-const mountInput = (props: Record<string, unknown> = {}) =>
+const mountInput = (
+  props: Record<string, unknown> = {},
+  options: { attachTo?: Element } = {},
+) =>
   mount(AppInput, {
     props: { label: 'Recipient', ...props },
     global: { plugins: [i18n] },
+    ...options,
   })
 
 // The field box carries the geometry + surface classes.
@@ -110,26 +114,47 @@ describe('AppInput — design-library rebuild (MEW-1971)', () => {
     }
   })
 
-  it('typing (Figma Active) drops the focus ring; keyboard focus keeps it', async () => {
+  it('keeps the focus ring while typing, with no hover ring', async () => {
     const w = mountInput({ modelValue: 'x' })
     const input = w.get('input')
-    // Keyboard focus (no pointer) is Figma Focus: ringed.
     await input.trigger('focus')
     expect(field(w).classes()).toContain('inset-ring-border-brand')
-    // Typing is Figma Active: caret only, no brand ring and no hover ring.
+    // Typing never drops the ring: it stays until the field loses focus.
     await input.trigger('input')
-    expect(field(w).classes()).not.toContain('inset-ring-border-brand')
+    expect(field(w).classes()).toContain('inset-ring-border-brand')
     expect(field(w).classes()).not.toContain('hover:inset-ring-border-hover')
+    await input.trigger('blur')
+    await new Promise(r => setTimeout(r, 200))
+    expect(field(w).classes()).not.toContain('inset-ring-border-brand')
   })
 
-  it('pointer focus enters Active straight away (no ring), errors included', async () => {
+  it('pointer focus shows the error ring on an errored field', async () => {
     const w = mountInput({ modelValue: 'x', errorMessage: 'Bad' })
     await w.get('input').trigger('pointerdown')
     await w.get('input').trigger('focus')
+    expect(field(w).classes()).toContain('inset-ring-border-error')
     expect(field(w).classes()).not.toContain('inset-ring-border-brand')
-    expect(field(w).classes()).not.toContain('inset-ring-border-error')
     // The feedback row still carries the error.
     expect(w.text()).toContain('Bad')
+  })
+
+  it('clicking the field box outside the input focuses it; disabled and trailing clicks do not', async () => {
+    const w = mountInput({ modelValue: 'x' }, { attachTo: document.body })
+    const input = w.get('input').element
+    await field(w).trigger('click')
+    expect(document.activeElement).toBe(input)
+    input.blur()
+    await w.get('[aria-label="Clear"]').trigger('click')
+    await w.vm.$nextTick()
+    w.unmount()
+
+    const d = mountInput(
+      { modelValue: 'x', disabled: true },
+      { attachTo: document.body },
+    )
+    await field(d).trigger('click')
+    expect(document.activeElement).not.toBe(d.get('input').element)
+    d.unmount()
   })
 
   it('renders trailing actions in icon/default, packed with no gap', () => {
