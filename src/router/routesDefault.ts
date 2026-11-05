@@ -272,6 +272,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'token-selector',
+              name: 'DevTokenSelector',
+              component: () => import('@/views/ViewTokenSelectorShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'tooltip',
               name: 'DevTooltip',
               component: () => import('@/views/ViewTooltipShowcase.vue'),
