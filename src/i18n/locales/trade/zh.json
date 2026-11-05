@@ -141,9 +141,10 @@
     "buy_label": "买入",
     "enter_amount": "输入金额",
     "select_asset": {
-      "title": "选择资产",
-      "subtitle": "部分资产可能暂时不可用",
-      "available_in": "{marketStatus} 可用资产",
+      "buy_title": "选择要买入的资产",
+      "sell_title": "选择要卖出的资产",
+      "available_in": "{marketStatus}可用",
+      "unavailable_in": "{marketStatus}期间不可用",
       "unavailable": "不可用资产"
     },
     "pause_reason": {

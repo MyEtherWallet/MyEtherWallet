@@ -9,20 +9,26 @@
   <app-token-selector-modal
     v-model="isOpen"
     v-model:search="searchInput"
-    :title="$t('trade.select_asset.title')"
-    :subtitle="side === 'buy' ? $t('trade.select_asset.subtitle') : undefined"
+    :title="
+      side === 'buy'
+        ? $t('trade.select_asset.buy_title')
+        : $t('trade.select_asset.sell_title')
+    "
     :items="items"
+    :list-title="listTitle"
     :quick-picks="quickPicks"
+    :recent-items="recentItems"
+    :owned-items="ownedItems"
+    :unavailable-items="unavailableItems"
+    :unavailable-title="unavailableTitle"
     :selected-id="selectedToken ? tokenId(selectedToken) : undefined"
-    :network-icon="networkIcon"
     :loading="!isLoaded"
-    :disabled-group-title="$t('trade.select_asset.unavailable')"
+    :sort-options="sortOptions"
+    :sort-value="sortValue"
+    :sort-direction="sortDirection"
+    @sort="onSort"
     @select="selectAsset"
   >
-    <template v-if="sectionHeader" #before-list>
-      <p class="text-label-base text-text-default">{{ sectionHeader }}</p>
-    </template>
-
     <template v-if="hasPausedAsset" #item-suffix="{ item }">
       <!-- The disabled row turns pointer events off; the tag keeps its tooltip. -->
       <app-tooltip
@@ -51,18 +57,24 @@ import { useI18n } from 'vue-i18n'
 
 import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
 import {
-  pickQuickPicks,
+  pickRecentItems,
+  pickStockQuickPicks,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
-import type { TokenSelectorItem } from '@/components/token_selector/types'
+import type {
+  TokenSelectorItem,
+  TokenSelectorSortDirection,
+} from '@/components/token_selector/types'
 import AppTag from '@/components/tag/AppTag.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
-import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { analytics, TradeClickSortEvent } from '@/analytics'
+import { useWalletStore } from '@/stores/walletStore'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useStocksStore } from '@/stores/stocksStore'
 import { useMarketStatusStore } from '@/stores/marketStatusStore'
+import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import { useCurrency } from '@/composables/useCurrency'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
@@ -95,7 +107,7 @@ const emit = defineEmits<{
   'open:selectToken': [isOpen: boolean]
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { formatFiat } = useCurrency()
 const walletStore = useWalletStore()
 const stocksStore = useStocksStore()
@@ -103,6 +115,7 @@ const { isLoadingBalances, isWalletConnected } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
 const { currentSession } = storeToRefs(useMarketStatusStore())
+const { recentlyViewedStocks } = storeToRefs(useRecentlyViewedTokensStore())
 
 const isOpen = ref(false)
 const searchInput = ref('')
@@ -117,18 +130,28 @@ const isLoading = computed(() => {
   return props.externalLoading || !isLoaded.value
 })
 
-const sectionHeader = computed(() => {
-  if (props.side !== 'buy') return ''
+const isBuy = computed(() => props.side === 'buy')
+
+// Lowercase, as the Figma reads it: "Available in post-market".
+const sessionName = computed(() => {
   const session = currentSession.value
   if (!session || session === 'regular') return ''
   const name = t(`trade.market_status.${session}`)
-  return name.startsWith('trade.')
-    ? ''
-    : t('trade.select_asset.available_in', { marketStatus: name })
+  return name.startsWith('trade.') ? '' : name.toLocaleLowerCase(locale.value)
 })
 
-const networkIcon = computed(() =>
-  props.networkName ? chainsStore.getChainIcon(props.networkName) : undefined,
+const listTitle = computed(() =>
+  isBuy.value && sessionName.value
+    ? t('trade.select_asset.available_in', { marketStatus: sessionName.value })
+    : undefined,
+)
+
+const unavailableTitle = computed(() =>
+  sessionName.value
+    ? t('trade.select_asset.unavailable_in', {
+        marketStatus: sessionName.value,
+      })
+    : t('trade.select_asset.unavailable'),
 )
 
 const tokenId = (token: NewTokenInfo) =>
@@ -137,6 +160,8 @@ const tokenId = (token: NewTokenInfo) =>
 const disabledAddresses = computed(
   () => new Set(props.disabledTokens.map(address => address.toLowerCase())),
 )
+const isSessionUnavailable = (token: TradeAssetToken) =>
+  disabledAddresses.value.has(token.address?.toLowerCase())
 
 const pauseReasonOf = (token: TradeAssetToken) =>
   token.pauseReason && isPauseReason(token.pauseReason)
@@ -149,14 +174,18 @@ interface TradeAsset {
   token: TradeAssetToken
   amount: string
   fiatValue: BigNumber
+  marketCap: number
+  change?: number
 }
 
 const assets = computed<TradeAsset[]>(() => {
   if (!isLoaded.value) return []
-  const assets = (props.chainTokens as TradeAssetToken[]).map(token => {
+  return (props.chainTokens as TradeAssetToken[]).map(token => {
     const amount = token.balance
       ? formatUnits(BigInt(token.balance), token.decimals)
       : '0'
+    // The wallet's market data fills in what the trade feed lacks (crypto).
+    const walletToken = walletStore.getTokenBalance(token.address)
     return {
       token:
         props.side === 'sell'
@@ -164,39 +193,77 @@ const assets = computed<TradeAsset[]>(() => {
               ...token,
               name: getTokenDisplayName({
                 name: token.name,
-                ondo: walletStore.getTokenBalance(token.address)?.ondo,
+                ondo: walletToken?.ondo,
               }),
             }
           : token,
       amount,
       fiatValue: BigNumber(amount).multipliedBy(token.price || 0),
+      marketCap: token.marketCap || walletToken?.market_cap || 0,
+      change:
+        token.priceChangePercentage24h ??
+        walletToken?.price_change_percentage_24h,
     }
   })
-  if (props.side === 'buy') return assets
-  return (
-    assets
-      // Filter on balance, not fiat value: a held token whose price feed is
-      // missing must stay sellable. With no wallet connected there are no
-      // balances at all — show the list rather than an empty "no tokens" state.
-      .filter(
-        ({ amount }) =>
-          !isWalletConnected.value || BigNumber(amount).isGreaterThan(0),
-      )
-      .sort((a, b) => b.fiatValue.comparedTo(a.fiatValue) ?? 0)
-  )
 })
 
-const toItem = ({
-  token,
-  amount,
-  fiatValue,
-}: TradeAsset): TokenSelectorItem<TradeAssetToken> => {
+// Values double as the analytics `sortOption`.
+const SORT = {
+  MARKET_CAP: 'Market Cap',
+  PRICE: 'Price',
+  CHANGE: '24H Change',
+  NAME: 'Name',
+} as const
+
+const sortOptions = computed(() => [
+  { value: SORT.MARKET_CAP, label: t('stocks.market_cap') },
+  { value: SORT.PRICE, label: t('stocks.price') },
+  { value: SORT.CHANGE, label: t('stocks.twenty_four_h_change') },
+  { value: SORT.NAME, label: t('stocks.name') },
+])
+const sortValue = ref<string>(SORT.MARKET_CAP)
+const sortDirection = ref<TokenSelectorSortDirection>('desc')
+
+const onSort = (value: string) => {
+  analytics.trackTradeClickSortEvent(TradeClickSortEvent, {
+    sortOption: value,
+    isFromView: props.side === 'sell',
+  })
+  if (value === sortValue.value) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortValue.value = value
+    sortDirection.value = value === SORT.NAME ? 'asc' : 'desc'
+  }
+}
+
+const sortNumber: Record<string, (asset: TradeAsset) => number> = {
+  [SORT.MARKET_CAP]: asset => asset.marketCap,
+  [SORT.PRICE]: asset => asset.token.price || 0,
+  [SORT.CHANGE]: asset => asset.change ?? 0,
+}
+
+const sortAssets = (list: TradeAsset[]) => {
+  const direction = sortDirection.value === 'asc' ? 1 : -1
+  const byNumber = sortNumber[sortValue.value]
+  return [...list].sort(
+    (a, b) =>
+      (byNumber
+        ? byNumber(a) - byNumber(b)
+        : a.token.name.localeCompare(b.token.name)) * direction,
+  )
+}
+
+// Holdings only in "Your assets"; every other row shows price and 24h change.
+const toItem = (
+  { token, amount, fiatValue, change }: TradeAsset,
+  showHolding = false,
+): TokenSelectorItem<TradeAssetToken> => {
   const { isStock, symbol } = tradeAssetLabel(
     token,
     props.networkName,
     stocksStore.isStock,
   )
-  const held = BigNumber(amount).isGreaterThan(0)
   const paused = !!pauseReasonOf(token)
   return {
     id: tokenId(token),
@@ -208,32 +275,66 @@ const toItem = ({
     rightAccessory: paused
       ? undefined
       : tokenRowAccessory({
-          balanceFiat: held ? formatFiat(fiatValue).display : undefined,
-          balance: held
-            ? `${formatFloatingPointValue(amount).value} ${truncate(token.symbol, 7)}`
+          balanceFiat: showHolding ? formatFiat(fiatValue).display : undefined,
+          balance: showHolding
+            ? `${formatFloatingPointValue(amount).value} ${truncate(symbol, 7)}`
             : undefined,
           price: formatFiat(BigNumber(token.price || 0)).display,
-          change: token.priceChangePercentage24h,
+          change,
         }),
-    disabled:
-      paused || disabledAddresses.value.has(token.address?.toLowerCase()),
+    disabled: paused || isSessionUnavailable(token),
     raw: token,
   }
 }
 
-const allItems = computed(() => assets.value.map(toItem))
+const search = (list: TokenSelectorItem<TradeAssetToken>[]) =>
+  fuzzySearchByKeys(list, ['name', 'symbol'], searchInput.value)
 
-const items = computed(() =>
-  fuzzySearchByKeys(allItems.value, ['name', 'symbol'], searchInput.value),
+// Buy moves the session-unavailable assets to a group of their own; sell keeps
+// them in place, disabled.
+const listedItems = computed(() =>
+  sortAssets(
+    isBuy.value
+      ? assets.value.filter(({ token }) => !isSessionUnavailable(token))
+      : assets.value,
+  ).map(asset => toItem(asset)),
+)
+
+const items = computed(() => search(listedItems.value))
+
+const unavailableItems = computed(() =>
+  isBuy.value
+    ? search(
+        sortAssets(
+          assets.value.filter(({ token }) => isSessionUnavailable(token)),
+        ).map(asset => toItem(asset)),
+      )
+    : [],
 )
 
 const quickPicks = computed(() =>
-  pickQuickPicks(
-    allItems.value,
-    assets.value.find(
-      ({ token }) => token.address?.toLowerCase() === MAIN_TOKEN_CONTRACT,
-    )?.token.symbol ?? '',
-  ),
+  isBuy.value ? pickStockQuickPicks(listedItems.value) : [],
+)
+
+// The stock page and global search store a stock by its tokenized symbol.
+const recentItems = computed(() =>
+  isBuy.value
+    ? pickRecentItems(
+        listedItems.value,
+        recentlyViewedStocks.value.map(({ id }) => id),
+        ({ raw }, id) => raw.symbol.toUpperCase() === id.toUpperCase(),
+      )
+    : [],
+)
+
+// Balance, not fiat value: a held token without a price feed is still held.
+const ownedItems = computed(() =>
+  !isBuy.value && isWalletConnected.value
+    ? assets.value
+        .filter(({ amount }) => BigNumber(amount).isGreaterThan(0))
+        .sort((a, b) => b.fiatValue.comparedTo(a.fiatValue) ?? 0)
+        .map(asset => toItem(asset, true))
+    : [],
 )
 
 // Only pass the suffix slot when it has something to draw: the row reserves
