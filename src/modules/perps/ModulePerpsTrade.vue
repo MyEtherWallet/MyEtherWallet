@@ -420,7 +420,7 @@
              wallet-side action that doesn't touch the perps service, and it's
              useful across the rest of the app regardless. -->
         <app-base-button
-          v-else-if="isWatchOnly"
+          v-else-if="!isWalletConnected || isWatchOnly"
           class="w-full"
           @click="connectWallet"
         >
@@ -605,7 +605,7 @@ import {
 } from '@/analytics'
 
 const walletStore = useWalletStore()
-const { isWatchOnly } = storeToRefs(walletStore)
+const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const {
   isAuthenticating,
   showSigningPrompt,
