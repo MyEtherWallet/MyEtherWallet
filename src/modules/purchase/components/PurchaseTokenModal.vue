@@ -14,7 +14,6 @@
     :selected-id="selectedId"
     :networks="networkOptions"
     :loading="isLoading"
-    :empty-text="$t('purchase.select_token.no_results')"
     @select="emit('update:selected', $event.raw as PurchaseAsset)"
   />
 </template>
@@ -26,6 +25,7 @@ import { useI18n } from 'vue-i18n'
 import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
 import {
   pickQuickPicks,
+  pickRecentItems,
   tokenRowAccessory,
 } from '@/components/token_selector/tokenSelector'
 import type {
@@ -79,25 +79,26 @@ const compatibleNetworks = computed(() =>
 const chainIcon = (network: BuyNetwork) =>
   getPurchaseChainIcon(network.chain, network.tokens, chainsStore)
 
+const toNetwork = (
+  network: BuyNetwork,
+  disabled?: boolean,
+): TokenSelectorNetwork => ({
+  value: network.chain,
+  name: network.name,
+  icon: chainIcon(network),
+  disabled,
+})
+
 const networkOptions = computed<TokenSelectorNetwork[]>(() => [
   { value: null, name: t('purchase.select_token.filter_all_networks') },
-  ...compatibleNetworks.value.map(network => ({
-    value: network.chain,
-    name: network.name,
-    icon: chainIcon(network),
-  })),
+  ...compatibleNetworks.value.map(network => toNetwork(network)),
   ...props.networks
     .filter(
       network =>
         props.incompatibleChains?.includes(network.chain) &&
         !compatibleNetworks.value.includes(network),
     )
-    .map(network => ({
-      value: network.chain,
-      name: network.name,
-      icon: chainIcon(network),
-      disabled: true,
-    })),
+    .map(network => toNetwork(network, true)),
 ])
 
 watch(isOpen, value => {
@@ -164,9 +165,10 @@ const quickPicks = computed(() =>
 
 // Recently viewed entries are keyed by coingecko id.
 const recentItems = computed(() =>
-  recentlyViewedCrypto.value.flatMap(
-    ({ id }) =>
-      networkItems.value.find(item => item.raw.coingecko_id === id) ?? [],
+  pickRecentItems(
+    networkItems.value,
+    recentlyViewedCrypto.value.map(({ id }) => id),
+    (item, id) => item.raw.coingecko_id === id,
   ),
 )
 

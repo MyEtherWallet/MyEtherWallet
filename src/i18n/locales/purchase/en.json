@@ -48,8 +48,7 @@
     "select_token": {
       "title_buy": "Select asset to buy",
       "title_sell": "Select asset to sell",
-      "filter_all_networks": "All networks",
-      "no_results": "No tokens match"
+      "filter_all_networks": "All networks"
     },
     "select_currency": {
       "title": "Currency",

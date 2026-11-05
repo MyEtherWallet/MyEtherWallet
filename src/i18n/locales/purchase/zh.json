@@ -48,8 +48,7 @@
     "select_token": {
       "title_buy": "选择要买入的资产",
       "title_sell": "选择要卖出的资产",
-      "filter_all_networks": "所有网络",
-      "no_results": "没有匹配的代币"
+      "filter_all_networks": "所有网络"
     },
     "select_currency": {
       "title": "货币",
