@@ -65,7 +65,7 @@
           <AppIcon v-else name="document-duplicate" />
         </button>
         <app-pop-up-menu
-          placeholder="account menu"
+          :placeholder="$t('multi_address.menu.label')"
           location="right"
           teleport
           menu-radius-class="rounded-16"
