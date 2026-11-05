@@ -199,6 +199,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'table',
+              name: 'DevTable',
+              component: () => import('@/views/ViewTableShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'scroll-fade',
               name: 'DevScrollFade',
               component: () => import('@/views/ViewScrollFadeShowcase.vue'),
