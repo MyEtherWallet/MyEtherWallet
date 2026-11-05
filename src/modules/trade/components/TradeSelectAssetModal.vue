@@ -288,13 +288,19 @@ const toItem = (
 const search = (list: TokenSelectorItem<TradeAssetToken>[]) =>
   fuzzySearchByKeys(list, ['name', 'symbol'], searchInput.value)
 
+// Sell lists what can be sold: the held assets once a wallet is connected (by
+// balance, not fiat value, so a held token with no price feed stays sellable),
+// every asset otherwise since there are no balances yet.
+const isSellable = ({ amount }: TradeAsset) =>
+  !isWalletConnected.value || BigNumber(amount).isGreaterThan(0)
+
 // Buy moves the session-unavailable assets to a group of their own; sell keeps
 // them in place, disabled.
 const listedItems = computed(() =>
   sortAssets(
     isBuy.value
       ? assets.value.filter(({ token }) => !isSessionUnavailable(token))
-      : assets.value,
+      : assets.value.filter(isSellable),
   ).map(asset => toItem(asset)),
 )
 

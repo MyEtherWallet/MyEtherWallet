@@ -324,7 +324,7 @@ describe('TradeSelectAssetModal (sell)', () => {
   })
   const HELD_AAPL = { ...AAPL, balance: '1000000000000000000' }
 
-  it('lists the holdings under "Your assets", biggest first, then every asset', async () => {
+  it('lists the holdings under "Your assets", biggest first, then every held asset', async () => {
     const wrapper = await mountOpenModal(
       { side: 'sell', chainTokens: [ETH, HELD_AAPL, USDC] },
       connectWallet,
@@ -340,7 +340,8 @@ describe('TradeSelectAssetModal (sell)', () => {
       expect.objectContaining({ kind: 'balance', secondary: '1 AAPLon' }),
     ])
 
-    expect(tickersIn('token-selector-all')).toEqual(['ETH', 'AAPLon', 'USDC'])
+    // ETH has no balance, so it can't be sold.
+    expect(tickersIn('token-selector-all')).toEqual(['AAPLon', 'USDC'])
     expect(header('token-selector-all')).toContain('All tokens')
     ;(selector(wrapper).props('items') as TokenSelectorItem[]).forEach(item =>
       expect(item.rightAccessory).toMatchObject({
