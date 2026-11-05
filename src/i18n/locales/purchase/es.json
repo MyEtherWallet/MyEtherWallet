@@ -10,7 +10,6 @@
       "continue": "Revisar compra",
       "connect_wallet": "Conectar billetera",
       "no_quotes": "No se encontraron cotizaciones",
-      "need_help": "¿Necesitas ayuda para comprar?",
       "network_not_supported": "Red no compatible",
       "network_not_available": "La compra no está disponible en {network}. Cambia a una red compatible.",
       "error": {
@@ -26,7 +25,6 @@
       "enter_amount": "Ingresa la cantidad",
       "continue": "Revisar venta",
       "connect_wallet": "Conectar billetera",
-      "need_help": "¿Necesitas ayuda para vender?",
       "network_not_supported": "Red no compatible",
       "network_not_available": "La venta no está disponible en {network}. Cambia a una red compatible.",
       "error": {

@@ -36,7 +36,6 @@ import { useTradeExecution, type TradeFlowStep } from './useTradeExecution'
 import { useTradeForm } from './useTradeForm'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
-import configs from '@/configs'
 import type { Chain } from '@/mew_api/types'
 import { ToastType } from '@/types/notification'
 
@@ -45,7 +44,6 @@ export function useTradeModule() {
 
   // Dev-only until the help center has a trade article to point at — the href
   // in ModuleTrade still targets the gas-fees article as a placeholder.
-  const showHelpLink = configs.BUILD_MODE !== 'production'
 
   // --- Stores ---
   const pairStore = usePairStore()
@@ -867,7 +865,6 @@ export function useTradeModule() {
     isFromAmountBusy,
     isFromAmountErrorVisible,
     isCtaLoading,
-    showHelpLink,
     isInsufficientBalanceError,
     isDecimalsError,
     isPairUnavailable,

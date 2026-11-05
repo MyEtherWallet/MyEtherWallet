@@ -234,12 +234,6 @@
       </div>
     </div>
 
-    <div v-if="showHelpLink" class="mt-auto flex justify-center px-5 pb-5">
-      <app-base-button type="link" size="small" @click="openHelpLink">
-        {{ $t('trade.need_help') }}
-      </app-base-button>
-    </div>
-
     <!-- Trade Quote Modal -->
     <trade-review-modal
       v-model:is-open="reviewModalOpen"
@@ -340,7 +334,6 @@ const {
   isFromAmountBusy,
   isFromAmountErrorVisible,
   isCtaLoading,
-  showHelpLink,
   isInsufficientBalanceError,
   isDecimalsError,
   isPairUnavailable,
@@ -364,14 +357,6 @@ const {
   onFromTokenSelected,
   onToTokenSelected,
 } = useTradeModule()
-
-const openHelpLink = () => {
-  window.open(
-    'https://help.myetherwallet.com/en/article/what-is-gas',
-    '_blank',
-    'noopener,noreferrer',
-  )
-}
 
 // Case-insensitive: the swap list can return a checksummed native sentinel,
 // and an exact-match miss here would let MAX select the entire native balance

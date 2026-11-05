@@ -10,7 +10,6 @@
       "continue": "Review purchase",
       "connect_wallet": "Connect wallet",
       "no_quotes": "No quotes found",
-      "need_help": "Need help buying?",
       "network_not_supported": "Network not supported",
       "network_not_available": "Buying is not available on {network}. Switch to a supported network.",
       "error": {
@@ -26,7 +25,6 @@
       "enter_amount": "Enter amount",
       "continue": "Review sell",
       "connect_wallet": "Connect wallet",
-      "need_help": "Need help selling?",
       "network_not_supported": "Network not supported",
       "network_not_available": "Selling is not available on {network}. Switch to a supported network.",
       "error": {

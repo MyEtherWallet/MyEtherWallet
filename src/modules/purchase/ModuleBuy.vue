@@ -57,9 +57,6 @@
 
       <div class="mt-auto pt-5 flex flex-col items-center gap-5">
         <purchase-footer />
-        <app-base-button type="link" size="small" @click="openHelpCenter">
-          {{ t('purchase.buy.need_help') }}
-        </app-base-button>
       </div>
     </div>
 
@@ -203,7 +200,6 @@ const accessStore = useAccessStore()
 
 const DEFAULT_BUY_CHAIN = 'ETH'
 const DEFAULT_FIAT = 'USD'
-const HELP_CENTER_URL = 'https://help.myetherwallet.com/'
 const MAX_FIAT_DECIMALS = 6
 
 const fiatAmount = ref('')
@@ -541,10 +537,6 @@ const buyQuoteParams = () => ({
   cryptoCurrency: tokenSymbol.value,
   chain: purchaseChainCode.value,
 })
-
-const openHelpCenter = () => {
-  window.open(HELP_CENTER_URL, '_blank', 'noopener')
-}
 
 const onSubmit = async () => {
   if (showUnsupportedNetwork.value) return

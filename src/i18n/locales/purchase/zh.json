@@ -10,7 +10,6 @@
       "continue": "查看购买",
       "connect_wallet": "连接钱包",
       "no_quotes": "未找到报价",
-      "need_help": "购买需要帮助？",
       "network_not_supported": "不支持该网络",
       "network_not_available": "{network} 上暂不支持购买。请切换到受支持的网络。",
       "error": {
@@ -26,7 +25,6 @@
       "enter_amount": "输入数量",
       "continue": "查看出售",
       "connect_wallet": "连接钱包",
-      "need_help": "出售需要帮助？",
       "network_not_supported": "不支持该网络",
       "network_not_available": "{network} 上暂不支持出售。请切换到受支持的网络。",
       "error": {

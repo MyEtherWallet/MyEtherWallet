@@ -115,8 +115,7 @@
       "take-profit": "Take profit",
       "stop-loss": "Stop loss",
       "review-long": "Review long",
-      "review-short": "Review short",
-      "need-help": "Need help trading perps?"
+      "review-short": "Review short"
     },
     "info": {
       "perpetual-label": "Perpetual",

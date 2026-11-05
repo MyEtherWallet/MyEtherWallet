@@ -12,7 +12,6 @@
     "trading_restricted": "El acceso a las operaciones está restringido en tu jurisdicción.",
     "learn_more": "Más información",
     "review_trade": "Revisar operación",
-    "need_help": "¿Necesitas ayuda para operar?",
     "tokens_not_tradable": "Uno o más tokens no se pueden operar actualmente. Inténtalo más tarde o selecciona tokens diferentes.",
     "service_unavailable": "El servicio de operaciones no está disponible temporalmente. Inténtalo de nuevo más tarde.",
     "asset_not_tradable": "no se puede operar actualmente debido a {reason}",

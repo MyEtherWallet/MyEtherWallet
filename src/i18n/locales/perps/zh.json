@@ -115,8 +115,7 @@
       "take-profit": "止盈",
       "stop-loss": "止损",
       "review-long": "查看做多",
-      "review-short": "查看做空",
-      "need-help": "交易永续合约需要帮助？"
+      "review-short": "查看做空"
     },
     "confirm": {
       "long": "做多",

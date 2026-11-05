@@ -461,14 +461,6 @@
       </div>
     </div>
 
-    <app-need-help
-      :title="$t('perps.trade.need-help')"
-      :help-link="perpsHelpUrl"
-      variant="link"
-      class="mt-auto self-center pt-5"
-      :class="blockedClass"
-    />
-
     <!-- Order Confirmation Dialog -->
     <perps-order-confirmation-dialog
       v-model:is-open="showConfirmModal"
@@ -586,7 +578,6 @@ import type { SegmentItem } from '@/components/segmented_control/types'
 import AppSlider from '@/components/slider/AppSlider.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'

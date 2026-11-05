@@ -12,7 +12,6 @@
     "trading_restricted": "您所在的司法管辖区限制访问交易功能。",
     "learn_more": "了解更多",
     "review_trade": "核对交易",
-    "need_help": "交易遇到问题？",
     "tokens_not_tradable": "一个或多个代币当前不可交易。请稍后重试或选择其他代币。",
     "service_unavailable": "交易服务暂时不可用。请稍后重试。",
     "asset_not_tradable": "目前因 {reason} 暂不可交易",

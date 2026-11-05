@@ -2,7 +2,6 @@
   "send": {
     "send-tokens": "Enviar tokens",
     "send-nfts": "Enviar NFT",
-    "need-help": "¿Necesitas ayuda para enviar?",
     "description": "A cualquier dirección cripto",
     "review-send": "Revisar envío",
     "approve-tx-on-device": "Aprueba la transacción en tu dispositivo",
@@ -36,7 +35,6 @@
     "youre-sending": "Estás enviando",
     "confirm": "Confirmar envío"
   },
-
   "error": {
     "amount": {
       "required": "la cantidad es obligatoria",

@@ -12,7 +12,6 @@
     "trading_restricted": "Unfortunately, trading RWAs isn’t allowed in your current jurisdiction.",
     "learn_more": "Learn more",
     "review_trade": "Review trade",
-    "need_help": "Need help trading?",
     "tokens_not_tradable": "One or more tokens are currently not tradable. Try again later or select different tokens.",
     "service_unavailable": "Trading service is temporarily unavailable. Please try again later.",
     "asset_not_tradable": "is currently not tradable due to {reason}",
