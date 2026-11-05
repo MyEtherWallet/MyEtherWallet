@@ -162,10 +162,15 @@
               </template>
               <template #menu-content="{ toggleMenu }">
                 <div
+                  role="listbox"
+                  :aria-label="$t('perps.confirm.order-type-label')"
                   class="bg-white rounded-[20px] shadow-xl border border-border-default w-[260px] p-2 overflow-hidden"
                 >
-                  <div
-                    class="flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
+                  <button
+                    type="button"
+                    role="option"
+                    :aria-selected="orderType === 'market'"
+                    class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer text-left transition-colors"
                     :class="
                       orderType === 'market'
                         ? 'bg-background-brand-subtle'
@@ -190,9 +195,12 @@
                     />
 
                     <span v-else class="w-4 mt-0.5" />
-                  </div>
-                  <div
-                    class="flex items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
+                  </button>
+                  <button
+                    type="button"
+                    role="option"
+                    :aria-selected="orderType === 'limit'"
+                    class="flex w-full items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer text-left transition-colors"
                     :class="
                       orderType === 'limit'
                         ? 'bg-background-brand-subtle'
@@ -216,7 +224,7 @@
                       class="text-text-brand"
                     />
                     <span v-else class="w-4 mt-0.5" />
-                  </div>
+                  </button>
                 </div>
               </template>
             </app-pop-up-menu>
