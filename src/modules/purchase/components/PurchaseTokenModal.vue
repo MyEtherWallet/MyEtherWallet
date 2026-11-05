@@ -108,13 +108,17 @@ watch(isOpen, value => {
     : null
 })
 
+// Contract, not symbol: one chain can list two assets with the same symbol.
+const rowId = (chain: string, token: PurchaseAsset) =>
+  `${chain}:${token.contract_address || token.symbol}`
+
 const toItem = (
   token: PurchaseAsset,
   network: BuyNetwork,
 ): TokenSelectorItem<PurchaseAsset> => {
   const { market_data: market } = token
   return {
-    id: `${network.chain}:${token.symbol}`,
+    id: rowId(network.chain, token),
     symbol: token.symbol,
     name: token.name,
     logo: getPurchaseTokenIcon(
@@ -160,7 +164,7 @@ const recentItems = computed(() =>
 
 const selectedId = computed(() =>
   props.selectedToken
-    ? `${props.selectedToken.chain}:${props.selectedToken.symbol}`
+    ? rowId(props.selectedToken.chain, props.selectedToken)
     : undefined,
 )
 </script>

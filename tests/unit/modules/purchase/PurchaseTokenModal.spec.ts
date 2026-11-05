@@ -127,7 +127,7 @@ describe('PurchaseTokenModal', () => {
     const modal = (await mountModal()).findComponent(AppTokenSelectorModal)
     const items = modal.props('items') as TokenSelectorItem[]
 
-    expect(ids(items)).toEqual(['ETH:USDC', 'ETH:ETH'])
+    expect(ids(items)).toEqual(['ETH:0xUSDC', 'ETH:0xETH'])
     expect(items[0]).toMatchObject({
       symbol: 'USDC',
       name: 'USDC on ETH',
@@ -141,8 +141,31 @@ describe('PurchaseTokenModal', () => {
     })
     // No market data, no right column.
     expect(items[1].rightAccessory).toBeUndefined()
-    expect(modal.props('selectedId')).toBe('ETH:ETH')
+    expect(modal.props('selectedId')).toBe('ETH:0xETH')
     expect(modal.props('quickPicks')).toEqual([])
+  })
+
+  it('keys rows by contract so same-symbol assets stay apart', async () => {
+    const bridged = asset('ETH', 'USDC', { contract_address: '0xbridged' })
+    const noContract = asset('ETH', 'DAI', { contract_address: '' })
+    const modal = (
+      await mountModal({
+        networks: [
+          {
+            chain: 'ETH',
+            name: 'Ethereum',
+            tokens: [ETH_USDC, bridged, noContract],
+          },
+        ],
+        selectedToken: bridged,
+      })
+    ).findComponent(AppTokenSelectorModal)
+    expect(ids(modal.props('items') as TokenSelectorItem[])).toEqual([
+      'ETH:0xUSDC',
+      'ETH:0xbridged',
+      'ETH:DAI',
+    ])
+    expect(modal.props('selectedId')).toBe('ETH:0xbridged')
   })
 
   it('filters by network and search, never showing incompatible chains', async () => {
@@ -151,20 +174,20 @@ describe('PurchaseTokenModal', () => {
 
     await modal.vm.$emit('update:network', null)
     expect(ids(modal.props('items') as TokenSelectorItem[])).toEqual([
-      'ETH:USDC',
-      'ETH:ETH',
-      'POL:POL',
+      'ETH:0xUSDC',
+      'ETH:0xETH',
+      'POL:0xPOL',
     ])
 
     await modal.vm.$emit('update:network', 'POL')
     expect(ids(modal.props('items') as TokenSelectorItem[])).toEqual([
-      'POL:POL',
+      'POL:0xPOL',
     ])
 
     await modal.vm.$emit('update:network', null)
     await modal.vm.$emit('update:search', 'usdc on')
     expect(ids(modal.props('items') as TokenSelectorItem[])).toEqual([
-      'ETH:USDC',
+      'ETH:0xUSDC',
     ])
   })
 
@@ -186,7 +209,7 @@ describe('PurchaseTokenModal', () => {
 
     const modal = wrapper.findComponent(AppTokenSelectorModal)
     expect(ids(modal.props('recentItems') as TokenSelectorItem[])).toEqual([
-      'ETH:USDC',
+      'ETH:0xUSDC',
     ])
   })
 
