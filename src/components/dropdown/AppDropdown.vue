@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref, useId } from 'vue'
+import { computed, nextTick, ref, useId } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
@@ -10,6 +10,7 @@ import {
 } from '@/components/menu_list/types'
 import { useFlipPlacement } from './useFlipPlacement'
 import {
+  DROPDOWN_BARE_TRIGGER_CLASS,
   DROPDOWN_MENU_WIDTH_CLASS,
   DROPDOWN_TRIGGER_CLASS,
   DROPDOWN_TRIGGER_STATE_CLASS,
@@ -52,10 +53,13 @@ const props = withDefaults(
     menuRole?: MenuListRole
     /** Classes for the menu's scrolling rows region, e.g. its max height. */
     menuClass?: string
+    /** Text trigger without the pill box (title + 18px chevron); opens the S menu. */
+    bare?: boolean
   }>(),
   {
     size: 'm',
     surface: 'default',
+    bare: false,
     disabled: false,
     closeOnSelect: true,
     searchable: false,
@@ -70,6 +74,14 @@ const open = defineModel<boolean>('open', { default: false })
 const search = defineModel<string>('search', { default: '' })
 
 const AVATAR_SIZE = 's' as const // 24px in both sizes
+
+// A bare trigger lays out like S: inline, label title, 240px menu.
+const layout = computed<DropdownSize>(() => (props.bare ? 's' : props.size))
+const triggerClass = computed(() =>
+  props.bare
+    ? DROPDOWN_BARE_TRIGGER_CLASS
+    : DROPDOWN_TRIGGER_CLASS[props.size][props.surface],
+)
 
 const root = ref<HTMLElement | null>(null)
 const trigger = ref<HTMLButtonElement | null>(null)
@@ -135,7 +147,7 @@ defineExpose({ show, close })
     v-bind="$attrs"
     data-testid="dropdown"
     class="relative"
-    :class="size === 'm' ? 'flex w-full' : 'inline-flex'"
+    :class="layout === 'm' ? 'flex w-full' : 'inline-flex'"
     @keydown.esc="close(true)"
     @focusout="onFocusOut"
   >
@@ -149,10 +161,7 @@ defineExpose({ show, close })
       :aria-controls="open ? listId : undefined"
       :disabled="disabled"
       class="items-center text-left transition-colors"
-      :class="[
-        DROPDOWN_TRIGGER_CLASS[size][surface],
-        DROPDOWN_TRIGGER_STATE_CLASS,
-      ]"
+      :class="[triggerClass, DROPDOWN_TRIGGER_STATE_CLASS]"
       @click="toggle"
       @keydown.down.prevent="show()"
     >
@@ -160,7 +169,7 @@ defineExpose({ show, close })
         <slot name="avatar" :size="AVATAR_SIZE" />
       </span>
       <AppContentGroup
-        v-if="size === 'm'"
+        v-if="layout === 'm'"
         :title="title"
         size="m"
         no-wrap
@@ -168,12 +177,13 @@ defineExpose({ show, close })
       />
       <span
         v-else
-        class="whitespace-nowrap px-2 text-label-base text-text-default"
+        class="whitespace-nowrap text-label-base text-text-default"
+        :class="{ 'px-2': !bare }"
       >
         {{ title }}
       </span>
       <span
-        v-if="size === 'm' && $slots.suffix"
+        v-if="layout === 'm' && $slots.suffix"
         data-testid="dropdown-suffix"
         class="flex h-8 w-10 shrink-0 items-center justify-center"
       >
@@ -181,7 +191,7 @@ defineExpose({ show, close })
       </span>
       <AppIcon
         name="chevron-down"
-        size="s"
+        :size="bare ? 'xs' : 's'"
         class="shrink-0 text-icon-subtle transition-transform motion-reduce:transition-none"
         :class="{ 'rotate-180': open }"
       />
@@ -199,7 +209,7 @@ defineExpose({ show, close })
       :list-class="menuClass"
       class="absolute z-20"
       :class="[
-        DROPDOWN_MENU_WIDTH_CLASS[size],
+        DROPDOWN_MENU_WIDTH_CLASS[layout],
         flipUp ? 'bottom-full mb-1' : 'top-full mt-1',
       ]"
       @click="onMenuClick"
