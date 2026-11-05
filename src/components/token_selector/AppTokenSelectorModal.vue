@@ -154,65 +154,67 @@ const onClosed = () => {
     @closed="onClosed"
   >
     <div class="flex h-full flex-col">
-      <div
-        data-testid="token-selector-toolbar"
-        class="flex flex-none items-center gap-2 px-4 pt-1.5 pb-6 sm:px-6"
-      >
-        <AppSearchbar
-          v-model="search"
-          variant="default"
-          class="min-w-0 flex-1"
-          :placeholder="$t('select_token.search')"
-        />
-        <AppDropdown
-          v-if="currentNetwork"
-          v-model:search="networkQuery"
-          size="s"
-          surface="alternative"
-          menu-align="end"
-          class="shrink-0"
-          :title="currentNetwork.name"
-          :searchable="networks.length > 6"
-          :search-placeholder="$t('select_token.search')"
-          menu-class="max-h-80"
+      <!-- Search, network and filters stay put while the list scrolls -->
+      <div class="flex flex-none flex-col gap-4 px-4 pt-1.5 pb-6 sm:px-6">
+        <div
+          data-testid="token-selector-toolbar"
+          class="flex items-center gap-2"
         >
-          <template #avatar="{ size }">
-            <AppAvatar
-              type="network"
-              :size="size"
-              :url="currentNetwork.icon"
-              :chain="currentNetwork.name"
-            />
-          </template>
-          <AppCell
-            v-for="item in shownNetworks"
-            :key="item.value ?? 'all'"
-            size="small"
-            inset
-            role="option"
-            :aria-selected="item.value === network"
-            :selected="item.value === network"
-            :disabled="item.disabled"
-            :title="item.name"
-            @click="network = item.value"
+          <AppSearchbar
+            v-model="search"
+            variant="default"
+            class="min-w-0 flex-1"
+            :placeholder="$t('select_token.search')"
+          />
+          <AppDropdown
+            v-if="currentNetwork"
+            v-model:search="networkQuery"
+            size="s"
+            surface="alternative"
+            menu-align="end"
+            class="shrink-0"
+            :title="currentNetwork.name"
+            :searchable="networks.length > 6"
+            :search-placeholder="$t('select_token.search')"
+            menu-class="max-h-80"
           >
             <template #avatar="{ size }">
               <AppAvatar
                 type="network"
                 :size="size"
-                :url="item.icon"
-                :chain="item.name"
+                :url="currentNetwork.icon"
+                :chain="currentNetwork.name"
               />
             </template>
-          </AppCell>
-        </AppDropdown>
+            <AppCell
+              v-for="item in shownNetworks"
+              :key="item.value ?? 'all'"
+              size="small"
+              inset
+              role="option"
+              :aria-selected="item.value === network"
+              :selected="item.value === network"
+              :disabled="item.disabled"
+              :title="item.name"
+              @click="network = item.value"
+            >
+              <template #avatar="{ size }">
+                <AppAvatar
+                  type="network"
+                  :size="size"
+                  :url="item.icon"
+                  :chain="item.name"
+                />
+              </template>
+            </AppCell>
+          </AppDropdown>
+        </div>
+        <slot name="filters" />
       </div>
 
       <div
         class="mew-scrollbar flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-4 pb-6 sm:px-6"
       >
-        <slot name="before-list" />
-
         <div v-if="loading" class="flex flex-col gap-0.5" aria-busy="true">
           <AppCell v-for="n in 6" :key="n" inset loading />
         </div>

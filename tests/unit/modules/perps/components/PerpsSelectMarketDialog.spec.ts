@@ -26,7 +26,7 @@ const ModalStub = defineComponent({
     'sortDirection',
   ],
   emits: ['update:modelValue', 'update:search', 'sort', 'select'],
-  template: '<div><slot name="before-list" /></div>',
+  template: '<div><slot name="filters" /></div>',
 })
 
 const contract = (baseCurrency: string, extra: Partial<Contract> = {}) =>
@@ -97,7 +97,7 @@ describe('PerpsSelectMarketDialog', () => {
     expect(wrapper.emitted('select')).toEqual([[ETH]])
   })
 
-  it('keeps the category filter above the list', async () => {
+  it('keeps the category filter in the fixed filters slot', async () => {
     const wrapper = mountDialog()
     const filter = wrapper.getComponent(AppSegmentedControl)
     filter.vm.$emit('update:modelValue', 'Crypto')

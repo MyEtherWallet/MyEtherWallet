@@ -13,7 +13,7 @@
     @select="$emit('select', $event.raw as Contract)"
   >
     <!-- Category filter: not in Figma 12526:110395, kept so the list stays filterable -->
-    <template #before-list>
+    <template #filters>
       <AppSegmentedControl
         :model-value="activeFilter"
         :items="filterTabs"
