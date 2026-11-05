@@ -9,6 +9,7 @@ import AppCell from '@/components/cell/AppCell.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import TokenSelectorAvatar from './TokenSelectorAvatar.vue'
+import { MODAL_HEADER_CLASS } from './tokenSelector'
 import TokenSelectorList from './TokenSelectorList.vue'
 import type {
   TokenSelectorItem,
@@ -149,13 +150,13 @@ const onClosed = () => {
     v-model="open"
     :title="title"
     :subtitle="subtitle"
-    class="h-full sm:h-[640px]"
+    :class="['h-full sm:h-[640px]', MODAL_HEADER_CLASS]"
     @closed="onClosed"
   >
     <div class="flex h-full flex-col">
       <div
         data-testid="token-selector-toolbar"
-        class="flex flex-none items-center gap-2 px-4 pt-1 pb-5 sm:px-6"
+        class="flex flex-none items-center gap-2 px-4 pt-1.5 pb-6 sm:px-6"
       >
         <AppSearchbar
           v-model="search"

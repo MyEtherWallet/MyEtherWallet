@@ -2,11 +2,10 @@
   <app-modal
     v-model="isOpen"
     :title="$t('purchase.select_currency.title')"
-    class="h-full sm:h-[600px]"
+    :class="['h-full sm:h-[600px]', MODAL_HEADER_CLASS]"
   >
     <div class="flex h-full flex-col">
-      <!-- pt-1 keeps the search focus ring inside the scrolling body -->
-      <div class="flex-none px-4 pt-1 pb-5 sm:px-6">
+      <div class="flex-none px-4 pt-1.5 pb-6 sm:px-6">
         <app-searchbar v-model="searchInput" variant="default" />
       </div>
 
@@ -65,6 +64,7 @@ import AppModal from '@/components/modal/AppModal.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppCell from '@/components/cell/AppCell.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import { MODAL_HEADER_CLASS } from '@/components/token_selector/tokenSelector'
 import { getFiatIcon } from '../helpers/purchaseIcons'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { getCurrencyName } from '../helpers/currencyName'

@@ -94,3 +94,12 @@ export const pickRecentItems = <T>(
   }
   return [...picks.values()]
 }
+
+/**
+ * For an AppModal whose content starts with a searchbar: the header hands 6px
+ * of its bottom padding (and min height) to the body, so the search's 6px focus
+ * ring isn't clipped by the scrolling body while the title and the field stay
+ * where Figma puts them (title at 29, field at 80).
+ */
+export const MODAL_HEADER_CLASS =
+  '[&>header]:min-h-[74px] [&>header]:pb-2.5 sm:[&>header]:pb-[18px]'
