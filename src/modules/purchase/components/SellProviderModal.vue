@@ -1,123 +1,137 @@
 <template>
-  <app-modal
-    v-model="isOpen"
-    :aria-label="t('purchase.sell.provider.title', { amount: formattedCrypto })"
-  >
-    <div class="flex flex-col gap-8 px-4 sm:px-6 pt-8 pb-8">
-      <!-- Header -->
-      <div class="flex flex-col gap-1 pr-10">
-        <h2 class="text-heading-xl">
-          {{ t('purchase.sell.provider.title', { amount: formattedCrypto }) }}
-        </h2>
-      </div>
-
-      <!-- Loading -->
+  <app-modal v-model="isOpen" :title="t('purchase.sell.provider.review_title')">
+    <div class="flex flex-col gap-6 p-6">
       <div
         v-if="isLoading"
         class="flex items-center justify-center py-16"
         aria-live="polite"
       >
-        <span
-          class="inline-block w-8 h-8 rounded-full border-2 border-border-default border-t-border-brand animate-spin"
-        />
+        <app-spinner />
       </div>
 
-      <!-- Error -->
-      <p v-else-if="error" class="text-text-error text-s-14 text-center py-8">
+      <p
+        v-else-if="error"
+        class="py-8 text-center text-text-sm text-text-error"
+      >
         {{ error }}
       </p>
 
-      <!-- Quote summary + CTA -->
       <template v-else-if="quote">
-        <!-- Provider card (mirrors a single provider entry from BuyProviderModal) -->
-        <div
-          class="w-full flex items-center gap-4 p-4 rounded-16 bg-background-default border-2 border-black"
-        >
-          <div
-            class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
-          >
-            <p class="text-label-base text-black">
-              {{ formattedFiat }}
+        <div class="flex flex-col gap-8 pb-6">
+          <div class="flex flex-col gap-3">
+            <p class="text-label-base text-text-default">
+              {{ t('purchase.select_provider.provider') }}
             </p>
-            <p class="text-label-base text-text-subtle">
-              ≈ {{ formattedCrypto }}
-            </p>
+            <!-- Sell gets a single quote, so it's the only option. -->
+            <app-dropdown :title="providerName" bordered>
+              <template #avatar="{ size }">
+                <app-avatar
+                  type="cryptoAsset"
+                  :size="size"
+                  :url="getProviderIcon(quote?.provider)"
+                  :symbol="providerName"
+                />
+              </template>
+              <template #suffix>
+                <app-tag
+                  type="success"
+                  variant="contrast"
+                  leading-icon="check-badge"
+                  :label="t('purchase.select_provider.best_value')"
+                />
+              </template>
+              <app-cell
+                size="small"
+                inset
+                role="option"
+                aria-selected="true"
+                selected
+                :title="providerName"
+                :right-accessory="{ kind: 'balance', primary: formattedFiat }"
+              >
+                <template #avatar="{ size }">
+                  <app-avatar
+                    type="cryptoAsset"
+                    :size="size"
+                    :url="getProviderIcon(quote?.provider)"
+                    :symbol="providerName"
+                  />
+                </template>
+              </app-cell>
+            </app-dropdown>
           </div>
-          <img
-            v-if="providerLogo"
-            :src="providerLogo"
-            :alt="quote.provider"
-            class="h-[18px] w-auto object-contain flex-none"
+
+          <div class="flex flex-col gap-3">
+            <p class="text-label-base text-text-default">
+              {{ t('purchase.select_provider.summary') }}
+            </p>
+            <div
+              class="flex w-full flex-col gap-4 overflow-hidden rounded-16 bg-background-default p-4"
+            >
+              <div class="flex items-center gap-3">
+                <app-content-group
+                  :title="t('purchase.select_provider.youre_paying')"
+                  class="flex-1"
+                />
+                <app-content-group
+                  :title="formattedCrypto"
+                  :description="cryptoFiat ? `≈ ${cryptoFiat}` : undefined"
+                  align="right"
+                  class="flex-1"
+                />
+                <app-token-logo
+                  :url="tokenIcon"
+                  :symbol="cryptoSymbol"
+                  width="w-10"
+                  height="h-10"
+                  no-shadow
+                />
+              </div>
+              <app-divider variant="alternative" class="-my-1" />
+              <div class="flex items-center gap-3">
+                <app-content-group
+                  :title="t('purchase.select_provider.expected_to_receive')"
+                  class="flex-1"
+                />
+                <app-content-group
+                  :title="formattedFiat"
+                  align="right"
+                  class="flex-1"
+                />
+                <app-token-logo
+                  :url="getFiatIcon(quote.fiat_currency)"
+                  :symbol="quote.fiat_currency"
+                  cover
+                  width="w-10"
+                  height="h-10"
+                  no-shadow
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <p class="text-label-base text-text-default">
+              {{ t('purchase.sell.network_fee') }}
+            </p>
+            <app-select-tx-fee :reset-to-default="false" dropdown />
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center gap-4">
+          <app-base-button
+            class="w-full"
+            :disabled="quoteExpired"
+            @click="onContinue"
+          >
+            {{ t('purchase.sell.provider.confirm') }}
+          </app-base-button>
+          <purchase-quote-status
+            :quote-countdown="quoteCountdown"
+            :quote-expired="quoteExpired"
+            :cooldown-seconds="cooldownSeconds"
           />
         </div>
-
-        <!-- Summary -->
-        <div class="flex flex-col gap-2">
-          <div class="flex items-center justify-between">
-            <span class="text-s-12 text-text-subtle leading-[18px]">
-              {{ t('purchase.sell.provider.youll_send') }}
-            </span>
-            <span class="text-label-xs">
-              {{ formattedCrypto }}
-            </span>
-          </div>
-          <app-divider class="-my-1" />
-          <div class="flex items-center justify-between">
-            <span class="text-s-12 text-text-subtle leading-[18px]">
-              {{ t('purchase.sell.provider.youll_receive') }}
-            </span>
-            <span class="text-label-xs">
-              {{ formattedFiat }}
-            </span>
-          </div>
-          <app-divider class="-my-1" />
-        </div>
-
-        <!-- Quote freshness -->
-        <p
-          v-if="cooldownSeconds !== null"
-          class="text-text-error text-s-12 text-center -my-4"
-          aria-live="polite"
-        >
-          {{ t('purchase.quote.rate_limited', { seconds: cooldownSeconds }) }}
-        </p>
-        <p
-          v-else-if="quoteExpired"
-          class="text-text-subtle text-s-12 text-center -my-4"
-          aria-live="polite"
-        >
-          {{ t('purchase.quote.expired_refreshing') }}
-        </p>
-        <p
-          v-else-if="quoteCountdown"
-          class="text-text-subtle text-s-12 text-center -my-4"
-        >
-          {{ t('purchase.quote.updates_in', { time: quoteCountdown }) }}
-        </p>
-
-        <!-- Continue CTA -->
-        <app-base-button
-          class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
-          :disabled="quoteExpired"
-          @click="onContinue"
-        >
-          <span class="flex items-center justify-center gap-2">
-            {{ t('purchase.sell.provider.continue') }}
-            <AppIcon
-              name="arrow-top-right-on-square"
-              variant="filled"
-              size="s"
-              class="flex-none"
-            />
-          </span>
-        </app-base-button>
-        <p class="text-text-subtle text-s-12 text-center -mt-5">
-          {{
-            t('purchase.select_provider.redirect', {
-              provider: providerNameFormatted,
-            })
-          }}
-        </p>
       </template>
     </div>
   </app-modal>
@@ -126,15 +140,27 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import AppModal from '@/components/modal/AppModal.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
+import AppDropdown from '@/components/dropdown/AppDropdown.vue'
+import AppCell from '@/components/cell/AppCell.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppTag from '@/components/tag/AppTag.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
+import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
+import PurchaseQuoteStatus from './PurchaseQuoteStatus.vue'
+import { getFiatIcon } from '../helpers/purchaseIcons'
 import {
   formatFloatingPointValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
-import { getProviderLogo } from '../helpers/purchaseProviders'
+import {
+  formatProviderName,
+  getProviderIcon,
+} from '../helpers/purchaseProviders'
 import type { SellQuote } from '@/types/buyToken'
 import { analytics, SellOfferEvent, SellEventError } from '@/analytics'
 import type { SellPayloadShared, SellOfferPayload } from '@/analytics'
@@ -144,6 +170,9 @@ const props = defineProps<{
   quote: SellQuote | null
   cryptoAmount: string
   cryptoSymbol: string
+  /** Market value of the crypto being sold, in the selected fiat. */
+  cryptoFiat?: string
+  tokenIcon?: string
   isLoading: boolean
   error: string
   analyticsPayload: SellPayloadShared
@@ -208,10 +237,6 @@ const formattedFiat = computed(() => {
   return `${symbol}${formatFiatValue(props.quote.fiat_amount).value}`
 })
 
-const providerLogo = computed(() =>
-  props.quote ? getProviderLogo(props.quote.provider) : undefined,
-)
-
 const onContinue = () => {
   if (props.quoteExpired || !props.quote?.url) return
   proceeded.value = true
@@ -220,8 +245,7 @@ const onContinue = () => {
   isOpen.value = false
 }
 
-const providerNameFormatted = computed(() => {
-  const providerName = props.quote?.provider.toLowerCase() ?? ''
-  return providerName.charAt(0).toUpperCase() + providerName.slice(1)
-})
+const providerName = computed(() =>
+  props.quote ? formatProviderName(props.quote.provider) : '',
+)
 </script>

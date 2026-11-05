@@ -35,16 +35,13 @@
         "insufficient": "Not enough {symbol}"
       },
       "provider": {
-        "title": "You'll sell {amount}",
-        "youll_send": "You'll send",
-        "youll_receive": "You'll receive",
-        "continue": "Continue"
+        "review_title": "Review sell",
+        "confirm": "Confirm sell"
       }
     },
     "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
     "min": "Min",
     "max": "Max",
-    "bank": "Bank",
     "select_token": {
       "title": "Tokens",
       "subtitle": "Select one from the list",
@@ -61,19 +58,19 @@
       "no_results": "No currencies match"
     },
     "select_provider": {
-      "title": "You'll pay {amount}",
-      "subtitle": "Select one of the following providers to define how much {crypto} you'll be receiving.",
       "best_value": "Best value",
-      "youll_pay": "You'll pay",
-      "youll_receive": "You'll receive",
-      "continue": "Continue",
       "error": {
         "no_quotes": "No providers available for this selection. Try a different amount or currency."
       },
-      "redirect": "You'll be redirected to {provider} to complete your purchase."
+      "review_title": "Review buy",
+      "provider": "Purchase provider",
+      "summary": "Summary",
+      "youre_paying": "You’re paying",
+      "expected_to_receive": "Expected to receive",
+      "confirm": "Confirm buy"
     },
     "quote": {
-      "updates_in": "Quote updates in {time}",
+      "updates_in": "Quote refreshes in {time}",
       "expired_refreshing": "Quote expired — getting a new one…",
       "rate_limited": "Too many requests — retry in {seconds}s"
     }

@@ -95,6 +95,8 @@
       :quote="sellQuote"
       :crypto-amount="cryptoAmount"
       :crypto-symbol="tokenSymbol"
+      :crypto-fiat="cryptoFiatValue"
+      :token-icon="tokenIcon"
       :is-loading="isFetchingSellQuote && !sellQuote"
       :error="sellQuoteError"
       :analytics-payload="sellPayload"
@@ -116,6 +118,7 @@ import PurchaseCurrencyPicker from './components/PurchaseCurrencyPicker.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import SellProviderModal from './components/SellProviderModal.vue'
+import { getSelectedTokenIcon } from './helpers/purchaseIcons'
 import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@components/AppBaseButton.vue'
@@ -132,6 +135,7 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
+import BigNumber from 'bignumber.js'
 import { v7ToPurchaseChain, purchaseChainToChain } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
@@ -162,6 +166,7 @@ const {
   sellQuoteExpiresAt,
   exchangeRates,
   rateLimitedUntil,
+  coinImages,
 } = storeToRefs(purchaseStore)
 const { fetchPurchaseInfo, fetchSellQuote, clearSellQuote } = purchaseStore
 
@@ -244,6 +249,14 @@ const purchaseChainCode = computed<string>(
 const tokenSymbol = computed<string>(
   () =>
     selectedToken.value?.symbol ?? displayChain.value?.currencyName ?? 'ETH',
+)
+
+const tokenIcon = computed(() =>
+  getSelectedTokenIcon(
+    selectedToken.value,
+    displayChain.value,
+    coinImages.value,
+  ),
 )
 
 onMounted(() => {
@@ -444,6 +457,28 @@ const onQuickAction = (percent: string | number) => {
  * used on submit). Reads `sellQuote.fiat_amount` for the estimate
  * display and `sellQuote.url` later for the Moonpay redirect.
  * ------------------------------------------------------------------ */
+
+// Market value of the typed amount, shown under it on the review. Only with
+// the token's own price: tokenPrice falls back to the chain's native price,
+// which is right for the native coin only.
+const cryptoFiatValue = computed(() => {
+  const token = selectedToken.value
+  const hasOwnPrice =
+    !token ||
+    !!token.market_data?.price ||
+    token.symbol === displayChain.value?.currencyName
+  if (
+    !cryptoAmount.value ||
+    !hasOwnPrice ||
+    tokenPrice.value <= 0 ||
+    !fiatRate.value
+  )
+    return ''
+  const value = new BigNumber(cryptoAmount.value)
+    .times(tokenPrice.value)
+    .times(fiatRate.value)
+  return `${getCurrencySymbol(selectedFiat.value)}${formatFiatValue(value.toFixed()).value}`
+})
 
 const formattedFiatEstimate = computed(() => {
   const symbol = getCurrencySymbol(selectedFiat.value)

@@ -32,7 +32,6 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Dropdown', to: '/dev/dropdown' },
       { name: 'Footer', to: '/dev/footer' },
       { name: 'Icon', to: '/dev/icons' },
-      { name: 'InfoCell', to: '/dev/info-cell' },
       { name: 'Input', to: '/dev/input' },
       { name: 'Input Feedback', to: '/dev/input-feedback' },
       { name: 'Input Naked', to: '/dev/input-naked' },

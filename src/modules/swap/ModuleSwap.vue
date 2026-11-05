@@ -139,7 +139,6 @@
       v-model:selected-quote="selectedQuote"
       v-model:loading="txProceeding"
       @update:proceedWithSwap="proceedWithSwap"
-      @update:declineSwap="cancelSwap"
       :quotes="providers"
       :amount="fromAmount"
       :from-chain="selectedChain"
@@ -233,7 +232,6 @@ const {
   validateToAddress,
   proceedWithSwap,
   swapButton,
-  cancelSwap,
   setToChain,
   connectWalletForSwap,
   bindWatchers,

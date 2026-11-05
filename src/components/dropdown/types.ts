@@ -36,6 +36,10 @@ export const DROPDOWN_TRIGGER_CLASS: Record<
   },
 }
 
+/** Opt-in resting hairline (`bordered`); focus swaps it for the brand ring. */
+export const DROPDOWN_TRIGGER_BORDER_CLASS =
+  'ring-[0.5px] ring-inset ring-border-default'
+
 /** Focus and disabled are shared: 2px brand ring inside, content at 40%. */
 export const DROPDOWN_TRIGGER_STATE_CLASS =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand disabled:cursor-default disabled:*:opacity-40'

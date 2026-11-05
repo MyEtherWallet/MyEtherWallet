@@ -121,9 +121,6 @@
     "confirm": {
       "long": "Largo",
       "short": "Corto",
-      "title": "Confirmar {side} {symbol}",
-      "confirm-action": "Confirmar {side}",
-      "processing": "Procesando...",
       "side-label": "Dirección",
       "order-type-label": "Tipo de orden",
       "market": "Mercado",
@@ -133,14 +130,23 @@
       "margin": "Margen",
       "leverage": "Apalancamiento",
       "position-size": "Tamaño de la posición",
-      "size": "Tamaño ({symbol})",
-      "est-liquidation": "Liquidación est.",
-      "est-fee": "Comisión est. ({type})",
       "maker": "Creador",
       "taker": "Tomador",
       "take-profit": "Take Profit",
       "stop-loss": "Stop Loss",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "review-long": "Revisar long de {symbol}",
+      "review-short": "Revisar short de {symbol}",
+      "confirm-long": "Confirmar long",
+      "confirm-short": "Confirmar short",
+      "place-order-at": "Colocar orden a",
+      "take-profit-at": "Tomar ganancias a",
+      "stop-loss-at": "Stop loss a",
+      "order-size": "Tamaño de la orden",
+      "est-liquidation-price": "Precio de liquidación est.",
+      "tx-fee": "Comisión de tx",
+      "expand-breakdown": "Ver desglose",
+      "close-breakdown": "Ocultar desglose"
     },
     "amount": {
       "price-label": "Precio"

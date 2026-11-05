@@ -1,67 +1,22 @@
-import moonpayLogo from '@/assets/images/buy/icon-moonpay.svg'
-import simplexLogo from '@/assets/images/buy/icon-simplex.svg'
-import topperLogo from '@/assets/images/buy/icon-topper.svg'
-import coinbaseLogo from '@/assets/images/buy/icon-coinbase-light.svg'
-import visaLogo from '@/assets/images/buy/icon-visa.svg'
-import mastercardLogo from '@/assets/images/buy/icon-master.svg'
-import applePayLogo from '@/assets/images/buy/icon-apple-pay.svg'
-import googlePayLogo from '@/assets/images/buy/icon-google-pay-logo.svg'
-import pixLogo from '@/assets/images/buy/icon-pix-logo.svg'
-import paypalLogo from '@/assets/images/buy/icon-paypal-logo.svg'
-import venmoLogo from '@/assets/images/buy/icon-venmo-logo.svg'
-import cashappLogo from '@/assets/images/buy/icon-cash-app-logo.png'
-import bankLogo from '@/assets/images/buy/icon-bank.svg'
-import i18n from '@/i18n'
+import moonpayIcon from '@/assets/images/buy/providers/moonpay.svg'
+import simplexIcon from '@/assets/images/buy/providers/simplex.svg'
+import topperIcon from '@/assets/images/buy/providers/topper.svg'
+import coinbaseIcon from '@/assets/images/buy/providers/coinbase.svg'
 
-const providerLogoMap: Record<string, string> = {
-  MOONPAY: moonpayLogo,
-  SIMPLEX: simplexLogo,
-  TOPPER: topperLogo,
-  COINBASE: coinbaseLogo,
-  VENMO: venmoLogo,
-  CASH_APP: cashappLogo,
+/** Provider code (e.g. MOONPAY) as a display name (Moonpay). */
+export const formatProviderName = (provider: string): string => {
+  const name = provider.toLowerCase()
+  return name.charAt(0).toUpperCase() + name.slice(1)
 }
 
-export const getProviderLogo = (provider: string): string | undefined =>
-  providerLogoMap[provider]
-
-interface PaymentMethodIcon {
-  src: string
-  alt: string
+// Brand marks cropped from the providers' wordmarks onto a white square, so an
+// Avatar clips them round. Unknown providers fall back to initials.
+const PROVIDER_ICONS: Record<string, string> = {
+  MOONPAY: moonpayIcon,
+  SIMPLEX: simplexIcon,
+  TOPPER: topperIcon,
+  COINBASE: coinbaseIcon,
 }
 
-const VISA: PaymentMethodIcon = { src: visaLogo, alt: 'Visa' }
-const MASTERCARD: PaymentMethodIcon = { src: mastercardLogo, alt: 'Mastercard' }
-const APPLE_PAY: PaymentMethodIcon = { src: applePayLogo, alt: 'Apple Pay' }
-const GOOGLE_PAY: PaymentMethodIcon = { src: googlePayLogo, alt: 'Google Pay' }
-const PIX: PaymentMethodIcon = { src: pixLogo, alt: 'Pix' }
-const PAYPAL: PaymentMethodIcon = { src: paypalLogo, alt: 'PayPal' }
-const VENMO: PaymentMethodIcon = { src: venmoLogo, alt: 'Venmo' }
-const CASH_APP: PaymentMethodIcon = { src: cashappLogo, alt: 'Cash App' }
-// `alt` is resolved lazily inside `getPaymentMethodIcons` so it tracks the
-// active locale on each render rather than freezing at module load.
-const BANK: PaymentMethodIcon = { src: bankLogo, alt: 'Bank' }
-
-/**
- * Maps a quote's list of accepted payment method codes (as returned by the
- * provider API) to a deduplicated, ordered list of icons to render.
- */
-export const getPaymentMethodIcons = (
-  methods: string[],
-): PaymentMethodIcon[] => {
-  const icons: PaymentMethodIcon[] = []
-  const has = (code: string) => methods.includes(code)
-  if (has('CREDIT_CARD') || has('DEBIT_CARD') || has('CARD')) {
-    icons.push(VISA, MASTERCARD)
-  }
-  if (has('APPLE_PAY')) icons.push(APPLE_PAY)
-  if (has('GOOGLE_PAY')) icons.push(GOOGLE_PAY)
-  if (has('PIX')) icons.push(PIX)
-  if (has('PAYPAL')) icons.push(PAYPAL)
-  if (has('VENMO')) icons.push(VENMO)
-  if (has('CASH_APP')) icons.push(CASH_APP)
-  if (has('ACH') || has('ACH_BANK_ACCOUNT') || has('SEPA_OPEN_BANKING')) {
-    icons.push({ ...BANK, alt: i18n.global.t('purchase.bank') })
-  }
-  return icons
-}
+export const getProviderIcon = (provider?: string): string | undefined =>
+  provider ? PROVIDER_ICONS[provider] : undefined

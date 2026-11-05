@@ -31,10 +31,10 @@
     }
   },
   "verify-tx": {
-    "title": "Verify Transaction",
-    "description": "Double check the information before confirming the transaction.",
-    "unknown-network": "Unknown network",
-    "confirm": "Confirm and send"
+    "title": "Review send",
+    "summary": "Summary",
+    "youre-sending": "You’re sending",
+    "confirm": "Confirm send"
   },
 
   "error": {
