@@ -1,26 +1,23 @@
 <template>
-  <div v-if="isWalletConnected" class="flex flex-col w-full">
-    <div
-      class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
-    >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">
-        {{ $t('portfolio.your_balances') }}
-      </h1>
-      <!--Filter Lists-->
-      <div class="hidden lg:block">
-        <AppSegmentedControl
-          v-model="selectedFilterValue"
-          :items="allTokensFilterOptions"
-          :label="$t('portfolio.balance_menu')"
-          size="default"
-        />
-      </div>
+  <table-token-balance
+    v-if="isWalletConnected"
+    :view="selectedCryptoFilter.value"
+  >
+    <!--Filter Lists-->
+    <template #filters="{ size }">
+      <AppSegmentedControl
+        v-if="size === 'l'"
+        v-model="selectedFilterValue"
+        :items="allTokensFilterOptions"
+        :label="$t('portfolio.balance_menu')"
+        size="default"
+      />
       <app-select
+        v-else
         v-model:selected="selectedCryptoFilter"
         :options="allTokensFilterOptions"
         position="right-0"
         :placeholder="$t('portfolio.balance_menu')"
-        class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">
           <div
@@ -45,23 +42,13 @@
           </div>
         </template>
       </app-select>
-    </div>
-
-    <app-sheet :is-elivated="false" sheet-class="py-4 !px-2 min-h-[200px] ">
-      <table-token-balance
-        v-if="showTableTokens"
-        :view="selectedCryptoFilter.value"
-      />
-      <div v-else class="text-center my-10">{{ $t('common.coming_soon') }}</div>
-    </app-sheet>
-  </div>
+    </template>
+  </table-token-balance>
 </template>
-
 <script lang="ts" setup>
 import TableTokenBalance from './components/balances/TableTokenBalance.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
 import { computed, ref, watch } from 'vue'
-import AppSheet from '@/components/AppSheet.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { useI18n } from 'vue-i18n'
 import { useWalletStore } from '@/stores/walletStore'
@@ -110,15 +97,6 @@ const selectedCryptoFilter = computed<BalanceFilterOption>({
   set: option => {
     selectedFilterValue.value = option.value
   },
-})
-
-const showTableTokens = computed(() => {
-  return (
-    selectedCryptoFilter.value.value === 'all' ||
-    selectedCryptoFilter.value.value === 'watchlist' ||
-    selectedCryptoFilter.value.value === 'custom' ||
-    selectedCryptoFilter.value.value === 'stocks'
-  )
 })
 
 watch(isBitcoinChain, (newVal: boolean) => {

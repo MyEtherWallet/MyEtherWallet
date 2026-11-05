@@ -6,13 +6,13 @@ import type { IconSize } from '@/components/icon/icons'
  * Icon` 1519:7534). AppBtnIcon and its /dev preview read from here so a token
  * tweak lands in one place.
  *
- * Box and glyph are tied per size: S 22/16 (3px pad), M 32/24, L 40/32 (4px
- * pad). S is off the size scale, a documented Figma exception like avatar XS
- * 18 / badge 22, so don't round it to 24.
+ * Box and glyph are tied per size: S 32/16 and M 40/24 (8px pad), L 40/32
+ * (4px pad). The box is fixed, so slot content of any size stays centred in
+ * the same footprint.
  */
 export const BTN_ICON_SIZE = {
-  s: { box: 'size-[22px]', icon: 'xxs' },
-  m: { box: 'size-8', icon: 'm' },
+  s: { box: 'size-8', icon: 'xxs' },
+  m: { box: 'size-10', icon: 'm' },
   l: { box: 'size-10', icon: 'l' },
 } as const satisfies Record<string, { box: string; icon: IconSize }>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
+import type { BtnIconSize } from '@components/btnIconTypes'
 
 /**
  * Cell watchlist toggle (design library, Figma `_watchlist toggle` 2290:39411).
@@ -9,9 +10,13 @@ import AppBtnIcon from '@components/AppBtnIcon.vue'
  * works in any row. Fully controlled: the row passes the watched state and
  * runs its watchlist action on `update:modelValue` (or binds `v-model`).
  * Clicks and Enter/Space keydowns stop here, so a clickable row underneath
- * never fires. `loading` disables it (Button Icon's 40% opacity).
+ * never fires. `loading` disables it (Button Icon's 40% opacity). `size` is
+ * the Button Icon size, S by default.
  */
-const props = defineProps<{ modelValue: boolean; loading?: boolean }>()
+const props = withDefaults(
+  defineProps<{ modelValue: boolean; loading?: boolean; size?: BtnIconSize }>(),
+  { size: 's' },
+)
 const emit = defineEmits<{ 'update:modelValue': [on: boolean] }>()
 
 const { t } = useI18n()
@@ -24,7 +29,7 @@ const toggle = (e: MouseEvent) => {
 
 <template>
   <AppBtnIcon
-    size="s"
+    :size="size"
     icon="star"
     :icon-variant="modelValue ? 'filled' : 'stroke'"
     :class="modelValue ? 'text-icon-brand' : 'text-icon-default'"

@@ -48,6 +48,12 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'accordion',
+              name: 'DevAccordion',
+              component: () => import('@/views/ViewAccordionShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'action-bar',
               name: 'DevActionBar',
               component: () => import('@/views/ViewActionBarShowcase.vue'),
@@ -132,6 +138,18 @@ const DefaultRoutes = <RouteNameCollection>[
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
+              path: 'list',
+              name: 'DevList',
+              component: () => import('@/views/ViewListShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'menu-list',
+              name: 'DevMenuList',
+              component: () => import('@/views/ViewMenuListShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
               path: 'navbar',
               name: 'DevNavbar',
               component: () => import('@/views/ViewNavbarShowcase.vue'),
@@ -141,6 +159,12 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'picker',
               name: 'DevPicker',
               component: () => import('@/views/ViewPickerShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'dropdown',
+              name: 'DevDropdown',
+              component: () => import('@/views/ViewDropdownShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -178,6 +202,12 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'pagination',
               name: 'DevPagination',
               component: () => import('@/views/ViewPaginationShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'table',
+              name: 'DevTable',
+              component: () => import('@/views/ViewTableShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
