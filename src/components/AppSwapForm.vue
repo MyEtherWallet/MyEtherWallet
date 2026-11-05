@@ -11,6 +11,7 @@
  * CTA (recipient address, alerts); the `cta` slot replaces the button for the
  * connect-wallet / no-balance states.
  */
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppChip from '@/components/chip/AppChip.vue'
@@ -19,8 +20,9 @@ import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import SelectChainPicker from '@/components/select_chain/SelectChainPicker.vue'
 import { type NewTokenInfo } from '@/stores/swapStore'
 import { type Chain } from '@/mew_api/types'
+import type { TokenSelectorNetwork } from '@/components/token_selector/types'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     fromTokens: NewTokenInfo[] | null
     toTokens: NewTokenInfo[] | null
@@ -81,6 +83,19 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const QUICK_ACTIONS = [25, 50, 75, 100]
 const chipLabel = (pct: number) => (pct === 100 ? t('common.max') : `${pct}%`)
+
+// The to token modal offers the to picker's chains and reports through it.
+const toNetworks = computed<TokenSelectorNetwork[]>(() =>
+  props.toChains.map(({ name, nameLong, icon }) => ({
+    value: name,
+    name: nameLong,
+    icon,
+  })),
+)
+const selectToNetwork = (name: string | null) => {
+  const chain = props.toChains.find(item => item.name === name)
+  if (chain) emit('update:toChain', chain)
+}
 </script>
 
 <template>
@@ -135,7 +150,10 @@ const chipLabel = (pct: number) => (pct === 100 ? t('common.max') : `${pct}%`)
         :is-estimate="true"
         :is-from-view="false"
         :is-pristine="isPristine"
+        :networks="showToNetwork ? toNetworks : []"
+        :network="toChain?.name ?? null"
         sort-context="swap"
+        @update:network="selectToNetwork"
       >
         <template #header>
           <SelectChainPicker

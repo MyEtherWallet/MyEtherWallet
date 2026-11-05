@@ -24,6 +24,8 @@
           :sort-context="sortContext"
           :disabled-tokens="disabledTokens"
           :disabled-group-title="disabledGroupTitle"
+          :networks="networks"
+          v-model:network="network"
           @open:select-token="setIsOpenSelectToken"
           @select:token="emit('select:token', $event)"
         />
@@ -61,6 +63,7 @@ import { type NewTokenInfo } from '@/stores/swapStore'
 import { useDebounceFn } from '@vueuse/core'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { useI18n } from 'vue-i18n'
+import type { TokenSelectorNetwork } from '@/components/token_selector/types'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: storeLoading, isWalletConnected } =
@@ -114,6 +117,11 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  // Network dropdown in the token modal; empty hides it.
+  networks: {
+    type: Array as PropType<TokenSelectorNetwork[]>,
+    default: () => [],
+  },
 })
 
 //String will be returned when input is cleared --> ''
@@ -123,6 +131,7 @@ const amount = defineModel('amount', {
 })
 
 const selectedToken = defineModel<NewTokenInfo>('selectedToken')
+const network = defineModel<string | null>('network', { default: null })
 
 // Forwarded from the token-select child: fires only on an explicit user pick,
 // unlike v-model:selected-token which also updates on programmatic defaulting.

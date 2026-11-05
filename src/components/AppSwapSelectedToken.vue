@@ -29,392 +29,62 @@
       </template>
     </AppPicker>
   </slot>
-  <app-modal
+  <AppTokenSelectorModal
     v-model="showAllTokens"
+    v-model:search="searchInput"
+    v-model:network="network"
     :title="
       isFromView ? $t('select_token.swap_from') : $t('select_token.swap_to')
     "
-  >
-    <div
-      class="min-h-[500px] lg:min-h-[90vh] max-h-[90vh] xs:max-h-[500px] px-4 sm:px-6 pb-6 overflow-y-auto mew-scrollbar"
-      ref="scrollContainer"
-    >
-      <div class="sticky top-0 bg-white z-20 pt-2">
-        <div
-          class="flex gap-2 justify-between items-center mb-2 rounded-full bg-background-formfield"
-        >
-          <app-searchbar
-            v-model="searchInput"
-            variant="outline"
-            class="grow"
-            :placeholder="$t('select_token.search')"
-          />
-          <!--SORT-->
-          <app-pop-up-menu :placeholder="$t('common.sort')">
-            <template #menu-button="{ toggleMenu }">
-              <button
-                class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center mr-1"
-                @click="toggleMenu"
-              >
-                <span class="mr-2">{{ activeSortLabel }}</span>
-                <AppIcon
-                  name="arrow-long-up"
-                  variant="filled"
-                  size="xxs"
-                  v-if="activeSortDirection === SortDirection.ASC"
-                  class="shrink-0"
-                />
-                <AppIcon
-                  name="arrow-long-down"
-                  variant="filled"
-                  size="xxs"
-                  v-else
-                  class="shrink-0"
-                />
-              </button>
-            </template>
-            <template #menu-content="{ toggleMenu }">
-              <div class="py-4 flex flex-col w-[200px] gap-1">
-                <div class="flex items-center justify-between mb-1 mx-3">
-                  <p class="text-s-17 font-medium ml-3 whitespace-nowrap">
-                    {{ $t('common.sort_by') }}
-                  </p>
-                  <app-btn-icon-close @close="toggleMenu" />
-                </div>
-                <app-divider class="mb-1" />
-                <button
-                  v-for="option in sortOptions"
-                  :key="option.value"
-                  :class="[
-                    option.value === activeSortValue
-                      ? 'bg-background-default'
-                      : '',
-                    'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-20 text-s-15 font-medium whitespace-nowrap',
-                  ]"
-                  :id="option.value"
-                  @click="setActiveSort(option.value)"
-                >
-                  <p class="capitalize">{{ option.label }}</p>
-                  <div
-                    v-if="activeSortValue === option.value"
-                    class="ml-auto pl-2"
-                  >
-                    <AppIcon
-                      name="arrow-long-up"
-                      variant="filled"
-                      size="s"
-                      v-if="activeSortDirection === SortDirection.ASC"
-                      class="text-text-brand"
-                    />
-                    <AppIcon
-                      name="arrow-long-down"
-                      variant="filled"
-                      size="s"
-                      v-else
-                      class="text-text-brand"
-                    />
-                  </div>
-                </button>
-              </div>
-            </template>
-          </app-pop-up-menu>
-        </div>
-        <app-divider class="-mt-1 mb-1" />
-      </div>
-
-      <!-- Stablecoins & Recently searched, pinned to the top of the results -->
-      <div
-        v-if="recentlySearchedResults.length || stablecoinResults.length"
-        class="mb-3"
-      >
-        <div v-if="recentlySearchedResults.length" class="mb-3">
-          <p class="text-s-12 font-medium text-text-subtle mb-1.5 px-2">
-            {{ $t('select_token.recently_viewed') }}
-          </p>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button
-              v-for="token in recentlySearchedResults"
-              :key="`recent-${token.address}`"
-              type="button"
-              class="flex items-center hoverNoBG bg-background-default rounded-full py-1 pl-1 pr-3 transition-colors"
-              @click="setSelectedToken(token)"
-            >
-              <app-token-logo
-                :url="token.logoURI"
-                :symbol="token.symbol"
-                :address="
-                  networkName
-                    ? { address: token.address, network: networkName }
-                    : undefined
-                "
-                width="w-6"
-                height="h-6"
-                :no-shadow="noLogoShadow"
-                class="mr-1.5 shrink-0"
-              />
-              <app-token-symbol
-                :symbol="token.symbol"
-                :address="
-                  networkName
-                    ? { address: token.address, network: networkName }
-                    : undefined
-                "
-              />
-            </button>
-          </div>
-        </div>
-
-        <div v-if="stablecoinResults.length">
-          <p class="text-s-12 font-medium text-text-subtle mb-1.5 px-2">
-            {{ $t('crypto.stablecoins') }}
-          </p>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button
-              v-for="token in stablecoinResults"
-              :key="`stablecoin-${token.address}`"
-              type="button"
-              class="flex items-center hoverNoBG bg-background-default rounded-full py-1 pl-1 pr-3 transition-colors"
-              @click="setSelectedToken(token)"
-            >
-              <app-token-logo
-                :url="token.logoURI"
-                :symbol="token.symbol"
-                :address="
-                  networkName
-                    ? { address: token.address, network: networkName }
-                    : undefined
-                "
-                width="w-6"
-                height="h-6"
-                :no-shadow="noLogoShadow"
-                class="mr-1.5 shrink-0"
-              />
-              <app-token-symbol
-                :symbol="token.symbol"
-                :address="
-                  networkName
-                    ? { address: token.address, network: networkName }
-                    : undefined
-                "
-              />
-            </button>
-          </div>
-        </div>
-
-        <app-divider class="mt-2 -mb-1" />
-      </div>
-
-      <div v-if="enabledResults.length" class="flex flex-col gap-1">
-        <button
-          v-for="token in enabledResults"
-          :key="token.address"
-          class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
-          :class="[
-            token.address === selectedToken?.address
-              ? '!bg-background-brand-subtle'
-              : 'bg-transparent hoverBGWhite',
-          ]"
-          @click="setSelectedToken(token)"
-        >
-          <div class="flex justify-between items-center w-full">
-            <div class="flex items-center">
-              <app-token-logo
-                :url="token.logoURI"
-                :symbol="token.symbol"
-                :address="
-                  networkName
-                    ? { address: token.address, network: networkName }
-                    : undefined
-                "
-                :no-shadow="noLogoShadow"
-                class="shrink-0 mr-4"
-              />
-              <div class="text-left">
-                <app-token-symbol
-                  :symbol="token.symbol"
-                  :address="
-                    networkName
-                      ? { address: token.address, network: networkName }
-                      : undefined
-                  "
-                />
-                <app-tooltip v-if="token.name.length > 10" :text="token.name">
-                  <h2 class="text-s-12 text-text-subtle whitespace-nowrap">
-                    {{ truncate(token.name, 20) }}
-                  </h2>
-                </app-tooltip>
-                <h2
-                  v-else
-                  class="text-s-12 text-text-subtle whitespace-nowrap"
-                >
-                  {{ token.name }}
-                </h2>
-              </div>
-            </div>
-            <div v-if="token.price !== 0" class="text-right">
-              <div v-if="isFromView && isWalletConnected">
-                <p class="font-medium text-black">
-                  {{ currencySymbol }}
-                  {{ formatUsdBalance(token.usd_balance) }}
-                </p>
-                <p class="text-text-subtle text-s-12">
-                  {{ getBalance(token?.balance || '0', token.decimals) }}
-                  {{ truncate(token.symbol, 7) }}
-                </p>
-              </div>
-              <div v-else>
-                <p class="font-medium text-black">
-                  {{ currencySymbol }}
-                  {{ token.price ? formatFiat(token.price).value : '0.00' }}
-                </p>
-                <p
-                  v-if="
-                    isWalletConnected &&
-                    token.balance &&
-                    token.usd_balance > 0
-                  "
-                  class="text-text-subtle text-s-12"
-                >
-                  {{ getBalance(token?.balance || '0', token.decimals) }}
-                  {{ truncate(token.symbol, 7) }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </button>
-      </div>
-      <div v-else-if="!disabledResults.length">
-        <div
-          class="flex justify-center items-center h-[400px] text-text-placeholder"
-        >
-          <p v-if="searchInput !== ''">
-            {{ $t('select_token.no_tokens_match') }}
-          </p>
-          <p v-else>
-            {{ $t('select_token.no_tokens_available') }}
-          </p>
-        </div>
-      </div>
-
-      <!-- Disabled group (e.g. "Trading paused for this session") -->
-      <div v-if="disabledResults.length" class="mt-5">
-        <p class="text-s-12 font-medium text-text-subtle mb-2 px-2">
-          {{ disabledGroupLabel }}
-        </p>
-        <div class="flex flex-col gap-1">
-          <div
-            v-for="token in disabledResults"
-            :key="token.address"
-            class="flex items-center justify-between px-2 py-3 rounded-20 opacity-50 cursor-not-allowed select-none"
-            aria-disabled="true"
-          >
-            <div class="flex items-center">
-              <app-token-logo
-                :url="token.logoURI"
-                :symbol="token.symbol"
-                :address="
-                  networkName
-                    ? { address: token.address, network: networkName }
-                    : undefined
-                "
-                :no-shadow="noLogoShadow"
-                class="shrink-0 mr-4"
-              />
-              <div class="text-left">
-                <app-token-symbol
-                  :symbol="token.symbol"
-                  :address="
-                    networkName
-                      ? { address: token.address, network: networkName }
-                      : undefined
-                  "
-                />
-                <h2 class="text-s-12 text-text-subtle whitespace-nowrap">
-                  {{ truncate(token.name, 20) }}
-                </h2>
-              </div>
-            </div>
-            <div v-if="token.price !== 0" class="text-right">
-              <p class="font-medium text-black">
-                {{ currencySymbol }}
-                {{ token.price ? formatFiat(token.price).value : '0.00' }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div
-          v-show="tokens.length > paginatedTokens.length && !searchInput"
-          class="h-11 w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-background-default rounded-full mt-1 mb-5"
-          :class="{
-            'cursor-pointer': !loadingMoreItems,
-          }"
-          @click="loadMoreItems"
-        >
-          <svg
-            v-if="loadingMoreItems"
-            aria-hidden="true"
-            class="w-6 h-6 text-text-brand animate-spin fill-white mx-auto"
-            viewBox="0 0 100 101"
-            width="24"
-            height="24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-              fill="currentColor"
-            />
-            <path
-              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-              fill="currentFill"
-            />
-          </svg>
-          <p
-            v-else
-            class="text-s-15 font-medium text-text-subtle cursor-pointer"
-          >
-            {{ $t('common.load_more') }}
-          </p>
-        </div>
-      </div>
-    </div>
-  </app-modal>
+    :items="items"
+    :quick-picks="quickPicks"
+    :recent-items="recentItems"
+    :selected-id="selectedToken?.address"
+    :sort-options="sortOptions"
+    :sort-value="activeSortValue"
+    :sort-direction="activeSortDirection"
+    :networks="networks"
+    :network-icon="currentChain?.icon"
+    :loading="!isLoaded"
+    :has-more="tokens.length > endingPagination && !searchInput"
+    :loading-more="loadingMoreItems"
+    :disabled-group-title="disabledGroupLabel"
+    @select="setSelectedToken"
+    @sort="setActiveSort($event as SortValueString)"
+    @load-more="loadMoreItems"
+  />
 </template>
 
 <script setup lang="ts">
 import { useWalletStore } from '@/stores/walletStore'
 import { type NewTokenInfo } from '@/stores/swapStore'
-import { type Ref, ref, computed, onMounted, watch } from 'vue'
+import { type PropType, ref, computed, onMounted, watch } from 'vue'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
-import AppModal from '@/components/modal/AppModal.vue'
-import AppSearchbar from './AppSearchbar.vue'
-import AppPopUpMenu from './AppPopUpMenu.vue'
-import AppBtnIconClose from './AppBtnIconClose.vue'
-import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
-// The swap token type carries no stablecoin flag, so match by symbol against the
-// shared list to surface them regardless of the connected wallet.
-import { STABLECOIN_SYMBOLS } from '@/utils/tokenCategories'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import { useI18n } from 'vue-i18n'
-import { useScroll, refDebounced } from '@vueuse/core'
+import { refDebounced } from '@vueuse/core'
 import AppTokenLogo from './AppTokenLogo.vue'
 import { formatUnits } from 'viem'
-import AppTokenSymbol from './AppTokenSymbol.vue'
 import { analytics, TradeClickSortEvent, SwapClickSortEvent } from '@/analytics'
-
-import AppIcon from '@/components/icon/AppIcon.vue'
-import AppDivider from '@/components/divider/AppDivider.vue'
 import AppPicker from '@/components/picker/AppPicker.vue'
+import AppTokenSelectorModal from '@/components/token_selector/AppTokenSelectorModal.vue'
+import {
+  pickQuickPicks,
+  tokenRowAccessory,
+} from '@/components/token_selector/tokenSelector'
+import type {
+  TokenSelectorItem,
+  TokenSelectorNetwork,
+  TokenSelectorSortDirection,
+} from '@/components/token_selector/types'
+
 const props = defineProps({
   selectedToken: {
     type: Object as () => NewTokenInfo,
@@ -449,14 +119,18 @@ const props = defineProps({
     type: String,
     required: false,
   },
-  noLogoShadow: {
-    type: Boolean,
-    default: false,
+  // Network dropdown inside the modal (Bridge "to"); empty hides it.
+  networks: {
+    type: Array as PropType<TokenSelectorNetwork[]>,
+    default: () => [],
   },
 })
 
+// The dropdown's chain name; the parent switches the list on update.
+const network = defineModel<string | null>('network', { default: null })
+
 const { t } = useI18n()
-const { formatFiat, currencySymbol } = useCurrency()
+const { formatFiat } = useCurrency()
 const emit = defineEmits<{
   'update:selectedToken': [token: NewTokenInfo]
   // Fired only on an explicit user pick from the list (not on programmatic
@@ -474,7 +148,11 @@ const {
 } = storeToRefs(store)
 
 const chainsStore = useChainsStore()
-const { isLoaded } = storeToRefs(chainsStore)
+const { isLoaded, allChains } = storeToRefs(chainsStore)
+// allChains, not chains: the bridge "to" side can be Solana.
+const currentChain = computed(() =>
+  allChains.value.find(chain => chain.name === props.networkName),
+)
 
 const recentlyViewedTokensStore = useRecentlyViewedTokensStore()
 const { recentlyViewedCrypto } = storeToRefs(recentlyViewedTokensStore)
@@ -501,8 +179,6 @@ const searchInput = ref('')
 // `searchInput` keeps the input field responsive.
 const debouncedSearchInput = refDebounced(searchInput, 250)
 const loadingMoreItems = ref(false)
-const scrollContainer = ref<HTMLElement | null>(null)
-const { y } = useScroll(scrollContainer)
 
 onMounted(() => {
   if (!props.isFromView || !isWalletConnected.value) {
@@ -513,7 +189,7 @@ onMounted(() => {
       activeSortValue.value = SortValueString.RANK
     } else {
       activeSortValue.value = SortValueString.PRICE
-      activeSortDirection.value = SortDirection.DESC
+      activeSortDirection.value = 'desc'
     }
   }
 })
@@ -525,7 +201,9 @@ watch(
     if (tokens.value.length > 0) {
       // Prefer an enabled token; never default-select a disabled one. Fall back
       // to the full list only when nothing is enabled.
-      const top = enabledResults.value[0] ?? searchResults.value[0]
+      const top =
+        searchResults.value.find(token => !isTokenDisabled(token)) ??
+        searchResults.value[0]
       if (top) emit('update:selectedToken', top)
     }
   },
@@ -540,9 +218,6 @@ watch(
 
 // pagination
 const endingPagination = ref(100)
-const paginatedTokens: Ref<NewTokenInfo[]> = computed(() => {
-  return tokens.value.slice(0, endingPagination.value)
-})
 
 /** -------------------
  *   Search & Sort
@@ -592,17 +267,8 @@ const sortOptions = computed(() => {
   return [...shared, ...marketOptions]
 })
 
-enum SortDirection {
-  ASC = 'asc',
-  DESC = 'desc',
-}
-
 const activeSortValue = ref<SortValueString>(SortValueString.RANK)
-const activeSortLabel = computed(() => {
-  const option = sortOptions.value.find(o => o.value === activeSortValue.value)
-  return option?.label || ''
-})
-const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
+const activeSortDirection = ref<TokenSelectorSortDirection>('asc')
 
 const setActiveSort = (value: SortValueString) => {
   if (props.sortContext === 'trade') {
@@ -618,9 +284,7 @@ const setActiveSort = (value: SortValueString) => {
   }
   if (value === activeSortValue.value) {
     activeSortDirection.value =
-      activeSortDirection.value === SortDirection.ASC
-        ? SortDirection.DESC
-        : SortDirection.ASC
+      activeSortDirection.value === 'asc' ? 'desc' : 'asc'
   } else {
     activeSortValue.value = value
     const isNumericSort = [
@@ -631,9 +295,7 @@ const setActiveSort = (value: SortValueString) => {
       SortValueString.USD,
       SortValueString.BALANCE,
     ].includes(value)
-    activeSortDirection.value = isNumericSort
-      ? SortDirection.DESC
-      : SortDirection.ASC
+    activeSortDirection.value = isNumericSort ? 'desc' : 'asc'
   }
 }
 
@@ -641,10 +303,18 @@ interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
   market_cap: number
   volume24h: number
+  change24h?: number
 }
 
-// Enriched token list (adds usd_balance / market_cap / volume24h). Shared by the
-// main search results as well as the trending / recently searched suggestions.
+const marketByContract = computed(
+  () =>
+    new Map(
+      walletTokens.value.map(wt => [wt.contract?.toLowerCase(), wt] as const),
+    ),
+)
+
+// Enriched token list (adds usd_balance and the wallet's market data). Shared by
+// the main results, the quick picks and the recently viewed rows.
 const enrichedTokens = computed<TokenBalanceWithUsd[]>(() => {
   return tokens.value.map(token => {
     const usdBalance = BigNumber(
@@ -656,18 +326,14 @@ const enrichedTokens = computed<TokenBalanceWithUsd[]>(() => {
         ),
       ),
     ).toNumber()
+    const market = marketByContract.value.get(token.address?.toLowerCase())
     return {
       ...token,
       usd_balance: usdBalance,
       price: token.price || 0,
-      market_cap:
-        walletTokens.value.find(
-          wt => wt.contract?.toLowerCase() === token.address?.toLowerCase(),
-        )?.market_cap ?? 0,
-      volume24h:
-        walletTokens.value.find(
-          wt => wt.contract?.toLowerCase() === token.address?.toLowerCase(),
-        )?.volume_24h ?? 0,
+      market_cap: market?.market_cap ?? 0,
+      volume24h: market?.volume_24h ?? 0,
+      change24h: market?.price_change_percentage_24h,
     }
   })
 })
@@ -709,60 +375,77 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
   return combinedSorted.slice(0, endingPagination.value)
 })
 
-// Disabled-token grouping: split the visible results into the normal
-// (selectable) list and a disabled group rendered at the bottom.
+// Disabled tokens render under the modal's disabled group at the bottom.
 const disabledSet = computed(
   () => new Set(props.disabledTokens.map(a => a.toLowerCase())),
 )
 const isTokenDisabled = (token: NewTokenInfo) =>
   disabledSet.value.has(token.address?.toLowerCase())
-const enabledResults = computed(() =>
-  searchResults.value.filter(t => !isTokenDisabled(t)),
-)
-const disabledResults = computed(() =>
-  searchResults.value.filter(t => isTokenDisabled(t)),
-)
 const disabledGroupLabel = computed(
   () => props.disabledGroupTitle || t('trade.trading_paused_session'),
 )
 
-// Stablecoins & recently searched suggestions, pinned above the results and
-// shown whenever the picker is open (including while the user is searching)
-const SUGGESTION_LIMIT = 6
+const getBalance = (value: string, decimals: number) => {
+  return formatFloatingPointValue(formatUnits(BigInt(value), decimals)).value
+}
 
-// Stablecoins available on the current chain, most liquid (24H volume) first.
-const stablecoinResults = computed<TokenBalanceWithUsd[]>(() => {
-  const stables = sortObjectArrayNumber(
-    enrichedTokens.value,
-    'volume24h',
-    SortDirection.DESC,
-  ).filter(
-    token =>
-      STABLECOIN_SYMBOLS.has(token.symbol?.toUpperCase()) &&
-      !isTokenDisabled(token),
-  )
+// Holdings on the from side (and for any held token), the price otherwise.
+// Tokens without a price show nothing on the right, as before.
+const rowAccessory = (token: TokenBalanceWithUsd) => {
+  if (!token.price) return undefined
+  const showBalance =
+    isWalletConnected.value && (props.isFromView || token.usd_balance > 0)
+  return tokenRowAccessory({
+    balanceFiat: showBalance
+      ? formatFiat(token.usd_balance).display
+      : undefined,
+    balance: showBalance
+      ? `${getBalance(token.balance || '0', token.decimals)} ${truncate(token.symbol, 7)}`
+      : undefined,
+    price: formatFiat(token.price).display,
+    change: token.change24h,
+  })
+}
 
-  // On the "from" (sell) side only surface stables the user actually holds,
-  // ordered by holding size — so the category is hidden when you have none.
-  if (props.isFromView) {
-    return sortObjectArrayNumber(
-      stables.filter(token => Number(token.balance ?? 0) > 0),
-      'usd_balance',
-      SortDirection.DESC,
-    ).slice(0, SUGGESTION_LIMIT)
-  }
-
-  return stables.slice(0, SUGGESTION_LIMIT)
+const toItem = (
+  token: TokenBalanceWithUsd,
+): TokenSelectorItem<TokenBalanceWithUsd> => ({
+  id: token.address,
+  symbol: token.symbol,
+  name: token.name,
+  logo: token.logoURI,
+  disabled: isTokenDisabled(token),
+  rightAccessory: rowAccessory(token),
+  raw: token,
 })
 
-// Recently searched reuses the shared "recently viewed" store, resolving each
-// entry against the current chain's tokens (by coingecko id, falling back to
-// address) so only selectable tokens are shown.
-const recentlySearchedResults = computed<TokenBalanceWithUsd[]>(() => {
+const items = computed(() => searchResults.value.map(toItem))
+
+// Rank order so a duplicate symbol resolves to the better-ranked token; the
+// bare rows keep the scan cheap and only the picks get formatted.
+const quickPicks = computed(() =>
+  pickQuickPicks(
+    sortObjectArrayNumber(enrichedTokens.value, 'rank', 'asc').map(token => ({
+      id: token.address,
+      symbol: token.symbol,
+      name: token.name,
+      disabled: isTokenDisabled(token),
+      raw: token,
+    })),
+    currentChain.value?.currencyName ?? '',
+  ).map(({ raw }) => toItem(raw)),
+)
+
+const RECENT_LIMIT = 6
+
+// Recently viewed reuses the shared store, resolving each entry against the
+// current chain's tokens (by coingecko id, falling back to address) so only
+// selectable tokens are shown.
+const recentItems = computed(() => {
   const resolved: TokenBalanceWithUsd[] = []
   const seen = new Set<string>()
   for (const entry of recentlyViewedCrypto.value) {
-    if (resolved.length >= SUGGESTION_LIMIT) break
+    if (resolved.length >= RECENT_LIMIT) break
     const match = enrichedTokens.value.find(
       token =>
         (token.cgId && token.cgId === entry.id) ||
@@ -777,7 +460,7 @@ const recentlySearchedResults = computed<TokenBalanceWithUsd[]>(() => {
       resolved.push(match)
     }
   }
-  return resolved
+  return resolved.map(toItem)
 })
 
 const loadMoreItems = () => {
@@ -786,11 +469,11 @@ const loadMoreItems = () => {
   setTimeout(() => {
     loadingMoreItems.value = false
     endingPagination.value += 100
-    y.value -= 600
   }, 500)
 }
 
-const setSelectedToken = (token: NewTokenInfo) => {
+const setSelectedToken = ({ raw }: TokenSelectorItem) => {
+  const token = raw as NewTokenInfo
   recentlyViewedTokensStore.addToken({
     id: token.cgId || token.address,
     symbol: token.symbol,
@@ -800,14 +483,5 @@ const setSelectedToken = (token: NewTokenInfo) => {
   })
   emit('update:selectedToken', token)
   emit('select:token', token)
-  showAllTokens.value = false
-}
-
-const formatUsdBalance = (_value: number) => {
-  return formatFiat(_value).value
-}
-
-const getBalance = (value: string, decimals: number) => {
-  return formatFloatingPointValue(formatUnits(BigInt(value), decimals)).value
 }
 </script>
