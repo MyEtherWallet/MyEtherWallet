@@ -379,8 +379,8 @@ onFetchResponse(() => {
     feesReady.value = true
     const _gasPriceType = gasPriceType.value as GasPriceType
     const nativeFeeValue =
-      feeEstmates.value[_gasPriceType].nativeValue ||
-      feeEstmates.value[_gasPriceType].nativeFeeTotal ||
+      feeEstmates.value[_gasPriceType]?.nativeValue ||
+      feeEstmates.value[_gasPriceType]?.nativeFeeTotal ||
       0
     const txDataValue =
       (txData.value as EstimatesRequestBody).value ?? P2WPKH_DUST

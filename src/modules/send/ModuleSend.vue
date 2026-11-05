@@ -412,9 +412,7 @@ const amountToHex = computed(() => {
 })
 
 const getTxRequestBody = ():
-  | EstimatesRequestBody
-  | BitcoinQuotesRequestBody
-  | undefined => {
+  EstimatesRequestBody | BitcoinQuotesRequestBody | undefined => {
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&
@@ -592,22 +590,24 @@ const exceedsBalance = (
 }
 
 // Get quotes:
+// Only the latest request may write gasFees, so a slower, superseded
+// response can't replace the fees of the quote the tx is built from.
+let latestGasQuoteRequest = 0
 const getGasFeeQuotes = async () => {
+  const request = ++latestGasQuoteRequest
   try {
     gasFeeError.value = ''
     const body = getTxRequestBody()
     if (!body || !tokenSelected.value) return
     gasFeeTxEstimate.value = body
     isLoadingFees.value = true
-    if (isEvmChain.value) {
-      gasFees.value = await wallet.value?.getGasFee?.(
-        gasFeeTxEstimate.value as EstimatesRequestBody,
-      )
-    } else {
-      gasFees.value = (await wallet.value?.getBtcGasFee?.(
-        gasFeeTxEstimate.value as BitcoinQuotesRequestBody,
-      )) as QuotesResponse
-    }
+    const fees = isEvmChain.value
+      ? await wallet.value?.getGasFee?.(body as EstimatesRequestBody)
+      : ((await wallet.value?.getBtcGasFee?.(
+          body as BitcoinQuotesRequestBody,
+        )) as QuotesResponse)
+    if (request !== latestGasQuoteRequest) return undefined
+    gasFees.value = fees
     //Check if user has enough balance to cover gas fees
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
@@ -618,6 +618,7 @@ const getGasFeeQuotes = async () => {
     isLoadingFees.value = false
     return gasFees.value
   } catch (e) {
+    if (request !== latestGasQuoteRequest) return undefined
     if (e instanceof Error) {
       if (e.message) {
         const isInsufficientFundsError = e.message
@@ -721,25 +722,47 @@ const handleSubmit = async () => {
 // A fee picked on the review changes the tx, so rebuild (and re-sign) it
 // before it can be confirmed. Only the latest pick may update it.
 let latestFeeChange = 0
+// Each opening of the review is its own session: work left over from an
+// earlier one must not touch the current review.
+let reviewSession = 0
+watch(openTxModal, open => {
+  if (open) reviewSession++
+})
+// Native MAX sends balance minus fee, and the panel takes that fee from the
+// quote, so a new quote can move the amount again. Re-quote until it holds.
+const MAX_REQUOTES = 3
 watch(selectedFee, async () => {
   if (!openTxModal.value || !gasFees.value?.quoteId) return
   const change = ++latestFeeChange
-  const isStale = () => change !== latestFeeChange || !openTxModal.value
+  const session = reviewSession
+  const isStale = () =>
+    change !== latestFeeChange ||
+    session !== reviewSession ||
+    !openTxModal.value
   isPreparingTx.value = true
   try {
     let quoteId = gasFees.value.quoteId
     if (isMaxSelected.value && isNativeTokenSelected.value) {
-      // Native MAX sends balance minus fee: a new tier changes the amount, so
-      // the tx needs a fresh quote for it.
-      await nextTick()
-      await applyMaxAmount()
-      const quote = await getGasFeeQuotes()
-      if (isStale()) return
-      if (!quote || gasFeeError.value) {
+      let settled = false
+      for (let i = 0; i < MAX_REQUOTES && !settled; i++) {
+        await nextTick()
+        await applyMaxAmount()
+        const quotedAmount = amount.value
+        const quote = await getGasFeeQuotes()
+        if (isStale()) return
+        if (!quote || gasFeeError.value) {
+          openTxModal.value = false
+          return
+        }
+        quoteId = quote.quoteId
+        await nextTick()
+        await applyMaxAmount()
+        settled = amount.value === quotedAmount
+      }
+      if (!settled) {
         openTxModal.value = false
         return
       }
-      quoteId = quote.quoteId
     } else {
       const body = gasFeeTxEstimate.value
       if (body && exceedsBalance(body)) {

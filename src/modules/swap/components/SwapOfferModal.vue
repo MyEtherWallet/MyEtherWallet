@@ -248,7 +248,7 @@
         class="w-full"
         @click="proceedWithSwap"
         :is-loading="loadingModel"
-        :disabled="!!gasFeeError || !swapGasFeeQuote?.quoteId"
+        :disabled="!canProceed"
       >
         {{ btnText }}
       </app-base-button>
@@ -278,6 +278,7 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { analytics, SwapEvent, type SwapPayloadShared } from '@/analytics'
 import { useWalletStore } from '@/stores/walletStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
 import { WalletType } from '@/providers/types'
 
@@ -322,6 +323,7 @@ enum DisplayProviderName {
 
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
+const { gasPriceType } = storeToRefs(useGlobalStore())
 
 const model = defineModel('swapOfferOpen', {
   type: Boolean,
@@ -567,12 +569,21 @@ watch(
 )
 
 // Let parent know when the swap is to be proceeded
+// A quote can omit fee tiers; the selected one must be in it, or the tx would
+// be requested for a tier the quote doesn't price.
+const canProceed = computed(
+  () =>
+    !gasFeeError.value &&
+    !!props.swapGasFeeQuote?.quoteId &&
+    !!props.swapGasFeeQuote.fees?.[gasPriceType.value],
+)
+
 const proceedWithSwap = () => {
   // Guard against proceeding without a resolved quote: an empty quoteId would
   // build a malformed unsigned-tx URL (…/multi-quotes//unsigned -> 404). The
   // button is disabled in this state; this also ignores any stray click.
   const quoteId = props.swapGasFeeQuote?.quoteId
-  if (!quoteId) return
+  if (!quoteId || !canProceed.value) return
   isProceeding.value = true
   loadingModel.value = true
   if (
