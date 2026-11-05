@@ -1,5 +1,6 @@
 import type { AvatarSize } from '@/components/avatar/types'
 import type { IconName } from '@/components/icon/icons'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
 
 /**
  * Cell geometry (Figma: MEW Web App — Design Library › Cell, Size axis).
@@ -69,3 +70,19 @@ export type CellRightAccessory =
   | { kind: 'graph'; points: number[]; trend?: 'up' | 'down' }
   | { kind: 'icon'; icon: IconName }
   | { kind: 'loading' }
+
+export type Trend = 'up' | 'down' | 'neutral'
+
+export const trendOf = (change: number): Trend =>
+  change > 0 ? 'up' : change < 0 ? 'down' : 'neutral'
+
+/** A change as Figma writes it: +2.87%, −2.87% (U+2212), 0.00%. */
+export const formatChange = (change: number): string => {
+  const trend = trendOf(change)
+  // The shared formatter returns a bare '0' here; Figma wants 0.00%.
+  if (trend === 'neutral') return '0.00%'
+  // It keeps the sign, bounds included ('> -0.01%', '< -1000%').
+  const value = formatPercentageValue(change).value.replace('-', '−')
+  // A '+' in front of a bound would read '+< 0.01%'.
+  return trend === 'up' && !/^[<>]/.test(value) ? `+${value}` : value
+}

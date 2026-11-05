@@ -13,10 +13,10 @@ describe('AppBtnIcon', () => {
     expect(el.getAttribute('aria-label')).toBe('Close')
   })
 
-  it('sizes the box and the glyph together per size (S 22/16, M 32/24, L 40/32)', () => {
+  it('sizes the box and the glyph together per size (S 32/16, M 40/24, L 40/32)', () => {
     const cases = [
-      ['s', 'size-[22px]', 'size-4'],
-      ['m', 'size-8', 'size-6'],
+      ['s', 'size-8', 'size-4'],
+      ['m', 'size-10', 'size-6'],
       ['l', 'size-10', 'size-8'],
     ] as const
     for (const [size, box, glyph] of cases) {
@@ -32,7 +32,7 @@ describe('AppBtnIcon', () => {
     const btn = mount(AppBtnIcon, { props: { ...LABEL, icon: 'x-mark' } }).get(
       'button',
     )
-    expect(btn.classes()).toContain('size-8')
+    expect(btn.classes()).toContain('size-10')
     expect(btn.classes()).toContain(
       'not-disabled:hover:bg-background-alternative-hover',
     )

@@ -23,8 +23,12 @@ const model = defineModel<AccordionKey | AccordionKey[] | null>({
   default: null,
 })
 
-const openKeys = (): AccordionKey[] =>
-  model.value === null ? [] : [model.value].flat()
+// Single mode shows one panel even if the model holds several keys (e.g. after
+// `multiple` turns off); the next toggle writes a single key back.
+const openKeys = (): AccordionKey[] => {
+  const keys = model.value === null ? [] : [model.value].flat()
+  return props.multiple ? keys : keys.slice(0, 1)
+}
 
 provide(ACCORDION_GROUP_KEY, {
   isOpen: key => openKeys().includes(key),
