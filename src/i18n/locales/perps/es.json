@@ -115,8 +115,7 @@
       "take-profit": "Take profit",
       "stop-loss": "Stop loss",
       "review-long": "Revisar largo",
-      "review-short": "Revisar corto",
-      "need-help": "¿Necesitas ayuda para operar perps?"
+      "review-short": "Revisar corto"
     },
     "confirm": {
       "long": "Largo",
@@ -343,9 +342,6 @@
     },
     "select-market": {
       "title": "Selecciona un mercado de perpetuos",
-      "search-placeholder": "Buscar",
-      "sort": "Ordenar",
-      "no-markets-found": "No se encontraron mercados",
       "filter-tab-all": "Todos",
       "filter-tab-equities": "Acciones",
       "filter-tab-commodities": "Materias primas",

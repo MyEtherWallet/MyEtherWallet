@@ -251,7 +251,11 @@
     "swap_to": "选择要买入的代币",
     "search": "搜索",
     "no_tokens_match": "没有与您的搜索匹配的代币",
-    "no_tokens_available": "暂无可用代币"
+    "no_tokens_available": "暂无可用代币",
+    "recently_viewed": "最近查看",
+    "your_assets": "你的资产",
+    "all_tokens": "全部代币",
+    "sort_by": "按{option}"
   },
   "select_fee": {
     "title": "选择交易费用",

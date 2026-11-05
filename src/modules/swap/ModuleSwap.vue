@@ -124,15 +124,6 @@
       </app-swap-form>
     </div>
 
-    <app-need-help
-      :title="
-        isSwapView ? t('swap.need-help-swapping') : t('swap.need-help-bridging')
-      "
-      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-      variant="link"
-      class="mt-auto self-center pt-5"
-      :class="blockedClass"
-    />
     <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
     <swap-offer-modal
       v-model:swap-offer-open="bestOfferSelectionOpen"
@@ -170,7 +161,6 @@ import AppSwapForm from '@/components/AppSwapForm.vue'
 import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBanner from '@/components/banner/AppBanner.vue'
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'

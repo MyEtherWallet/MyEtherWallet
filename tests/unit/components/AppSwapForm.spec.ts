@@ -9,7 +9,11 @@ import AppSwapForm from '@/components/AppSwapForm.vue'
 vi.mock('@/components/AppSwapEnterAmount.vue', () => ({
   default: {
     name: 'AppSwapEnterAmount',
-    props: { isFromView: { type: Boolean, default: true } },
+    props: {
+      isFromView: { type: Boolean, default: true },
+      networks: { type: Array, default: () => [] },
+      network: { type: String, default: null },
+    },
     template:
       '<div data-testid="amount-card" :data-from="isFromView"><slot name="header" /><slot name="actions" /></div>',
   },
@@ -94,6 +98,34 @@ describe('AppSwapForm', () => {
     const bridgeNetworks = bridge.findAll('[data-testid="network"]')
     expect(bridgeNetworks).toHaveLength(2)
     expect(bridgeNetworks[1].classes()).not.toContain('hidden')
+  })
+
+  it('gives the to token modal the to chains only when the to network is shown', async () => {
+    const toChains = [
+      { name: 'ETHEREUM', nameLong: 'Ethereum', icon: 'eth.svg' },
+      { name: 'BASE', nameLong: 'Base', icon: 'base.svg' },
+    ]
+    const cardsOf = (wrapper: ReturnType<typeof mountForm>) =>
+      wrapper.findAllComponents({ name: 'AppSwapEnterAmount' })
+
+    const swap = mountForm({ toChains, toChain: toChains[0] })
+    expect(cardsOf(swap)[1].props('networks')).toEqual([])
+
+    const bridge = mountForm({
+      showToNetwork: true,
+      toChains,
+      toChain: toChains[0],
+    })
+    const [from, to] = cardsOf(bridge)
+    expect(from.props('networks')).toEqual([])
+    expect(to.props('networks')).toEqual([
+      { value: 'ETHEREUM', name: 'Ethereum', icon: 'eth.svg' },
+      { value: 'BASE', name: 'Base', icon: 'base.svg' },
+    ])
+    expect(to.props('network')).toBe('ETHEREUM')
+
+    to.vm.$emit('update:network', 'BASE')
+    expect(bridge.emitted('update:toChain')).toEqual([[toChains[1]]])
   })
 
   it('renders the CTA from props and emits submit', async () => {

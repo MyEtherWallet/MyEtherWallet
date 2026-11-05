@@ -184,6 +184,19 @@ describe('AppDropdown — design-library Dropdown (MEW-2468)', () => {
     expect(wrapper.findComponent(AppMenuList).exists()).toBe(false)
   })
 
+  it('draws a bare text trigger without the pill, opening the S menu', async () => {
+    const bare = mountDropdown({ bare: true }, { suffix: '<i />' })
+    const classes = trigger(bare).classes()
+    expect(classes).not.toContain('rounded-full')
+    expect(classes.some(c => c.startsWith('bg-background'))).toBe(false)
+    expect(trigger(bare).text()).toBe('Network')
+    expect(bare.find('[data-testid="dropdown-suffix"]').exists()).toBe(false)
+    expect(trigger(bare).find('svg').classes()).toContain('size-[18px]')
+
+    await openMenu(bare)
+    expect(bare.getComponent(AppMenuList).classes()).toContain('w-60')
+  })
+
   it('draws no resting border on any trigger and the suffix only at M', () => {
     const mDefault = mountDropdown({}, { suffix: '<i />' })
     expect(mDefault.find('[data-testid="dropdown-suffix"]').exists()).toBe(true)
@@ -241,6 +254,27 @@ describe('AppDropdown — design-library Dropdown (MEW-2468)', () => {
     const small = mountDropdown({ size: 's' })
     await openMenu(small)
     expect(small.getComponent(AppMenuList).classes()).toContain('w-60')
+  })
+
+  it('lines an S menu up with the trigger end when asked', async () => {
+    const start = mountDropdown({ size: 's' })
+    await openMenu(start)
+    expect(start.getComponent(AppMenuList).classes()).toContain('left-0')
+
+    const end = mountDropdown({ size: 's', menuAlign: 'end' })
+    await openMenu(end)
+    const classes = end.getComponent(AppMenuList).classes()
+    expect(classes).toEqual(expect.arrayContaining(['right-0', 'w-60']))
+    expect(classes).not.toContain('left-0')
+  })
+
+  it('scrolls the opened menu into view inside a clipping container', async () => {
+    const scrollIntoView = vi.fn()
+    Element.prototype.scrollIntoView = scrollIntoView
+    const wrapper = mountDropdown()
+    await openMenu(wrapper)
+    await nextTick()
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest' })
   })
 
   it('forwards the search query both ways', async () => {

@@ -59,12 +59,6 @@
         {{ ctaLabel }}
       </app-base-button>
 
-      <div class="mt-auto pt-5 flex justify-center">
-        <app-base-button type="link" size="small" @click="openHelpCenter">
-          {{ t('purchase.sell.need_help') }}
-        </app-base-button>
-      </div>
-
       <div class="hidden">
         <app-select-tx-fee
           ref="feeSelector"
@@ -75,6 +69,7 @@
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
+      side="sell"
       :networks="sellNetworks"
       :default-chain-code="purchaseChainCode"
       :selected-token="selectedToken"
@@ -218,7 +213,6 @@ const accessStore = useAccessStore()
 
 const DEFAULT_SELL_CHAIN = 'ETH'
 const DEFAULT_FIAT = 'USD'
-const HELP_CENTER_URL = 'https://help.myetherwallet.com/'
 
 const cryptoAmount = ref('')
 const isInputFocused = ref(false)
@@ -635,10 +629,6 @@ watch(
     }
   },
 )
-
-const openHelpCenter = () => {
-  window.open(HELP_CENTER_URL, '_blank', 'noopener')
-}
 
 const onSubmit = () => {
   if (showUnsupportedNetwork.value) return

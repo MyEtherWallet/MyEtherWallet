@@ -162,10 +162,15 @@
               </template>
               <template #menu-content="{ toggleMenu }">
                 <div
+                  role="listbox"
+                  :aria-label="$t('perps.confirm.order-type-label')"
                   class="bg-white rounded-[20px] shadow-xl border border-border-default w-[260px] p-2 overflow-hidden"
                 >
-                  <div
-                    class="flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
+                  <button
+                    type="button"
+                    role="option"
+                    :aria-selected="orderType === 'market'"
+                    class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer text-left transition-colors"
                     :class="
                       orderType === 'market'
                         ? 'bg-background-brand-subtle'
@@ -190,9 +195,12 @@
                     />
 
                     <span v-else class="w-4 mt-0.5" />
-                  </div>
-                  <div
-                    class="flex items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
+                  </button>
+                  <button
+                    type="button"
+                    role="option"
+                    :aria-selected="orderType === 'limit'"
+                    class="flex w-full items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer text-left transition-colors"
                     :class="
                       orderType === 'limit'
                         ? 'bg-background-brand-subtle'
@@ -216,7 +224,7 @@
                       class="text-text-brand"
                     />
                     <span v-else class="w-4 mt-0.5" />
-                  </div>
+                  </button>
                 </div>
               </template>
             </app-pop-up-menu>
@@ -420,7 +428,7 @@
              wallet-side action that doesn't touch the perps service, and it's
              useful across the rest of the app regardless. -->
         <app-base-button
-          v-else-if="isWatchOnly"
+          v-else-if="!isWalletConnected || isWatchOnly"
           class="w-full"
           @click="connectWallet"
         >
@@ -460,14 +468,6 @@
         </template>
       </div>
     </div>
-
-    <app-need-help
-      :title="$t('perps.trade.need-help')"
-      :help-link="perpsHelpUrl"
-      variant="link"
-      class="mt-auto self-center pt-5"
-      :class="blockedClass"
-    />
 
     <!-- Order Confirmation Dialog -->
     <perps-order-confirmation-dialog
@@ -521,7 +521,6 @@
       :contracts="filteredMarketList"
       :filter-tabs="marketFilterTabs"
       :get-market-display-name="getMarketDisplayName"
-      :get-market-leverage="getMarketLeverage"
       @set-sort="setMarketSort"
       @select="selectMarket"
     />
@@ -587,7 +586,6 @@ import type { SegmentItem } from '@/components/segmented_control/types'
 import AppSlider from '@/components/slider/AppSlider.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'
@@ -615,7 +613,7 @@ import {
 } from '@/analytics'
 
 const walletStore = useWalletStore()
-const { isWatchOnly } = storeToRefs(walletStore)
+const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const {
   isAuthenticating,
   showSigningPrompt,
@@ -814,7 +812,6 @@ const {
   fullMarketName,
   contracts,
   getMarketDisplayName,
-  getMarketLeverage,
   openTokenSelect,
   selectMarket,
   // Leverage

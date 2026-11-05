@@ -115,8 +115,7 @@
       "take-profit": "Take profit",
       "stop-loss": "Stop loss",
       "review-long": "Review long",
-      "review-short": "Review short",
-      "need-help": "Need help trading perps?"
+      "review-short": "Review short"
     },
     "info": {
       "perpetual-label": "Perpetual",
@@ -343,10 +342,7 @@
       "leverage-error-fallback": "Failed to set leverage"
     },
     "select-market": {
-      "title": "Select Perps Market",
-      "search-placeholder": "Search",
-      "sort": "Sort",
-      "no-markets-found": "No markets found",
+      "title": "Select perps market",
       "filter-tab-all": "All",
       "filter-tab-equities": "Equities",
       "filter-tab-commodities": "Commodities",

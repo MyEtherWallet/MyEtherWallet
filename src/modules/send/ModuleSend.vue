@@ -73,12 +73,6 @@
       >
     </div>
 
-    <app-need-help
-      :title="$t('send.need-help')"
-      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-      variant="link"
-      class="mt-auto self-center pt-5"
-    />
     <!-- TODO: replace network with actual selected network info -->
     <evm-transaction-confirmation
       v-if="isWalletConnected && tokenSelected && toAddress"
@@ -151,7 +145,6 @@ import { useAddressInput } from '@/composables/useAddressInput'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useFormPristine } from '@/composables/useFormPristine'
 import { useAccessStore } from '@/stores/accessStore'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import {
   analytics,
   ConnectWalletEvent,

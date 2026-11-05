@@ -257,7 +257,10 @@
     "search": "Search",
     "no_tokens_match": "No tokens match your search",
     "no_tokens_available": "No tokens available",
-    "recently_viewed": "Recently Viewed"
+    "recently_viewed": "Recently viewed",
+    "your_assets": "Your assets",
+    "all_tokens": "All tokens",
+    "sort_by": "by {option}"
   },
   "select_fee": {
     "title": "Select transaction fee",

@@ -10,7 +10,6 @@
       "continue": "Review purchase",
       "connect_wallet": "Connect wallet",
       "no_quotes": "No quotes found",
-      "need_help": "Need help buying?",
       "network_not_supported": "Network not supported",
       "network_not_available": "Buying is not available on {network}. Switch to a supported network.",
       "error": {
@@ -26,7 +25,6 @@
       "enter_amount": "Enter amount",
       "continue": "Review sell",
       "connect_wallet": "Connect wallet",
-      "need_help": "Need help selling?",
       "network_not_supported": "Network not supported",
       "network_not_available": "Selling is not available on {network}. Switch to a supported network.",
       "error": {
@@ -43,18 +41,12 @@
     "min": "Min",
     "max": "Max",
     "select_token": {
-      "title": "Tokens",
-      "subtitle": "Select one from the list",
-      "search_placeholder": "Search",
-      "filter_all_networks": "All networks",
-      "filter_title": "Filter by network",
-      "filter_subtitle": "Select a network from the list",
-      "no_results": "No tokens match"
+      "title_buy": "Select asset to buy",
+      "title_sell": "Select asset to sell",
+      "filter_all_networks": "All networks"
     },
     "select_currency": {
-      "title": "Currency",
-      "subtitle": "Select a currency from the list",
-      "search_placeholder": "Search",
+      "title": "Select currency",
       "no_results": "No currencies match"
     },
     "select_provider": {

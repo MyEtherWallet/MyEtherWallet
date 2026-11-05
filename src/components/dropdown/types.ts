@@ -36,6 +36,9 @@ export const DROPDOWN_TRIGGER_CLASS: Record<
   },
 }
 
+/** `bare`: a text trigger with no pill box, e.g. a list header's sort control. */
+export const DROPDOWN_BARE_TRIGGER_CLASS = 'inline-flex gap-1 rounded-4'
+
 /** Opt-in resting hairline (`bordered`); focus swaps it for the brand ring. */
 export const DROPDOWN_TRIGGER_BORDER_CLASS =
   'ring-[0.5px] ring-inset ring-border-default'
@@ -45,10 +48,13 @@ export const DROPDOWN_TRIGGER_STATE_CLASS =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand disabled:cursor-default disabled:*:opacity-40'
 
 /**
- * Open menu placement: M takes the trigger's width, S keeps Figma's 240px
- * panel left-aligned under its narrower pill.
+ * Open menu width: M takes the trigger's width, S keeps Figma's 240px panel
+ * (lined up by `menuAlign`).
  */
 export const DROPDOWN_MENU_WIDTH_CLASS: Record<DropdownSize, string> = {
   m: 'left-0 right-0',
-  s: 'left-0 w-60',
+  s: 'w-60',
 }
+
+/** Which trigger edge an S menu lines up with; M always spans the trigger. */
+export type DropdownMenuAlign = 'start' | 'end'

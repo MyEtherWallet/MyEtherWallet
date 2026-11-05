@@ -54,6 +54,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Text Area', to: '/dev/text-area' },
       { name: 'Toast', to: '/dev/toast' },
       { name: 'Toggle', to: '/dev/toggle' },
+      { name: 'Token Selector', to: '/dev/token-selector' },
       { name: 'Tooltip', to: '/dev/tooltip' },
     ],
   },

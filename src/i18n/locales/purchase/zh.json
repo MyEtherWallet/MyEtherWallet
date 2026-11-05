@@ -10,7 +10,6 @@
       "continue": "查看购买",
       "connect_wallet": "连接钱包",
       "no_quotes": "未找到报价",
-      "need_help": "购买需要帮助？",
       "network_not_supported": "不支持该网络",
       "network_not_available": "{network} 上暂不支持购买。请切换到受支持的网络。",
       "error": {
@@ -26,7 +25,6 @@
       "enter_amount": "输入数量",
       "continue": "查看出售",
       "connect_wallet": "连接钱包",
-      "need_help": "出售需要帮助？",
       "network_not_supported": "不支持该网络",
       "network_not_available": "{network} 上暂不支持出售。请切换到受支持的网络。",
       "error": {
@@ -43,18 +41,12 @@
     "min": "最低",
     "max": "最高",
     "select_token": {
-      "title": "代币",
-      "subtitle": "从列表中选择一个",
-      "search_placeholder": "搜索",
-      "filter_all_networks": "所有网络",
-      "filter_title": "按网络筛选",
-      "filter_subtitle": "从列表中选择一个网络",
-      "no_results": "没有匹配的代币"
+      "title_buy": "选择要买入的资产",
+      "title_sell": "选择要卖出的资产",
+      "filter_all_networks": "所有网络"
     },
     "select_currency": {
-      "title": "货币",
-      "subtitle": "从列表中选择一种货币",
-      "search_placeholder": "搜索",
+      "title": "选择货币",
       "no_results": "没有匹配的货币"
     },
     "select_provider": {
