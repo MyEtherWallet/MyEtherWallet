@@ -343,10 +343,7 @@
       "leverage-error-fallback": "Failed to set leverage"
     },
     "select-market": {
-      "title": "Select Perps Market",
-      "search-placeholder": "Search",
-      "sort": "Sort",
-      "no-markets-found": "No markets found",
+      "title": "Select perps market",
       "filter-tab-all": "All",
       "filter-tab-equities": "Equities",
       "filter-tab-commodities": "Commodities",

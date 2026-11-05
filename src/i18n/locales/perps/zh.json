@@ -343,9 +343,6 @@
     },
     "select-market": {
       "title": "选择永续合约市场",
-      "search-placeholder": "搜索",
-      "sort": "排序",
-      "no-markets-found": "未找到市场",
       "filter-tab-all": "全部",
       "filter-tab-equities": "股票",
       "filter-tab-commodities": "大宗商品",
