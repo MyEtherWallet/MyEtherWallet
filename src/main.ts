@@ -19,6 +19,7 @@ import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
+  isBenignBalanceHistoryNotAcceptable,
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
@@ -156,7 +157,10 @@ if (dsn && process.env.NODE_ENV === 'production') {
         // Purchase-info 403 from a region/wallet the fiat-purchase backend
         // denies — expected, already-handled business rule, not an app bug
         // (APP-MEW-WEB-1F5 / MEW-2173).
-        isBenignPurchaseInfoForbidden(event)
+        isBenignPurchaseInfoForbidden(event) ||
+        // Intermittent backend 406 from portfolio balance-history; the chart
+        // already shows its empty state (APP-MEW-WEB-1K0 / MEW-2547).
+        isBenignBalanceHistoryNotAcceptable(event)
       )
         return null
       return event
