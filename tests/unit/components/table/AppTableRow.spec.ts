@@ -209,6 +209,14 @@ describe('AppTableRow', () => {
     expect(w.get('[role="row"]').classes()).toContain('isolate')
   })
 
+  it('steps its Button Icons hover past the grey of the hovered row', () => {
+    const row = factory().get('[role="row"]').classes()
+    expect(row).toContain('[--btn-icon-hover:var(--background-default-hover)]')
+    expect(row).toContain(
+      '[--btn-icon-pressed:var(--background-default-pressed)]',
+    )
+  })
+
   it('shows the full title as a tooltip on the leading cell', () => {
     expect(factory().findAll('[role="cell"]')[0].attributes('title')).toBe(
       'USDC',
