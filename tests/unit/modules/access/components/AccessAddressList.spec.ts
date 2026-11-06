@@ -20,31 +20,31 @@ const i18n = createI18n({
 const ENTRIES = [
   {
     address: '0x1111111111111111111111111111111111111111',
-    index: 10,
+    index: 0,
     balance: '',
   },
   {
     address: '0x2222222222222222222222222222222222222222',
-    index: 11,
+    index: 1,
     balance: '',
   },
 ]
 
 describe('AccessAddressList', () => {
-  it('shows each address index right before its identicon', () => {
+  it('numbers each address from 1, right before its identicon', () => {
     const w = mount(AccessAddressList, {
       props: {
         entries: ENTRIES,
         isLoading: false,
         balancesError: false,
-        modelValue: 10,
+        modelValue: 0,
       },
       global: { plugins: [i18n] },
     })
     const rows = w.findAll('[data-testid="address-row"]')
     expect(
       rows.map(row => row.get('[data-testid="address-index"]').text()),
-    ).toEqual(['10', '11'])
+    ).toEqual(['1', '2'])
     const index = rows[0].get('[data-testid="address-index"]').element
     const avatar = rows[0].get('[data-testid="avatar"]').element
     expect(index.nextElementSibling).toBe(avatar)

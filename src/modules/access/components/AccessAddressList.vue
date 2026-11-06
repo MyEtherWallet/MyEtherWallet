@@ -44,7 +44,7 @@
         <span
           data-testid="address-index"
           class="w-6 shrink-0 text-center text-xs text-text-subtle"
-          >{{ entry.index }}</span
+          >{{ entry.index + 1 }}</span
         >
         <AppAvatar type="account" size="l" :address="entry.address" />
         <AppContentGroup
