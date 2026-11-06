@@ -199,13 +199,15 @@ const { y: scrollTop } = useScroll(scrollContainer)
 // can't reach it: bring a newly opened page to the top here. Drawers and the
 // connect/create overlays are child routes of the page they cover, so the
 // top-level record stays the same and the page underneath keeps its place.
-// Hash links (/stocks#oip) scroll to their own section.
+// Hash links (/stocks#oip) scroll to their own section. 'post' so a drawer open
+// on the old page has unmounted and released isOverflowHidden first.
 watch(
   () => route.matched[0],
   () => {
     if (route.hash) return
     scrollContainer.value?.scrollTo({ top: 0, behavior: 'smooth' })
   },
+  { flush: 'post' },
 )
 
 const onHeaderWheel = (e: WheelEvent) => {

@@ -101,10 +101,9 @@ const { formatFiat } = useCurrency()
 // Section-only fetch — the stocks overview is triggered by ViewStocks.
 onMounted(stocksStore.fetchStocksOips)
 
-// The home Industry Sectors tile links here as /stocks#oip. The app scrolls an
-// inner overflow-y-auto wrapper rather than the window (TheAppLayout.vue),
-// which leaves hash links alone when it resets that scroll — bring the section
-// into view ourselves, the same way PerpsPagination does.
+// The home Industry Sectors tile links here as /stocks#oip. TheAppLayout skips
+// its scroll reset for hash links, so bring the section into view ourselves,
+// the same way PerpsPagination does.
 const section = ref<HTMLElement | null>(null)
 onMounted(async () => {
   if (route.hash !== '#oip') return

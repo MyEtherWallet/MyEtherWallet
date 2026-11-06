@@ -18,8 +18,7 @@ const hasRestorableWallet = (): boolean => {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [...DefaultRoutes],
-  // No scrollBehavior: the window never scrolls (the app scrolls an inner
-  // wrapper), so TheAppLayout resets that wrapper on page changes instead.
+  // No scrollBehavior: the window never scrolls, TheAppLayout resets its wrapper.
 })
 
 // reroute when address is undefined
