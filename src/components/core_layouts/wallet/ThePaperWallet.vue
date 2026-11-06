@@ -11,7 +11,7 @@
     >
       <div
         v-if="isOpen"
-        class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex p-4 sm:p-9 overscroll-none overflow-y-auto mew-scrollbar z-[102]"
+        class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex p-4 sm:p-9 print:p-9 overscroll-none overflow-y-auto mew-scrollbar z-[102]"
       >
         <div
           class="bg-white print:border-1 print:border-border-default w-full max-w-[600px] m-auto rounded-32 sm:min-h-[512px] px-3 sm:px-5"
@@ -64,7 +64,7 @@
               </div>
             </div>
             <div
-              class="rounded-16 p-3 sm:mr-2 shadow-button shadow-button-elevated print:shadow-none print:border-1 print:border-border-default h-[174px] w-[174px] flex items-center justify-center"
+              class="rounded-16 p-3 sm:mr-2 print:mr-2 shadow-button shadow-button-elevated print:shadow-none print:border-1 print:border-border-default h-[174px] w-[174px] flex items-center justify-center"
             >
               <div v-show="!isLoadingQRCode" ref="qrCode"></div>
               <!-- Loading QR Placeholder -->
@@ -86,7 +86,7 @@
           <app-divider class="my-5" />
           <!-- TODO:  add privatekey option-->
           <div
-            class="flex flex-col sm:flex-row print:flex-row justify-between items-center gap-4 mx-3 sm:mx-6 mb-6"
+            class="flex flex-col sm:flex-row print:flex-row justify-between items-center gap-4 mx-3 sm:mx-6 print:mx-6 mb-6"
           >
             <img
               src="@/assets/images/peggy/peggy.webp"
