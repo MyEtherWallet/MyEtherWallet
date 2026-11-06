@@ -39,6 +39,11 @@
         "
         @click="selected = entry.index"
       >
+        <span
+          data-testid="address-index"
+          class="min-w-5 shrink-0 text-xs text-text-subtle"
+          >{{ entry.index }}</span
+        >
         <AppAvatar type="account" size="l" :address="entry.address" />
         <AppContentGroup
           :title="truncateAddress(entry.address)"
