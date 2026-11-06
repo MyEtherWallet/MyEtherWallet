@@ -195,6 +195,19 @@ const scrollContainer = ref<HTMLElement | null>(null)
 // Drives the navbar's bottom border: only once the page leaves the top.
 const { y: scrollTop } = useScroll(scrollContainer)
 
+// The app scrolls this wrapper, not the window, so vue-router's scrollBehavior
+// can't reach it: bring a newly opened page to the top here. Drawers and the
+// connect/create overlays are child routes of the page they cover, so the
+// top-level record stays the same and the page underneath keeps its place.
+// Hash links (/stocks#oip) scroll to their own section.
+watch(
+  () => route.matched[0],
+  () => {
+    if (route.hash) return
+    scrollContainer.value?.scrollTo({ top: 0, behavior: 'smooth' })
+  },
+)
+
 const onHeaderWheel = (e: WheelEvent) => {
   if (isOverflowHidden.value || !scrollContainer.value) return
   scrollContainer.value?.scrollBy({ top: e.deltaY, behavior: 'instant' })
