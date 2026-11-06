@@ -11,10 +11,10 @@
     >
       <div
         v-if="isOpen"
-        class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none overflow-y-auto mew-scrollbar z-[102] fixed"
+        class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex items-center justify-center p-4 xs:p-9 overscroll-none overflow-y-auto mew-scrollbar z-[102] fixed"
       >
         <div
-          class="bg-white print:border-1 print:border-border-default rounded-16 max-h-[95%] w-[95%] max-w-[600px] mx-auto bg-white rounded-32 sm:min-h-[512px] px-3 sm:px-5"
+          class="bg-white print:border-1 print:border-border-default rounded-16 max-h-[95%] w-[95%] max-w-[600px] mx-auto bg-white rounded-32 sm:min-h-[512px] px-3 sm:px-5 overflow-y-auto mew-scrollbar print:max-h-none print:overflow-visible"
         >
           <div class="flex justify-between items-center my-6 ml-3 mr-5">
             <img
@@ -38,7 +38,10 @@
             </button>
           </div>
 
-          <div class="flex justify-between items-center mx-3 gap-6">
+          <!-- Below xs the QR goes under the address so neither gets squeezed -->
+          <div
+            class="flex justify-between items-center mx-3 gap-6 max-xs:flex-col max-xs:items-stretch"
+          >
             <div>
               <p class="text-s-28 font-semibold mb-2">
                 {{
@@ -62,7 +65,7 @@
               </div>
             </div>
             <div
-              class="rounded-16 p-3 mr-2 shadow-button shadow-button-elevated print:shadow-none print:border-1 print:border-border-default h-[174px] w-[174px] flex items-center justify-center"
+              class="rounded-16 p-3 mr-2 max-xs:mx-auto shadow-button shadow-button-elevated print:shadow-none print:border-1 print:border-border-default h-[174px] w-[174px] flex items-center justify-center"
             >
               <div v-show="!isLoadingQRCode" ref="qrCode"></div>
               <!-- Loading QR Placeholder -->
@@ -83,15 +86,18 @@
           </p>
           <app-divider class="my-5" />
           <!-- TODO:  add privatekey option-->
-          <div class="flex justify-between items-center mx-6 mb-6">
+          <!-- Below xs Peggy hides so the contacts fit on one line each -->
+          <div
+            class="flex justify-between items-center mx-6 mb-6 max-xs:mx-3 max-xs:justify-center"
+          >
             <img
               src="@/assets/images/peggy/peggy.webp"
               alt=""
               width="135px"
               height="330px"
-              class="w-[135px] max-h-[100px] flex-none object-contain"
+              class="w-[135px] max-h-[100px] flex-none object-contain max-xs:hidden"
             />
-            <div class="ml-auto">
+            <div class="ml-auto whitespace-nowrap max-xs:ml-0 max-xs:text-s-14">
               <p class="mb-3">
                 <AppIcon
                   name="chat-bubble-bottom-center-text"

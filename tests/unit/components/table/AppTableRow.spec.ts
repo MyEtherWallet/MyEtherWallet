@@ -178,6 +178,16 @@ describe('AppTableRow', () => {
     expect(w.get('[data-test="tag"]').text()).toBe('xs')
   })
 
+  it('passes the description-icon slot to the content group', () => {
+    const w = factory({
+      props: { description: 'USD Coin' },
+      slots: {
+        'description-icon': '<i data-test="desc-tag">{{ params.size }}</i>',
+      },
+    })
+    expect(w.get('[data-test="desc-tag"]').text()).toBe('xs')
+  })
+
   it('links the title over the whole row when given `to`', async () => {
     const calls: number[] = []
     const w = factory({

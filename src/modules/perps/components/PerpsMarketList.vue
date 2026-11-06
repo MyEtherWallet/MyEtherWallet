@@ -118,9 +118,18 @@
                 :symbol="contract.baseCurrency"
               />
             </template>
-            <template #title-icon>
+            <!-- At S the leverage tag moves under the ticker so it doesn't
+                 truncate it, at 10px (QA, below the type scale). -->
+            <template v-if="size !== 's'" #title-icon>
               <AppTag
                 variant="subtle"
+                :label="`${contract.defaultLeverage}x`"
+              />
+            </template>
+            <template v-else #description-icon>
+              <AppTag
+                variant="subtle"
+                class="text-[10px]/[12px]!"
                 :label="`${contract.defaultLeverage}x`"
               />
             </template>

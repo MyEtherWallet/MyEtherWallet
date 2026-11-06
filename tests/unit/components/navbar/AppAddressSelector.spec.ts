@@ -171,6 +171,22 @@ describe('AppAddressSelector — design-library Address selector (MEW-2462)', ()
     expect(button(wrapper).attributes('aria-label')).toBe('No address')
   })
 
+  it('below 450 keeps only the avatar, network and chevron; the name stays announced', () => {
+    const wrapper = mountSelector({ balance: '$0.99' })
+    expect(
+      wrapper.get('[data-test="address-selector-text"]').classes(),
+    ).toContain('max-[450px]:hidden')
+    expect(wrapper.findComponent(AppAvatar).classes()).not.toContain(
+      'max-[450px]:hidden',
+    )
+    expect(button(wrapper).attributes('aria-label')).toContain('$0.99')
+    expect(
+      mountSelector({ address: '' })
+        .get('[data-test="address-selector-no-address"]')
+        .classes(),
+    ).toContain('max-[450px]:hidden')
+  })
+
   it('passes clicks through', async () => {
     const wrapper = mountSelector()
     await button(wrapper).trigger('click')
