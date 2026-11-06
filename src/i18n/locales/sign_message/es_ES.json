@@ -1,0 +1,19 @@
+{
+  "sign_message": {
+    "enter_message_to_sign": "Enter the message to sign",
+    "signature_title": "Signature",
+    "message_label": "Message:",
+    "signing_address_label": "Signing address:",
+    "signature_label": "Signature:",
+    "copy_signature": "Copy Signature",
+    "signature_copied": "Signature copied to clipboard",
+    "signature_copy_failed": "Failed to copy signature to clipboard",
+    "signing_failed": "Signing Failed",
+    "enter_message_to_verify": "Enter the message to verify",
+    "signing_address": "Signing Address",
+    "enter_signature_to_verify": "Enter the signature to verify",
+    "message_signed_by": "Message {message} is signed by {address}.",
+    "message_not_signed_by": "Message {message} is NOT signed by {address}.",
+    "verify_not_supported": "Verify message not supported for {chain}"
+  }
+}
