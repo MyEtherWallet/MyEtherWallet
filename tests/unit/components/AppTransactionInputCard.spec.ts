@@ -106,10 +106,14 @@ describe('AppTransactionInputCard', () => {
     expect(info.text()).toBe('Minimum not reached')
     expect(info.classes()).toContain('text-text-error')
     expect(balance.classes()).toContain('truncate')
-    // The fiat line keeps its width over a long balance, but a huge amount's
-    // stops at half the row and truncates instead of leaving the card (MEW-2642)
+    // Both sides get their natural width; when they don't fit, the longer one
+    // truncates first (two max-content grid tracks grow evenly), so a huge
+    // amount's fiat line stays inside the card (MEW-2642)
+    expect(info.element.parentElement?.className).toContain(
+      'grid-cols-[minmax(0,max-content)_minmax(0,max-content)]',
+    )
     expect(info.classes()).toEqual(
-      expect.arrayContaining(['shrink-0', 'max-w-[50%]', 'truncate']),
+      expect.arrayContaining(['min-w-0', 'truncate']),
     )
     expect(
       wrapper

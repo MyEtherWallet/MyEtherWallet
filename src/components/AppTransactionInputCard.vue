@@ -118,12 +118,14 @@ const infoColorClass = computed(() => {
 
       <div
         v-if="hasInfoRow"
-        class="flex items-center justify-between gap-2 h-5 text-text-sm"
+        class="grid grid-cols-[minmax(0,max-content)_minmax(0,max-content)] items-center justify-between gap-2 h-5 text-text-sm"
         :aria-busy="loading || undefined"
       >
+        <!-- Each side keeps its width; when both don't fit, the longer one
+             truncates first (the tracks grow evenly up to their content) -->
         <div
           :id="infoId"
-          :class="['shrink-0 max-w-[50%] truncate', infoColorClass]"
+          :class="['min-w-0 truncate', infoColorClass]"
           data-testid="transaction-input-card-info"
         >
           <AppSpinner v-if="loading" :size="20" />
