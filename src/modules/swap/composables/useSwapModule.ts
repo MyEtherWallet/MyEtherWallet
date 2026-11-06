@@ -17,6 +17,7 @@ import {
   meetsOutputFloor,
   inputForOutputFloor,
 } from '@/modules/swap/swapMinAmount'
+import { quotePriceImpact } from '@/modules/swap/swapPriceImpact'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm, type InitiatedSwap } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -405,16 +406,13 @@ export function useSwapModule(): SwapModuleBindings {
     return ''
   })
 
-  const priceImpact = computed(() => {
-    const fromAmt = parseFloat(fromAmount.value)
-    const toAmt = parseFloat(toAmount.value)
-    const fromPrice = fromTokenSelected.value?.price || 0
-    const toPrice = toTokenSelected.value?.price || 0
-    if (!fromAmt || !toAmt || !fromPrice || !toPrice) return 0
-    const fromValue = fromAmt * fromPrice
-    const toValue = toAmt * toPrice
-    return ((fromValue - toValue) / fromValue) * 100
-  })
+  const priceImpact = computed(() =>
+    quotePriceImpact(
+      providers.value[0],
+      fromTokenSelected.value,
+      toTokenSelected.value,
+    ),
+  )
 
   const priceImpactTooHigh = computed(
     () => priceImpact.value > MAX_PRICE_IMPACT,
