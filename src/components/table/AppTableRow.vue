@@ -105,6 +105,7 @@ const activate = (e: KeyboardEvent) => {
     :tabindex="clickable ? 0 : undefined"
     :class="[
       'group relative isolate col-span-full grid grid-cols-subgrid items-center rounded-12 bg-background-alternative py-3 transition-colors hover:bg-background-alternative-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand',
+      '[--btn-icon-hover:var(--background-default-hover)] [--btn-icon-pressed:var(--background-default-pressed)]',
       ROW_PADDING[size],
       { 'cursor-pointer': clickable },
     ]"
@@ -113,6 +114,9 @@ const activate = (e: KeyboardEvent) => {
     @keydown.enter.self.prevent="activate"
     @keydown.space.self.prevent="activate"
   >
+    <!-- The --btn-icon-* vars: a Button Icon is only hovered while the row
+         is, and the row's hover grey is the naked button's own hover, so its
+         Button Icons step one shade darker (see BTN_ICON_VARIANT_CLASS). -->
     <div v-if="start" role="cell" class="relative z-10 flex items-center">
       <!-- AppTable's SortableJS drags the row by this handle. A loading row
            keeps its box (the track stays put) but can't be grabbed. -->
