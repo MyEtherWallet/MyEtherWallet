@@ -205,7 +205,7 @@ watch(
   () => route.matched[0],
   () => {
     if (route.hash) return
-    scrollContainer.value?.scrollTo({ top: 0, behavior: 'smooth' })
+    scrollContainer.value?.scrollTo({ top: 0, behavior: 'instant' })
   },
   { flush: 'post' },
 )

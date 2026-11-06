@@ -110,7 +110,7 @@ describe('TheAppLayout scroll on navigation', () => {
 
     await navigate('/stocks')
 
-    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'instant' })
     expect(scrollTo.mock.contexts[0]).toBe(container)
   })
 
