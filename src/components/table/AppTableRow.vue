@@ -193,6 +193,12 @@ const activate = (e: KeyboardEvent) => {
           >
             <slot name="title-icon" :size="iconSize" />
           </template>
+          <template
+            v-if="$slots['description-icon']"
+            #description-icon="{ size: iconSize }"
+          >
+            <slot name="description-icon" :size="iconSize" />
+          </template>
         </AppContentGroup>
       </template>
     </div>

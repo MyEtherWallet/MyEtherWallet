@@ -4,7 +4,6 @@
       ref="actionBar"
       :items="actionItems"
       :active-id="isOpenSideMenu ? walletPanel : null"
-      :expanded="isOpenSideMenu"
       :class="[
         {
           'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]':
@@ -13,7 +12,6 @@
         'fixed right-0 top-[77px] z-[50] h-[calc(100vh-77px)] overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
       @select="onSelect"
-      @toggle="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
     />
     <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
     <!-- Modules -->
@@ -34,13 +32,13 @@
         ]"
         class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
-        <app-btn-icon
+        <!-- z-10: some panels pull their header up with negative margins and
+             would otherwise cover the button's hit area -->
+        <app-btn-icon-close
           :label="$t('common.close_side_menu')"
-          class="md:hidden flex-none ml-3"
-          @click="walletMenu.setIsOpenSideMenu(false)"
-        >
-          <AppIcon name="chevron-double-right" size="s" />
-        </app-btn-icon>
+          class="relative z-10 flex-none self-start sm:self-end"
+          @close="walletMenu.setIsOpenSideMenu(false)"
+        />
         <div class="flex-1 min-h-0">
           <transition name="fade" mode="out-in">
             <ModuleTrade v-if="walletPanel === 'trade'" key="trade" />
@@ -87,7 +85,7 @@ import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
 import ModulePerpsTrade from '@/modules/perps/ModulePerpsTrade.vue'
 import ModulePurchase from '@/modules/purchase/ModulePurchase.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppActionBar from '@/components/action_bar/AppActionBar.vue'
 import type { ActionBarItem } from '@/components/action_bar/types'
 import {
@@ -102,7 +100,6 @@ import { pageRouteName } from '@/router/routeHierarchy'
 import { useI18n } from 'vue-i18n'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 const { t } = useI18n()
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)

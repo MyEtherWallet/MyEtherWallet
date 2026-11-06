@@ -64,6 +64,7 @@ vi.mock('@/components/core_layouts/wallet/TheDepositDialog.vue', () => ({
 }))
 
 import LayoutWallet from '@/components/core_layouts/LayoutWallet.vue'
+import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppActionBar from '@/components/action_bar/AppActionBar.vue'
 import MarketingTooltip from '@/components/core_layouts/MarketingTooltip.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -160,19 +161,17 @@ describe('LayoutWallet action bar wiring', () => {
     expect(analytics.trackClickMainMenuEvent).not.toHaveBeenCalled()
   })
 
-  it('toggles the side menu and only marks the open panel active', async () => {
+  it('opens from an action, closes from the drawer X and only marks the open panel active', async () => {
     const w = factory()
     const menu = useWalletMenuStore()
     const bar = w.findComponent(AppActionBar)
     expect(bar.props('activeId')).toBeNull()
 
-    bar.vm.$emit('toggle')
-    await nextTick()
+    await w.get('[data-action-id="swap"]').trigger('click')
     expect(menu.isOpenSideMenu).toBe(true)
-    expect(bar.props('expanded')).toBe(true)
     expect(bar.props('activeId')).toBe('swap')
 
-    bar.vm.$emit('toggle')
+    w.findComponent(AppBtnIconClose).vm.$emit('close')
     await nextTick()
     expect(menu.isOpenSideMenu).toBe(false)
     expect(bar.props('activeId')).toBeNull()
