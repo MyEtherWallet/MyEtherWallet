@@ -39,9 +39,11 @@
         "
         @click="selected = entry.index"
       >
+        <!-- As wide as the network avatar in the picker above (size s), so the
+             index sits right under it and the identicons line up. -->
         <span
           data-testid="address-index"
-          class="min-w-5 shrink-0 text-xs text-text-subtle"
+          class="w-6 shrink-0 text-center text-xs text-text-subtle"
           >{{ entry.index }}</span
         >
         <AppAvatar type="account" size="l" :address="entry.address" />
