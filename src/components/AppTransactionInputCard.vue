@@ -123,7 +123,7 @@ const infoColorClass = computed(() => {
       >
         <div
           :id="infoId"
-          :class="['min-w-0 truncate', infoColorClass]"
+          :class="['shrink-0 max-w-[50%] truncate', infoColorClass]"
           data-testid="transaction-input-card-info"
         >
           <AppSpinner v-if="loading" :size="20" />

@@ -106,9 +106,10 @@ describe('AppTransactionInputCard', () => {
     expect(info.text()).toBe('Minimum not reached')
     expect(info.classes()).toContain('text-text-error')
     expect(balance.classes()).toContain('truncate')
-    // A huge amount's fiat line truncates instead of leaving the card (MEW-2642)
+    // The fiat line keeps its width over a long balance, but a huge amount's
+    // stops at half the row and truncates instead of leaving the card (MEW-2642)
     expect(info.classes()).toEqual(
-      expect.arrayContaining(['min-w-0', 'truncate']),
+      expect.arrayContaining(['shrink-0', 'max-w-[50%]', 'truncate']),
     )
     expect(
       wrapper
