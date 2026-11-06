@@ -1,11 +1,17 @@
+const HARDENED_OFFSET = 0x80000000
+
+// Matches what hdkey can derive: only the ' hardened marker (it reads "44h" as
+// an unhardened 44) and indexes below 2^31 (it throws "Invalid index" above).
 const checkCustomPath = (path: string): boolean => {
-  path = path.trim()
-  if (
-    /^m(((\/[0-9]+h)+|(\/[0-9]+H)+|(\/[0-9]+')*)((\/[0-9]+)*))$/.test(path) &&
-    (path[path.length - 1] === "'" || /^[0-9]/.test(path[path.length - 1]))
+  const [root, ...segments] = path.trim().split('/')
+  return (
+    root === 'm' &&
+    segments.length > 0 &&
+    segments.every(
+      segment =>
+        /^\d+'?$/.test(segment) && parseInt(segment, 10) < HARDENED_OFFSET,
+    )
   )
-    return true
-  return false
 }
 
 export { checkCustomPath }
