@@ -266,9 +266,35 @@ const currencyOptions = computed(() => {
   return Array.from(supportedFiats).filter(f => buyFiats.value.has(f))
 })
 
+// Providers that can quote the asset being bought (the chain's native token
+// when none was picked), so limits only come from providers that support it.
+const assetProviders = computed<string[]>(
+  () =>
+    selectedToken.value?.providers ??
+    buyNetworks.value
+      .find(network => network.chain === purchaseChainCode.value)
+      ?.tokens.find(token => token.symbol === tokenSymbol.value)?.providers ??
+    [],
+)
+
 const fiatLimits = computed(() => {
-  const fiat = buyFiats.value.get(selectedFiat.value)
-  return fiat?.limits ?? { min: 0, max: 0 }
+  const fallback = buyFiats.value.get(selectedFiat.value)?.limits ?? {
+    min: 0,
+    max: 0,
+  }
+  if (!assetProviders.value.length || !purchaseInfo.value?.providers) {
+    return fallback
+  }
+  const limits = purchaseInfo.value.providers
+    .filter(p => assetProviders.value.includes(p.provider))
+    .flatMap(p => p.fiats)
+    .filter(f => f.fiat_currency === selectedFiat.value)
+    .map(f => f.limits)
+  if (!limits.length) return fallback
+  return {
+    min: Math.min(...limits.map(l => l.min)),
+    max: Math.max(...limits.map(l => l.max)),
+  }
 })
 
 const USD_AMOUNTS = [15, 50, 100, 250]
