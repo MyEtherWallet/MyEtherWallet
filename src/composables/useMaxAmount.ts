@@ -183,7 +183,6 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     applyMaxAmount,
     setMaxAmount,
     resetMaxState,
-    isInternalWallet,
     canUseMax,
   }
 }
