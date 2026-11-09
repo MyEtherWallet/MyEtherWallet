@@ -36,12 +36,12 @@ const USDT = { address: '0xusdt', symbol: 'USDT', decimals: 6, price: 1 }
 const ETH = { address: '0xeee', symbol: 'ETH', decimals: 18, price: 2000 }
 
 // 2,000 USDT in; the ETH out sets the loss.
-const quote = (provider: string, eth: string) =>
+const quote = (provider: string, eth: string, toToken: object = ETH) =>
   ({
     provider,
     fromTokenAmount: parseUnits('2000', USDT.decimals),
     toTokenAmount: parseUnits(eth, ETH.decimals),
-    quote: { provider, options: { fromToken: USDT, toToken: ETH } },
+    quote: { provider, options: { fromToken: USDT, toToken } },
   }) as unknown as ProviderQuoteResponse
 
 const fair = quote('oneInch', '0.99') // 1% loss
@@ -94,5 +94,13 @@ describe('SwapOfferModal price impact (MEW-2648)', () => {
 
     await proceedButton(wrapper).trigger('click')
     expect(wrapper.emitted('update:proceedWithSwap')).toEqual([['q1']])
+  })
+
+  it('warns without blocking when a token has no price (MEW-2649)', () => {
+    const wrapper = mountWith(quote('zerox', '0.8', { ...ETH, price: null }))
+
+    expect(wrapper.text()).toContain('swap.price-impact-unknown')
+    expect(wrapper.text()).not.toContain('swap.price-impact-too-high')
+    expect(proceedButton(wrapper).attributes('disabled')).toBeUndefined()
   })
 })

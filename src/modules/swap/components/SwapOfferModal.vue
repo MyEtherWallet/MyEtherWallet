@@ -254,6 +254,12 @@
         "
         class="w-full"
       />
+      <app-banner
+        v-else-if="priceImpact === null"
+        type="warning"
+        :description="t('swap.price-impact-unknown')"
+        class="w-full"
+      />
       <app-base-button
         class="w-full"
         @click="proceedWithSwap"
