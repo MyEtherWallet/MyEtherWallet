@@ -244,6 +244,16 @@
         </div>
       </div>
 
+      <app-banner
+        v-if="priceImpactTooHigh"
+        type="alert"
+        :description="
+          t('swap.price-impact-too-high', {
+            percent: priceImpact?.toFixed(2),
+          })
+        "
+        class="w-full"
+      />
       <app-base-button
         class="w-full"
         @click="proceedWithSwap"
@@ -289,6 +299,11 @@ import AppCell from '@/components/cell/AppCell.vue'
 import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
+import {
+  isPriceImpactTooHigh,
+  quotePriceImpact,
+} from '@/modules/swap/swapPriceImpact'
 import oneInchLogo from '@/assets/images/swap/providers/oneinch.png'
 import paraswapLogo from '@/assets/images/swap/providers/paraswap.png'
 import zeroxLogo from '@/assets/images/swap/providers/zerox.png'
@@ -550,6 +565,15 @@ const exchangeRate = computed(() => {
     .value
 })
 
+// The form checks the best quote; here the offer the user picked has to pass
+// the same limit before it can be swapped (MEW-2648).
+const priceImpact = computed(() =>
+  quotePriceImpact(selectedQuote.value, fromToken.value, toToken.value),
+)
+const priceImpactTooHigh = computed(() =>
+  isPriceImpactTooHigh(priceImpact.value),
+)
+
 const isProceeding = ref(false)
 watch(
   () => model.value,
@@ -573,6 +597,7 @@ watch(
 // be requested for a tier the quote doesn't price.
 const canProceed = computed(
   () =>
+    !priceImpactTooHigh.value &&
     !gasFeeError.value &&
     !!props.swapGasFeeQuote?.quoteId &&
     !!props.swapGasFeeQuote.fees?.[gasPriceType.value],
