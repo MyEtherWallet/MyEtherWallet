@@ -1,7 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { parseUnits } from 'viem'
 import type { ProviderQuoteResponse } from '@enkryptcom/swap'
-import { quotePriceImpact } from '@/modules/swap/swapPriceImpact'
+import {
+  MAX_PRICE_IMPACT,
+  isPriceImpactTooHigh,
+  quotePriceImpact,
+} from '@/modules/swap/swapPriceImpact'
 
 const USDT = { address: '0xusdt', decimals: 6, price: 0.99 }
 const ETH = { address: '0xeee', decimals: 18, price: 2222.89 }
@@ -36,13 +40,29 @@ describe('quotePriceImpact', () => {
     expect(quotePriceImpact(quote('3', '0.001326'), USDT, DAI)).toBe(0)
   })
 
-  it('has nothing to show without a quote or a price', () => {
+  it('has nothing to show without a quote', () => {
     expect(quotePriceImpact(null, USDT, ETH)).toBe(0)
+  })
+
+  // MEW-2649: a missing price used to read as 0%, so a bad rate passed silently.
+  it('reports an unknown impact when either token has no price', () => {
     expect(
       quotePriceImpact(quote('3', '0.001326'), { ...USDT, price: 0 }, ETH),
-    ).toBe(0)
+    ).toBeNull()
     expect(
-      quotePriceImpact(quote('3', '0.001326'), USDT, { ...ETH, price: 0 }),
-    ).toBe(0)
+      quotePriceImpact(quote('3', '0.001326'), USDT, { ...ETH, price: null }),
+    ).toBeNull()
+  })
+})
+
+describe('isPriceImpactTooHigh', () => {
+  it('blocks a loss above the limit only', () => {
+    expect(isPriceImpactTooHigh(MAX_PRICE_IMPACT + 0.01)).toBe(true)
+    expect(isPriceImpactTooHigh(MAX_PRICE_IMPACT)).toBe(false)
+    expect(isPriceImpactTooHigh(0.75)).toBe(false)
+  })
+
+  it('does not block an unknown impact', () => {
+    expect(isPriceImpactTooHigh(null)).toBe(false)
   })
 })

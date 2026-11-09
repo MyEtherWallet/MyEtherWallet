@@ -11,6 +11,7 @@
     "review-swap": "查看兑换",
     "review-bridge": "查看跨链",
     "price-impact-too-high": "价格影响过高 {percent}%",
+    "price-impact-unknown": "无法检查价格影响。兑换前请核对汇率。",
     "unknown": "未知",
     "unknown_chain": "未知链",
     "unknown_token": "未知代币",
