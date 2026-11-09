@@ -144,7 +144,8 @@ interface SwapModuleBindings {
   priceImpactUnknown: ComputedRef<boolean>
   isSwapDisabled: ComputedRef<boolean>
   swapFeeError: ComputedRef<string | undefined>
-  isInternalWallet: () => boolean
+  /** MAX availability: any wallet on a token, internal wallets on native. */
+  canUseMax: () => boolean
   /** Max (100) or a % preset of the from balance. */
   handleMaxClick: (percentage?: number) => void
   switchGlobalNetwork: (chain: Chain) => void
@@ -480,7 +481,7 @@ export function useSwapModule(): SwapModuleBindings {
   const {
     setMaxAmount,
     resetMaxState,
-    isInternalWallet,
+    canUseMax,
     isMaxSelected,
     selectedPercentage,
   } = useMaxAmount({
@@ -1752,7 +1753,7 @@ export function useSwapModule(): SwapModuleBindings {
     priceImpactUnknown: swapValidationFeature.priceImpactUnknown,
     isSwapDisabled: swapValidationFeature.isSwapDisabled,
     swapFeeError: swapValidationFeature.swapFeeError,
-    isInternalWallet,
+    canUseMax,
     handleMaxClick,
     switchGlobalNetwork,
     validateToAddress,

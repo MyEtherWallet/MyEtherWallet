@@ -59,7 +59,7 @@
         :show-quick-actions="
           isWalletConnected && !isWatchOnly && !!fromTokenSelected
         "
-        :max-disabled="!isInternalWallet()"
+        :max-disabled="!canUseMax()"
         :show-from-network="!isSwapView"
         :from-chains="fromChains"
         :show-to-network="
@@ -229,7 +229,7 @@ const {
   priceImpactUnknown,
   isSwapDisabled,
   swapFeeError,
-  isInternalWallet,
+  canUseMax,
   handleMaxClick,
   switchGlobalNetwork,
   validateToAddress,
