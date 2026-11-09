@@ -112,7 +112,7 @@
 
           <div class="flex flex-col gap-3">
             <p class="text-label-base text-text-default">
-              {{ t('purchase.sell.network_fee') }}
+              {{ t('common.network_fee') }}
             </p>
             <app-select-tx-fee :reset-to-default="false" dropdown />
           </div>
