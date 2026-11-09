@@ -11,6 +11,7 @@
     "review-swap": "Revisar intercambio",
     "review-bridge": "Revisar puente",
     "price-impact-too-high": "El impacto en el precio es demasiado alto {percent}%",
+    "price-impact-unknown": "No se pudo comprobar el impacto en el precio. Revisa la tasa antes de hacer el intercambio.",
     "unknown": "Desconocido",
     "unknown_chain": "Cadena desconocida",
     "unknown_token": "Token desconocido",

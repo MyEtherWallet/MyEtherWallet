@@ -11,6 +11,7 @@
     "review-swap": "Review swap",
     "review-bridge": "Review bridge",
     "price-impact-too-high": "Price impact is too high {percent}%",
+    "price-impact-unknown": "Price impact couldn't be checked. Review the rate before you swap.",
     "unknown": "Unknown",
     "unknown_chain": "Unknown Chain",
     "unknown_token": "Unknown Token",

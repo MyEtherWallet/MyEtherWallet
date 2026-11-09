@@ -95,8 +95,16 @@
           v-if="!isLoading && priceImpactTooHigh"
           type="alert"
           :description="
-            t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
+            t('swap.price-impact-too-high', {
+              percent: priceImpact?.toFixed(2),
+            })
           "
+          class="w-full"
+        />
+        <AppBanner
+          v-if="!isLoading && priceImpactUnknown"
+          type="warning"
+          :description="t('swap.price-impact-unknown')"
           class="w-full"
         />
         <AppBanner
@@ -218,6 +226,7 @@ const {
   toAmountError,
   priceImpact,
   priceImpactTooHigh,
+  priceImpactUnknown,
   isSwapDisabled,
   swapFeeError,
   isInternalWallet,

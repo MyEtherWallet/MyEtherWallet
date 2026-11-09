@@ -17,7 +17,10 @@ import {
   meetsOutputFloor,
   inputForOutputFloor,
 } from '@/modules/swap/swapMinAmount'
-import { quotePriceImpact } from '@/modules/swap/swapPriceImpact'
+import {
+  isPriceImpactTooHigh,
+  quotePriceImpact,
+} from '@/modules/swap/swapPriceImpact'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm, type InitiatedSwap } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -136,8 +139,9 @@ interface SwapModuleBindings {
   fromLoadingState: ComputedRef<boolean>
   fromAmountError: ComputedRef<string>
   toAmountError: ComputedRef<string>
-  priceImpact: ComputedRef<number>
+  priceImpact: ComputedRef<number | null>
   priceImpactTooHigh: ComputedRef<boolean>
+  priceImpactUnknown: ComputedRef<boolean>
   isSwapDisabled: ComputedRef<boolean>
   swapFeeError: ComputedRef<string | undefined>
   isInternalWallet: () => boolean
@@ -155,7 +159,6 @@ interface SwapModuleBindings {
 
 export function useSwapModule(): SwapModuleBindings {
   const isDevMode = configs.IS_DEV_MODE
-  const MAX_PRICE_IMPACT = 10
   // --- Stores ---
   const walletMenu = useWalletMenuStore()
   const { walletPanel } = storeToRefs(walletMenu)
@@ -414,9 +417,12 @@ export function useSwapModule(): SwapModuleBindings {
     ),
   )
 
-  const priceImpactTooHigh = computed(
-    () => priceImpact.value > MAX_PRICE_IMPACT,
+  const priceImpactTooHigh = computed(() =>
+    isPriceImpactTooHigh(priceImpact.value),
   )
+
+  // A token without a price leaves the impact unknown: warn, don't block.
+  const priceImpactUnknown = computed(() => priceImpact.value === null)
 
   const isSwapDisabled = computed(
     () =>
@@ -1322,6 +1328,7 @@ export function useSwapModule(): SwapModuleBindings {
     isSameToken,
     priceImpact,
     priceImpactTooHigh,
+    priceImpactUnknown,
     swapFeeError,
   })
   const swapQuoteFeature = useSwapQuote({
@@ -1742,6 +1749,7 @@ export function useSwapModule(): SwapModuleBindings {
     toAmountError: swapValidationFeature.toAmountError,
     priceImpact: swapValidationFeature.priceImpact,
     priceImpactTooHigh: swapValidationFeature.priceImpactTooHigh,
+    priceImpactUnknown: swapValidationFeature.priceImpactUnknown,
     isSwapDisabled: swapValidationFeature.isSwapDisabled,
     swapFeeError: swapValidationFeature.swapFeeError,
     isInternalWallet,
