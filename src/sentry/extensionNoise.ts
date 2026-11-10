@@ -452,7 +452,7 @@ export function isWalletConnectStaleSessionTopicError(err: unknown): boolean {
  */
 export function isWalletConnectPublishFailedError(err: unknown): boolean {
   const SESSION_DELETE_PUBLISH_FAILED =
-    /Failed to publish payload, please try again\. id:\d+ tag:1112$/
+    /^Failed to publish payload, please try again\. id:\d+ tag:1112$/
   if (typeof err === 'string') return SESSION_DELETE_PUBLISH_FAILED.test(err)
   if (!err || typeof err !== 'object') return false
   const message = (err as { message?: unknown }).message

@@ -1016,6 +1016,12 @@ describe('isWalletConnectPublishFailedError', () => {
     ).toBe(false)
   })
 
+  it('keeps reporting an app error that wraps the message with a prefix', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error(`Signing failed: ${MSG}`)),
+    ).toBe(false)
+  })
+
   it('is false for a genuine app error and non-matching inputs', () => {
     expect(
       isWalletConnectPublishFailedError(new Error('Failed to publish post')),
