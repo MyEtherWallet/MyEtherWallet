@@ -17,10 +17,7 @@
         >
           <template
             v-if="
-              isWalletConnected &&
-              !isWatchOnly &&
-              tokenSelected &&
-              isInternalWallet()
+              isWalletConnected && !isWatchOnly && tokenSelected && canUseMax()
             "
             #footer
           >
@@ -272,7 +269,7 @@ const isNativeTokenSelected = computed(() => {
 const {
   setMaxAmount,
   resetMaxState,
-  isInternalWallet,
+  canUseMax,
   isMaxSelected,
   applyMaxAmount,
 } = useMaxAmount({
