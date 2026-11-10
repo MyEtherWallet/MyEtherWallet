@@ -59,6 +59,7 @@
       "cancel": "Close"
     },
     "menu": {
+      "label": "Account menu",
       "rename": "Rename",
       "copy": "Copy address",
       "refresh": "Refresh balance",

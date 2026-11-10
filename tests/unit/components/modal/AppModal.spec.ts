@@ -306,6 +306,15 @@ describe('AppModal', () => {
       )
     })
 
+    it('focuses the panel, not the first control, when autofocus is off', async () => {
+      mountModal(
+        { autofocus: false },
+        { default: '<input data-test="first" />' },
+      )
+      await flushPromises()
+      expect(document.activeElement).toBe(dialog())
+    })
+
     it('returns focus to the opener on close', async () => {
       const opener = document.createElement('button')
       document.body.appendChild(opener)

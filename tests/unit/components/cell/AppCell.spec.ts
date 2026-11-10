@@ -155,6 +155,20 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(w.attributes('aria-disabled')).toBe('true')
   })
 
+  it('dims everything but the suffix on a disabled row', () => {
+    const w = mountCell(
+      { disabled: true },
+      { ...avatarSlot, suffix: '<span data-test="tag">Paused</span>' },
+    )
+    expect(w.classes()).not.toContain('opacity-30')
+    expect(w.classes()).toContain(
+      '[&>:not([data-test=cell-suffix])]:opacity-30',
+    )
+    expect(w.get('[data-test="tag"]').element.parentElement?.dataset.test).toBe(
+      'cell-suffix',
+    )
+  })
+
   it('opts out of hover, cursor and button role when interactive=false', async () => {
     const w = mountCell({ interactive: false })
     expect(w.classes()).not.toContain('hover:bg-background-alternative-hover')

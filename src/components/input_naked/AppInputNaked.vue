@@ -45,7 +45,7 @@
           :placeholder="placeholder"
           :aria-label="label"
           :aria-invalid="error || undefined"
-          :aria-describedby="hasInfoRow ? infoId : undefined"
+          :aria-describedby="hasInfoRow ? infoId : externalDescribedBy"
           type="text"
           inputmode="decimal"
           autocomplete="off"
@@ -117,6 +117,12 @@ const attrs = useAttrs()
 const attrsClass = computed(() => attrs.class)
 const inputAttrs = computed(() =>
   Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'class')),
+)
+
+// Kept when the info row is hidden, so a consumer can render its own (e.g. the
+// transaction input card) and still describe the input with it
+const externalDescribedBy = computed(
+  () => attrs['aria-describedby'] as string | undefined,
 )
 
 const generatedId = useId()

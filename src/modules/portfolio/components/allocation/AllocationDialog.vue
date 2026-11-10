@@ -8,16 +8,19 @@
     >
       {{ $t('common.view_all') }}</app-base-button
     >
-    <app-modal v-model="openDialog" :title="t('common.allocation')">
+    <app-modal
+      v-model="openDialog"
+      :title="t('common.allocation')"
+      :autofocus="false"
+    >
       <div
-        class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4"
+        class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4 pt-4"
       >
         <div
           class="flex gap-4 justify-between items-center mb-4 rounded-full bg-background-formfield"
         >
           <app-searchbar
             v-model="searchInput"
-            variant="outline"
             class="grow"
             :placeholder="$t('select_token.search')"
           />
@@ -91,7 +94,8 @@
             <button
               v-for="token in searchResults"
               :key="token.symbol + token.id"
-              class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-background-default"
+              class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-background-default disabled:pointer-events-none"
+              :disabled="!token.id && !token.stock_route"
               @click="routeToToken(token)"
             >
               <div class="flex justify-between items-center w-full">
@@ -264,7 +268,7 @@ const routeToToken = (token: TokenAllocation) => {
   } else {
     router.push({
       name: TOKEN_INFO_ROUTE_NAMES.home,
-      params: { tokenId: token.id || token.symbol },
+      params: { tokenId: token.id },
     })
   }
 }

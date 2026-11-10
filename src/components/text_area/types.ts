@@ -37,18 +37,16 @@ export const textAreaFieldClass = ({
   error,
   disabled,
   focused,
-  active,
 }: {
   surface: InputSurface
   filled: boolean
   error: boolean
   disabled: boolean
   focused: boolean
-  active: boolean
 }): string => {
   const bg = TEXT_AREA_BG[surface]
   const rest = filled || error || disabled ? TEXT_AREA_REST_LINE[surface] : ''
-  if (disabled || (focused && active)) return `${bg} ${rest}`
+  if (disabled) return `${bg} ${rest}`
   if (focused) return `${bg} ${FOCUS}`
   return `${bg} ${rest} ${filled || error ? HOVER_THICK : HOVER_THIN}`
 }

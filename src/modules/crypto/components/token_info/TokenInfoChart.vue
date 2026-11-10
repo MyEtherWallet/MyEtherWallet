@@ -142,7 +142,7 @@ const labels = computed<number[]>(() => {
 })
 
 const endpoint = computed(() => {
-  return `/v1/web/token-price-chart/coins/${props.tokenId}?interval=${selectedChartFilter.value.value}`
+  return `/v1/web/token-price-chart/coins/${encodeURIComponent(props.tokenId)}?interval=${selectedChartFilter.value.value}`
 })
 
 const refetch = computed(() => {

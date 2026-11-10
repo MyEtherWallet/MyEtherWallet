@@ -17,8 +17,12 @@ import {
   meetsOutputFloor,
   inputForOutputFloor,
 } from '@/modules/swap/swapMinAmount'
+import {
+  isPriceImpactTooHigh,
+  quotePriceImpact,
+} from '@/modules/swap/swapPriceImpact'
 import { useBlockedContent } from '@/composables/useBlockedContent'
-import { useSwapForm } from './useSwapForm'
+import { useSwapForm, type InitiatedSwap } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useInputStore } from '@/stores/inputStore'
@@ -116,6 +120,7 @@ interface SwapModuleBindings {
   swapInfo: Ref<ProviderSwapResponse | null>
   swapGasFeeQuote: Ref<QuotesResponse | undefined>
   txHash: Ref<HexPrefixedString>
+  initiatedSwap: Ref<InitiatedSwap | null>
   bestSwapLoadingOpen: Ref<boolean>
   bestOfferSelectionOpen: Ref<boolean>
   swapInitiatedOpen: Ref<boolean>
@@ -134,18 +139,19 @@ interface SwapModuleBindings {
   fromLoadingState: ComputedRef<boolean>
   fromAmountError: ComputedRef<string>
   toAmountError: ComputedRef<string>
-  priceImpact: ComputedRef<number>
+  priceImpact: ComputedRef<number | null>
   priceImpactTooHigh: ComputedRef<boolean>
+  priceImpactUnknown: ComputedRef<boolean>
   isSwapDisabled: ComputedRef<boolean>
   swapFeeError: ComputedRef<string | undefined>
-  isInternalWallet: () => boolean
-  handleMaxClick: () => void
+  /** MAX availability: any wallet on a token, internal wallets on native. */
+  canUseMax: () => boolean
+  /** Max (100) or a % preset of the from balance. */
+  handleMaxClick: (percentage?: number) => void
   switchGlobalNetwork: (chain: Chain) => void
-  clearValues: () => void
   validateToAddress: () => Promise<void>
   proceedWithSwap: (quoteId: string) => Promise<void>
   swapButton: () => Promise<void>
-  cancelSwap: () => void
   setToChain: (chain: Chain) => void
   connectWalletForSwap: () => void
   bindWatchers: () => void
@@ -154,7 +160,6 @@ interface SwapModuleBindings {
 
 export function useSwapModule(): SwapModuleBindings {
   const isDevMode = configs.IS_DEV_MODE
-  const MAX_PRICE_IMPACT = 10
   // --- Stores ---
   const walletMenu = useWalletMenuStore()
   const { walletPanel } = storeToRefs(walletMenu)
@@ -221,6 +226,7 @@ export function useSwapModule(): SwapModuleBindings {
     swapInfo,
     swapGasFeeQuote,
     txHash,
+    initiatedSwap,
     localToTokens,
     isLoadingQuotes,
     bestSwapLoadingOpen,
@@ -404,20 +410,20 @@ export function useSwapModule(): SwapModuleBindings {
     return ''
   })
 
-  const priceImpact = computed(() => {
-    const fromAmt = parseFloat(fromAmount.value)
-    const toAmt = parseFloat(toAmount.value)
-    const fromPrice = fromTokenSelected.value?.price || 0
-    const toPrice = toTokenSelected.value?.price || 0
-    if (!fromAmt || !toAmt || !fromPrice || !toPrice) return 0
-    const fromValue = fromAmt * fromPrice
-    const toValue = toAmt * toPrice
-    return ((fromValue - toValue) / fromValue) * 100
-  })
-
-  const priceImpactTooHigh = computed(
-    () => priceImpact.value > MAX_PRICE_IMPACT,
+  const priceImpact = computed(() =>
+    quotePriceImpact(
+      providers.value[0],
+      fromTokenSelected.value,
+      toTokenSelected.value,
+    ),
   )
+
+  const priceImpactTooHigh = computed(() =>
+    isPriceImpactTooHigh(priceImpact.value),
+  )
+
+  // A token without a price leaves the impact unknown: warn, don't block.
+  const priceImpactUnknown = computed(() => priceImpact.value === null)
 
   const isSwapDisabled = computed(
     () =>
@@ -472,39 +478,44 @@ export function useSwapModule(): SwapModuleBindings {
     return gasFee + additionalFees
   }
 
-  const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
-    useMaxAmount({
-      getBalance: () => {
-        if (!fromTokenSelected.value) return 0n
-        const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
-        return tokenParams.totalBalance
-      },
-      getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
-      getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
-      isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
-      isTokenSelected: () => !!fromTokenSelected.value,
-      getAmount: () => fromAmount.value,
-      onAmountChange: value => {
-        fromAmount.value = String(value)
-      },
-      markFormDirty,
-      resetFormPristine: resetPristine,
-      getTokenIdentifier: () => fromTokenSelected.value?.address,
-      getDependencies: () => [
-        fromTokenSelected.value?.balance,
-        swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
-          swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
-        selectedQuote.value?.additionalNativeFees?.toString(),
-      ],
-    })
+  const {
+    setMaxAmount,
+    resetMaxState,
+    canUseMax,
+    isMaxSelected,
+    selectedPercentage,
+  } = useMaxAmount({
+    getBalance: () => {
+      if (!fromTokenSelected.value) return 0n
+      const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
+      return tokenParams.totalBalance
+    },
+    getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
+    getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
+    isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
+    isTokenSelected: () => !!fromTokenSelected.value,
+    getAmount: () => fromAmount.value,
+    onAmountChange: value => {
+      fromAmount.value = String(value)
+    },
+    markFormDirty,
+    resetFormPristine: resetPristine,
+    getTokenIdentifier: () => fromTokenSelected.value?.address,
+    getDependencies: () => [
+      fromTokenSelected.value?.balance,
+      swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
+        swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
+      selectedQuote.value?.additionalNativeFees?.toString(),
+    ],
+  })
 
-  const handleMaxClick = (): void => {
-    if (isMaxSelected.value) return
+  const handleMaxClick = (percentage = 100): void => {
+    if (isMaxSelected.value && selectedPercentage.value === percentage) return
     // Discard any prior quote/fee so the new max is calculated against the full
     // balance, not against a fee that was estimated for a smaller manual amount.
     selectedQuote.value = undefined
     swapGasFeeQuote.value = undefined
-    setMaxAmount()
+    setMaxAmount(percentage)
   }
 
   const switchGlobalNetwork = (chain: Chain) => {
@@ -622,6 +633,20 @@ export function useSwapModule(): SwapModuleBindings {
     generalError.value = ''
     const analyticsPayload = getAnalyticsShared()
     analytics.trackSwapEvent(SwapEvent.OFFER_PROCEED, analyticsPayload)
+    // Read now, not after the signature: the wallet prompt can stay open for a
+    // while, and meanwhile balance polling / token-list refreshes / quote
+    // refetches mutate the form (`selectedQuote` gets cleared, amounts reset).
+    // The initiated modal and the post-tx reward check must describe what was
+    // submitted, not what the form holds when the hash finally lands.
+    const submitted = {
+      fromChain: selectedChain.value,
+      toChain: selectedToChain.value,
+      selectedQuote: selectedQuote.value,
+      toAddress: toAddress.value,
+      fromAddress: userAddress.value,
+    }
+    const submittedUsdValue =
+      parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
     try {
       let txPromise: Promise<string> | undefined
 
@@ -636,14 +661,17 @@ export function useSwapModule(): SwapModuleBindings {
       if (txPromise) {
         const hash = await txPromise
         txHash.value = hash as HexPrefixedString
+        // Set before the modal opens so its open-watcher sees the full set.
+        initiatedSwap.value = {
+          ...submitted,
+          txHash: hash as HexPrefixedString,
+        }
         bestOfferSelectionOpen.value = false
         swapInitiatedOpen.value = true
         //check reward elements availability after transaction is sent
         let canEarnReward: undefined | boolean = undefined
 
-        const fromUsdValue =
-          parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-        if (fromUsdValue > 50) {
+        if (submittedUsdValue > 50) {
           const canEarn =
             await rewardsStore.checkAvailabilityAfterTransaction('swap')
           canEarnReward = canEarn ? true : undefined
@@ -911,10 +939,6 @@ export function useSwapModule(): SwapModuleBindings {
     const analyticsPayload = getAnalyticsShared()
     analytics.trackSwapEvent(SwapEvent.CLICK_SWAP, analyticsPayload)
     return isBitcoinChain.value ? swapForBtc() : swapForEvm()
-  }
-
-  const cancelSwap = () => {
-    bestOfferSelectionOpen.value = false
   }
 
   // Monotonic id so a superseded in-flight request can't apply its results or
@@ -1305,6 +1329,7 @@ export function useSwapModule(): SwapModuleBindings {
     isSameToken,
     priceImpact,
     priceImpactTooHigh,
+    priceImpactUnknown,
     swapFeeError,
   })
   const swapQuoteFeature = useSwapQuote({
@@ -1389,6 +1414,7 @@ export function useSwapModule(): SwapModuleBindings {
 
           // Cleanup
           txHash.value = '0x'
+          initiatedSwap.value = null
           providers.value = []
           clearValues()
         }
@@ -1703,6 +1729,7 @@ export function useSwapModule(): SwapModuleBindings {
     swapInfo,
     swapGasFeeQuote,
     txHash,
+    initiatedSwap,
     bestSwapLoadingOpen,
     bestOfferSelectionOpen,
     swapInitiatedOpen,
@@ -1723,16 +1750,15 @@ export function useSwapModule(): SwapModuleBindings {
     toAmountError: swapValidationFeature.toAmountError,
     priceImpact: swapValidationFeature.priceImpact,
     priceImpactTooHigh: swapValidationFeature.priceImpactTooHigh,
+    priceImpactUnknown: swapValidationFeature.priceImpactUnknown,
     isSwapDisabled: swapValidationFeature.isSwapDisabled,
     swapFeeError: swapValidationFeature.swapFeeError,
-    isInternalWallet,
+    canUseMax,
     handleMaxClick,
     switchGlobalNetwork,
-    clearValues,
     validateToAddress,
     proceedWithSwap: swapExecutionFeature.proceedWithSwap,
     swapButton: swapExecutionFeature.swapButton,
-    cancelSwap,
     setToChain,
     connectWalletForSwap,
     bindWatchers,
