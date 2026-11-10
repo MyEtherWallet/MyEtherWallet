@@ -4,7 +4,6 @@ import { mount } from '@vue/test-utils'
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (k: string) => k }) }))
 
 import AppActionBar from '@/components/action_bar/AppActionBar.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import type { ActionBarItem } from '@/components/action_bar/types'
 
 const items: ActionBarItem[] = [
@@ -17,12 +16,12 @@ const factory = (props: Record<string, unknown> = {}) =>
   mount(AppActionBar, { props: { items, ...props } })
 
 describe('AppActionBar', () => {
-  it('renders the top action plus one button per item inside a nav', () => {
+  it('renders one button per item inside a nav', () => {
     const wrapper = factory()
     expect(wrapper.get('nav').attributes('aria-label')).toBe(
       'common.wallet_actions',
     )
-    expect(wrapper.findAll('button')).toHaveLength(items.length + 1)
+    expect(wrapper.findAll('button')).toHaveLength(items.length)
     expect(wrapper.findAll('li')).toHaveLength(items.length)
   })
 
@@ -30,13 +29,6 @@ describe('AppActionBar', () => {
     const wrapper = factory()
     await wrapper.get('[data-action-id="swap"]').trigger('click')
     expect(wrapper.emitted('select')).toEqual([['swap']])
-  })
-
-  it('emits toggle from the top action', async () => {
-    const wrapper = factory()
-    await wrapper.findAll('button')[0].trigger('click')
-    expect(wrapper.emitted('toggle')).toHaveLength(1)
-    expect(wrapper.emitted('select')).toBeUndefined()
   })
 
   it('marks only the activeId button as pressed', () => {
@@ -53,20 +45,8 @@ describe('AppActionBar', () => {
     expect(send.disabled).toBe(true)
   })
 
-  it('flips the chevron and the top action name with expanded', async () => {
+  it('has no top action: the drawer owns its close button', () => {
     const wrapper = factory()
-    const top = () => wrapper.findAll('button')[0]
-    expect(wrapper.findAllComponents(AppIcon)[0].props('name')).toBe(
-      'chevron-double-left',
-    )
-    expect(top().attributes('aria-expanded')).toBe('false')
-    expect(top().attributes('aria-label')).toBe('common.open_side_menu')
-
-    await wrapper.setProps({ expanded: true })
-    expect(wrapper.findAllComponents(AppIcon)[0].props('name')).toBe(
-      'chevron-double-right',
-    )
-    expect(top().attributes('aria-expanded')).toBe('true')
-    expect(top().attributes('aria-label')).toBe('common.close_side_menu')
+    expect(wrapper.get('nav').element.firstElementChild?.tagName).toBe('UL')
   })
 })
