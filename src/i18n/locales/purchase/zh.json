@@ -1,13 +1,15 @@
 {
   "purchase": {
+    "title": "买入与卖出",
+    "description": "任意加密资产",
+    "on_network": "{network} 网络",
     "buy": {
       "title": "购买",
-      "youre_buying": "您正在购买",
+      "you_are_paying": "您将支付",
       "enter_amount": "输入数量",
-      "continue": "继续",
+      "continue": "查看购买",
       "connect_wallet": "连接钱包",
       "no_quotes": "未找到报价",
-      "need_help": "购买需要帮助？",
       "network_not_supported": "不支持该网络",
       "network_not_available": "{network} 上暂不支持购买。请切换到受支持的网络。",
       "error": {
@@ -18,14 +20,11 @@
     },
     "sell": {
       "title": "出售",
-      "youre_selling": "您正在出售",
-      "your_balance": "您的余额：",
+      "you_are_selling": "您将出售",
+      "balance": "余额：{amount}",
       "enter_amount": "输入数量",
-      "continue": "继续",
+      "continue": "查看出售",
       "connect_wallet": "连接钱包",
-      "need_help": "出售需要帮助？",
-      "network_fee": "网络费用",
-      "network_fee_tooltip": "{chain} 网络中的费用以 {symbol} 收取",
       "network_not_supported": "不支持该网络",
       "network_not_available": "{network} 上暂不支持出售。请切换到受支持的网络。",
       "error": {
@@ -34,42 +33,38 @@
         "insufficient": "{symbol} 不足"
       },
       "provider": {
-        "title": "您将出售 {amount}",
-        "youll_send": "您将发送",
-        "youll_receive": "您将收到",
-        "continue": "继续"
+        "review_title": "查看出售",
+        "confirm": "确认出售"
       }
     },
-    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal, Venmo, Cash App",
+    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
     "min": "最低",
     "max": "最高",
-    "bank": "银行",
     "select_token": {
-      "title": "代币",
-      "subtitle": "从列表中选择一个",
-      "search_placeholder": "搜索",
-      "filter_all_networks": "所有网络",
-      "filter_title": "按网络筛选",
-      "filter_subtitle": "从列表中选择一个网络",
-      "no_results": "没有匹配的代币"
+      "title_buy": "选择要买入的资产",
+      "title_sell": "选择要卖出的资产",
+      "filter_all_networks": "所有网络"
     },
     "select_currency": {
-      "title": "货币",
-      "subtitle": "从列表中选择一种货币",
-      "search_placeholder": "搜索",
+      "title": "选择货币",
       "no_results": "没有匹配的货币"
     },
     "select_provider": {
-      "title": "您将支付 {amount}",
-      "subtitle": "请从以下服务商中选择一个，以确定您将收到多少 {crypto}。",
       "best_value": "最优",
-      "youll_pay": "您将支付",
-      "youll_receive": "您将收到",
-      "continue": "继续",
       "error": {
         "no_quotes": "没有适用于此选择的服务商。请尝试其他数量或货币。"
       },
-      "redirect": "您将被重定向至 {provider} 以完成购买。"
+      "review_title": "查看购买",
+      "provider": "购买服务商",
+      "summary": "摘要",
+      "youre_paying": "您将支付",
+      "expected_to_receive": "预计获得",
+      "confirm": "确认购买"
+    },
+    "quote": {
+      "updates_in": "报价将在 {time} 后刷新",
+      "expired_refreshing": "报价已过期，正在获取新报价…",
+      "rate_limited": "请求过多，请在 {seconds} 秒后重试"
     }
   }
 }

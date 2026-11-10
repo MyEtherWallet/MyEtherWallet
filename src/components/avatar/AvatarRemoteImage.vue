@@ -13,6 +13,8 @@ const props = defineProps<{
   fallbackText?: string
   /** Fallback text size class; caller scales it per avatar size. */
   fallbackTextClass?: string
+  /** `cover` fills the circle with non-square art (e.g. 28×20 fiat flags). */
+  fit?: 'contain' | 'cover'
 }>()
 
 const isLoading = ref(true)
@@ -59,7 +61,10 @@ watch(
     <img
       v-if="image && !isLoading"
       :src="image"
-      class="w-full h-full object-contain"
+      :class="[
+        'w-full h-full',
+        fit === 'cover' ? 'object-cover' : 'object-contain',
+      ]"
       alt=""
     />
     <span

@@ -9,6 +9,7 @@ const props = defineProps<{
   size: AvatarSize
   url?: string | null
   symbol?: string
+  fit?: 'contain' | 'cover'
 }>()
 
 defineOptions({ inheritAttrs: false })
@@ -21,5 +22,6 @@ const fallbackTextClass = computed(() => AVATAR_FALLBACK_TEXT_CLASS[props.size])
     :url="url"
     :fallback-text="symbol"
     :fallback-text-class="fallbackTextClass"
+    :fit="fit"
   />
 </template>

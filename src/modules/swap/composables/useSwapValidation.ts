@@ -5,8 +5,9 @@ interface Options {
   toAmountError: ComputedRef<string>
   isSwapDisabled: ComputedRef<boolean>
   isSameToken: ComputedRef<boolean>
-  priceImpact: ComputedRef<number>
+  priceImpact: ComputedRef<number | null>
   priceImpactTooHigh: ComputedRef<boolean>
+  priceImpactUnknown: ComputedRef<boolean>
   swapFeeError: ComputedRef<string | undefined>
 }
 
