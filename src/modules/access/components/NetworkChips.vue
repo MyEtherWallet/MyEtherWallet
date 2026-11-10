@@ -22,10 +22,12 @@
         </template>
       </AppChip>
     </div>
+    <!-- The "+" ends the row, so the menu opens leftward from its right edge;
+         anchored left it ran off a phone screen. -->
     <AppPopUpMenu
       class="shrink-0"
       teleport
-      location="left"
+      location="right"
       menu-radius-class="rounded-16"
       @update:open="onOpen"
     >

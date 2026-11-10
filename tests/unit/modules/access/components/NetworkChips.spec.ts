@@ -101,6 +101,22 @@ describe('NetworkChips', () => {
     ).toBe('Ethereum')
   })
 
+  it('opens the menu inward from the "+" so it stays on a phone screen', async () => {
+    // The "+" ends the row, 16px from the right edge of a 375px screen.
+    vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(375)
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      left: 311,
+      right: 343,
+      bottom: 120,
+    } as DOMRect)
+    const w = mountChips()
+    await w.get('[data-testid="network-more"]').trigger('click')
+    const menu = w.get<HTMLElement>('.app-popup-menu-floating').element
+    expect(menu.style.right).toBe('32px')
+    expect(menu.style.left).toBe('')
+    vi.restoreAllMocks()
+  })
+
   it('marks the selected network in the menu', async () => {
     const scrollIntoView = vi.fn()
     Element.prototype.scrollIntoView = scrollIntoView
