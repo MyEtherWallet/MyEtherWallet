@@ -437,6 +437,24 @@ export function isWalletConnectStaleSessionTopicError(err: unknown): boolean {
   )
 }
 
+/**
+ * Whether an error is the WalletConnect relay publish timeout
+ * (`Failed to publish payload, please try again. id:<id> tag:<tag>`), thrown by
+ * `@walletconnect/core`'s publisher when the relay doesn't acknowledge a
+ * message in time. Seen when wagmi's WalletConnect connector deletes a stale
+ * session before connecting (tag 1112 = `wc_sessionDelete`). The connect flow
+ * already shows a "Could not connect" toast and the user can retry, so it is
+ * transient relay noise (APP-MEW-WEB-1RW / MEW-2657). MEW never throws this
+ * message. Handles both the Error-object and bare-string payload shapes.
+ */
+export function isWalletConnectPublishFailedError(err: unknown): boolean {
+  const MESSAGE = 'Failed to publish payload, please try again.'
+  if (typeof err === 'string') return err.includes(MESSAGE)
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return typeof message === 'string' && message.includes(MESSAGE)
+}
+
 // The null-`info` deref message, in both shapes the crash surfaces as: the
 // `he.info` read (`Cannot read properties of null (reading 'info')`) and the
 // `({ info }) =>` destructure (`Cannot destructure property 'info' of ...`).

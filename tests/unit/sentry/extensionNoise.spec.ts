@@ -23,6 +23,7 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectPublishFailedError,
   isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
@@ -984,6 +985,38 @@ describe('isWalletConnectStaleSessionTopicError', () => {
     expect(isWalletConnectStaleSessionTopicError(undefined)).toBe(false)
     expect(isWalletConnectStaleSessionTopicError({})).toBe(false)
     expect(isWalletConnectStaleSessionTopicError({ message: 42 })).toBe(false)
+  })
+})
+
+describe('isWalletConnectPublishFailedError', () => {
+  // Exact production message (APP-MEW-WEB-1RW): tag 1112 = wc_sessionDelete.
+  const MSG =
+    'Failed to publish payload, please try again. id:1794229263589309184 tag:1112'
+
+  it('drops the @walletconnect/core relay publish timeout (APP-MEW-WEB-1RW)', () => {
+    expect(isWalletConnectPublishFailedError(new Error(MSG))).toBe(true)
+  })
+
+  it('is true for the serialized payload and a bare-string rejection', () => {
+    expect(isWalletConnectPublishFailedError({ message: MSG })).toBe(true)
+    expect(isWalletConnectPublishFailedError(MSG)).toBe(true)
+  })
+
+  it('is true for any relay tag, not just wc_sessionDelete', () => {
+    expect(
+      isWalletConnectPublishFailedError(
+        new Error('Failed to publish payload, please try again. id:1 tag:1108'),
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for a genuine app error and non-matching inputs', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error('Failed to publish post')),
+    ).toBe(false)
+    expect(isWalletConnectPublishFailedError(null)).toBe(false)
+    expect(isWalletConnectPublishFailedError({})).toBe(false)
+    expect(isWalletConnectPublishFailedError({ message: 42 })).toBe(false)
   })
 })
 
