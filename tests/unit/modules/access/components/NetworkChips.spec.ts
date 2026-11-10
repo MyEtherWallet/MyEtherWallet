@@ -44,7 +44,10 @@ const mountChips = (selected = CHAINS[0]) => {
   })
   return wrapper
 }
-afterEach(() => wrapper?.unmount())
+afterEach(() => {
+  wrapper?.unmount()
+  vi.restoreAllMocks()
+})
 
 const chips = (w: VueWrapper) => w.findAll('[data-testid="network-chip"]')
 const options = (w: VueWrapper) =>
@@ -102,7 +105,8 @@ describe('NetworkChips', () => {
   })
 
   it('opens the menu inward from the "+" so it stays on a phone screen', async () => {
-    // The "+" ends the row, 16px from the right edge of a 375px screen.
+    // The "+" ends the row, 32px from the right edge of a 375px screen
+    // (modal margin + content padding).
     vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(375)
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
       left: 311,
@@ -114,7 +118,6 @@ describe('NetworkChips', () => {
     const menu = w.get<HTMLElement>('.app-popup-menu-floating').element
     expect(menu.style.right).toBe('32px')
     expect(menu.style.left).toBe('')
-    vi.restoreAllMocks()
   })
 
   it('marks the selected network in the menu', async () => {
