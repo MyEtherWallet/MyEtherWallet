@@ -96,6 +96,14 @@ describe('AppAccordion — design-library Accordion (MEW-2465)', () => {
     expect(panel(w).attributes('id')).toBe('fees-body')
   })
 
+  it('follows a later id change on the header and body', async () => {
+    const w = mountAccordion({ id: 'fees' })
+    await w.setProps({ id: 'gas' })
+    expect(header(w).attributes('id')).toBe('gas-header')
+    expect(header(w).attributes('aria-controls')).toBe('gas-body')
+    expect(panel(w).attributes('id')).toBe('gas-body')
+  })
+
   it('gives each instance its own ids', () => {
     // useId is unique per app tree, so both live under one parent.
     const w = mount(
@@ -121,6 +129,19 @@ describe('AppAccordion — design-library Accordion (MEW-2465)', () => {
     expect(w.emitted('update:open')).toBeUndefined()
     expect(header(w).attributes(aria)).toBe('true')
   })
+
+  it.each(['disabled', 'loading'])(
+    'keeps the disclosure role and state on the header while %s',
+    prop => {
+      const h = header(
+        mountAccordion({ [prop]: true, open: true, 'onUpdate:open': () => {} }),
+      )
+      expect(h.attributes('role')).toBe('button')
+      expect(h.attributes('aria-expanded')).toBe('true')
+      // still out of the tab order, like the Cell
+      expect(h.attributes('tabindex')).toBeUndefined()
+    },
+  )
 
   it('keeps the chevron visible while loading', () => {
     expect(
@@ -221,6 +242,11 @@ describe('AppAccordionGroup', () => {
     expect(w.emitted('update:modelValue')).toEqual([[null]])
   })
 
+  it('opens only one panel in single mode even if the model holds several keys', () => {
+    const w = mountGroup({ modelValue: ['a', 'b'] })
+    expect(panels(w).map(p => p.isVisible())).toEqual([true, false])
+  })
+
   it('lets several stay open with multiple', async () => {
     const w = mountGroup({ multiple: true })
     await headers(w)[0].trigger('click')
@@ -240,5 +266,25 @@ describe('AppAccordionGroup', () => {
     expect(panels(w).map(p => p.isVisible())).toEqual([true, false])
     await w.setProps({ modelValue: 'b' })
     expect(panels(w).map(p => p.isVisible())).toEqual([false, true])
+  })
+
+  it("keeps a nested accordion out of the outer group, so it doesn't close its parent", async () => {
+    const w = mount(AppAccordionGroup, {
+      props: { modelValue: 'outer', 'onUpdate:modelValue': () => {} },
+      ...opts,
+      slots: {
+        default: () =>
+          h(
+            AppAccordion,
+            { value: 'outer', title: 'Outer' },
+            { default: () => h(AppAccordion, { title: 'Inner' }) },
+          ),
+      },
+    })
+    const [outer, inner] = headers(w)
+    await inner.trigger('click')
+    expect(w.emitted('update:modelValue')).toBeUndefined()
+    expect(panels(w).map(p => p.isVisible())).toEqual([true, true])
+    expect(outer.attributes('aria-expanded')).toBe('true')
   })
 })

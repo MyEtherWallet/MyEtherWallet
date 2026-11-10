@@ -85,10 +85,13 @@ const multipleOpen = ref<string[]>(['Ethereum'])
             class="flex flex-col gap-1"
           >
             <span class="text-text-xs text-text-subtle">{{ state.label }}</span>
+            <!-- The no-op listener keeps :open controlled, so a click can't open a
+                 cell labelled "Open: False". -->
             <AppAccordion
               :surface="s.surface"
               :open="o.open"
               v-bind="state.props"
+              @update:open="() => {}"
               title="Title"
               description="Information"
               :right-accessory="BALANCE"

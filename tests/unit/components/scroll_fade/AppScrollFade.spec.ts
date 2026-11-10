@@ -47,7 +47,7 @@ describe('AppScrollFade', () => {
     expect(button.attributes('aria-hidden')).toBeUndefined()
     expect(button.classes()).toEqual(
       expect.arrayContaining([
-        'size-8',
+        'size-10',
         'pointer-events-auto',
         'bg-background-alternative',
         'shadow-button',
