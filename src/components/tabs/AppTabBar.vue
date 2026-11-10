@@ -7,7 +7,7 @@
  * @example
  * <AppTabBar v-model="tab" :items="[{ id: 'stocks', label: 'Stocks' }]" label="Assets" />
  */
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import AppTabItem from './AppTabItem.vue'
 import type { TabBarItem, TabBarSurface } from './types'
 
@@ -41,6 +41,26 @@ const select = (id: TId) => {
   if (id !== model.value) model.value = id
 }
 
+/** The tab focus ring (2px outline, 4px offset); the tablist pads by as much. */
+const RING_SPACE = 6
+
+// Scrolls the tablist only, ring included. scrollIntoView would also scroll
+// the page to bars below the fold (home sections) when they mount.
+const reveal = (tab?: HTMLElement | null) => {
+  const list = listRef.value
+  if (!list || !tab) return
+  const start = tab.offsetLeft - RING_SPACE
+  const end = tab.offsetLeft + tab.offsetWidth + RING_SPACE
+  if (start < list.scrollLeft) list.scrollLeft = start
+  else if (end > list.scrollLeft + list.clientWidth)
+    list.scrollLeft = end - list.clientWidth
+}
+
+const revealSelected = () =>
+  reveal(listRef.value?.querySelector<HTMLElement>('[aria-selected="true"]'))
+onMounted(revealSelected)
+watch(model, revealSelected, { flush: 'post' })
+
 const onKeydown = (event: KeyboardEvent) => {
   if (!listRef.value) return
   const tabs = Array.from(
@@ -59,18 +79,22 @@ const onKeydown = (event: KeyboardEvent) => {
   const next = nextIndexByKey[event.key]
   if (next === undefined) return
   event.preventDefault()
-  tabs[next].focus()
+  tabs[next].focus({ preventScroll: true })
+  reveal(tabs[next])
 }
 </script>
 
 <template>
   <div class="w-full border-b" :class="ruleClass" data-testid="tab-bar">
-    <!-- -mb-px puts the item underline on top of the rule, as in Figma -->
+    <!-- Scrolls sideways when the tabs outgrow the bar (mobile). The -m-1.5/p-1.5
+         pair keeps the focus ring inside the scroll box, and -mb-[7px] (those
+         6px plus 1px) still puts the item underline on top of the rule, as in
+         Figma. `relative` makes the tabs' offsetLeft relative to the list. -->
     <div
       ref="listRef"
       role="tablist"
       :aria-label="label"
-      class="-mb-px flex items-center gap-3"
+      class="no-scrollbar relative -m-1.5 -mb-[7px] flex items-center gap-3 overflow-x-auto p-1.5"
       @keydown="onKeydown"
     >
       <AppTabItem

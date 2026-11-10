@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import AppTabBar from '@/components/tabs/AppTabBar.vue'
 
@@ -84,6 +84,57 @@ describe('AppTabBar', () => {
     elements[0].focus()
     await w.get('[role="tablist"]').trigger('keydown', { key: 'ArrowRight' })
     expect(document.activeElement).toBe(elements[2])
+  })
+
+  describe('when the tabs outgrow the bar', () => {
+    // jsdom has no layout: 60px tabs, 12px apart, after the list's 6px ring
+    // padding, in a 150px-wide list. The last tab ends at 360px.
+    const FIVE = [
+      ...ITEMS,
+      { id: 'nft', label: 'NFT' },
+      { id: 'more', label: 'More' },
+    ]
+    beforeEach(() => {
+      vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(60)
+      vi.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockImplementation(
+        function (this: HTMLElement) {
+          const siblings = Array.from(this.parentElement?.children ?? [])
+          return 6 + siblings.indexOf(this) * 72
+        },
+      )
+      vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(150)
+    })
+    afterEach(() => vi.restoreAllMocks())
+
+    const list = (w: VueWrapper) => w.get('[role="tablist"]').element
+
+    it('scrolls sideways without a scrollbar', () => {
+      expect(
+        mountBar({ items: FIVE }).get('[role="tablist"]').classes(),
+      ).toEqual(expect.arrayContaining(['overflow-x-auto', 'no-scrollbar']))
+    })
+
+    it('scrolls the selected tab into view on mount, ring included', () => {
+      expect(
+        list(mountBar({ items: FIVE, modelValue: 'more' })).scrollLeft,
+      ).toBe(360 - 150)
+    })
+
+    it('scrolls to a newly selected tab and leaves visible ones alone', async () => {
+      const w = mountBar({ items: FIVE })
+      await w.setProps({ modelValue: 'crypto' })
+      expect(list(w).scrollLeft).toBe(0)
+      await w.setProps({ modelValue: 'more' })
+      expect(list(w).scrollLeft).toBe(360 - 150)
+    })
+
+    it('scrolls back to a tab focused with the keyboard', async () => {
+      const w = mountBar({ items: FIVE, modelValue: 'more' })
+      list(w).scrollLeft = 360 - 150
+      ;(tabs(w)[4].element as HTMLElement).focus()
+      await w.get('[role="tablist"]').trigger('keydown', { key: 'Home' })
+      expect(list(w).scrollLeft).toBe(0)
+    })
   })
 
   it('falls back to the first enabled tab when nothing matches the v-model', () => {
