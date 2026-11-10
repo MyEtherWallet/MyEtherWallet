@@ -41,25 +41,28 @@ const select = (id: TId) => {
   if (id !== model.value) model.value = id
 }
 
-/** The tab focus ring (2px outline, 4px offset); the tablist pads by as much. */
+// Tab focus ring room (2px outline + 4px offset); the tablist pads as much
 const RING_SPACE = 6
 
-// Scrolls the tablist only, ring included. scrollIntoView would also scroll
-// the page to bars below the fold (home sections) when they mount.
-const reveal = (tab?: HTMLElement | null) => {
+// Nearest-edge scroll of the tablist alone, keeping the ring space in view.
+// scrollIntoView would also scroll whatever holds the bar.
+const scrollToTab = (tab?: HTMLElement | null) => {
   const list = listRef.value
   if (!list || !tab) return
-  const start = tab.offsetLeft - RING_SPACE
-  const end = tab.offsetLeft + tab.offsetWidth + RING_SPACE
+  const { offsetLeft, offsetWidth } = tab
+  const start = offsetLeft - RING_SPACE
+  const end = offsetLeft + offsetWidth + RING_SPACE
   if (start < list.scrollLeft) list.scrollLeft = start
   else if (end > list.scrollLeft + list.clientWidth)
     list.scrollLeft = end - list.clientWidth
 }
 
-const revealSelected = () =>
-  reveal(listRef.value?.querySelector<HTMLElement>('[aria-selected="true"]'))
-onMounted(revealSelected)
-watch(model, revealSelected, { flush: 'post' })
+const scrollToSelected = () =>
+  scrollToTab(
+    listRef.value?.querySelector<HTMLElement>('[aria-selected="true"]'),
+  )
+onMounted(scrollToSelected)
+watch(model, scrollToSelected, { flush: 'post' })
 
 const onKeydown = (event: KeyboardEvent) => {
   if (!listRef.value) return
@@ -80,16 +83,15 @@ const onKeydown = (event: KeyboardEvent) => {
   if (next === undefined) return
   event.preventDefault()
   tabs[next].focus({ preventScroll: true })
-  reveal(tabs[next])
+  scrollToTab(tabs[next])
 }
 </script>
 
 <template>
   <div class="w-full border-b" :class="ruleClass" data-testid="tab-bar">
-    <!-- Scrolls sideways when the tabs outgrow the bar (mobile). The -m-1.5/p-1.5
-         pair keeps the focus ring inside the scroll box, and -mb-[7px] (those
-         6px plus 1px) still puts the item underline on top of the rule, as in
-         Figma. `relative` makes the tabs' offsetLeft relative to the list. -->
+    <!-- Scrolls sideways when the tabs don't fit. -m-1.5/p-1.5 keeps the focus
+         ring inside the scroll box; -mb-[7px] (6px + 1px) keeps the underline on
+         the rule, as in Figma. `relative` measures offsetLeft from the list. -->
     <div
       ref="listRef"
       role="tablist"
