@@ -438,21 +438,27 @@ export function isWalletConnectStaleSessionTopicError(err: unknown): boolean {
 }
 
 /**
- * Whether an error is the WalletConnect relay publish timeout
- * (`Failed to publish payload, please try again. id:<id> tag:<tag>`), thrown by
- * `@walletconnect/core`'s publisher when the relay doesn't acknowledge a
- * message in time. Seen when wagmi's WalletConnect connector deletes a stale
- * session before connecting (tag 1112 = `wc_sessionDelete`). The connect flow
- * already shows a "Could not connect" toast and the user can retry, so it is
- * transient relay noise (APP-MEW-WEB-1RW / MEW-2657). MEW never throws this
- * message. Handles both the Error-object and bare-string payload shapes.
+ * Whether an error is the WalletConnect relay publish timeout for a session
+ * deletion (`Failed to publish payload, please try again. id:<id> tag:1112`),
+ * thrown by `@walletconnect/core`'s publisher when the relay doesn't
+ * acknowledge the message in time. Seen when wagmi's WalletConnect connector
+ * deletes a stale session before connecting (tag 1112 = `wc_sessionDelete`).
+ * The connect flow already shows a "Could not connect" toast and the user can
+ * retry, so it is transient relay noise (APP-MEW-WEB-1RW / MEW-2657).
+ *
+ * Fails closed on every other tag: e.g. tag 1108 (`wc_sessionRequest`) is a
+ * signing/send request, where a failed publish breaks a user flow, so it keeps
+ * reporting. Handles both the Error-object and bare-string payload shapes.
  */
 export function isWalletConnectPublishFailedError(err: unknown): boolean {
-  const MESSAGE = 'Failed to publish payload, please try again.'
-  if (typeof err === 'string') return err.includes(MESSAGE)
+  const SESSION_DELETE_PUBLISH_FAILED =
+    /Failed to publish payload, please try again\. id:\d+ tag:1112$/
+  if (typeof err === 'string') return SESSION_DELETE_PUBLISH_FAILED.test(err)
   if (!err || typeof err !== 'object') return false
   const message = (err as { message?: unknown }).message
-  return typeof message === 'string' && message.includes(MESSAGE)
+  return (
+    typeof message === 'string' && SESSION_DELETE_PUBLISH_FAILED.test(message)
+  )
 }
 
 // The null-`info` deref message, in both shapes the crash surfaces as: the

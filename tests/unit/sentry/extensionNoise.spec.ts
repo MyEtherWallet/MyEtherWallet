@@ -1002,12 +1002,18 @@ describe('isWalletConnectPublishFailedError', () => {
     expect(isWalletConnectPublishFailedError(MSG)).toBe(true)
   })
 
-  it('is true for any relay tag, not just wc_sessionDelete', () => {
+  it('keeps reporting every other relay tag (fails closed)', () => {
+    // tag 1108 = wc_sessionRequest: a failed signing/send request must report.
     expect(
       isWalletConnectPublishFailedError(
         new Error('Failed to publish payload, please try again. id:1 tag:1108'),
       ),
-    ).toBe(true)
+    ).toBe(false)
+    expect(
+      isWalletConnectPublishFailedError(
+        'Failed to publish payload, please try again. id:1 tag:11120',
+      ),
+    ).toBe(false)
   })
 
   it('is false for a genuine app error and non-matching inputs', () => {
