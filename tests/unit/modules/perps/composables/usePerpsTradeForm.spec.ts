@@ -418,6 +418,16 @@ describe('usePerpsTradeForm — panel price change and % presets (MEW-2661)', ()
     expect(form.inputAmount.value).toBe('50.00')
     expect(form.sliderValue.value).toBe(25)
   })
+
+  it('never fills more than the available margin', () => {
+    mockContracts.contracts.value = [contract('0')]
+    mockPerpsState.balance.value = {
+      availableMargin: '45.717758',
+    } as PerpsBalance
+    const form = usePerpsTradeForm()
+    form.setPercentage(100)
+    expect(form.inputAmount.value).toBe('45.71')
+  })
 })
 
 describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {

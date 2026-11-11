@@ -946,7 +946,11 @@ export function usePerpsTradeForm() {
     } else if (baseSize === null && availableMargin.value > 0) {
       // No max order size data yet: same fallback as the slider. A reported
       // max of 0 is not missing data, so it fills nothing.
-      inputAmount.value = ((availableMargin.value * pct) / 100).toFixed(2)
+      // Floored so 100% never rounds above the balance
+      inputAmount.value = floorToIncrement(
+        (availableMargin.value * pct) / 100,
+        0.01,
+      )
       sliderValue.value = pct
     }
   }
