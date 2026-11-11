@@ -38,6 +38,7 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectPublishFailedError,
   isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
@@ -156,6 +157,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
         // for an already-removed session; no app frame, no user impact
         // (APP-MEW-WEB-C9 / MEW-2656).
         isWalletConnectStaleSessionTopicError(originalException) ||
+        // WalletConnect relay publish timeout ("Failed to publish payload")
+        // for tag 1112 only, i.e. deleting a stale session before connect,
+        // which the connect flow already toasts. Other tags (e.g. signing
+        // requests) keep reporting (APP-MEW-WEB-1RW / MEW-2657).
+        isWalletConnectPublishFailedError(originalException) ||
         // iOS injected-script "Maximum call stack" RangeErrors with no app
         // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
         isForeignStackOverflow(event) ||

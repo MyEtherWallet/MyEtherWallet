@@ -23,6 +23,7 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectPublishFailedError,
   isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
@@ -984,6 +985,50 @@ describe('isWalletConnectStaleSessionTopicError', () => {
     expect(isWalletConnectStaleSessionTopicError(undefined)).toBe(false)
     expect(isWalletConnectStaleSessionTopicError({})).toBe(false)
     expect(isWalletConnectStaleSessionTopicError({ message: 42 })).toBe(false)
+  })
+})
+
+describe('isWalletConnectPublishFailedError', () => {
+  // Exact production message (APP-MEW-WEB-1RW): tag 1112 = wc_sessionDelete.
+  const MSG =
+    'Failed to publish payload, please try again. id:1794229263589309184 tag:1112'
+
+  it('drops the @walletconnect/core relay publish timeout (APP-MEW-WEB-1RW)', () => {
+    expect(isWalletConnectPublishFailedError(new Error(MSG))).toBe(true)
+  })
+
+  it('is true for the serialized payload and a bare-string rejection', () => {
+    expect(isWalletConnectPublishFailedError({ message: MSG })).toBe(true)
+    expect(isWalletConnectPublishFailedError(MSG)).toBe(true)
+  })
+
+  it('keeps reporting every other relay tag (fails closed)', () => {
+    // tag 1108 = wc_sessionRequest: a failed signing/send request must report.
+    expect(
+      isWalletConnectPublishFailedError(
+        new Error('Failed to publish payload, please try again. id:1 tag:1108'),
+      ),
+    ).toBe(false)
+    expect(
+      isWalletConnectPublishFailedError(
+        'Failed to publish payload, please try again. id:1 tag:11120',
+      ),
+    ).toBe(false)
+  })
+
+  it('keeps reporting an app error that wraps the message with a prefix', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error(`Signing failed: ${MSG}`)),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error and non-matching inputs', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error('Failed to publish post')),
+    ).toBe(false)
+    expect(isWalletConnectPublishFailedError(null)).toBe(false)
+    expect(isWalletConnectPublishFailedError({})).toBe(false)
+    expect(isWalletConnectPublishFailedError({ message: 42 })).toBe(false)
   })
 })
 
