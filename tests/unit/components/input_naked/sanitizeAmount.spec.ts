@@ -49,6 +49,10 @@ describe('sanitizeAmount', () => {
       ['10,000', '10000'],
       ['1,234,567', '1234567'],
       ['1.234.567', '1234567'],
+      // Lakh grouping: twos, then a final three.
+      ['1,00,000', '100000'],
+      ['12,34,567', '1234567'],
+      ['1,23,45,678', '12345678'],
     ])('reads %s as a thousands-grouped whole number', (raw, want) => {
       expect(sanitizeAmount(raw)).toBe(want)
     })
@@ -89,6 +93,24 @@ describe('sanitizeAmount', () => {
         expect(sanitizeAmount(raw)).toBe(want)
       },
     )
+
+    it.each([
+      ['0.125,', '0.125'],
+      ['0,125.', '0.125'],
+      ['0.005,', '0.005'],
+      ['1.234,', '1.234'],
+      ['1,234.', '1234'],
+      ['1,234.56,', '1234.56'],
+    ])(
+      'reads the last character of %s as punctuation, not a decimal point',
+      (raw, want) => {
+        expect(sanitizeAmount(raw)).toBe(want)
+      },
+    )
+
+    it('does not take a lone zero for a thousands group', () => {
+      expect(sanitizeAmount('0,125.5')).toBe('0.1255')
+    })
 
     it.each(['1e5', '1e-7', '2.5E-05', '1.5e3', '251e-7'])(
       'rejects exponent notation %s instead of collapsing it into digits',
@@ -155,6 +177,10 @@ describe('sanitizeAmount', () => {
       // A keyboard re-committing its composing text hands back the comma.
       expect(typed('1,500')).toBe('1.500')
       expect(typed('1.2.3')).toBe('1.23')
+    })
+
+    it('drops a comma that was not located when the value has a decimal point', () => {
+      expect(typed('1,2.34')).toBe('12.34')
     })
   })
 })

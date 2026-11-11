@@ -12,8 +12,8 @@ const EXPONENT = /\d[eE][+-]?\d/
 
 /** First group of a number grouped with one kind of separator only: "1,234". */
 const WHOLE_NUMBER_LEAD = /^[1-9]\d{0,2}$/
-/** First group when a decimal part follows: "01,234.50" is still grouped. */
-const AMOUNT_LEAD = /^\d{1,3}$/
+/** First group when a decimal part follows: "01,234.50" too, but not a lone 0. */
+const AMOUNT_LEAD = /^(?:[1-9]\d{0,2}|0\d{1,2})$/
 
 /** A leading group, then groups of exactly three: "1,234" / "12.947.536". */
 const isThousandsGrouped = (
@@ -29,6 +29,19 @@ const isThousandsGrouped = (
   )
 }
 
+/** Lakh grouping, "12,34,567": one or two digits, twos, then a final three. */
+const isLakhGrouped = (digits: string, separator: string): boolean => {
+  const [first, ...groups] = digits.split(separator)
+  const last = groups.pop()
+  return (
+    groups.length > 0 &&
+    /^[1-9]\d?$/.test(first) &&
+    groups.every(group => /^\d{2}$/.test(group)) &&
+    last !== undefined &&
+    /^\d{3}$/.test(last)
+  )
+}
+
 /**
  * Where the decimal point of a pasted amount is; -1 when every separator is a
  * thousands mark. A separator is only read as a thousands mark when it can be
@@ -41,10 +54,14 @@ const pastedDecimalIndex = (kept: string): number => {
   const first = kept.search(SEPARATOR)
 
   if (lastDot !== -1 && lastComma !== -1) {
+    const last = Math.max(lastDot, lastComma)
+    // "0.125," / "1,234.": with nothing after it the last separator is
+    // punctuation from the surrounding text, and the amount is what precedes it.
+    if (last === kept.length - 1) return pastedDecimalIndex(kept.slice(0, last))
+
     // "1,234.50" / "1.234,50": the last separator is the decimal point when it
     // appears once and the other kind groups the whole part. Two or more marks
     // of the other kind can only be grouping, threes or not ("1,23,456.78").
-    const last = Math.max(lastDot, lastComma)
     const grouping = kept[last] === '.' ? ',' : '.'
     const whole = kept.slice(0, last)
     const isGroupedAmount =
@@ -60,7 +77,8 @@ const pastedDecimalIndex = (kept: string): number => {
   const isRepeated = kept.indexOf(separator) !== kept.lastIndexOf(separator)
   const isGrouping =
     (separator === ',' || isRepeated) &&
-    isThousandsGrouped(kept, separator, WHOLE_NUMBER_LEAD)
+    (isThousandsGrouped(kept, separator, WHOLE_NUMBER_LEAD) ||
+      isLakhGrouped(kept, separator))
   return isGrouping ? -1 : first
 }
 
@@ -111,6 +129,8 @@ export const sanitizeAmount = (
   const isTypedIgnored =
     separatorAt !== undefined &&
     (SEPARATOR.test(withoutTyped) || maxDecimals <= 0)
-  const kept = (isTypedIgnored ? withoutTyped : raw).replace(/[^\d.,]/g, '')
+  const typed = (isTypedIgnored ? withoutTyped : raw).replace(/[^\d.,]/g, '')
+  // The field only ever holds a dot, so beside one a comma is a stray keystroke.
+  const kept = typed.includes('.') ? typed.replace(/,/g, '') : typed
   return toDecimalString(kept, kept.search(SEPARATOR), maxDecimals)
 }

@@ -192,34 +192,50 @@ const describeEdit = (event: Event, input: HTMLInputElement): AmountEdit => {
     !WHOLE_VALUE_INPUTS.includes(event.inputType) &&
     (event.data?.length === 1 || event.inputType === 'insertCompositionText')
   if (!isTyping) return { kind: 'paste' }
+  // The typed character sits right before the caret, whatever the event says.
   const typedAt = (input.selectionStart ?? 0) - 1
-  const isSeparator =
-    (event.data === '.' || event.data === ',') &&
-    input.value[typedAt] === event.data
-  return isSeparator
+  const typed = input.value[typedAt]
+  return typed === '.' || typed === ','
     ? { kind: 'typing', separatorAt: typedAt }
     : { kind: 'typing' }
 }
 
+/** Where the caret belongs once `raw` has been rewritten to `cleaned`. */
+const caretAfterRewrite = (
+  raw: string,
+  cleaned: string,
+  caretAt: number,
+  edit: AmountEdit,
+): number => {
+  if (edit.kind === 'typing' && edit.separatorAt !== undefined) {
+    const { separatorAt } = edit
+    const wasIgnored =
+      cleaned === raw.slice(0, separatorAt) + raw.slice(separatorAt + 1)
+    // An ignored separator leaves the caret where it was typed; one that
+    // became the decimal point has the caret right after it.
+    return wasIgnored ? separatorAt : cleaned.indexOf('.') + 1
+  }
+  // Only text after the caret changed (the decimal cap): the caret stays.
+  if (cleaned.startsWith(raw.slice(0, caretAt))) return caretAt
+  // Otherwise it keeps its distance from the end.
+  return Math.max(0, cleaned.length - (raw.length - caretAt))
+}
+
 const onInput = (event: Event) => {
   const input = event.target as HTMLInputElement
-  const caretAt = input.selectionStart ?? input.value.length
-  const beforeCaret = input.value.slice(0, caretAt)
-  const afterCaret = input.value.length - caretAt
+  const raw = input.value
+  const edit = describeEdit(event, input)
   // A paste that is not an amount is ignored: the field keeps what it had.
-  const cleaned =
-    sanitizeAmount(
-      input.value,
-      props.maxDecimals,
-      describeEdit(event, input),
-    ) ?? model.value
-  if (cleaned !== input.value) {
+  const cleaned = sanitizeAmount(raw, props.maxDecimals, edit) ?? model.value
+  if (cleaned !== raw) {
+    const caret = caretAfterRewrite(
+      raw,
+      cleaned,
+      input.selectionStart ?? raw.length,
+      edit,
+    )
+    // Writing the value sends the caret to the end, so put it back.
     input.value = cleaned
-    // Writing the value sends the caret to the end. Put it back: where it was
-    // when only text after it changed, else as far from the end as it was.
-    const caret = cleaned.startsWith(beforeCaret)
-      ? caretAt
-      : Math.max(0, cleaned.length - afterCaret)
     input.setSelectionRange(caret, caret)
   }
   model.value = cleaned

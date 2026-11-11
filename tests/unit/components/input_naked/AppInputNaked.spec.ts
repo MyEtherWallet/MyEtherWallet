@@ -188,6 +188,42 @@ describe('AppInputNaked', () => {
       expect(el.value).toBe('1.500')
     })
 
+    it('keeps the caret before the decimal point when a stray one is typed in front of it', async () => {
+      const wrapper = mountControlled('1.5')
+      const el = await type(wrapper, '1..5', '.', 2)
+      expect(el.value).toBe('1.5')
+      expect(el.selectionStart).toBe(1)
+    })
+
+    it('puts the caret after a typed decimal point when the decimal cap trims the end', async () => {
+      const wrapper = mountControlled('12345678')
+      await wrapper.setProps({ maxDecimals: 6 })
+      const el = await type(wrapper, '1,2345678', ',', 2)
+      expect(el.value).toBe('1.234567')
+      expect(el.selectionStart).toBe(2)
+    })
+
+    it('finds a typed separator by the caret when the keyboard reports its whole composing text', async () => {
+      const wrapper = mountControlled('12.34')
+      const el = await edit(wrapper, '1,2.34', {
+        inputType: 'insertCompositionText',
+        data: '1,',
+        caret: 2,
+      })
+      expect(el.value).toBe('12.34')
+      expect(el.selectionStart).toBe(1)
+    })
+
+    it('reads a pasted separator as a paste, however short', async () => {
+      const wrapper = mountControlled('1234')
+      const el = await edit(wrapper, '1,234', {
+        inputType: 'insertFromPaste',
+        data: ',',
+        caret: 2,
+      })
+      expect(el.value).toBe('1234')
+    })
+
     it('reads a pasted grouped number as a whole amount', async () => {
       const wrapper = mountControlled('')
       expect((await paste(wrapper, '1,234')).value).toBe('1234')
