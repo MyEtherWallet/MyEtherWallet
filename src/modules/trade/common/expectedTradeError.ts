@@ -60,6 +60,24 @@ export function isBelowMinimumError(e: unknown): boolean {
 }
 
 /**
+ * Raw 1inch response details the provider attaches to quote errors, for the
+ * Sentry report — the error message itself may be localized user copy.
+ */
+export function fusionErrorDetails(e: unknown): {
+  fusionStatus?: number
+  fusionCode?: string
+  fusionDescription?: string
+} {
+  if (typeof e !== 'object' || e === null) return {}
+  const { fusionStatus, fusionCode, fusionDescription } = e as {
+    fusionStatus?: number
+    fusionCode?: string
+    fusionDescription?: string
+  }
+  return { fusionStatus, fusionCode, fusionDescription }
+}
+
+/**
  * Reads the `transientNetworkError` flag the 1inch provider attaches when the
  * request never completed (axios "Network Error"). Guarded for the same reason
  * as `isExpectedClientError`.

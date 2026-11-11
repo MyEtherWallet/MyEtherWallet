@@ -76,13 +76,22 @@ const FUSION_ERROR_COPY: Record<string, string> = {
   MARKET_CLOSED: 'trade.error.market-closed',
 }
 
+// Ondo's rate limit on the 1inch client. Matched by description: its `code`
+// is unknown until one is captured in Sentry (see getQuote).
+const PROVIDER_RATE_LIMIT_PATTERN = /rps budget exhausted/i
+
+const fusionErrorBody = (e: unknown): ErrorBody | undefined =>
+  e && typeof e === 'object' && 'response' in e
+    ? ((e as AxiosError).response?.data as ErrorBody | undefined)
+    : undefined
+
 export const fusionErrorMessage = (e: unknown): string | null => {
-  const data =
-    e && typeof e === 'object' && 'response' in e
-      ? ((e as AxiosError).response?.data as ErrorBody | undefined)
-      : undefined
+  const data = fusionErrorBody(e)
   const localized = data?.code ? FUSION_ERROR_COPY[data.code] : undefined
   if (localized) return i18n.global.t(localized)
+  if (data?.description && PROVIDER_RATE_LIMIT_PATTERN.test(data.description)) {
+    return i18n.global.t('trade.error.provider-unavailable')
+  }
   return data?.description || null
 }
 
@@ -233,9 +242,8 @@ class OneInchFusion {
       }
     } catch (e: unknown) {
       const status = (e as AxiosError).response?.status
-      const fusionCode = (
-        (e as AxiosError).response?.data as ErrorBody | undefined
-      )?.code
+      const body = fusionErrorBody(e)
+      const fusionCode = body?.code
       const response = fusionErrorMessage(e)
       const rawMessage =
         e instanceof Error ? e.message : typeof e === 'string' ? e : ''
@@ -257,6 +265,8 @@ class OneInchFusion {
         expectedClientError?: boolean
         transientNetworkError?: boolean
         fusionCode?: string
+        fusionStatus?: number
+        fusionDescription?: string
       }
       error.expectedClientError =
         typeof status === 'number' &&
@@ -264,6 +274,9 @@ class OneInchFusion {
         status < 500 &&
         !REPORTABLE_CLIENT_STATUSES.has(status)
       error.fusionCode = fusionCode
+      // Raw provider details for Sentry — the message may be localized copy.
+      error.fusionStatus = status
+      error.fusionDescription = body?.description
       // A transient axios "Network Error" (the 1inch request never completed —
       // no response received) is environmental noise, already surfaced to the
       // user; flag it so the caller skips Sentry reporting.
