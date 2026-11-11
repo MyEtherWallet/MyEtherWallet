@@ -297,14 +297,15 @@ export function usePerpsTradeForm() {
     return 0
   })
 
+  // null when the contract has no 24h change, so the panel can hide it
+  // instead of showing 0.00%
   const priceChange = computed(() => {
     const contract = contracts.value.find(
       c => c.market === fullMarketName.value,
     )
-    if (contract?.priceChangePercent) {
-      return parseFloat(contract.priceChangePercent)
-    }
-    return 0
+    return contract?.priceChangePercent
+      ? parseFloat(contract.priceChangePercent)
+      : null
   })
 
   const availableMargin = computed(() =>

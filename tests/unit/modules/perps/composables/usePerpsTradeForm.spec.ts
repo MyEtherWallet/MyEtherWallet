@@ -375,6 +375,42 @@ describe('usePerpsTradeForm — hide disabled tokens (MEW-2025)', () => {
   })
 })
 
+describe('usePerpsTradeForm — panel price change and % presets (MEW-2661)', () => {
+  const contract = (priceChangePercent?: string) =>
+    ({
+      market: 'AAA-USD',
+      baseCurrency: 'AAA',
+      quoteCurrency: 'USD',
+      disabled: false,
+      usdVolume: '0',
+      priceChangePercent,
+      bid: '10',
+      ask: '10',
+      tags: [],
+    }) as unknown as Contract
+
+  beforeEach(() => {
+    walletMenuState.selectedTradeOrderSide = 'buy'
+    walletMenuState.selectedTradeManageMode = null
+    walletMenuState.selectedTradeTokenSymbol = 'AAA-USD'
+  })
+
+  afterEach(() => {
+    mockContracts.contracts.value = []
+    mockPerpsState.balance.value = null
+  })
+
+  it('reads the 24h change from the contract', () => {
+    mockContracts.contracts.value = [contract('-1.57')]
+    expect(usePerpsTradeForm().priceChange.value).toBe(-1.57)
+  })
+
+  it('has no change when the contract does not report one', () => {
+    mockContracts.contracts.value = [contract(undefined)]
+    expect(usePerpsTradeForm().priceChange.value).toBeNull()
+  })
+})
+
 describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {
   const makeContract = (market: string) =>
     ({

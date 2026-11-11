@@ -94,7 +94,10 @@
             </template>
             <template #description>
               {{ marketPrice }}
-              <span :class="pnlColor(String(priceChange))">
+              <span
+                v-if="priceChange !== null"
+                :class="pnlColor(String(priceChange))"
+              >
                 ({{ formatChange(priceChange) }})
               </span>
             </template>
