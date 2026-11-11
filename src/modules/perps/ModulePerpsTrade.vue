@@ -600,7 +600,12 @@
 
 <script setup lang="ts">
 import { computed, nextTick, watch } from 'vue'
-import { formatUsd, formatPnl, pnlColor } from './utils/formatters'
+import {
+  formatUsd,
+  formatPnl,
+  formatContractPrice,
+  pnlColor,
+} from './utils/formatters'
 import { formatChange } from '@/components/cell/cellSizes'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
@@ -940,8 +945,9 @@ const activeContract = computed(() =>
 )
 
 const logoUrl = computed(() => getLogoUrl(displaySymbol.value))
+// Same price as the market selector rows: "—" when the contract has no quote
 const marketPrice = computed(() =>
-  activeContract.value ? formatUsd(currentPrice.value) : '',
+  activeContract.value ? formatContractPrice(activeContract.value) : '',
 )
 
 const limitPresetLabel = (pct: number) =>
