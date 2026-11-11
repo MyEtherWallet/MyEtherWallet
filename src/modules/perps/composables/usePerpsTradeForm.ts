@@ -853,6 +853,8 @@ export function usePerpsTradeForm() {
   const submitDisabled = computed(() => {
     const amt = parseFloat(inputAmount.value)
     if (!amt || amt <= 0 || isSubmitting.value) return true
+    // No price (e.g. a market with no quote) means no order size to send
+    if (!(parseFloat(orderSize.value) > 0)) return true
     if (limitPriceHasError.value) return true
     if (marginPrecisionError.value) return true
     if (takeProfitErrorMessage.value || stopLossErrorMessage.value) return true

@@ -428,6 +428,17 @@ describe('usePerpsTradeForm — panel price change and % presets (MEW-2661)', ()
     form.setPercentage(100)
     expect(form.inputAmount.value).toBe('45.71')
   })
+
+  it('blocks a market order when the market has no quote', () => {
+    mockContracts.contracts.value = [
+      { ...contract('0'), bid: undefined, ask: undefined } as Contract,
+    ]
+    mockPerpsState.balance.value = { availableMargin: '200' } as PerpsBalance
+    const form = usePerpsTradeForm()
+    form.inputAmount.value = '50'
+    expect(form.orderSize.value).toBe('0')
+    expect(form.submitDisabled.value).toBe(true)
+  })
 })
 
 describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {
