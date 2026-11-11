@@ -8,6 +8,8 @@ import {
   type WalletConfig,
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
+import { buildWalletConnectQrData } from '@/modules/access/common/walletConnectQrUri'
+import type { Wallet } from '@rainbow-me/rainbowkit'
 import { useProviderStore, type Provider } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
@@ -21,7 +23,11 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
-import { isUserRejectionError } from '@/utils/walletUtils'
+import {
+  getLocalizedWalletConnectError,
+  isUserRejectionError,
+  toReportableWalletError,
+} from '@/utils/walletUtils'
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -165,12 +171,18 @@ export const useConnectWallet = () => {
         })
         .catch(err => {
           let error = t('error_connecting')
+          const walletConnectError = getLocalizedWalletConnectError(err)
           if (isUserRejectionError(err)) {
             error = t('common.error.user_canceled_request')
+          } else if (walletConnectError) {
+            error = walletConnectError
           }
           accessStore.setWeb3ConnectionError(error)
-          if (error !== t('common.error.user_canceled_request')) {
-            captureException(err, SENTRY_MODULE_TAGS.ACCESS)
+          if (error === t('error_connecting')) {
+            captureException(
+              toReportableWalletError(err),
+              SENTRY_MODULE_TAGS.ACCESS,
+            )
           }
         })
       return
@@ -240,6 +252,7 @@ export const useConnectWallet = () => {
         })
         .catch(err => {
           let error = t('error_connecting')
+          const walletConnectError = getLocalizedWalletConnectError(err)
           if (isUserRejectionError(err)) {
             error = t('common.error.user_canceled_request')
           } else if (
@@ -252,10 +265,15 @@ export const useConnectWallet = () => {
             err.message.toLowerCase().includes('unrecognized chain id')
           ) {
             error = t('access_wallet.toast.network_not_supported')
+          } else if (walletConnectError) {
+            error = walletConnectError
           }
           accessStore.setWeb3ConnectionError(error)
           if (error === t('error_connecting')) {
-            captureException(err, SENTRY_MODULE_TAGS.ACCESS)
+            captureException(
+              toReportableWalletError(err),
+              SENTRY_MODULE_TAGS.ACCESS,
+            )
           }
         })
     }
@@ -289,9 +307,16 @@ export const useConnectWallet = () => {
       return
     }
     connector.onDisconnect()
+    const rkDetails = (connector as unknown as { rkDetails?: Wallet }).rkDetails
     connector.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
-        wagmiWalletData.value = msg.data as string // possibly a temp fix
+        // Encode the clicked wallet's universal link (when it exposes one) so a
+        // native-camera scan opens that wallet instead of the OS default `wc:`
+        // handler. Falls back to the raw uri. (MEW-2288)
+        wagmiWalletData.value = buildWalletConnectQrData(
+          rkDetails,
+          msg.data as string,
+        )
         accessStore.setWagmiWalletData(wagmiWalletData.value)
       }
     })
@@ -320,6 +345,7 @@ export const useConnectWallet = () => {
       .catch(err => {
         let error = t('error_connecting')
         let _type = ToastType.Warning
+        const walletConnectError = getLocalizedWalletConnectError(err)
         if (isUserRejectionError(err)) {
           error = t('common.error.user_canceled_request')
           _type = ToastType.Info
@@ -329,6 +355,8 @@ export const useConnectWallet = () => {
         ) {
           error = t('access_wallet.toast.connection_timed_out')
           _type = ToastType.Info
+        } else if (walletConnectError) {
+          error = walletConnectError
         }
         toastStore.addToastMessage({
           text: t('access_wallet.toast.could_not_connect'),
@@ -336,7 +364,10 @@ export const useConnectWallet = () => {
           type: _type,
         })
         if (error === t('error_connecting')) {
-          captureException(err, SENTRY_MODULE_TAGS.ACCESS)
+          captureException(
+            toReportableWalletError(err),
+            SENTRY_MODULE_TAGS.ACCESS,
+          )
         }
       })
   }

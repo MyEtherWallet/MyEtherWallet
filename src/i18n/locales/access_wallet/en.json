@@ -27,7 +27,11 @@
       "could_not_connect": "Could not connect to wallet",
       "connection_timed_out": "Connection timed out. Please try again.",
       "connect_request_pending": "Request to connect already pending, please check your wallet extension",
-      "network_not_supported": "Your wallet does not support selected network. Please switch to a supported network or enable it in your wallet."
+      "network_not_supported": "Your wallet does not support selected network. Please switch to a supported network or enable it in your wallet.",
+      "wallet_region_restricted": "This wallet isn't available in your region.",
+      "wallet_popup_blocked": "Your browser blocked the wallet popup. Allow popups for this site and try again.",
+      "wallet_logged_out": "You're signed out of your wallet. Sign in and try again.",
+      "wallet_update_pending": "Your wallet needs to finish updating. Open it, complete the update, and try again."
     },
     "official": "Official",
     "tabs": {
