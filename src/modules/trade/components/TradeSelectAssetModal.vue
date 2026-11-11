@@ -6,180 +6,152 @@
     :selected-token="selectedToken"
   />
 
-  <app-dialog
-    v-model:is-open="isOpen"
-    :class="[
-      side === 'sell' ? 'sm:h-[600px]' : 'sm:h-[640px]',
-      'w-full sm:w-[480px] sm:mx-auto !rounded-20',
-    ]"
-    hide-close
+  <app-modal
+    v-model="isOpen"
+    :title="$t('trade.select_asset.title')"
+    :subtitle="side === 'buy' ? $t('trade.select_asset.subtitle') : undefined"
+    :class="side === 'sell' ? 'sm:h-[600px]' : 'sm:h-[640px]'"
   >
-    <template #title>
+    <div class="flex h-full flex-col">
       <div
-        class="flex flex-col gap-1 items-center justify-center w-full min-h-[80px] px-6 pt-6 pb-4"
+        :class="[
+          sectionHeader ? 'pb-0.5' : 'pb-6',
+          'flex flex-none flex-col gap-6 bg-white px-6 pt-0',
+        ]"
       >
-        <h1
-          id="dialogTitle"
-          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black text-center"
-        >
-          {{ $t('trade.select_asset.title') }}
-        </h1>
+        <app-searchbar
+          v-model="searchInput"
+          variant="default"
+          :placeholder="$t('select_token.search')"
+        />
         <p
-          v-if="side === 'buy'"
-          class="text-s-16 leading-[22px] text-[#575757] text-center"
+          v-if="sectionHeader"
+          class="flex items-center px-3 py-2 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
         >
-          {{ $t('trade.select_asset.subtitle') }}
+          {{ sectionHeader }}
         </p>
       </div>
-      <app-btn-icon
-        :label="$t('common.close')"
-        class="absolute top-6 right-6 bg-bgBase"
-        height="h-8"
-        width="w-8"
-        @click="isOpen = false"
+
+      <div
+        class="flex flex-1 flex-col gap-0.5 overflow-y-auto rounded-12 px-6 pb-6 mew-scrollbar"
       >
-        <x-mark-icon class="w-6 h-6" />
-      </app-btn-icon>
-    </template>
-    <template #content>
-      <div class="flex h-full flex-col">
-        <div
-          :class="[
-            sectionHeader ? 'pb-[2px]' : 'pb-6',
-            'flex flex-none flex-col gap-6 bg-white px-6 pt-0',
-          ]"
-        >
-          <app-search-input
-            v-model="searchInput"
-            size="compact"
-            bg-class="bg-bgBase"
-            input-class="!text-s-14 placeholder:text-neutral-500"
-            :placeholder="$t('select_token.search')"
-          />
+        <template v-for="asset in searchResults" :key="asset.address">
           <p
-            v-if="sectionHeader"
-            class="flex items-center px-3 py-2 text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+            v-if="asset === firstUnavailableAsset"
+            class="sticky top-0 z-10 flex items-center px-3 py-2 mt-[22px] bg-white text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
           >
-            {{ sectionHeader }}
+            {{ $t('trade.select_asset.unavailable') }}
           </p>
-        </div>
-
-        <div
-          class="flex flex-1 flex-col gap-[2px] overflow-y-auto rounded-12 px-6 pb-6 mew-scrollbar"
-        >
-          <template v-for="asset in searchResults" :key="asset.address">
-            <p
-              v-if="asset === firstUnavailableAsset"
-              class="sticky top-0 z-10 flex items-center px-3 py-2 mt-[22px] bg-white text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-            >
-              {{ $t('trade.select_asset.unavailable') }}
-            </p>
-            <component
-              :is="isAssetPaused(asset) ? 'div' : 'button'"
-              :type="isAssetPaused(asset) ? undefined : 'button'"
+          <component
+            :is="isAssetPaused(asset) ? 'div' : 'button'"
+            :type="isAssetPaused(asset) ? undefined : 'button'"
+            :class="[
+              isAssetPaused(asset) ? 'cursor-default' : 'hoverBGWhite',
+              isSessionUnavailable(asset) ? 'opacity-30' : '',
+              'flex flex-none items-center gap-3 h-[68px] p-3 rounded-12 bg-white transition-colors focus-visible:!outline-offset-[-3px]',
+            ]"
+            @click="!isAssetPaused(asset) && selectAsset(asset)"
+          >
+            <div
               :class="[
-                isAssetPaused(asset) ? 'cursor-default' : 'hoverBGWhite',
-                isSessionUnavailable(asset) ? 'opacity-30' : '',
-                'flex flex-none items-center gap-3 h-[68px] p-3 rounded-12 bg-white transition-colors focus-visible:!outline-offset-[-3px]',
+                isDimmed(asset) ? 'opacity-40' : '',
+                'relative flex-none',
               ]"
-              @click="!isAssetPaused(asset) && selectAsset(asset)"
             >
-              <div
+              <app-token-logo
+                :url="asset.logoURI"
+                :symbol="asset.symbol"
+                :address="tokenAddress(asset)"
+                :is-stock="side === 'buy'"
+                width="w-10"
+                height="h-10"
+                no-shadow
+              />
+              <span
+                v-if="isSelected(asset)"
+                class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-background-skeleton"
+              >
+                <AppIcon
+                  name="check-circle"
+                  variant="filled"
+                  class="flex-none text-black"
+                />
+              </span>
+            </div>
+
+            <div
+              :class="[
+                isDimmed(asset) ? 'opacity-40' : '',
+                'flex flex-col items-start flex-1 min-w-0',
+              ]"
+            >
+              <app-token-symbol
+                :symbol="asset.symbol"
+                :address="tokenAddress(asset)"
+                :is-stock="side === 'buy'"
+                class="!text-s-16 !font-semibold leading-[22px] tracking-[-0.32px]"
+              />
+              <p
+                class="text-s-14 leading-[20px] text-text-subtle truncate max-w-full"
+              >
+                {{ asset.name }}
+              </p>
+            </div>
+
+            <app-tooltip
+              v-if="pauseReasonOf(asset)"
+              :text="$t(`trade.pause_reason.${pauseReasonOf(asset)}.tooltip`)"
+              placement="right"
+              class="flex-none"
+            >
+              <span
+                class="flex items-center gap-1 p-1 pl-2 rounded-32 bg-warning-subtle-hover"
+              >
+                <span
+                  class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-text-warning"
+                >
+                  {{ $t(`trade.pause_reason.${pauseReasonOf(asset)}.tag`) }}
+                </span>
+                <AppIcon
+                  name="information-circle"
+                  variant="filled"
+                  size="xs"
+                  class="text-text-warning"
+                />
+              </span>
+            </app-tooltip>
+
+            <div v-else class="flex flex-col items-end flex-none">
+              <p
+                class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
+              >
+                {{ asset.fiatValueFormatted }}
+              </p>
+              <p
                 :class="[
-                  isDimmed(asset) ? 'opacity-40' : '',
-                  'relative flex-none',
+                  side === 'buy' ? changeColor(asset) : 'text-text-subtle',
+                  'text-s-14 leading-[20px] whitespace-nowrap',
                 ]"
               >
-                <app-token-logo
-                  :url="asset.logoURI"
-                  :symbol="asset.symbol"
-                  :address="tokenAddress(asset)"
-                  :is-stock="side === 'buy'"
-                  width="w-10"
-                  height="h-10"
-                  no-shadow
-                />
-                <span
-                  v-if="isSelected(asset)"
-                  class="absolute -top-[4.84px] -left-[4.84px] flex items-center justify-center w-[22px] h-[22px] overflow-hidden rounded-full border border-white bg-neutral-200"
-                >
-                  <check-circle-icon class="w-6 h-6 flex-none text-black" />
-                </span>
-              </div>
+                {{ asset.secondaryLine }}
+              </p>
+            </div>
+          </component>
+        </template>
 
-              <div
-                :class="[
-                  isDimmed(asset) ? 'opacity-40' : '',
-                  'flex flex-col items-start flex-1 min-w-0',
-                ]"
-              >
-                <app-token-symbol
-                  :symbol="asset.symbol"
-                  :address="tokenAddress(asset)"
-                  :is-stock="side === 'buy'"
-                  :has-gradient="false"
-                  class="!text-s-16 !font-semibold leading-[22px] tracking-[-0.32px]"
-                />
-                <p
-                  class="text-s-14 leading-[20px] text-[#575757] truncate max-w-full"
-                >
-                  {{ asset.name }}
-                </p>
-              </div>
-
-              <app-tooltip
-                v-if="pauseReasonOf(asset)"
-                :text="$t(`trade.pause_reason.${pauseReasonOf(asset)}.tooltip`)"
-                theme="dark"
-                position="right"
-                class="flex-none"
-              >
-                <span
-                  class="flex items-center gap-1 p-1 pl-2 rounded-32 bg-warning-subtle-hover"
-                >
-                  <span
-                    class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px] text-orange-600"
-                  >
-                    {{ $t(`trade.pause_reason.${pauseReasonOf(asset)}.tag`) }}
-                  </span>
-                  <information-circle-icon
-                    class="w-[18px] h-[18px] text-orange-600"
-                  />
-                </span>
-              </app-tooltip>
-
-              <div v-else class="flex flex-col items-end flex-none">
-                <p
-                  class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-                >
-                  {{ asset.fiatValueFormatted }}
-                </p>
-                <p
-                  :class="[
-                    side === 'buy' ? changeColor(asset) : 'text-[#575757]',
-                    'text-s-14 leading-[20px] whitespace-nowrap',
-                  ]"
-                >
-                  {{ asset.secondaryLine }}
-                </p>
-              </div>
-            </component>
-          </template>
-
-          <p
-            v-if="!searchResults.length"
-            class="text-s-14 leading-[20px] text-info text-center py-6"
-          >
-            {{
-              searchInput
-                ? $t('select_token.no_tokens_match')
-                : $t('select_token.no_tokens_available')
-            }}
-          </p>
-        </div>
+        <p
+          v-if="!searchResults.length"
+          class="text-s-14 leading-[20px] text-text-subtle text-center py-6"
+        >
+          {{
+            searchInput
+              ? $t('select_token.no_tokens_match')
+              : $t('select_token.no_tokens_available')
+          }}
+        </p>
       </div>
-    </template>
-  </app-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
@@ -187,17 +159,14 @@ import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
-import { CheckCircleIcon } from '@heroicons/vue/24/solid'
-import { InformationCircleIcon } from '@heroicons/vue/24/solid'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 
-import AppDialog from '@/components/AppDialog.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
 import { useWalletStore } from '@/stores/walletStore'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
@@ -362,7 +331,9 @@ const firstUnavailableAsset = computed(() =>
 )
 
 const changeColor = (asset: DisplayAsset) =>
-  (asset.priceChangePercentage24h ?? 0) < 0 ? 'text-error' : 'text-success-600'
+  (asset.priceChangePercentage24h ?? 0) < 0
+    ? 'text-text-error'
+    : 'text-text-success'
 
 const isSelected = (asset: DisplayAsset) =>
   selectedToken.value?.address?.toLowerCase() === asset.address?.toLowerCase()

@@ -16,8 +16,9 @@
     <app-input
       ref="nameInput"
       v-model="name"
-      :placeholder="$t('common.enter_name')"
-      :errorMessage="nameErrorMessages"
+      surface="alternative"
+      :label="$t('common.enter_name')"
+      :error-message="nameErrorMessages"
       is-required
       @focus="setNameInFocusInput()"
       @blur="startNameOutOfFocusTimeout"
@@ -38,7 +39,7 @@
     <div class="flex justify-center gap-3">
       <app-base-button
         v-if="addressEdit"
-        is-outline
+        type="secondary"
         size="medium"
         @click="cancelEdit"
         >{{ $t('common.cancel') }}</app-base-button

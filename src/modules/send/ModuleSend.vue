@@ -4,13 +4,17 @@
       <div class="w-full max-w-[500px]">
         <div class="flex items-end justify-between mb-4 px-4">
           <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
-          <app-btn-text
-            class="text-primary text-s-15 pb-1"
+          <app-base-button
+            type="link"
+            size="small"
+            class="text-text-brand text-s-15 pb-1"
             @click="resetSendModule"
-            >{{ $t('common.clear_all') }}</app-btn-text
+            >{{ $t('common.clear_all') }}</app-base-button
           >
         </div>
-        <div class="p-5 rounded-20 bg-mewBg mb-6 flex flex-col gap-4">
+        <div
+          class="p-5 rounded-20 bg-background-brand-subtle mb-6 flex flex-col gap-4"
+        >
           <app-enter-amount
             v-model:amount="amount"
             v-model:selected-token="tokenSelectedContract"
@@ -19,11 +23,18 @@
             :is-pristine="isPristine"
           >
             <template #balance-action>
-              <div v-if="isWalletConnected && !isWatchOnly && tokenSelected && isInternalWallet()">
+              <div
+                v-if="
+                  isWalletConnected &&
+                  !isWatchOnly &&
+                  tokenSelected &&
+                  isInternalWallet()
+                "
+              >
                 <button
                   type="button"
                   class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                @click="setMaxAmount()"
+                  @click="setMaxAmount()"
                 >
                   {{ $t('common.max') }}
                 </button>
@@ -118,7 +129,6 @@ import { Contract } from 'web3-eth-contract'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import type {
@@ -214,10 +224,23 @@ const sendModalData = ref({
   tokenIcon: '',
   tokenAddress: '',
 })
-const address = ref('')
+// Follow the store instead of copying the wallet on mount: this panel stays
+// mounted while the user connects or switches wallets, and a stale or empty
+// address makes the API build the tx for the wrong account ("nonce too low").
+const address = computed(() => walletAddress.value ?? '')
 // 0x-prefixed compressed public key, populated for Bitcoin-family wallets;
 // required to declare a P2SH from-address in the quote request.
 const publicKey = ref('')
+watch(
+  wallet,
+  async w => {
+    // don't pair the next wallet's address with the previous wallet's key
+    publicKey.value = ''
+    const key = (await w?.getPublicKey?.()) ?? ''
+    if (w === wallet.value) publicKey.value = key
+  },
+  { immediate: true },
+)
 const foundNickName = ref('')
 
 /** ----------------
@@ -238,13 +261,10 @@ const {
   markDirty: markFormDirty,
 } = useFormPristine([amount, adrInput])
 
-onMounted(async () => {
+onMounted(() => {
   //NOTE: The send module should not be loaded before the chains data has been retrieved.
   //AS of Right now, skeleton loader is shown while the chains data is being fetched.
   if (!wallet.value) return
-  address.value = await wallet.value.getAddress()
-  publicKey.value = (await wallet.value.getPublicKey?.()) ?? ''
-
   if (hasSendValues.value) {
     markFormDirty() // Restoring values means form is not pristine
     amount.value = sendValues.value.amount
@@ -271,23 +291,26 @@ const isNativeTokenSelected = computed(() => {
 /** ----------------
  * Max Amount
  ------------------*/
-const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxAmount({
-  getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
-  getDecimals: () => tokenSelected.value?.decimals ?? 18,
-  getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
-  isNativeToken: () => isNativeTokenSelected.value,
-  isTokenSelected: () => !!tokenSelected.value,
-  getAmount: () => amount.value,
-  onAmountChange: value => { amount.value = value },
-  markFormDirty,
-  resetFormPristine: resetPristine,
-  getTokenIdentifier: () => tokenSelectedContract.value,
-  getDependencies: () => [
-    tokenSelected.value?.balanceWei,
-    selectedFeeNativeValue.value,
-  ],
-  onMaxApplied: () => checkAmountForError(),
-})
+const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
+  useMaxAmount({
+    getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
+    getDecimals: () => tokenSelected.value?.decimals ?? 18,
+    getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
+    isNativeToken: () => isNativeTokenSelected.value,
+    isTokenSelected: () => !!tokenSelected.value,
+    getAmount: () => amount.value,
+    onAmountChange: value => {
+      amount.value = value
+    },
+    markFormDirty,
+    resetFormPristine: resetPristine,
+    getTokenIdentifier: () => tokenSelectedContract.value,
+    getDependencies: () => [
+      tokenSelected.value?.balanceWei,
+      selectedFeeNativeValue.value,
+    ],
+    onMaxApplied: () => checkAmountForError(),
+  })
 
 const checkAmountForError = () => {
   // Skip validation if form is pristine (just cleared or initial state)
@@ -302,7 +325,10 @@ const checkAmountForError = () => {
     tokenSelected.value?.decimals ?? 18,
   )
   const baseAmount = amount.value
-    ? safeParseUnits(amount.value.toString(), tokenSelected.value?.decimals ?? 18)
+    ? safeParseUnits(
+        amount.value.toString(),
+        tokenSelected.value?.decimals ?? 18,
+      )
     : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
@@ -390,9 +416,7 @@ const amountToHex = computed(() => {
 })
 
 const getTxRequestBody = ():
-  | EstimatesRequestBody
-  | BitcoinQuotesRequestBody
-  | undefined => {
+  EstimatesRequestBody | BitcoinQuotesRequestBody | undefined => {
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&
@@ -477,7 +501,11 @@ watchDebounced(
     prevToken.value = currentToken
     prevToAddress.value = currentToAddress
 
-    if (isMaxSelected.value && onlyAmountChanged && isNativeTokenSelected.value) {
+    if (
+      isMaxSelected.value &&
+      onlyAmountChanged &&
+      isNativeTokenSelected.value
+    ) {
       return
     }
 
@@ -492,6 +520,12 @@ watchDebounced(
   },
   { debounce: 500, maxWait: 2000 },
 )
+
+// The sender can change on a filled form (wallet switch, BTC public key
+// arriving late); rebuild the estimate so the fee shown is for that sender.
+watch([address, publicKey], () => {
+  gasFeeTxEstimate.value = getTxRequestBody()
+})
 
 const resetSendModule = () => {
   resetPristine()

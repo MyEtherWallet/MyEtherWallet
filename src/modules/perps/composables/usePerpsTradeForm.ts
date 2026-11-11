@@ -1,5 +1,5 @@
 import { ref, computed, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import {
@@ -10,6 +10,7 @@ import {
   PerpsClosePositionEvent,
 } from '@/analytics'
 import type {
+  PerpsEventSource,
   PerpsTradeOrderPayload,
   PerpsTradeOrderFailPayload,
   PerpsTpSlSavePayload,
@@ -22,6 +23,7 @@ import type { MaxOrderSizeResult } from '../sdk/types'
 import { perpsClient } from '../configs'
 import { capturePerps } from '../sentry'
 import { PERPS_FEATURE } from '@/sentry/constants'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { usePerpsAuth, usePerpsBalance } from './usePerpsAuth'
 import { usePerpsMarkets, usePerpsContracts } from './usePerpsMarkets'
 import { usePerpsPositions } from './usePerpsPositions'
@@ -89,7 +91,8 @@ export function usePerpsTradeForm() {
   const { t } = useI18n()
   const walletMenuStore = useWalletMenuStore()
   const router = useRouter()
-  const { token, login, triggerRefresh } = usePerpsAuth()
+  const route = useRoute()
+  const { token, login, triggerRefresh, isWalletConnected } = usePerpsAuth()
   const { balance } = usePerpsBalance()
   const { markets, isLoading: marketsLoading } = usePerpsMarkets()
   const { contracts } = usePerpsContracts()
@@ -195,9 +198,26 @@ export function usePerpsTradeForm() {
     { immediate: true },
   )
 
-  const activeMarket = computed(
-    () => walletMenuStore.selectedTradeTokenSymbol || 'AAPL-USD',
-  )
+  // `selectedTradeTokenSymbol` is shared with the Trade panel, which can leave a
+  // symbol there that has no perps market (any asset the perps venue doesn't
+  // list). Only honour it when a contract exists for it; otherwise start from
+  // the first contract, as an empty prefill does. The store is left untouched
+  // so switching back to Trade still restores the user's pick there.
+  const findContractForSymbol = (symbol: string | null) => {
+    if (!symbol) return undefined
+    const base = symbol.split('-')[0].toUpperCase()
+    return contracts.value.find(c => c.baseCurrency.toUpperCase() === base)
+  }
+
+  const activeMarket = computed(() => {
+    const stored = walletMenuStore.selectedTradeTokenSymbol
+    // Before the contracts arrive there is nothing to validate against, so keep
+    // the stored symbol rather than flashing the default for a valid market.
+    if (stored && (!contracts.value.length || findContractForSymbol(stored))) {
+      return stored
+    }
+    return contracts.value[0]?.baseCurrency ?? 'AAPL-USD'
+  })
   const displaySymbol = computed(() => activeMarket.value.split('-')[0])
   const fullMarketName = computed(() => {
     const match = markets.value.find(m => m.pair.base === displaySymbol.value)
@@ -970,13 +990,13 @@ export function usePerpsTradeForm() {
 
   // ── Market selector ────────────────────────────────────────
   const marketFilterTabs = [
-    { key: 'all', label: t('perps.select-market.filter-tab-all') },
-    { key: 'Equities', label: t('perps.select-market.filter-tab-equities') },
+    { value: 'all', label: t('perps.select-market.filter-tab-all') },
+    { value: 'Equities', label: t('perps.select-market.filter-tab-equities') },
     {
-      key: 'Commodities',
+      value: 'Commodities',
       label: t('perps.select-market.filter-tab-commodities'),
     },
-    { key: 'Indices', label: t('perps.select-market.filter-tab-indices') },
+    { value: 'Indices', label: t('perps.select-market.filter-tab-indices') },
   ]
 
   const marketSortOptions: MarketSortOption[] = [
@@ -1090,6 +1110,21 @@ export function usePerpsTradeForm() {
     walletMenuStore.setSelectedTradeTokenSymbol(contract.baseCurrency)
     showMarketModal.value = false
     router.push({ path: `/perps/perp/${contract.market}` })
+  }
+
+  // The side panel's sign-in CTA shows on every page, so take the user to the
+  // perps page, where the sign-in progress and then their portfolio show up
+  // (MEW-2470). Already inside perps (incl. the market drawer child route), we
+  // stay put. Without a connected wallet login() bails out, so the page stays
+  // as it is too.
+  function signIn(source?: PerpsEventSource) {
+    if (
+      isWalletConnected.value &&
+      !route.matched.some(r => r.name === ROUTES_MAIN.PERPS.NAME)
+    ) {
+      router.push({ name: ROUTES_MAIN.PERPS.NAME })
+    }
+    return login(source)
   }
 
   // ── Leverage modal ─────────────────────────────────────────
@@ -1783,7 +1818,7 @@ export function usePerpsTradeForm() {
   return {
     // Auth
     token,
-    login,
+    signIn,
     // Market info
     displaySymbol,
     currentPrice,

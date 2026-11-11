@@ -8,14 +8,13 @@
 
       <!-- Filters: search + category + network -->
       <div
-        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-grey-5"
+        class="flex flex-col xs:flex-row xs:flex-wrap xs:items-center gap-2 px-2 pb-6 mb-4 border-b border-border-subtle"
       >
-        <app-search-input
+        <app-searchbar
           v-model="searchInput"
-          bg-class="bg-grey-5"
-          size="compact"
+          variant="default"
           :placeholder="$t('crypto.search')"
-          class="w-full xs:w-[240px] shrink-0"
+          class="w-full xs:w-60 shrink-0"
         />
 
         <!-- Category filter -->
@@ -27,20 +26,25 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="flex items-center justify-between gap-2 bg-grey-5 hover:bg-grey-10 transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
+              class="flex items-center justify-between gap-2 bg-background-default hover:bg-background-default-hover transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
               @click="toggleSelect"
             >
               <span class="text-s-15 font-medium text-black truncate">
                 {{ selectedCryptoFilter.label }}
               </span>
-              <chevron-down-icon class="w-4 h-4 shrink-0 text-info" />
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="shrink-0 text-text-subtle"
+              />
             </button>
           </template>
         </app-select>
 
         <!-- Network filter -->
         <button
-          class="flex items-center justify-between gap-2 bg-grey-5 hover:bg-grey-10 transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
+          class="flex items-center justify-between gap-2 bg-background-default hover:bg-background-default-hover transition-colors rounded-full h-10 px-4 w-full xs:w-auto"
           @click="openChainDialog = true"
         >
           <div class="flex items-center gap-2 truncate">
@@ -55,508 +59,472 @@
               {{ networkFilterLabel }}
             </span>
           </div>
-          <chevron-down-icon class="w-4 h-4 shrink-0 text-info" />
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            size="xxs"
+            class="shrink-0 text-text-subtle"
+          />
         </button>
       </div>
 
-        <div class="static" ref="tableContainer">
-          <table
-            class="w-full text-sm table-fixed border-separate border-spacing-y-0"
-          >
-            <!-- Header-->
-            <thead class="bg-white">
-              <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-normal"
+      <div class="static" ref="tableContainer">
+        <table
+          class="w-full text-sm table-fixed border-separate border-spacing-y-0"
+        >
+          <!-- Header-->
+          <thead class="bg-white">
+            <tr
+              class="text-left text-s-11 uppercase text-text-subtle tracking-sp-06 border-b border-border-subtle font-normal"
+            >
+              <!-- Watchlist -->
+              <th class="w-10 pb-4 text-center"></th>
+              <!-- Name -->
+              <th
+                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+                colspan="2"
               >
-                <!-- Watchlist -->
-                <th class="w-10 pb-4 text-center"></th>
-                <!-- Name -->
-                <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-                  colspan="2"
+                <div
+                  class="flex items-center gap-1 ml-9 xs:ml-11 font-normal"
+                  :class="{
+                    'text-black': headerSort === 'NAME',
+                  }"
+                  @click="setHeaderSort('NAME')"
                 >
-                  <div
-                    class="flex items-center gap-1 ml-9 xs:ml-11 font-normal"
-                    :class="{
-                      'text-black': headerSort === 'NAME',
-                    }"
-                    @click="setHeaderSort('NAME')"
-                  >
-                    {{ $t('crypto.token') }}
-                    <arrow-up-icon
-                      class="w-3.5 h-3.5"
-                      v-if="headerSort === 'NAME' && tableDirection === 'asc'"
-                    />
-                    <arrow-down-icon
-                      class="w-3.5 h-3.5"
-                      v-if="headerSort === 'NAME' && tableDirection === 'desc'"
-                    />
-                  </div>
-                </th>
+                  {{ $t('crypto.token') }}
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="headerSort === 'NAME' && tableDirection === 'asc'"
+                  />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="headerSort === 'NAME' && tableDirection === 'desc'"
+                  />
+                </div>
+              </th>
 
-                <!-- Market Cap -->
-                <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 md:w-[140px]"
-                >
-                  <div
-                    class="flex items-center gap-1 relative font-normal justify-end text-right lg:justify-start lg:text-left"
-                    :class="{
-                      'text-black': headerSort === 'MARKET_CAP',
-                    }"
-                    @click="setHeaderSort('MARKET_CAP')"
-                  >
-                    {{ $t('crypto.market_cap') }}
-                    <arrow-up-icon
-                      class="w-3.5 h-3.5"
-                      v-if="
-                        headerSort === 'MARKET_CAP' && tableDirection === 'asc'
-                      "
-                    />
-                    <arrow-down-icon
-                      class="w-3.5 h-3.5"
-                      v-if="
-                        headerSort === 'MARKET_CAP' && tableDirection === 'desc'
-                      "
-                    />
-                  </div>
-                </th>
-
-                <!-- Volume -->
-                <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden xl:table-cell w-[140px]"
-                >
-                  <div
-                    class="flex items-center gap-1 justify-start relative text-left font-normal"
-                    :class="{
-                      'text-black': headerSort === 'TOTAL_VOLUME',
-                    }"
-                    @click="setHeaderSort('TOTAL_VOLUME')"
-                  >
-                    {{ $t('crypto.volume') }}
-                    <arrow-up-icon
-                      class="w-3.5 h-3.5"
-                      v-if="
-                        headerSort === 'TOTAL_VOLUME' &&
-                        tableDirection === 'asc'
-                      "
-                    />
-                    <arrow-down-icon
-                      class="w-3.5 h-3.5"
-                      v-if="
-                        headerSort === 'TOTAL_VOLUME' &&
-                        tableDirection === 'desc'
-                      "
-                    />
-                  </div>
-                </th>
-                <!-- 24H Change -->
-                <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
-                  <div class="text-left font-normal">
-                    {{ $t('crypto.twenty_four_h_change') }}
-                  </div>
-                </th>
-                <!-- Price -->
-                <th
-                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell w-[140px]"
-                >
-                  <div
-                    class="flex items-center gap-1 justify-end lg:justify-start relative text-right lg:text-left font-normal"
-                    :class="{
-                      'text-black': headerSort === 'PRICE',
-                    }"
-                    @click="setHeaderSort('PRICE')"
-                  >
-                    {{ $t('crypto.price') }}
-                    <arrow-up-icon
-                      class="w-3.5 h-3.5"
-                      v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
-                    />
-                    <arrow-down-icon
-                      class="w-3.5 h-3.5"
-                      v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
-                    />
-                  </div>
-                </th>
-
-                <!-- Actions -->
-                <th
-                  class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[112px]"
-                ></th>
-              </tr>
-            </thead>
-            <!-- Body-->
-            <tbody v-if="!isLoading">
-              <tr
-                v-for="token in tokens"
-                :key="token.name + token.marketCap"
-                class="h-14 cursor-pointer hover:bg-[#F5F5F5] transition-colors duration-300"
-                @click="onRowClick(token)"
+              <!-- Market Cap -->
+              <th
+                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors w-24 md:w-[140px]"
               >
-                <!-- Watchlist -->
-                <td class="w-10 rounded-l-12 text-center">
-                  <button
-                    :aria-label="
-                      isWatchListed(getWatchlistId(token))
-                        ? $t('common.remove_from_watchlist')
-                        : $t('common.add_to_watchlist')
+                <div
+                  class="flex items-center gap-1 relative font-normal justify-end text-right lg:justify-start lg:text-left"
+                  :class="{
+                    'text-black': headerSort === 'MARKET_CAP',
+                  }"
+                  @click="setHeaderSort('MARKET_CAP')"
+                >
+                  {{ $t('crypto.market_cap') }}
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === 'MARKET_CAP' && tableDirection === 'asc'
                     "
-                    @click.stop="setWatchlistToken(token)"
-                    class="p-2 text-info rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
-                  >
-                    <!-- changes color when active -->
-                    <star-outline-icon
-                      class="h-4 w-4 cursor-pointer"
-                      v-if="!isWatchListed(getWatchlistId(token))"
-                    />
-                    <star-solid-icon
-                      v-else
-                      class="h-4 w-4 cursor-pointer text-primary"
-                    />
-                  </button>
-                </td>
-                <!-- Name & Symbol -->
-                <td class="px-1 py-1" colspan="2">
-                  <router-link
-                    :to="getTokenRoute(token)"
-                    class="flex items-center gap-3"
-                    @click.stop
-                  >
-                    <app-token-logo
-                      :url="token.logoUrl"
+                  />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === 'MARKET_CAP' && tableDirection === 'desc'
+                    "
+                  />
+                </div>
+              </th>
+
+              <!-- Volume -->
+              <th
+                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden xl:table-cell w-[140px]"
+              >
+                <div
+                  class="flex items-center gap-1 justify-start relative text-left font-normal"
+                  :class="{
+                    'text-black': headerSort === 'TOTAL_VOLUME',
+                  }"
+                  @click="setHeaderSort('TOTAL_VOLUME')"
+                >
+                  {{ $t('crypto.volume') }}
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="
+                      headerSort === 'TOTAL_VOLUME' && tableDirection === 'asc'
+                    "
+                  />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="
+                      headerSort === 'TOTAL_VOLUME' && tableDirection === 'desc'
+                    "
+                  />
+                </div>
+              </th>
+              <!-- 24H Change -->
+              <th class="hidden xl:table-cell px-1 pb-4 w-[140px]">
+                <div class="text-left font-normal">
+                  {{ $t('crypto.twenty_four_h_change') }}
+                </div>
+              </th>
+              <!-- Price -->
+              <th
+                class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell w-[140px]"
+              >
+                <div
+                  class="flex items-center gap-1 justify-end lg:justify-start relative text-right lg:text-left font-normal"
+                  :class="{
+                    'text-black': headerSort === 'PRICE',
+                  }"
+                  @click="setHeaderSort('PRICE')"
+                >
+                  {{ $t('crypto.price') }}
+                  <AppIcon
+                    name="arrow-up"
+                    size="xxs"
+                    v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
+                  />
+                  <AppIcon
+                    name="arrow-down"
+                    size="xxs"
+                    v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
+                  />
+                </div>
+              </th>
+
+              <!-- Actions -->
+              <th
+                class="lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-28"
+              ></th>
+            </tr>
+          </thead>
+          <!-- Body-->
+          <tbody v-if="!isLoading">
+            <tr
+              v-for="token in tokens"
+              :key="token.name + token.marketCap"
+              class="h-14 cursor-pointer hover:bg-background-default transition-colors duration-300"
+              @click="onRowClick(token)"
+            >
+              <!-- Watchlist -->
+              <td class="w-10 rounded-l-12 text-center">
+                <AppCellWatchlistToggle
+                  :model-value="isWatchListed(getWatchlistId(token))"
+                  @update:model-value="setWatchlistToken(token)"
+                />
+              </td>
+              <!-- Name & Symbol -->
+              <td class="px-1 py-1" colspan="2">
+                <router-link
+                  :to="getTokenRoute(token)"
+                  class="flex items-center gap-3"
+                  @click.stop
+                >
+                  <app-token-logo
+                    :url="token.logoUrl"
+                    :symbol="token.symbol"
+                    :is-stock="token.ondo !== null"
+                    no-shadow
+                    class="inline-block rounded-full"
+                  />
+                  <div class="truncate min-w-0">
+                    <app-token-symbol
                       :symbol="token.symbol"
                       :is-stock="token.ondo !== null"
-                      no-shadow
-                      class="inline-block rounded-full"
+                      :max-length="30"
+                      class="!font-semibold"
                     />
-                    <div class="truncate min-w-0">
-                      <app-token-symbol
-                        :symbol="token.symbol"
-                        :is-stock="token.ondo !== null"
-                        :max-length="30"
-                        class="!font-semibold"
-                      />
-                      <app-tooltip
-                        :text="token.name"
-                        v-if="token.name.length > 20"
-                      >
-                        <p
-                          class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
-                        >
-                          {{ getTokenDisplayName(token) }}
-                        </p>
-                      </app-tooltip>
+                    <app-tooltip
+                      :text="token.name"
+                      v-if="token.name.length > 20"
+                    >
                       <p
-                        v-else
-                        class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                       >
-                        {{ token.name }}
+                        {{ getTokenDisplayName(token) }}
                       </p>
-                    </div>
-                  </router-link>
-                </td>
-                <!-- Market Cap -->
-                <td class="px-1 py-1 text-right lg:text-left text-s-14 text-black">
-                  <p class="font-semibold">{{ token.marketCap }}</p>
-                  <p
-                    class="text-s-12 font-semibold md:hidden"
-                    :class="getPercentClass(getActivePercent(token))"
-                  >
-                    {{ parsePercent(getActivePercent(token)) }}
-                  </p>
-                </td>
-                <!-- Volume -->
-                <td
-                  class="hidden xl:table-cell px-1 py-1 text-left font-semibold text-s-14 text-black"
-                >
-                  {{ token.totalVolume }}
-                </td>
-                <!-- 24H Change -->
-                <td class="hidden xl:table-cell px-1 py-1 text-left">
-                  <div class="flex flex-col items-start justify-center py-2">
+                    </app-tooltip>
                     <p
-                      class="text-s-13 font-semibold mb-1"
-                      :class="getPercentClass(getActivePercent(token))"
+                      v-else
+                      class="truncate text-text-subtle text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                     >
-                      {{ parsePercent(getActivePercent(token)) }}
+                      {{ token.name }}
                     </p>
-                    <table-sparkline
-                      v-if="getSparkLinePoints(token).length > 0"
-                      :points="getSparkLinePoints(token)"
-                      :width="70"
-                      :height="24"
-                      :max-points="34"
-                      :percent-change="getActivePercent(token) || undefined"
-                    />
                   </div>
-                </td>
-                <!-- Price -->
-                <td class="hidden md:table-cell pl-1 pr-1 py-1 text-right lg:text-left">
-                  <p class="font-semibold text-s-14 text-black">
-                    {{ token.price }}
-                  </p>
+                </router-link>
+              </td>
+              <!-- Market Cap -->
+              <td
+                class="px-1 py-1 text-right lg:text-left text-s-14 text-black"
+              >
+                <p class="font-semibold">{{ token.marketCap }}</p>
+                <p
+                  class="text-s-12 font-semibold md:hidden"
+                  :class="getPercentClass(getActivePercent(token))"
+                >
+                  {{ parsePercent(getActivePercent(token)) }}
+                </p>
+              </td>
+              <!-- Volume -->
+              <td
+                class="hidden xl:table-cell px-1 py-1 text-left font-semibold text-s-14 text-black"
+              >
+                {{ token.totalVolume }}
+              </td>
+              <!-- 24H Change -->
+              <td class="hidden xl:table-cell px-1 py-1 text-left">
+                <div class="flex flex-col items-start justify-center py-2">
                   <p
-                    class="text-s-12 font-semibold xl:hidden"
+                    class="text-s-13 font-semibold mb-1"
                     :class="getPercentClass(getActivePercent(token))"
                   >
                     {{ parsePercent(getActivePercent(token)) }}
                   </p>
-                </td>
-                <!-- Actions -->
+                  <table-sparkline
+                    v-if="getSparkLinePoints(token).length > 0"
+                    :points="getSparkLinePoints(token)"
+                    :width="70"
+                    :height="24"
+                    :max-points="34"
+                    :percent-change="getActivePercent(token) || undefined"
+                  />
+                </div>
+              </td>
+              <!-- Price -->
+              <td
+                class="hidden md:table-cell pl-1 pr-1 py-1 text-right lg:text-left"
+              >
+                <p class="font-semibold text-s-14 text-black">
+                  {{ token.price }}
+                </p>
+                <p
+                  class="text-s-12 font-semibold xl:hidden"
+                  :class="getPercentClass(getActivePercent(token))"
+                >
+                  {{ parsePercent(getActivePercent(token)) }}
+                </p>
+              </td>
+              <!-- Actions -->
 
-                <td class="lg:pr-2 py-1 rounded-r-12 relative text-right">
-                  <div
-                    class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
+              <td class="lg:pr-2 py-1 rounded-r-12 relative text-right">
+                <div
+                  class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
+                >
+                  <app-pop-up-menu
+                    :placeholder="$t('common.action_menu')"
+                    location="right"
                   >
-                    <app-pop-up-menu
-                      :placeholder="$t('common.action_menu')"
-                      location="right"
-                    >
-                      <template #menu-button="{ toggleMenu }">
-                        <app-btn-icon
-                          :label="$t('common.action_menu')"
-                          @click.stop="toggleMenu"
-                          height="h-7 xs:h-8"
-                          width="w-7 xs:w-8"
+                    <template #menu-button="{ toggleMenu }">
+                      <app-btn-icon
+                        :label="$t('common.action_menu')"
+                        @click.stop="toggleMenu"
+                      >
+                        <AppIcon
+                          name="ellipsis-vertical"
+                          variant="filled"
+                          size="s"
+                        />
+                      </app-btn-icon>
+                    </template>
+                    <template #menu-content="{ toggleMenu }">
+                      <div
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-60"
+                      >
+                        <button
+                          v-if="token.coinId || token.ondo"
+                          class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[setWatchlistToken(token), toggleMenu()]"
                         >
-                          <ellipsis-vertical-icon class="w-5 h-5" />
-                        </app-btn-icon>
-                      </template>
-                      <template #menu-content="{ toggleMenu }">
-                        <div
-                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
-                        >
-                          <button
-                            v-if="token.coinId || token.ondo"
-                            class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
-                            @click.stop="[
-                              setWatchlistToken(token),
-                              toggleMenu(),
-                            ]"
-                          >
-                            <star-outline-icon
-                              class="h-4 w-4 cursor-pointer"
-                              v-if="!isWatchListed(getWatchlistId(token))"
-                            />
-                            <star-solid-icon
-                              v-else
-                              class="h-4 w-4 cursor-pointer"
-                            />
-                            <span class="ml-2">{{
-                              isWatchListed(getWatchlistId(token))
-                                ? $t('common.remove_from_watchlist')
-                                : $t('common.add_to_watchlist')
-                            }}</span>
-                          </button>
-                          <hr
-                            v-if="
-                              isBuyableOnCompatibleChain(token.coinId) ||
-                              token.ondo !== null ||
-                              getIsBridgeable(token) ||
-                              token.chains.length > 0 ||
-                              getTokenIsCurrentNative(token)
-                            "
-                            class="h-px bg-grey-10 border-0 w-full my-2 xs:hidden"
+                          <AppIcon
+                            name="star"
+                            size="xxs"
+                            v-if="!isWatchListed(getWatchlistId(token))"
+                            class="cursor-pointer"
                           />
+                          <AppIcon
+                            name="star"
+                            variant="filled"
+                            size="xxs"
+                            v-else
+                            class="cursor-pointer"
+                          />
+                          <span class="ml-2">{{
+                            isWatchListed(getWatchlistId(token))
+                              ? $t('common.remove_from_watchlist')
+                              : $t('common.add_to_watchlist')
+                          }}</span>
+                        </button>
+                        <app-divider
+                          v-if="
+                            isBuyableOnCompatibleChain(token.coinId) ||
+                            token.ondo !== null ||
+                            getIsBridgeable(token) ||
+                            token.chains.length > 0 ||
+                            getTokenIsCurrentNative(token)
+                          "
+                          class="my-1 xs:hidden"
+                        />
 
-                          <ul>
+                        <ul>
+                          <li
+                            v-if="isBuyableOnCompatibleChain(token.coinId)"
+                            @click.stop="[toggleMenu(), buyBtn(token, true)]"
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                          >
+                            <icon-buy class="text-text-brand w-4 h-4 mr-2" />
+                            <p>{{ $t('common.buy') }}</p>
+                          </li>
+                          <template v-if="token.ondo !== null">
                             <li
-                              v-if="isBuyableOnCompatibleChain(token.coinId)"
-                              @click.stop="[toggleMenu(), buyBtn(token, true)]"
+                              @click.stop="[
+                                tradeBtn(token, true),
+                                toggleMenu(),
+                              ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
-                              <icon-buy class="text-primary w-4 h-4 mr-2" />
-                              <p>{{ $t('common.buy') }}</p>
+                              <icon-trade
+                                class="text-text-brand w-4 h-4 mr-2"
+                              />
+                              <p>{{ $t('crypto.trade') }}</p>
                             </li>
-                            <template v-if="token.ondo !== null">
-                              <li
-                                @click.stop="[
-                                  tradeBtn(token, true),
-                                  toggleMenu(),
-                                ]"
-                                class="p-2 flex items-center hoverBGWhite rounded-12"
-                              >
-                                <icon-trade class="text-primary w-4 h-4 mr-2" />
-                                <p>{{ $t('crypto.trade') }}</p>
-                              </li>
-                            </template>
-                            <template v-else>
-                              <li
-                                v-if="getIsBridgeable(token)"
-                                @click.stop="[
-                                  toggleMenu(),
-                                  bridgeBtn(token, true),
-                                ]"
-                                class="p-2 flex items-center hoverBGWhite rounded-12"
-                              >
-                                <icon-bridge
-                                  class="text-primary w-4 h-4 mr-2"
-                                />
-                                <p>{{ $t('crypto.bridge') }}</p>
-                              </li>
-                              <li
-                                v-else-if="
-                                  currentChainhasSwapSupport &&
-                                  (token.chains.length > 0 ||
-                                    getTokenIsCurrentNative(token))
-                                "
-                                @click.stop="[
-                                  toggleMenu(),
-                                  swapBtn(token, true),
-                                ]"
-                                class="p-2 flex items-center hoverBGWhite rounded-12"
-                              >
-                                <icon-swap class="text-primary w-4 h-4 mr-2" />
-                                <p>{{ $t('common.swap') }}</p>
-                              </li>
-                            </template>
-                          </ul>
-                        </div>
-                      </template>
-                    </app-pop-up-menu>
-                  </div>
-                  <!-- Single primary action, tonal style to match Stocks (QA MEW-2324) -->
-                  <div class="hidden lg:flex justify-end">
-                    <app-base-button
-                      v-if="token.ondo !== null"
-                      size="small"
-                      theme="secondary"
-                      class="!px-3 !py-2 w-24"
-                      @click="tradeBtn(token)"
-                      >{{ $t('crypto.trade') }}
-                    </app-base-button>
-                    <app-base-button
-                      v-else-if="getIsBridgeable(token)"
-                      size="small"
-                      theme="secondary"
-                      class="!px-3 !py-2 w-24"
-                      @click="bridgeBtn(token)"
-                      >{{ $t('crypto.bridge') }}
-                    </app-base-button>
-                    <app-base-button
-                      v-else-if="
-                        currentChainhasSwapSupport &&
-                        (token.chains.length > 0 ||
-                          getTokenIsCurrentNative(token))
-                      "
-                      size="small"
-                      theme="secondary"
-                      class="!px-3 !py-2 w-24"
-                      @click="swapBtn(token)"
-                      >{{ $t('common.swap') }}
-                    </app-base-button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div
-            v-if="!isLoading && tokens.length === 0"
-            class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
-          >
-            <p
-              v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
-              class="mb-1 text-center lg:mt-10"
-            >
-              {{ $t('crypto.no_watchlisted_tokens') }}
-            </p>
-            <p v-if="searchInput" class="mb-1 text-center lg:my-10">
-              {{ $t('crypto.no_results_for', { search: searchInput }) }}
-            </p>
-            <button
-              v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
-              class="underline lg:mb-10"
-              @click="selectedCryptoFilter = cryptoFilterOptions[0]"
-            >
-              {{ $t('crypto.discover_more_tokens') }}
-              <arrow-up-icon class="rotate-90 w-4 h-4 inline-flex" />
-            </button>
-          </div>
-          <!-- Loading State -->
-          <div v-if="isLoading" class="">
-            <div
-              v-for="n in PER_PAGE"
-              :key="n"
-              class="flex w-full h-[56px] py-2"
-            >
-              <div
-                class="bg-surface/30 rounded-12 w-full h-full animate-pulse"
-              ></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Footer / pagination -->
+                          </template>
+                          <template v-else>
+                            <li
+                              v-if="getIsBridgeable(token)"
+                              @click.stop="[
+                                toggleMenu(),
+                                bridgeBtn(token, true),
+                              ]"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                            >
+                              <icon-bridge
+                                class="text-text-brand w-4 h-4 mr-2"
+                              />
+                              <p>{{ $t('crypto.bridge') }}</p>
+                            </li>
+                            <li
+                              v-else-if="
+                                currentChainhasSwapSupport &&
+                                (token.chains.length > 0 ||
+                                  getTokenIsCurrentNative(token))
+                              "
+                              @click.stop="[toggleMenu(), swapBtn(token, true)]"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                            >
+                              <icon-swap class="text-text-brand w-4 h-4 mr-2" />
+                              <p>{{ $t('common.swap') }}</p>
+                            </li>
+                          </template>
+                        </ul>
+                      </div>
+                    </template>
+                  </app-pop-up-menu>
+                </div>
+                <!-- Single primary action, tonal style to match Stocks (QA MEW-2324) -->
+                <div class="hidden lg:flex justify-end">
+                  <app-base-button
+                    v-if="token.ondo !== null"
+                    size="small"
+                    type="secondary"
+                    class="!px-3 !py-2 w-24"
+                    @click="tradeBtn(token)"
+                    >{{ $t('crypto.trade') }}
+                  </app-base-button>
+                  <app-base-button
+                    v-else-if="getIsBridgeable(token)"
+                    size="small"
+                    type="secondary"
+                    class="!px-3 !py-2 w-24"
+                    @click="bridgeBtn(token)"
+                    >{{ $t('crypto.bridge') }}
+                  </app-base-button>
+                  <app-base-button
+                    v-else-if="
+                      currentChainhasSwapSupport &&
+                      (token.chains.length > 0 ||
+                        getTokenIsCurrentNative(token))
+                    "
+                    size="small"
+                    type="secondary"
+                    class="!px-3 !py-2 w-24"
+                    @click="swapBtn(token)"
+                    >{{ $t('common.swap') }}
+                  </app-base-button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
         <div
-          class="flex items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
+          v-if="!isLoading && tokens.length === 0"
+          class="w-full flex flex-col items-center justify-center mx-auto text-text-subtle py-10 text-s-14"
         >
-          <span
-            class="text-info"
-            :class="isLoading ? 'invisible' : 'visible'"
+          <p
+            v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
+            class="mb-1 text-center lg:mt-10"
           >
-            {{ $t('common.showing_page', { current: page, total: totalPages }) }}
-          </span>
-          <div class="flex items-center gap-2">
-            <app-btn-icon
-              class="bg-grey-5"
-              height="h-10"
-              width="w-10"
-              :disabled="!isLoading && page === 1"
-              :label="$t('common.previous_page')"
-              @click="previousPage"
-            >
-              <ChevronLeftIcon class="w-4 h-4" />
-            </app-btn-icon>
-            <app-btn-icon
-              class="bg-grey-5"
-              height="h-10"
-              width="w-10"
-              :disabled="!isLoading && page >= totalPages"
-              :label="$t('common.next_page')"
-              @click="nextPage"
-            >
-              <ChevronRightIcon class="w-4 h-4" />
-            </app-btn-icon>
+            {{ $t('crypto.no_watchlisted_tokens') }}
+          </p>
+          <p v-if="searchInput" class="mb-1 text-center lg:my-10">
+            {{ $t('crypto.no_results_for', { search: searchInput }) }}
+          </p>
+          <button
+            v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
+            class="underline lg:mb-10"
+            @click="selectedCryptoFilter = cryptoFilterOptions[0]"
+          >
+            {{ $t('crypto.discover_more_tokens') }}
+            <AppIcon name="arrow-up" size="xxs" class="rotate-90 inline-flex" />
+          </button>
+        </div>
+        <!-- Loading State -->
+        <div v-if="isLoading" class="">
+          <div v-for="n in PER_PAGE" :key="n" class="flex w-full h-14 py-2">
+            <div
+              class="bg-background-default-hover/30 rounded-12 w-full h-full animate-pulse"
+            ></div>
           </div>
         </div>
-        <select-chain-dialog
-          v-if="isLoadedChains"
-          v-model:is-open="openChainDialog"
-          :selected-chain="selectedChainFilter"
-          has-all
-          :filter-by-selected-chain-type="false"
-          @update:chain="setSelectedChain"
-        />
       </div>
+
+      <AppPagination
+        :model-value="page"
+        :total-pages="totalPages"
+        variant="alternative"
+        :label="isLoading ? blankLabel : undefined"
+        class="mt-4"
+        @update:model-value="setPage"
+      />
+      <select-chain-dialog
+        v-if="isLoadedChains"
+        v-model:is-open="openChainDialog"
+        :selected-chain="selectedChainFilter"
+        has-all
+        :filter-by-selected-chain-type="false"
+        @update:chain="setSelectedChain"
+      />
     </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
 import { getTokenDisplayName } from '@/utils/tokenDisplayName'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppPagination from '@/components/pagination/AppPagination.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
-import {
-  StarIcon as StarSolidIcon,
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  EllipsisVerticalIcon,
-} from '@heroicons/vue/24/solid'
-import {
-  StarIcon as StarOutlineIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
-} from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -565,6 +533,7 @@ import type {
   Chain,
   GetWebTokensTableResponse,
   GetWebTokensTableResponseToken,
+  GetWebTokensWatchlistResponseToken,
   GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
@@ -588,13 +557,18 @@ import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const { t } = useI18n()
 const { formatFiat } = useCurrency()
 
 const walletMenu = useWalletMenuStore()
-const { setWalletPanel, setSelectedTradeTokenSymbol, setSelectedPurchaseCoinId } =
-  walletMenu
+const {
+  setWalletPanel,
+  setSelectedTradeTokenSymbol,
+  setSelectedPurchaseCoinId,
+} = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const purchaseStore = usePurchaseStore()
@@ -654,19 +628,12 @@ const PER_PAGE = 10
 /** -------------------------------
  * Pagination
 -------------------------------*/
-const previousPage = () => {
-  if (page.value > 1) {
-    page.value--
-  }
+const setPage = (p: number) => {
+  page.value = p
   tableContainer.value?.scrollTo(0, 0)
 }
-
-const nextPage = () => {
-  if (page.value < totalPages.value) {
-    page.value++
-  }
-  tableContainer.value?.scrollTo(0, 0)
-}
+// totalPages is stale until the fetch lands, so the page label stays blank.
+const blankLabel = () => ''
 
 /** -------------------------------
  * Buy/Trade/Swap/Bridge Button Actions
@@ -827,7 +794,7 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
     location: 'crypto_table',
     token: token.symbol,
-    stock: token.ondo?.underlyingMarket.name,
+    stock: token.ondo?.stockAlias || token.ondo?.underlyingMarket?.name,
   })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')
@@ -977,14 +944,29 @@ onMounted(() => {
   }
 })
 
-const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
+// Serves both the token table and the watchlist. The two endpoints agree on
+// every field except ondo.underlyingMarket.name, which the watchlist types as
+// optional — normalize onto the table shape so both map to one DisplayToken.
+// The alias wins over the underlying market's name wherever both are present.
+const formatToken = (
+  item: GetWebTokensTableResponseToken | GetWebTokensWatchlistResponseToken,
+): DisplayToken => {
   return {
     ...item,
     price: item.price ? formatFiat(item.price).display : '-',
     marketCap: item.marketCap ? formatFiat(item.marketCap).display : '-',
-    totalVolume: item.totalVolume
-      ? formatFiat(item.totalVolume).display
-      : '-',
+    totalVolume: item.totalVolume ? formatFiat(item.totalVolume).display : '-',
+    ondo: item.ondo
+      ? {
+          ...item.ondo,
+          underlyingMarket: item.ondo.underlyingMarket
+            ? {
+                name:
+                  item.ondo.stockAlias || item.ondo.underlyingMarket.name || '',
+              }
+            : null,
+        }
+      : null,
   }
 }
 
@@ -993,7 +975,9 @@ const formatStock = (
 ): DisplayToken => {
   return {
     coinId: '',
-    name: item.underlyingMarket.name,
+    // Portfolio tokens have no single underlying market, so the API sends
+    // underlyingMarket as null and the alias carries the display name.
+    name: item.stockAlias || item.underlyingMarket?.name || '',
     symbol: item.primaryMarket.symbol,
     logoUrl: item.iconPngUrl || item.iconSvgUrl || null,
     price: item.primaryMarket.price
@@ -1004,10 +988,10 @@ const formatStock = (
       ? Number(item.primaryMarket.priceChangePercentage24h)
       : null,
     priceChangePercentage7d: null,
-    totalVolume: item.underlyingMarket.volume24h
+    totalVolume: item.underlyingMarket?.volume24h
       ? formatFiat(Number(item.underlyingMarket.volume24h)).display
       : '-',
-    marketCap: item.underlyingMarket.marketCap
+    marketCap: item.underlyingMarket?.marketCap
       ? formatFiat(Number(item.underlyingMarket.marketCap)).display
       : '-',
     addresses: {},
@@ -1020,9 +1004,10 @@ const formatStock = (
       primaryMarket: {
         symbol: item.primaryMarket.symbol,
       },
-      underlyingMarket: {
-        name: item.underlyingMarket.name,
-      },
+      underlyingMarket: item.underlyingMarket
+        ? { name: item.underlyingMarket.name }
+        : null,
+      constituentTokens: item.constituentTokens,
     },
     sparklineIn7d: item.primaryMarket.sparkline24h || null,
   }
@@ -1128,9 +1113,9 @@ const parsePercent = (val: number | null): string => {
 
 const getPercentClass = (val: number | null): string => {
   if (val === null || val === undefined) return ''
-  if (val > 0) return 'text-success'
-  if (val < 0) return 'text-error'
-  return 'text-primary'
+  if (val > 0) return 'text-text-success'
+  if (val < 0) return 'text-text-error'
+  return 'text-text-brand'
 }
 
 const debounceTrackSearch = useDebounceFn((value: string) => {

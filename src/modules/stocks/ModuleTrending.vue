@@ -6,20 +6,18 @@
 
       <div class="flex">
         <app-btn-icon
-          class=""
           :disabled="isLoading || currentPage === 0"
           :label="$t('common.previous_page')"
           @click="prevPage"
         >
-          <ChevronLeftIcon class="w-4 h-4" />
+          <AppIcon name="chevron-left" size="xxs" variant="filled" />
         </app-btn-icon>
         <app-btn-icon
-          class=""
           :disabled="isLoading || currentPage >= totalPages - 1"
           :label="$t('common.next_page')"
           @click="nextPage"
         >
-          <ChevronRightIcon class="w-4 h-4" />
+          <AppIcon name="chevron-right" size="xxs" variant="filled" />
         </app-btn-icon>
       </div>
     </div>
@@ -33,7 +31,7 @@
         <div
           v-for="token in 3"
           :key="`loading-trending-${token}`"
-          class="basis-full bg-grey-10 flex items-end justify-between rounded-16 w-full h-[55px]"
+          class="basis-full bg-background-default-hover flex items-end justify-between rounded-16 w-full h-[55px]"
         ></div>
       </div>
     </app-sheet>
@@ -42,9 +40,9 @@
 
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import TokenRow from './components/TokenRow.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'
 import { usePaginate } from '@/composables/usePaginate'
 import { useStocksStore } from '@/stores/stocksStore'

@@ -3,10 +3,10 @@
     ref="cardEl"
     :class="[
       isActive
-        ? 'bg-white border-grey-10'
+        ? 'bg-white border-border-default'
         : side === 'sell'
-          ? 'bg-bgBase border-transparent has-[.amount-value:hover]:border-grey-subtle'
-          : 'bg-bgBase border-transparent',
+          ? 'bg-background-default border-transparent has-[.amount-value:hover]:border-border-hover'
+          : 'bg-background-default border-transparent',
       side === 'sell' ? 'pb-6' : 'pb-4',
       'w-full rounded-20 flex flex-col gap-5 px-4 pt-4 border-1 transition-colors',
     ]"
@@ -38,7 +38,7 @@
               :class="[
                 amountColorClass,
                 amountSizeClass,
-                'min-w-0 max-w-full bg-transparent text-s-32 font-bold leading-[36px] tracking-[-0.96px] placeholder:text-grey-subtle focus:outline-none focus:ring-0',
+                'min-w-0 max-w-full bg-transparent text-s-32 font-bold leading-[36px] tracking-[-0.96px] placeholder:text-text-placeholder focus:outline-none focus:ring-0',
               ]"
               @focus="focusInput"
               @keypress="checkIfNumber"
@@ -50,7 +50,7 @@
           v-else
           ref="amountDisplayElement"
           :class="[
-            amount ? amountColorClass : 'text-grey-subtle',
+            amount ? amountColorClass : 'text-text-placeholder',
             amountSizeClass,
             'min-w-0 grow truncate text-s-32 font-bold leading-[36px] tracking-[-0.96px]',
           ]"
@@ -73,14 +73,14 @@
           >
             <div
               v-if="tokenLoading || !token"
-              class="h-10 w-[120px] shrink-0 rounded-20 bg-grey-10 animate-pulse"
+              class="h-10 w-[120px] shrink-0 rounded-20 bg-background-default-hover animate-pulse"
             />
             <button
               v-else
               type="button"
               :aria-label="$t('select_token.title')"
               :class="[
-                isActive ? 'bg-bgBase' : 'bg-white',
+                isActive ? 'bg-background-default' : 'bg-white',
                 'flex items-center gap-2 p-2 rounded-20 shrink-0 transition-colors hoverNoBG',
               ]"
               @click.stop="open"
@@ -105,35 +105,30 @@
                     : undefined
                 "
                 :is-stock="side === 'buy'"
-                :has-gradient="false"
                 class="!text-s-14 !font-semibold leading-[20px] tracking-[-0.28px]"
               />
-              <chevron-right-icon class="w-5 h-5" />
+              <AppIcon name="chevron-right" variant="filled" size="s" />
             </button>
           </template>
         </trade-select-asset-modal>
       </div>
 
       <div class="w-full flex items-center justify-between gap-2">
-        <app-spinner v-if="isBusy" class="text-black" />
-        <p
+        <app-spinner v-if="isBusy" :size="18" />
+        <!-- Inside the card padding, so no side inset of its own -->
+        <AppInputFeedback
           v-else
           :id="`trade-amount-message-${side}`"
-          :role="showError ? 'alert' : undefined"
-          aria-live="polite"
-          :class="[
-            showError ? 'text-error' : 'text-info',
-            'text-s-12 leading-[18px] truncate',
-          ]"
-        >
-          {{ showError ? errorMessage : fiatText }}
-        </p>
+          :type="showError ? 'error' : 'text'"
+          :message="showError ? errorMessage : fiatText"
+          class="px-0!"
+        />
         <p
           v-if="showBalance"
           :class="[
             isErrorVisible && side === 'sell' && errorIsBalance
-              ? 'text-error'
-              : 'text-info',
+              ? 'text-text-error'
+              : 'text-text-subtle',
             'text-s-12 leading-[18px] whitespace-nowrap',
           ]"
         >
@@ -149,7 +144,7 @@
         type="button"
         :disabled="pct === 100 && maxDisabled"
         :class="[
-          isActive ? 'bg-bgBase' : 'bg-white',
+          isActive ? 'bg-background-default' : 'bg-white',
           pct === 100 && maxDisabled ? 'opacity-40 cursor-not-allowed' : '',
           'flex-1 h-8 flex items-center justify-center px-3 rounded-8 text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase transition-colors hoverNoBG',
         ]"
@@ -165,9 +160,8 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
-import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import { onClickOutside, useDebounceFn, useElementSize } from '@vueuse/core'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import TradeSelectAssetModal from './TradeSelectAssetModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
@@ -180,6 +174,8 @@ import { type NewTokenInfo } from '@/stores/swapStore'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { useTextScaler, type TextScale } from '@/composables/useTextScaler'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 const props = withDefaults(
   defineProps<{
     side: 'sell' | 'buy'
@@ -293,7 +289,9 @@ const balanceText = computed(() => {
 })
 
 const amountColorClass = computed(() =>
-  isErrorVisible.value && !inFocusInput.value ? 'text-error' : 'text-black',
+  isErrorVisible.value && !inFocusInput.value
+    ? 'text-text-error'
+    : 'text-black',
 )
 
 const cardEl = ref<HTMLElement | null>(null)

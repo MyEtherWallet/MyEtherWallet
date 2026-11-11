@@ -19,9 +19,11 @@ import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
+  isBenignBalanceHistoryNotAcceptable,
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
+  isEip6963NullProviderError,
   isExpectedTradeClientError,
   isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
@@ -37,10 +39,15 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectPublishFailedError,
+  isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
-import { CHUNK_LOAD_ERROR_MESSAGES } from '@/router/chunkError'
+import {
+  CHUNK_LOAD_ERROR_MESSAGES,
+  installStaleChunkReload,
+} from '@/router/chunkError'
 
 const app = createApp(App)
 
@@ -61,7 +68,9 @@ if (dsn && process.env.NODE_ENV === 'production') {
       'TypeError: Load failed',
       // Stale-deploy lazy-chunk errors: a cached index.html requests hashed
       // assets that no longer exist after a redeploy. These are already
-      // auto-recovered by router.onError (reload once), so they are noise.
+      // auto-recovered (reload once) by router.onError for route chunks and
+      // by installStaleChunkReload for imports inside libraries, so they are
+      // noise.
       // Covers every browser wording of the same failure (Safari "Importing a
       // module script failed" APP-MEW-WEB-A5, "text/html ... MIME type"
       // APP-MEW-WEB-B8, "Unable to preload CSS" APP-MEW-WEB-1K6).
@@ -109,6 +118,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
       if (
         isBluetoothGattDisconnectedError(originalException) ||
         isCoinNotFoundApiError(originalException) ||
+        // EIP-6963 `announceProvider` with a null/malformed `detail` from a
+        // buggy/hostile extension — crashes mipd/wagmi provider discovery and
+        // MEW's own providerStore.addProvider with a null-`info` deref; not an
+        // app bug (APP-MEW-WEB-1JM / 1JN / 1JG / MEW-2257).
+        isEip6963NullProviderError(originalException) ||
         isExpectedTradeClientError(originalException) ||
         isExtensionContextInvalidatedError(originalException) ||
         isExtensionOrProviderError(originalException) ||
@@ -139,13 +153,26 @@ if (dsn && process.env.NODE_ENV === 'production') {
         // no app frame, already handled by the connect flow (APP-MEW-WEB-61 /
         // MEW-2240).
         isWalletConnectSubscribeInterruptedError(originalException) ||
+        // WalletConnect "No matching key. session topic doesn't exist" thrown
+        // inside @walletconnect/sign-client when the relay delivers a message
+        // for an already-removed session; no app frame, no user impact
+        // (APP-MEW-WEB-C9 / MEW-2656).
+        isWalletConnectStaleSessionTopicError(originalException) ||
+        // WalletConnect relay publish timeout ("Failed to publish payload")
+        // for tag 1112 only, i.e. deleting a stale session before connect,
+        // which the connect flow already toasts. Other tags (e.g. signing
+        // requests) keep reporting (APP-MEW-WEB-1RW / MEW-2657).
+        isWalletConnectPublishFailedError(originalException) ||
         // iOS injected-script "Maximum call stack" RangeErrors with no app
         // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
         isForeignStackOverflow(event) ||
         // Purchase-info 403 from a region/wallet the fiat-purchase backend
         // denies — expected, already-handled business rule, not an app bug
         // (APP-MEW-WEB-1F5 / MEW-2173).
-        isBenignPurchaseInfoForbidden(event)
+        isBenignPurchaseInfoForbidden(event) ||
+        // Intermittent backend 406 from portfolio balance-history; the chart
+        // already shows its empty state (APP-MEW-WEB-1K0 / MEW-2547).
+        isBenignBalanceHistoryNotAcceptable(event)
       )
         return null
       return event
@@ -190,8 +217,7 @@ pinia.use(
     // (and potentially sensitive material) that must never leave the client.
     stateTransformer: state => {
       const walletStore = state.walletStore as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
       if (walletStore && 'wallet' in walletStore) {
         return {
           ...state,
@@ -214,6 +240,10 @@ pinia.use(
 
 app.use(pinia)
 app.use(router)
+// Reload once on stale-deploy chunk 404s that happen outside the router (see
+// router/chunkError.ts). Installed before mount so the first lazy import is
+// already covered.
+installStaleChunkReload()
 app.use(i18n as any)
 app.directive('ripple', rippleDirective)
 app.use(autoAnimatePlugin)

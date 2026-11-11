@@ -6,7 +6,9 @@
     >
       <div class="flex items-center">
         <div class="mr-2 ml-1">
-          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+          <p
+            class="text-text-subtle text-left text-s-12 leading-[16px] capitalize"
+          >
             {{ $t('derivation_path.title') }}
           </p>
           <p
@@ -14,75 +16,73 @@
             class="text-ellipsis truncate font-medium text-sm"
           >
             {{ selectedPath.label }}
-            <span class="text-info text-s-12 leading-[16px]">
+            <span class="text-text-subtle text-s-12 leading-[16px]">
               - {{ selectedPath.basePath }}</span
             >
           </p>
         </div>
-        <chevron-down-icon class="w-4 h-4 ml-auto mr-1" />
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
+          class="ml-auto mr-1"
+        />
       </div>
     </button>
 
     <!-- Dialog with chains list -->
-    <app-dialog
-      v-model:is-open="openDialog"
-      :title="$t('derivation_path.select_path')"
-      class="xs:max-w-[428px] sm:mx-auto"
-      z-index-overlay="z-[200]"
-      z-index-container="z-[201]"
-      has-content-gutter
-    >
-      <template #content>
-        <div class="max-h-[95vh] sm:max-h-[500px] pb-6">
-          <!--PATH LIST-->
-          <div>
-            <!-- Seacrh -->
-            <div class="sticky top-0 bg-white z-10 pt-2">
-              <div class="mb-1 flex items-center gap-2">
-                <app-search-input
-                  v-model="searchInput"
-                  class="grow"
-                  :placeholder="$t('derivation_path.search')"
-                />
-              </div>
-              <hr class="h-px bg-grey-10 border-0 w-full" />
+    <app-modal v-model="openDialog" :title="$t('derivation_path.select_path')">
+      <div class="max-h-[95vh] sm:max-h-[500px] pb-6 px-4 sm:px-6">
+        <!--PATH LIST-->
+        <div>
+          <!-- Seacrh -->
+          <div class="sticky top-0 bg-white z-10 pt-2">
+            <div class="mb-1 flex items-center gap-2">
+              <app-searchbar
+                v-model="searchInput"
+                variant="default"
+                class="grow"
+                :placeholder="$t('derivation_path.search')"
+              />
             </div>
-            <!-- Seacrh Result-->
-            <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
-              <button
-                v-for="(path, index) in searchResults"
-                :key="`${path.basePath}-${index}-${path.label}`"
-                class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-xl box-border"
-                @click="setSelectedPath(path)"
-              >
-                <div class="flex justify-between items-center w-full">
-                  <p>{{ path.label }}</p>
-                  <p class="text-info">{{ path.basePath }}</p>
-                </div>
-              </button>
-            </div>
-            <!-- Seacrh not found-->
-            <div v-else>
-              <div class="flex justify-center mt-10 h-[400px] text-info">
-                <p>{{ $t('derivation_path.not_found') }}: {{ searchInput }}</p>
+            <app-divider class="-my-1" />
+          </div>
+          <!-- Seacrh Result-->
+          <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
+            <button
+              v-for="(path, index) in searchResults"
+              :key="`${path.basePath}-${index}-${path.label}`"
+              class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-xl box-border"
+              @click="setSelectedPath(path)"
+            >
+              <div class="flex justify-between items-center w-full">
+                <p>{{ path.label }}</p>
+                <p class="text-text-subtle">{{ path.basePath }}</p>
               </div>
+            </button>
+          </div>
+          <!-- Seacrh not found-->
+          <div v-else>
+            <div class="flex justify-center mt-10 h-[400px] text-text-subtle">
+              <p>{{ $t('derivation_path.not_found') }}: {{ searchInput }}</p>
             </div>
           </div>
         </div>
-      </template>
-    </app-dialog>
+      </div>
+    </app-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import type { PathType } from '@/stores/derivationStore'
 import { HWwalletType } from '@enkryptcom/types'
+import AppDivider from '@/components/divider/AppDivider.vue'
 
 const props = defineProps({
   isBtnGroup: {

@@ -378,4 +378,21 @@ describe('TheManageAccounts', () => {
       vi.useRealTimers()
     }
   })
+
+  it('re-measures the trigger clone on every open and leaves its width to the content', async () => {
+    // The Address selector is content-width, so its size changes with the balance/name.
+    const anchor = document.createElement('div')
+    let rect = { top: 18, left: 900, right: 1040, width: 140, height: 40, bottom: 58 }
+    anchor.getBoundingClientRect = () => rect as DOMRect
+    const w = mount(TheManageAccounts, { props: { openDialog: true, anchor }, global: { stubs, mocks: { $t: (k: string) => k } } })
+    const cloneStyle = () => w.findComponent({ name: 'AddressTriggerPill' }).attributes('style') ?? ''
+
+    expect(cloneStyle()).toContain(`right: ${window.innerWidth - 1040}px`)
+    expect(cloneStyle()).not.toContain('width')
+
+    await w.setProps({ openDialog: false })
+    rect = { ...rect, left: 860, right: 1000, width: 180 }
+    await w.setProps({ openDialog: true })
+    expect(cloneStyle()).toContain(`right: ${window.innerWidth - 1000}px`)
+  })
 })

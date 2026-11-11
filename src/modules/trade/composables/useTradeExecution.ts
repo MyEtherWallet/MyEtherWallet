@@ -4,7 +4,10 @@ import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { isExpectedClientError } from '@/modules/trade/common/expectedTradeError'
 import { useToastStore } from '@/stores/toastStore'
-import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
+import {
+  useTradeOrdersStore,
+  type SavedTradeOrder,
+} from '@/stores/tradeOrdersStore'
 import { ToastType } from '@/types/notification'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
@@ -25,15 +28,13 @@ import { reportModuleError } from '@/utils/reportModuleError'
 import BigNumber from 'bignumber.js'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TradeForm } from './useTradeForm'
+import { NATIVE_ADDRESS } from '@/modules/trade/providers/oneinch_fusion/configs'
+import { NativeOrderUnsubmittedError } from '@/modules/trade/providers/oneinch_fusion/nativeOrderError'
 
 const isDevMode = Configs.IS_DEV_MODE
 
 export type TradeFlowStep =
-  | 'idle'
-  | 'approvalIntro'
-  | 'approving'
-  | 'review'
-  | 'processing'
+  'idle' | 'approvalIntro' | 'approving' | 'review' | 'processing'
 
 const getErrorMessage = (error: unknown, fallback: string): string => {
   if (error instanceof Error && error.message) return error.message
@@ -104,6 +105,10 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const isApproving = computed(() => tradeFlowStep.value === 'approving')
   const txProceeding = ref(false)
   const orderHash = ref<string>('')
+  // True from the moment a native (ETH/BNB) order needs its escrow deposit
+  // signed until that deposit is broadcast — the progress modal shows
+  // "confirm in your wallet" copy instead of the generic processing state.
+  const depositPending = ref(false)
 
   // USD value of the to-side quote (endAmount is in base units)
   const getToAmountUSD = (): number => {
@@ -151,7 +156,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const addProcessingToast = (hash: string) => {
     toastStore.addToastMessage({
       id: `trade-processing-${hash}`,
-      variant: 'dark',
       text: t('trade.toast.processing_trade'),
       textSecondary: t('trade.toast.processing_note'),
       isInfinite: true,
@@ -306,6 +310,144 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     analytics.trackTradeEvent(TradeEvent.OFFER_SHOWN, getAnalyticsPayload())
   }
 
+  /**
+   * What the user actually confirmed, captured before the first await in
+   * `confirmTrade`. The form is live while the order submits: dismissing the
+   * progress modal walks the step processing → idle, and the module clears the
+   * form on that transition (empty amount, null quote, default tokens), and
+   * the balance-refresh / token-list watchers can reassign the tokens too. The
+   * saved notification, the reward registration and the status analytics all
+   * read from the saved order, so it must be built from this snapshot, never
+   * from the refs.
+   */
+  interface TradeSnapshot {
+    from: NonNullable<TradeForm['fromTokenSelected']['value']>
+    to: NonNullable<TradeForm['toTokenSelected']['value']>
+    amount: string
+    quote: QuoteData | null
+    chainId: number
+    chainName: string
+    /** Account that signs the order and owns the saved notification. */
+    walletAddress: string
+  }
+
+  const snapshotTrade = (): TradeSnapshot | null => {
+    if (!fromTokenSelected.value || !toTokenSelected.value) return null
+    if (!walletAddress.value) return null
+    return {
+      from: fromTokenSelected.value,
+      to: toTokenSelected.value,
+      amount: fromAmount.value,
+      quote: currentQuote.value,
+      chainId: parseInt(selectedFromChain.value?.chainID || '1'),
+      chainName: selectedFromChain.value?.name || 'ETHEREUM',
+      walletAddress: walletAddress.value,
+    }
+  }
+
+  // Builds the persisted notification entry for an order. Amounts are stored as
+  // raw decimal strings — display sites format them, and the fill-vs-expected
+  // math in ModuleNotifications parses them back (a grouped/abbreviated display
+  // string breaks that math).
+  const buildSavedOrder = (
+    hash: string,
+    snapshot: TradeSnapshot,
+    extra: Partial<SavedTradeOrder> & { status: string },
+  ): SavedTradeOrder => {
+    const {
+      from,
+      to,
+      amount: fromAmount,
+      quote,
+      chainId,
+      chainName,
+      walletAddress: fromAddress,
+    } = snapshot
+    const toDecimals = to.decimals || 18
+    const expectedToAmount = formatUnits(
+      quote?.avgAmount || quote?.startAmount || 0n,
+      toDecimals,
+    )
+    return {
+      hash,
+      fromAmount,
+      fromSymbol: from.symbol,
+      fromDecimals: from.decimals || 18,
+      fromTokenIcon: from.logoURI,
+      expectedToAmount,
+      toSymbol: to.symbol,
+      toDecimals,
+      toTokenIcon: to.logoURI,
+      createdAt: Math.floor(Date.now() / 1000),
+      duration: 180,
+      fills: [],
+      usdValue: from.price
+        ? BigNumber(fromAmount || '0')
+            .times(from.price)
+            .toFixed(2)
+        : undefined,
+      toUsdValue: to.price
+        ? BigNumber(expectedToAmount).times(to.price).toFixed(2)
+        : undefined,
+      chainId,
+      fromAddress,
+      seen: false,
+      chainName,
+      fromTokenAddress: from.address,
+      toTokenAddress: to.address,
+      ...extra,
+    }
+  }
+
+  // The native deposit is on-chain (or in flight) but 1inch refused the order,
+  // so the ETH sits in the order's proxy with nothing to fill it. Persist what
+  // the recovery action needs and surface it; it is NOT stored as `pending`
+  // since there is no order on 1inch to poll.
+  const persistUnsubmittedOrder = (
+    e: NativeOrderUnsubmittedError,
+    snapshot: TradeSnapshot,
+    analyticsPayload: TradePayloadShared,
+  ) => {
+    orderHash.value = e.orderHash
+    tradeOrdersStore.addOrder(
+      buildSavedOrder(e.orderHash, snapshot, {
+        status: 'unsubmitted',
+        depositTxHash: e.depositTxHash,
+        proxyAddress: e.proxyAddress,
+        nativeOrder: e.nativeOrder,
+        duration: 0,
+      }),
+    )
+
+    const errorMessage = getErrorMessage(e.cause, e.message).toLowerCase()
+    reportModuleError({
+      tag: SENTRY_MODULE_TAGS.TRADE,
+      title: 'TRADE: Relayer refused native order after deposit was sent',
+      error: e.cause instanceof Error ? e.cause : new Error(errorMessage),
+      extra: {
+        errorMessage,
+        orderHash: e.orderHash,
+        depositTxHash: e.depositTxHash,
+        proxyAddress: e.proxyAddress,
+      },
+    })
+    analytics.trackTradeEventError(TradeEventError.RELAYER_ERROR, {
+      ...analyticsPayload,
+      orderHash: e.orderHash,
+      errorMsg: errorMessage,
+    })
+    analytics.trackTradeEventStatus(TradeEventStatus.UNSUBMITTED, {
+      ...analyticsPayload,
+      orderHash: e.orderHash,
+      txHash: e.depositTxHash,
+      ...getRewardFields(),
+    })
+    toastStore.addToastMessage({
+      text: t('trade.error.order-unsubmitted'),
+      type: ToastType.Error,
+    })
+  }
+
   const confirmTrade = async () => {
     // Last line of defence before an order is signed and submitted. Requires the
     // geo check to have resolved as allowed — an unresolved check is not consent.
@@ -319,6 +461,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     if (!fromTokenSelected.value || !toTokenSelected.value || !wallet.value) {
       return
     }
+    const snapshot = snapshotTrade()
+    if (!snapshot) return
 
     txProceeding.value = true
     const analyticsPayload = getAnalyticsPayload()
@@ -330,14 +474,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       const { default: OneInchFusion } =
         await import('../providers/oneinch_fusion/oneInchFusion')
 
-      const chainId = parseInt(selectedFromChain.value?.chainID || '1')
+      const { chainId } = snapshot
       const fusion = new OneInchFusion(wallet.value, chainId)
 
-      const decimals = fromTokenSelected.value.decimals || 18
-      const amountInBaseUnits = parseUnits(
-        fromAmount.value,
-        decimals,
-      ).toString()
+      const decimals = snapshot.from.decimals || 18
+      const amountInBaseUnits = parseUnits(snapshot.amount, decimals).toString()
 
       // Rechecked here because the guard above ran before an await (the dynamic
       // import), and the geo check can land against the user in that gap. This is
@@ -347,20 +488,31 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         return
       }
 
-      const result = await fusion.submitOrder({
-        fromTokenAddress: fromTokenSelected.value.address,
-        toTokenAddress: toTokenSelected.value.address,
-        amount: amountInBaseUnits,
-        fromAddress: walletAddress.value!,
-        fromTokenDecimals: fromTokenSelected.value.decimals || 18,
-        toTokenDecimals: toTokenSelected.value.decimals || 18,
-      })
+      const isNativeOrder =
+        snapshot.from.address.toLowerCase() === NATIVE_ADDRESS
+      depositPending.value = isNativeOrder
+      const result = await fusion.submitOrder(
+        {
+          fromTokenAddress: snapshot.from.address,
+          toTokenAddress: snapshot.to.address,
+          amount: amountInBaseUnits,
+          fromAddress: snapshot.walletAddress,
+          fromTokenDecimals: snapshot.from.decimals || 18,
+          toTokenDecimals: snapshot.to.decimals || 18,
+        },
+        {
+          onDepositSent: () => {
+            depositPending.value = false
+          },
+        },
+      )
+      depositPending.value = false
 
       orderHash.value = result.hash
 
       let canEarnReward: undefined | boolean = undefined
-      const fromUsdValue = BigNumber(fromAmount.value || '0').times(
-        fromTokenSelected.value?.price || 0,
+      const fromUsdValue = BigNumber(snapshot.amount || '0').times(
+        snapshot.from.price || 0,
       )
       const minSpendBN = BigNumber(minSpendTrade.value)
       const minimumSpend = minSpendBN.isNaN() ? BigNumber(0) : minSpendBN
@@ -376,46 +528,12 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         ...getRewardFields(),
       })
 
-      // Add order to store. Stored as a raw decimal string — display sites
-      // format it, and the fill-vs-expected math in ModuleNotifications parses
-      // it back (a grouped/abbreviated display string breaks that math).
-      const toDecimals = toTokenSelected.value.decimals || 18
-      const expectedToAmount = formatUnits(
-        currentQuote.value?.avgAmount || currentQuote.value?.startAmount || 0n,
-        toDecimals,
+      tradeOrdersStore.addOrder(
+        buildSavedOrder(result.hash, snapshot, {
+          status: 'pending',
+          depositTxHash: result.depositTxHash,
+        }),
       )
-
-      tradeOrdersStore.addOrder({
-        hash: result.hash,
-        status: 'pending',
-        fromAmount: fromAmount.value,
-        fromSymbol: fromTokenSelected.value.symbol,
-        fromDecimals: fromTokenSelected.value.decimals || 18,
-        fromTokenIcon: fromTokenSelected.value.logoURI,
-        expectedToAmount,
-        toSymbol: toTokenSelected.value.symbol,
-        toDecimals: toTokenSelected.value.decimals || 18,
-        toTokenIcon: toTokenSelected.value.logoURI,
-        createdAt: Math.floor(Date.now() / 1000),
-        duration: 180,
-        fills: [],
-        usdValue: fromTokenSelected.value.price
-          ? BigNumber(fromAmount.value || '0')
-              .times(fromTokenSelected.value.price)
-              .toFixed(2)
-          : undefined,
-        toUsdValue: toTokenSelected.value.price
-          ? BigNumber(expectedToAmount)
-              .times(toTokenSelected.value.price)
-              .toFixed(2)
-          : undefined,
-        chainId,
-        fromAddress: walletAddress.value!,
-        seen: false,
-        chainName: selectedFromChain.value?.name || 'ETHEREUM',
-        fromTokenAddress: fromTokenSelected.value.address,
-        toTokenAddress: toTokenSelected.value.address,
-      })
 
       // The user dismissed the progress modal while the order was submitting —
       // the toast is now the only in-flight indicator. The normal flow (modal
@@ -424,13 +542,24 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         addProcessingToast(result.hash)
       }
     } catch (e) {
+      // Read before `finally` clears it: a rejection while the deposit prompt
+      // was up is a distinct outcome from declining the order signature.
+      const rejectedDeposit = depositPending.value
+
+      if (e instanceof NativeOrderUnsubmittedError) {
+        // Keep the progress modal up: it renders the unsubmitted state with the
+        // recovery instructions, which a bounce back to Review would hide.
+        persistUnsubmittedOrder(e, snapshot, analyticsPayload)
+        return
+      }
+
       if (stepIs('processing')) {
         tradeFlowStep.value = 'review'
       }
       if (isUserRejectionError(e)) {
         analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
           ...analyticsPayload,
-          errorMsg: 'declined_by_user',
+          errorMsg: rejectedDeposit ? 'declined_deposit' : 'declined_by_user',
         })
         toastStore.addToastMessage({
           text: t('common.error.user_canceled_request'),
@@ -465,6 +594,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       })
     } finally {
       txProceeding.value = false
+      depositPending.value = false
     }
   }
 
@@ -472,6 +602,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     tradeFlowStep,
     isApproving,
     txProceeding,
+    depositPending,
     orderHash,
     startTradeFlow,
     confirmApproval,

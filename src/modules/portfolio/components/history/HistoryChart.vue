@@ -83,13 +83,17 @@ Chart.register(
   Filler,
 )
 
+/**
+ * Chart.js paints to a canvas, which cannot resolve `var(--color-*)`, so these
+ * mirror the semantic tokens as literals. Keep in sync with `main.css`.
+ */
 const colors = {
-  upColor: 'rgb(5,192,165,1)',
-  downColor: 'rgb(239,68,68,1)',
-  bgUp: 'rgba(5,192,165,0.07)',
-  bgDown: 'rgba(239,68,68,0.07)',
-  bgGrey: 'rgba(0,0,0,0.05)',
-  tooltipBg: 'rgba(0,0,0,0.7)',
+  upColor: '#01a08c', // background/success
+  downColor: '#e40c58', // background/error
+  bgUp: 'rgba(1,160,140,0.07)', // background/success @ 7%
+  bgDown: 'rgba(228,12,88,0.07)', // background/error @ 7%
+  bgGrey: '#f5f5f5', // background/default
+  tooltipBg: '#1a1a1a', // background/info
 }
 
 const customTooltip = ref<TooltipState | null>(null)
@@ -204,7 +208,7 @@ const chartData = computed<ChartData<'line'>>(() => {
   if (topPoints.value.length > 0) {
     dataSet.datasets!.push({
       data: topPoints.value,
-      borderColor: '#9D00FF',
+      borderColor: '#9d00ff',
       ...lineSettings,
     })
   }
@@ -455,7 +459,7 @@ canvas {
   pointer-events: none;
   background: rgba(0, 0, 0, 0.85);
   border-radius: 8px;
-  padding: 10px 14px;
+  padding: var(--size-2-5) var(--size-3-5);
   white-space: nowrap;
   z-index: 10;
   font-family: Roboto, sans-serif;
@@ -472,21 +476,21 @@ canvas {
 .tooltip-title {
   font-size: 13px;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 6px;
+  margin-bottom: var(--size-1-5);
 }
 
 .tooltip-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--size-2);
   font-size: 14px;
   line-height: 1.6;
 }
 
 .tooltip-dot {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: var(--size-2);
+  height: var(--size-2);
   border-radius: 50%;
   flex-shrink: 0;
 }

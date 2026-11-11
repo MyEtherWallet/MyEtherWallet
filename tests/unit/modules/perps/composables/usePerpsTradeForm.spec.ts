@@ -38,11 +38,23 @@ vi.mock('vue-i18n', () => {
     void i18nMock.localeTick.value
     return mockT(key, params)
   })
-  return { useI18n: () => ({ t: i18nMock.tSpy }) }
+  return {
+    useI18n: () => ({ t: i18nMock.tSpy }),
+    // `perps/sentry.ts` -> `utils/walletUtils.ts` -> `i18n/index.ts` builds the
+    // app instance at import time; stub it so the suite can load.
+    createI18n: () => ({ global: { t: i18nMock.tSpy, locale: ref('en') } }),
+  }
 })
 
+// Shared so the sign-in tests (MEW-2470) can set the current route and assert
+// on navigation.
+const routerMock = vi.hoisted(() => ({
+  push: vi.fn(),
+  route: { matched: [] as { name: string }[] },
+}))
 vi.mock('vue-router', () => ({
-  useRouter: () => ({ push: vi.fn() }),
+  useRouter: () => ({ push: routerMock.push }),
+  useRoute: () => routerMock.route,
 }))
 
 const walletMenuState = reactive<Record<string, unknown>>({
@@ -96,11 +108,16 @@ const mockPerpsState = vi.hoisted(
     }) as const,
 )
 
+const loginMock = vi.hoisted(() => vi.fn())
+const mockAuthState = vi.hoisted(() => ({
+  isWalletConnected: { value: true } as Ref<boolean>,
+}))
 vi.mock('@/modules/perps/composables/usePerpsAuth', () => ({
   usePerpsAuth: () => ({
     token: ref(null),
-    login: vi.fn(),
+    login: loginMock,
     triggerRefresh: vi.fn(),
+    isWalletConnected: mockAuthState.isWalletConnected,
   }),
   usePerpsBalance: () => ({ balance: mockPerpsState.balance }),
 }))
@@ -145,6 +162,8 @@ import {
   usePerpsTradeForm,
   triggerOrderPriceErrorKey,
 } from '@/modules/perps/composables/usePerpsTradeForm'
+import { PerpsEventSource } from '@/analytics/events'
+import { ROUTES_MAIN, PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
 
 describe('usePerpsTradeForm — target price required (MEW-1915)', () => {
   beforeEach(() => {
@@ -282,16 +301,16 @@ describe('usePerpsTradeForm — i18n label keys (MEW-2012)', () => {
     expect(longCalls()).toBeGreaterThan(before)
   })
 
-  it('builds marketFilterTabs labels from i18n keys while keeping keys stable', () => {
+  it('builds marketFilterTabs labels from i18n keys while keeping values stable', () => {
     const form = usePerpsTradeForm()
     expect(form.marketFilterTabs).toEqual([
-      { key: 'all', label: 'perps.select-market.filter-tab-all' },
-      { key: 'Equities', label: 'perps.select-market.filter-tab-equities' },
+      { value: 'all', label: 'perps.select-market.filter-tab-all' },
+      { value: 'Equities', label: 'perps.select-market.filter-tab-equities' },
       {
-        key: 'Commodities',
+        value: 'Commodities',
         label: 'perps.select-market.filter-tab-commodities',
       },
-      { key: 'Indices', label: 'perps.select-market.filter-tab-indices' },
+      { value: 'Indices', label: 'perps.select-market.filter-tab-indices' },
     ])
   })
 
@@ -368,6 +387,111 @@ describe('usePerpsTradeForm — hide disabled tokens (MEW-2025)', () => {
     ]
     const form = usePerpsTradeForm()
     expect(form.filteredMarketList.value).toHaveLength(2)
+  })
+})
+
+describe('usePerpsTradeForm — ignores a prefill with no perps market', () => {
+  const makeContract = (market: string) =>
+    ({
+      market,
+      baseCurrency: market.split('-')[0],
+      quoteCurrency: 'USD',
+      disabled: false,
+      usdVolume: '0',
+      priceChangePercent: '0',
+      bid: '1',
+      ask: '1',
+      indexPrice: '1',
+      tags: [],
+    }) as unknown as Contract
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    walletMenuState.selectedTradeOrderSide = 'buy'
+    walletMenuState.selectedTradeManageMode = null
+  })
+
+  afterEach(() => {
+    mockContracts.contracts.value = []
+  })
+
+  it('falls back to the first contract when Trade left a symbol perps does not list', () => {
+    walletMenuState.selectedTradeTokenSymbol = 'NOTLISTED'
+    mockContracts.contracts.value = [
+      makeContract('BTC-USD'),
+      makeContract('ETH-USD'),
+    ]
+    const form = usePerpsTradeForm()
+    expect(form.displaySymbol.value).toBe('BTC')
+    // The Trade panel's pick is preserved for when the user switches back.
+    expect(walletMenuState.selectedTradeTokenSymbol).toBe('NOTLISTED')
+  })
+
+  it('keeps the prefill when a contract exists for it', () => {
+    walletMenuState.selectedTradeTokenSymbol = 'ETH'
+    mockContracts.contracts.value = [
+      makeContract('BTC-USD'),
+      makeContract('ETH-USD'),
+    ]
+    const form = usePerpsTradeForm()
+    expect(form.displaySymbol.value).toBe('ETH')
+  })
+
+  it('matches a full market name and ignores case', () => {
+    walletMenuState.selectedTradeTokenSymbol = 'eth-usd'
+    mockContracts.contracts.value = [
+      makeContract('BTC-USD'),
+      makeContract('ETH-USD'),
+    ]
+    const form = usePerpsTradeForm()
+    expect(form.displaySymbol.value).toBe('eth')
+  })
+
+  it('keeps the prefill until contracts have loaded, then re-evaluates', () => {
+    walletMenuState.selectedTradeTokenSymbol = 'NOTLISTED'
+    mockContracts.contracts.value = []
+    const form = usePerpsTradeForm()
+    expect(form.displaySymbol.value).toBe('NOTLISTED')
+    mockContracts.contracts.value = [makeContract('BTC-USD')]
+    expect(form.displaySymbol.value).toBe('BTC')
+  })
+})
+
+describe('usePerpsTradeForm — sign in from the side panel (MEW-2470)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    routerMock.route.matched = []
+    mockAuthState.isWalletConnected.value = true
+  })
+
+  it('navigates to the perps page and starts the login when outside perps', () => {
+    routerMock.route.matched = [{ name: ROUTES_MAIN.HOME.NAME }]
+    const form = usePerpsTradeForm()
+    form.signIn(PerpsEventSource.TRADE)
+    expect(routerMock.push).toHaveBeenCalledWith({
+      name: ROUTES_MAIN.PERPS.NAME,
+    })
+    expect(loginMock).toHaveBeenCalledWith(PerpsEventSource.TRADE)
+  })
+
+  it('stays on the market drawer (a perps child route) and only logs in', () => {
+    routerMock.route.matched = [
+      { name: ROUTES_MAIN.PERPS.NAME },
+      { name: PERP_INFO_ROUTE_NAME },
+    ]
+    const form = usePerpsTradeForm()
+    form.signIn(PerpsEventSource.TRADE)
+    expect(routerMock.push).not.toHaveBeenCalled()
+    expect(loginMock).toHaveBeenCalledWith(PerpsEventSource.TRADE)
+  })
+
+  it('leaves the page alone when no wallet is connected', () => {
+    mockAuthState.isWalletConnected.value = false
+    routerMock.route.matched = [{ name: ROUTES_MAIN.HOME.NAME }]
+    const form = usePerpsTradeForm()
+    form.signIn(PerpsEventSource.TRADE)
+    expect(routerMock.push).not.toHaveBeenCalled()
+    expect(loginMock).toHaveBeenCalledWith(PerpsEventSource.TRADE)
   })
 })
 

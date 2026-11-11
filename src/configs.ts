@@ -30,21 +30,21 @@ const configs = {
   STRAPI_CMS_URL: strapiUrl,
   STRAPI_CMS_API: `${strapiUrl}/api`,
   RWA_REWARDS_API: `${mewWalletUrl}/rwa-rewards/season2`,
-  /** Rewards marketing page: terms & conditions and the full rewards list. */
+  /** Rewards marketing page: the full rewards list. */
   REWARDS_PAGE_URL: 'https://myetherwallet.com/rewards',
+  TERMS_OF_SERVICE_URL: 'https://www.myetherwallet.com/terms-of-service',
   MEW_MOBILE_DOWNLOAD_URL: 'https://download.mewwallet.com',
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
     'https://3779ba7db0670350a396d35fbeb766c0@o382951.ingest.us.sentry.io/4511061868347392',
-  VINATGE: 'https://www.myetherwallet.com/wallet/access',
+  VINTAGE: 'https://www.myetherwallet.com/wallet/access',
   APP_VERSION: import.meta.env.VITE_APP_VERSION || '0.0.0',
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
-  AMPLITUDE: import.meta.env.VITE_AMPLITUDE || 'dev',
   TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off',
-  PERPS_ENV: import.meta.env.VITE_PERPS_ENV || 'dev',
-  // Watchlist (home banner + table + onboarding) stays hidden unless the env var
+  // Watchlist (home banner + table + add modal) stays hidden unless the env var
   // is explicitly 'true', so it can be flipped per environment.
-  SHOW_WATCHLIST: import.meta.env.VITE_WATCHLIST_ENABLED === 'true'
+  SHOW_WATCHLIST: import.meta.env.VITE_WATCHLIST_ENABLED === 'true',
+  BUILD_MODE: import.meta.env.VITE_BUILD_MODE || 'dev',
 }
 
 export default configs

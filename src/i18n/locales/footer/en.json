@@ -1,0 +1,28 @@
+{
+  "footer": {
+    "nav_company": "Company",
+    "nav_products": "Products",
+    "nav_support": "Support",
+    "about_us": "About us",
+    "team": "Team",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "security_policy": "Security Policy",
+    "bug_bounty": "Bug Bounty",
+    "mobile_app": "MEW Mobile App",
+    "enkrypt": "Enkrypt",
+    "ethvm": "ethVM",
+    "help_center": "Help Center",
+    "customer_support": "Customer Support",
+    "faq": "FAQ",
+    "blog": "Blog",
+    "press_kit": "Press Kit",
+    "donate_text": "Help us keep MEW free and open-source, your donations go a long way towards making that possible.",
+    "donate_ethereum": "Ethereum donation",
+    "donate_bitcoin": "Bitcoin donation",
+    "join_community": "Join MEW Community",
+    "copyright": "© {year} MyEtherWallet. All rights reserved.",
+    "pricing_from": "Pricing taken from",
+    "version_label": "Version:"
+  }
+}

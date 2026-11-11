@@ -14,31 +14,27 @@
           <router-link
             v-if="i.id"
             :to="getTokenRouteParams(i)"
-            class="truncate group-hover:text-primary transition-colors block max-w-[80px]"
+            class="truncate group-hover:text-text-brand transition-colors block max-w-20"
           >
             <app-token-symbol
               :symbol="i.symbol"
               :is-stock="i.is_stock"
-              class="!text-s-14 !font-medium inline-flex truncate max-w-[80px]"
+              class="!text-s-14 !font-medium inline-flex truncate max-w-20"
             />
           </router-link>
-          <p v-else class="text-s-14 font-medium truncate block max-w-[80px]">
+          <p v-else class="text-s-14 font-medium truncate block max-w-20">
             {{ truncate(i.symbol, 10) }}
           </p>
         </app-tooltip>
       </div>
-      <p
-        class="px-2.5 py-0.5 leading-tight text-s-11 font-bold rounded-full bg-grey-5 text-info"
-      >
-        {{ i.formattedPercentage }}
-      </p>
+      <AppTag variant="subtle" :label="i.formattedPercentage" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { truncate } from '@/utils/filters'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import {
   type TokenAllocation,
   ALLOCATION_COLORS,
@@ -48,6 +44,7 @@ import {
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 defineProps({
   /**
    * @title The title of the dialog, not required

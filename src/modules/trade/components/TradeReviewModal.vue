@@ -1,221 +1,228 @@
 <template>
-  <app-dialog
-    v-model:is-open="model"
-    close-class="top-6 right-6"
-    class="w-full sm:w-[480px] sm:mx-auto !rounded-20"
-  >
-    <template #title>
-      <h1
-        id="dialogTitle"
-        class="w-full text-center text-s-20 font-bold leading-[22px] tracking-[-0.4px] px-12 pt-[29px] pb-[21px]"
-      >
-        {{ $t('trade.review_modal.title') }}
-      </h1>
-    </template>
-    <template #content>
-      <div class="flex flex-col gap-6 p-6">
-        <div class="flex flex-col gap-8">
-          <div class="flex flex-col gap-3">
-            <p
-              class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+  <app-modal v-model="model" :title="$t('trade.review_modal.title')">
+    <div class="flex flex-col gap-6 p-6">
+      <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-3">
+          <p
+            class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+          >
+            {{ $t('trade.review_modal.trade_provider') }}
+          </p>
+          <div
+            class="flex items-center gap-2 h-[52px] px-4 rounded-16 bg-background-default"
+          >
+            <img :src="oneInchLogo" alt="" class="w-6 h-6 rounded-full" />
+            <span
+              class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px]"
             >
-              {{ $t('trade.review_modal.trade_provider') }}
-            </p>
-            <div
-              class="flex items-center gap-2 h-[52px] px-4 rounded-16 bg-bgBase"
-            >
-              <img :src="oneInchLogo" alt="" class="w-6 h-6 rounded-full" />
-              <span
-                class="text-s-14 font-semibold leading-[20px] tracking-[-0.28px]"
-              >
-                {{ $t('trade.review_modal.provider_1inch') }}
-              </span>
-            </div>
+              {{ $t('trade.review_modal.provider_1inch') }}
+            </span>
           </div>
+        </div>
 
-          <div class="flex flex-col items-center gap-3">
-            <p
-              class="w-full text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
-            >
-              {{ $t('trade.review_modal.estimated_summary') }}
-            </p>
-            <div class="w-full flex flex-col gap-4 p-4 rounded-16 bg-bgBase">
-              <div class="flex items-center gap-3">
-                <p
-                  class="flex-1 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+        <div class="flex flex-col items-center gap-3">
+          <p
+            class="w-full text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+          >
+            {{ $t('trade.review_modal.estimated_summary') }}
+          </p>
+          <div
+            class="w-full flex flex-col gap-4 p-4 rounded-16 bg-background-default"
+          >
+            <div class="flex items-center gap-3">
+              <p
+                class="flex-1 text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+              >
+                {{ $t('trade.review_modal.you_pay') }}
+              </p>
+              <div class="flex flex-col items-end min-w-0">
+                <div
+                  class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] flex items-center gap-1"
                 >
-                  {{ $t('trade.review_modal.you_pay') }}
+                  {{ fromAmountDisplay }}
+                  <app-token-symbol
+                    :symbol="fromToken?.symbol || 'UNKNOWN'"
+                    :address="tokenAddress(fromToken)"
+                    class="!text-s-16 !font-semibold !leading-[22px]"
+                  />
+                  <app-tooltip
+                    v-if="isFromAmountTruncated"
+                    :text="fromAmountFull"
+                  >
+                    <AppIcon
+                      name="information-circle"
+                      size="xs"
+                      class="text-black cursor-pointer"
+                    />
+                  </app-tooltip>
+                </div>
+                <p class="text-s-14 leading-[20px] text-text-subtle">
+                  ≈ {{ currencySymbol }}{{ fromAmountFiat }}
                 </p>
-                <div class="flex flex-col items-end min-w-0">
-                  <p
-                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] flex items-center gap-1"
-                  >
-                    {{ fromAmount }}
-                    <app-token-symbol
-                      :symbol="fromToken?.symbol || 'UNKNOWN'"
-                      :address="tokenAddress(fromToken)"
-                      class="!text-s-16 !font-semibold !leading-[22px]"
-                    />
-                  </p>
-                  <p class="text-s-14 leading-[20px] text-info">
-                    ≈ {{ currencySymbol }}{{ fromAmountFiat }}
-                  </p>
-                </div>
-                <app-token-logo
-                  :url="fromToken?.logoURI"
-                  :symbol="fromToken?.symbol"
-                  :address="tokenAddress(fromToken)"
-                  width="w-10"
-                  height="h-10"
-                  no-shadow
-                />
               </div>
+              <app-token-logo
+                :url="fromToken?.logoURI"
+                :symbol="fromToken?.symbol"
+                :address="tokenAddress(fromToken)"
+                width="w-10"
+                height="h-10"
+                no-shadow
+              />
+            </div>
 
-              <div class="h-px w-full bg-grey-divider"></div>
+            <app-divider class="-my-1" />
 
-              <div class="flex items-center gap-3">
-                <div class="flex-1 flex flex-col">
-                  <p
-                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
-                  >
-                    {{ $t('trade.review_modal.you_receive') }}
-                  </p>
-                  <p class="text-s-14 leading-[20px] text-info">
-                    {{ $t('trade.review_modal.value_estimated') }}
-                  </p>
-                </div>
-                <div class="flex flex-col items-end min-w-0">
-                  <p
-                    class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] flex items-center gap-1"
-                  >
-                    {{ toAmountFormatted }}
-                    <app-token-symbol
-                      :symbol="toToken?.symbol || 'UNKNOWN'"
-                      :address="tokenAddress(toToken)"
-                      class="!text-s-16 !font-semibold !leading-[22px]"
-                    />
-                  </p>
-                  <p class="text-s-14 leading-[20px] text-info">
-                    ≈ {{ currencySymbol }}{{ toAmountFiat }}
-                  </p>
-                </div>
-                <app-token-logo
-                  :url="toToken?.logoURI"
-                  :symbol="toToken?.symbol"
-                  :address="tokenAddress(toToken)"
-                  width="w-10"
-                  height="h-10"
-                  no-shadow
-                />
+            <div class="flex items-center gap-3">
+              <div class="flex-1 flex flex-col">
+                <p
+                  class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+                >
+                  {{ $t('trade.review_modal.you_receive') }}
+                </p>
+                <p class="text-s-14 leading-[20px] text-text-subtle">
+                  {{ $t('trade.review_modal.value_estimated') }}
+                </p>
               </div>
+              <div class="flex flex-col items-end min-w-0">
+                <p
+                  class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] flex items-center gap-1"
+                >
+                  {{ toAmountFormatted }}
+                  <app-token-symbol
+                    :symbol="toToken?.symbol || 'UNKNOWN'"
+                    :address="tokenAddress(toToken)"
+                    class="!text-s-16 !font-semibold !leading-[22px]"
+                  />
+                </p>
+                <p class="text-s-14 leading-[20px] text-text-subtle">
+                  ≈ {{ currencySymbol }}{{ toAmountFiat }}
+                </p>
+              </div>
+              <app-token-logo
+                :url="toToken?.logoURI"
+                :symbol="toToken?.symbol"
+                :address="tokenAddress(toToken)"
+                width="w-10"
+                height="h-10"
+                no-shadow
+              />
+            </div>
 
-              <expand-transition>
-                <div v-if="isBreakdownOpen">
-                  <div class="flex flex-col gap-4">
-                    <div class="h-px w-full bg-grey-divider"></div>
-                    <div class="flex items-center gap-2">
-                      <p class="flex-1 text-s-16 leading-[22px] text-info">
-                        {{ $t('trade.review_modal.min_receive') }}
-                      </p>
-                      <p
-                        class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
-                      >
-                        {{ minReceive }} {{ toToken?.symbol }}
-                      </p>
-                      <app-token-logo
-                        :url="toToken?.logoURI"
-                        :symbol="toToken?.symbol"
-                        :address="tokenAddress(toToken)"
-                        width="w-[18px]"
-                        height="h-[18px]"
-                        no-shadow
-                      />
-                    </div>
-                    <div
-                      v-for="row in breakdownRows"
-                      :key="row.label"
-                      class="flex items-center gap-2"
+            <expand-transition>
+              <div v-if="isBreakdownOpen">
+                <div class="flex flex-col gap-4">
+                  <app-divider class="-my-1" />
+                  <div class="flex items-center gap-2">
+                    <p
+                      class="flex-1 text-s-16 leading-[22px] text-text-subtle"
                     >
-                      <p class="flex-1 text-s-16 leading-[22px] text-info">
-                        {{ row.label }}
-                      </p>
-                      <p
-                        class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
-                      >
-                        {{ row.value }}
-                      </p>
-                    </div>
+                      {{ $t('trade.review_modal.min_receive') }}
+                    </p>
+                    <p
+                      class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+                    >
+                      {{ minReceive }} {{ toToken?.symbol }}
+                    </p>
+                    <app-token-logo
+                      :url="toToken?.logoURI"
+                      :symbol="toToken?.symbol"
+                      :address="tokenAddress(toToken)"
+                      width="w-[18px]"
+                      height="h-[18px]"
+                      no-shadow
+                    />
+                  </div>
+                  <div
+                    v-for="row in breakdownRows"
+                    :key="row.label"
+                    class="flex items-center gap-2"
+                  >
+                    <p
+                      class="flex-1 text-s-16 leading-[22px] text-text-subtle"
+                    >
+                      {{ row.label }}
+                    </p>
+                    <p
+                      class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+                    >
+                      {{ row.value }}
+                    </p>
                   </div>
                 </div>
-              </expand-transition>
-            </div>
-
-            <app-btn-text
-              class="!text-black text-s-14 font-semibold tracking-[-0.28px]"
-              @click="isBreakdownOpen = !isBreakdownOpen"
-            >
-              <span class="flex items-center gap-1">
-                {{
-                  isBreakdownOpen
-                    ? $t('trade.review_modal.close_breakdown')
-                    : $t('trade.review_modal.expand_breakdown')
-                }}
-                <chevron-down-icon
-                  class="w-4 h-4 transition-transform"
-                  :class="{ 'rotate-180': isBreakdownOpen }"
-                />
-              </span>
-            </app-btn-text>
+              </div>
+            </expand-transition>
           </div>
-        </div>
 
-        <rewards-trade-confirmation-banner
-          :trade-amount="toAmountUsd"
-          :is-cashout="isCashout ?? false"
-        />
-
-        <div class="flex flex-col items-center gap-4">
           <app-base-button
-            class="w-full !font-semibold !py-[13px] text-s-16 leading-[22px] tracking-[-0.32px]"
-            :disabled="loading || isQuoteExpired"
-            @click="proceedWithTrade"
+            type="tertiary"
+            surface="alternative"
+            size="small"
+            class="!text-black text-s-14 font-semibold tracking-[-0.28px]"
+            @click="isBreakdownOpen = !isBreakdownOpen"
           >
-            <span v-if="loading" class="flex items-center gap-2 justify-center">
-              <app-spinner />
-              <span>{{ $t('common.processing') }}</span>
+            <span class="flex items-center gap-1">
+              {{
+                isBreakdownOpen
+                  ? $t('trade.review_modal.close_breakdown')
+                  : $t('trade.review_modal.expand_breakdown')
+              }}
+              <AppIcon
+                name="chevron-down"
+                variant="filled"
+                size="xxs"
+                class="transition-transform"
+                :class="{ 'rotate-180': isBreakdownOpen }"
+              />
             </span>
-            <span v-else>{{ $t('trade.review_modal.confirm_trade') }}</span>
           </app-base-button>
-          <i18n-t
-            v-if="expiresAt"
-            keypath="trade.review_modal.quote_refreshes_in"
-            tag="p"
-            class="text-s-14 leading-[20px] text-info"
-          >
-            <template #time>
-              <span
-                class="font-semibold text-black tracking-[-0.28px] tabular-nums"
-              >
-                {{ countdownLabel }}
-              </span>
-            </template>
-          </i18n-t>
         </div>
       </div>
-    </template>
-  </app-dialog>
+
+      <rewards-trade-confirmation-banner
+        :trade-amount="toAmountUsd"
+        :is-cashout="isCashout ?? false"
+      />
+
+      <div class="flex flex-col items-center gap-4">
+        <app-base-button
+          class="w-full !font-semibold !py-[13px] text-s-16 leading-[22px] tracking-[-0.32px]"
+          :disabled="loading || isQuoteExpired"
+          @click="proceedWithTrade"
+        >
+          <span v-if="loading" class="flex items-center gap-2 justify-center">
+            <app-spinner :size="18" color="inverted" />
+            <span>{{ $t('common.processing') }}</span>
+          </span>
+          <span v-else>{{ $t('trade.review_modal.confirm_trade') }}</span>
+        </app-base-button>
+        <i18n-t
+          v-if="expiresAt"
+          keypath="trade.review_modal.quote_refreshes_in"
+          tag="p"
+          class="text-s-14 leading-[20px] text-text-subtle"
+        >
+          <template #time>
+            <span
+              class="font-semibold text-black tracking-[-0.28px] tabular-nums"
+            >
+              {{ countdownLabel }}
+            </span>
+          </template>
+        </i18n-t>
+      </div>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AppSpinner from '@/components/AppSpinner.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
@@ -230,6 +237,8 @@ import type { QuoteOutputType } from '@/modules/trade/providers/oneinch_fusion/o
 import { useTradeBreakdown } from '@/modules/trade/composables/useTradeBreakdown'
 import { analytics, TradeEvent } from '@/analytics'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const { t } = useI18n()
 const { formatFiat, currencySymbol } = useCurrency()
 const model = defineModel<boolean>('isOpen', { default: false })
@@ -314,6 +323,28 @@ const toAmountUsd = computed(() => {
     .multipliedBy(props.toToken?.price || 0)
     .toFixed(2)
 })
+
+// Display capped at 6 decimals (rounded down); full value lives in the tooltip.
+const FROM_AMOUNT_MAX_DECIMALS = 6
+
+const fromAmountFull = computed(() =>
+  props.fromAmount ? new BigNumber(props.fromAmount).toFormat() : '0',
+)
+
+const isFromAmountTruncated = computed(
+  () =>
+    !!props.fromAmount &&
+    (new BigNumber(props.fromAmount).decimalPlaces() ?? 0) >
+      FROM_AMOUNT_MAX_DECIMALS,
+)
+
+const fromAmountDisplay = computed(() =>
+  props.fromAmount
+    ? new BigNumber(props.fromAmount)
+        .decimalPlaces(FROM_AMOUNT_MAX_DECIMALS, BigNumber.ROUND_DOWN)
+        .toFormat()
+    : '0',
+)
 
 const fromAmountFiat = computed(() => {
   if (!props.fromAmount) return '0.00'

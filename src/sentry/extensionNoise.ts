@@ -302,16 +302,16 @@ export function isIndexedDbMutationError(err: unknown): boolean {
   )
 }
 /* Whether an error is a Web Bluetooth "GATT Server is disconnected"
-  * DOMException.Chrome throws this(`NetworkError`, code 19) whenever a GATT
-  * operation runs after the device has disconnected.The Ledger BLE transport
-  * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
-  * fire - and - forgets`characteristic.stopNotifications()` after the device drops
-  * mid - handshake(powered off / out of range / Bluetooth toggled).Since that
-  * call is detached from any promise the app awaits, it surfaces as an unhandled
-  * rejection, and the connect flow already shows the user a "Failed to connect"
-  * toast — so it is external, unactionable Sentry noise.The frames are bundled
-  * into our own`/assets/index-*.js`, so denyUrls can't catch it; matched on the
-  * browser - native(minification - proof) message instead.
+ * DOMException.Chrome throws this(`NetworkError`, code 19) whenever a GATT
+ * operation runs after the device has disconnected.The Ledger BLE transport
+ * (`@ledgerhq/hw-transport-web-ble`) triggers it when its RxJS monitor teardown
+ * fire - and - forgets`characteristic.stopNotifications()` after the device drops
+ * mid - handshake(powered off / out of range / Bluetooth toggled).Since that
+ * call is detached from any promise the app awaits, it surfaces as an unhandled
+ * rejection, and the connect flow already shows the user a "Failed to connect"
+ * toast — so it is external, unactionable Sentry noise.The frames are bundled
+ * into our own`/assets/index-*.js`, so denyUrls can't catch it; matched on the
+ * browser - native(minification - proof) message instead.
  */
 export function isBluetoothGattDisconnectedError(err: unknown): boolean {
   if (typeof err === 'string') return /GATT Server is disconnected/i.test(err)
@@ -339,8 +339,7 @@ export function isLockedDeviceError(err: unknown): boolean {
   if (!err || typeof err !== 'object') return false
   const e = err as { name?: unknown; message?: unknown }
   if (e.name === 'LockedDeviceError') return true
-  const message =
-    typeof e.message === 'string' ? e.message.toLowerCase() : ''
+  const message = typeof e.message === 'string' ? e.message.toLowerCase() : ''
   return message.includes('0x5515') || message.includes('locked device')
 }
 
@@ -391,6 +390,26 @@ export function isBenignPurchaseInfoForbidden(event: unknown): boolean {
 }
 
 /**
+ * Whether a Sentry event is the portfolio balance-history endpoint answering
+ * 406. The backend does this intermittently for addresses it normally serves
+ * (same query: 200 most days, 406 for hours on others), and
+ * `PortfolioHistory.vue` already shows its "No chart data" state, so it is
+ * unactionable noise (APP-MEW-WEB-1K0 / MEW-2547). Matched on the
+ * `describeMewApiFetchError` tags, so other statuses from this endpoint and a
+ * 406 from any other route still report.
+ */
+export function isBenignBalanceHistoryNotAcceptable(event: unknown): boolean {
+  if (!event || typeof event !== 'object') return false
+  const tags = (event as { tags?: Record<string, unknown> }).tags
+  if (!tags) return false
+  return (
+    tags.mew_api_url ===
+      `${configs.MEW_PURCHASE_BASE_URL}/v5/portfolio/balance-history` &&
+    tags.mew_api_status === '406'
+  )
+}
+
+/**
  * Whether an error is the WalletConnect relay "Connection interrupted while
  * trying to subscribe" rejection. Thrown entirely inside `@walletconnect/core`'s
  * Relayer when the relay WebSocket (`wss://relay.walletconnect.org`) disconnects
@@ -403,12 +422,108 @@ export function isBenignPurchaseInfoForbidden(event: unknown): boolean {
  * "connection is closed" shapes already suppressed elsewhere. Handles both the
  * Error-object and bare-string payload shapes.
  */
-export function isWalletConnectSubscribeInterruptedError(err: unknown): boolean {
+export function isWalletConnectSubscribeInterruptedError(
+  err: unknown,
+): boolean {
   const MESSAGE = 'Connection interrupted while trying to subscribe'
   if (typeof err === 'string') return err.includes(MESSAGE)
   if (!err || typeof err !== 'object') return false
   const message = (err as { message?: unknown }).message
   return typeof message === 'string' && message.includes(MESSAGE)
+}
+
+/**
+ * Whether an error is the WalletConnect "No matching key. session topic doesn't
+ * exist" rejection thrown while processing an inbound relay message. The relay
+ * delivers a message (e.g. `wc_sessionEvent`) for a session the sign-client
+ * already removed from its store, `isValidSessionTopic` throws, and nothing
+ * inside `@walletconnect/sign-client` catches it, so it reaches Sentry as an
+ * `onunhandledrejection` with no MEW frame. The SDK just drops that message and
+ * nothing changes for the user (APP-MEW-WEB-C9 / MEW-2656).
+ *
+ * Anchored on the `onRelayMessage` frame (a non-mangled class property name,
+ * present in Chrome, Edge, Firefox and Safari stacks) so an outbound `request()`
+ * on a stale session, which would break a signing flow, keeps reporting. Fails
+ * open when no stack is present.
+ */
+export function isWalletConnectStaleSessionTopicError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const { message, stack } = err as { message?: unknown; stack?: unknown }
+  return (
+    typeof message === 'string' &&
+    message.includes("No matching key. session topic doesn't exist") &&
+    typeof stack === 'string' &&
+    stack.includes('onRelayMessage')
+  )
+}
+
+/**
+ * Whether an error is the WalletConnect relay publish timeout for a session
+ * deletion (`Failed to publish payload, please try again. id:<id> tag:1112`),
+ * thrown by `@walletconnect/core`'s publisher when the relay doesn't
+ * acknowledge the message in time. Seen when wagmi's WalletConnect connector
+ * deletes a stale session before connecting (tag 1112 = `wc_sessionDelete`).
+ * The connect flow already shows a "Could not connect" toast and the user can
+ * retry, so it is transient relay noise (APP-MEW-WEB-1RW / MEW-2657).
+ *
+ * Fails closed on every other tag: e.g. tag 1108 (`wc_sessionRequest`) is a
+ * signing/send request, where a failed publish breaks a user flow, so it keeps
+ * reporting. Handles both the Error-object and bare-string payload shapes.
+ */
+export function isWalletConnectPublishFailedError(err: unknown): boolean {
+  const SESSION_DELETE_PUBLISH_FAILED =
+    /^Failed to publish payload, please try again\. id:\d+ tag:1112$/
+  if (typeof err === 'string') return SESSION_DELETE_PUBLISH_FAILED.test(err)
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' && SESSION_DELETE_PUBLISH_FAILED.test(message)
+  )
+}
+
+// The null-`info` deref message, in both shapes the crash surfaces as: the
+// `he.info` read (`Cannot read properties of null (reading 'info')`) and the
+// `({ info }) =>` destructure (`Cannot destructure property 'info' of ...`).
+const NULL_INFO_MESSAGE =
+  /cannot read properties of null \(reading 'info'\)|cannot destructure property 'info' of/i
+// An EIP-6963 provider-discovery frame — retained (non-mangled) in the minified
+// bundle: the bundled `mipd` store (`requestProviders`), wagmi's connector
+// enumeration (`getProviders`) and config setup (`createConfig`), the
+// `eip6963:announceProvider` listeners, and MEW's own `providerStore.addProvider`.
+// The wagmi enumeration crash (1JN) is anchored on `createConfig` rather than the
+// generic zustand `createStore` (wagmi builds its store on zustand, so a bare
+// `createStore` frame is not unique to provider discovery — an unrelated null-`info`
+// deref passing through any zustand store would otherwise be suppressed).
+const EIP6963_DISCOVERY_FRAME =
+  /requestProviders|getProviders|announceProvider|eip6963|addProvider|createConfig/i
+
+/**
+ * Whether an error is the EIP-6963 `announceProvider` null-`detail` crash.
+ *
+ * A browser wallet extension announces itself by dispatching an
+ * `eip6963:announceProvider` CustomEvent whose `detail` should be
+ * `{ info, provider }`. A buggy or hostile extension can dispatch it with a
+ * null (or null-`info`) `detail`. Three independent listeners then read `.info`
+ * off it and throw: MEW's own `providerStore.addProvider` (the `App.vue`
+ * listener), and — via `generateConfig` → wagmi `createConfig` — the bundled
+ * `mipd` store's `requestProviders` callback and wagmi's `getProviders()`
+ * enumeration (APP-MEW-WEB-1JG / 1JM / 1JN). None is an app logic bug: the
+ * announced payload is untrusted third-party extension input, and MEW cannot
+ * correct it at the mipd/wagmi layer without a dependency bump. So all three are
+ * external, unactionable Sentry noise.
+ *
+ * Matched on the browser-native (minification-proof) null-`info` message AND an
+ * EIP-6963 provider-discovery frame in the stack, so an unrelated `.info`
+ * null-deref elsewhere in the app keeps reporting. Fails open when no stack is
+ * present (never suppresses on the message alone).
+ */
+export function isEip6963NullProviderError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const e = err as { message?: unknown; stack?: unknown }
+  if (typeof e.message !== 'string' || !NULL_INFO_MESSAGE.test(e.message)) {
+    return false
+  }
+  return typeof e.stack === 'string' && EIP6963_DISCOVERY_FRAME.test(e.stack)
 }
 
 /**

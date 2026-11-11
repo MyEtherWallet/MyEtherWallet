@@ -1,6 +1,10 @@
 <template>
   <div class="h-screen relative flex overflow-hidden">
-    <the-header class="basis-full" @wheel="onHeaderWheel" />
+    <the-header
+      class="basis-full"
+      :scrolled="scrollTop > 0"
+      @wheel="onHeaderWheel"
+    />
 
     <!-- Background -->
     <teleport to="#app">
@@ -15,7 +19,7 @@
       >
         <div
           v-if="isOpenSideMenu"
-          class="cursor-pointer top-0 xs:top-[69px] sm:top-[77px] fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
+          class="cursor-pointer top-0 xs:top-[77px] fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
           @click="walletMenu.setIsOpenSideMenu(false)"
           aria-hidden
         />
@@ -24,19 +28,25 @@
     <div
       ref="scrollContainer"
       :class="[
-        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
+        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-20',
         backgroundClass,
-        'flex w-full mr-[60px] xs:mr-[80px]',
-        isOverflowHidden
+        'flex w-full mr-20',
+        // The dev playground owns its own scroll (ViewDevLayout is a fixed-height
+        // shell whose <main> scrolls internally), so the app-level scroll must be
+        // off for it — otherwise the page double-scrolls and the sidebar drifts.
+        isOverflowHidden || isDevPlayground
           ? 'overflow-hidden'
           : 'overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
     >
       <div :class="['absolute w-full', backgroundClass]"></div>
-      <div
-        :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
-      >
-        <main :class="[' basis-full w-full max-w-[1440px] mx-auto relative']">
+      <div :class="['relative flex justify-center  w-full mt-19']">
+        <main
+          :class="[
+            'basis-full w-full relative',
+            isDevPlayground ? '' : 'max-w-[1440px] mx-auto',
+          ]"
+        >
           <div
             :class="[
               'min-h-[600px]',
@@ -44,33 +54,32 @@
               // the shared page gutter px-3 xs:px-5), so the wrapper adds none —
               // else the hero's top padding stacks on the wrapper's. Other
               // routes keep the shared page padding.
-              isNewHome ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
+              isNewHome || isDevPlayground ? '' : 'pt-3 xs:pt-6 px-3 xs:px-5',
             ]"
           >
             <router-view />
           </div>
-          <MewFooter
-            :use-i18n="useI18n"
+          <AppFooter
+            v-if="!isDevPlayground"
+            v-bind="footerProps"
             :amplitude="analytics.amplitude"
-            :link-component="RouterLink"
-            :package-version="packageVersion"
-            :user-consent="analyticsStore.consent"
-            :curr-project="CURR_PROJECT"
-            @update:consent="handleSetConsent"
-            class="px-3 xs:px-5"
           />
           <div
+            v-if="!isDevPlayground"
             class="sticky flex items-center justify-center w-full bottom-0 z-10"
           >
             <a
               class="text-s-14 sm:text-s-16 text-center group hover:underline hoverOpacityHasBG transition h-12 px-5 md-header:px-9 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)] rounded-3xl flex items-center justify-center mb-5"
-              :href="configs.VINATGE"
+              :href="configs.VINTAGE"
               target="_blank"
               rel="noopener noreferrer"
             >
               {{ t('common.old_version_link') }}
-              <arrow-long-right-icon
-                class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
+              <AppIcon
+                name="arrow-long-right"
+                variant="filled"
+                size="s"
+                class="text-black inline-block group-hover:translate-x-1 transition-transform"
               />
             </a>
           </div>
@@ -83,13 +92,13 @@
 </template>
 
 <script setup lang="ts">
-import { MewFooter } from '@myetherwallet/vue-common-components'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { AppFooter } from '@myetherwallet/vue-common-components'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { inject, computed, ref, watch } from 'vue'
+import { useScroll } from '@vueuse/core'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
-import { useAnalyticsStore } from '@/stores/analyticsStore'
 import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
@@ -100,7 +109,8 @@ import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import configs from '@/configs'
-import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import { useFooterProps } from '@/composables/useFooterProps'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isConnectingWallet } = storeToRefs(walletStore)
@@ -108,22 +118,11 @@ const accessStore = useAccessStore()
 const { isOpenAccessDialog } = storeToRefs(accessStore)
 const { t } = useI18n()
 
-const analyticsStore = useAnalyticsStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
-//TODO: make a new project for MEW  PORTOFLIO APP
-const CURR_PROJECT = 'MEW_WEBAPP'
-/**
- * App Version
- */
-
-const packageVersion = configs.APP_VERSION
-
-const handleSetConsent = (consent: boolean) => {
-  analyticsStore.setTrackingConsent(consent)
-}
+const footerProps = useFooterProps()
 
 const route = useRoute()
 const router = useRouter()
@@ -183,10 +182,33 @@ const backgroundClass = computed(() => {
 // horizontal padding, so its sections own their padding.
 const isNewHome = computed(() => pageRouteName(route) === ROUTES_MAIN.HOME.NAME)
 
+// DEV-only design-library playground (MEW-2271) renders full-bleed: no wrapper
+// padding or max-width, so its sidebar sits flush against the viewport edge.
+const isDevPlayground = computed(
+  () => route.path === '/dev' || route.path.startsWith('/dev/'),
+)
+
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)
 
 const scrollContainer = ref<HTMLElement | null>(null)
+// Drives the navbar's bottom border: only once the page leaves the top.
+const { y: scrollTop } = useScroll(scrollContainer)
+
+// The app scrolls this wrapper, not the window, so vue-router's scrollBehavior
+// can't reach it: bring a newly opened page to the top here. Drawers and the
+// connect/create overlays are child routes of the page they cover, so the
+// top-level record stays the same and the page underneath keeps its place.
+// Hash links (/stocks#oip) scroll to their own section. 'post' so a drawer open
+// on the old page has unmounted and released isOverflowHidden first.
+watch(
+  () => route.matched[0],
+  () => {
+    if (route.hash) return
+    scrollContainer.value?.scrollTo({ top: 0, behavior: 'instant' })
+  },
+  { flush: 'post' },
+)
 
 const onHeaderWheel = (e: WheelEvent) => {
   if (isOverflowHidden.value || !scrollContainer.value) return

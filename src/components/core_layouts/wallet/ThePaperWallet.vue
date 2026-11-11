@@ -11,10 +11,10 @@
     >
       <div
         v-if="isOpen"
-        class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none overflow-y-auto mew-scrollbar z-[102] fixed"
+        class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex p-4 sm:p-9 print:p-9 overscroll-none overflow-y-auto mew-scrollbar z-[102]"
       >
         <div
-          class="bg-white print:border-1 print:border-outline rounded-16 max-h-[95%] w-[95%] max-w-[600px] mx-auto bg-white rounded-32 sm:min-h-[512px] px-3 sm:px-5"
+          class="bg-white print:border-1 print:border-border-default w-full max-w-[600px] m-auto rounded-32 sm:min-h-[512px] px-3 sm:px-5"
         >
           <div class="flex justify-between items-center my-6 ml-3 mr-5">
             <img
@@ -22,7 +22,7 @@
               :alt="$t('home')"
               width="94px"
               height="32px"
-              class="w-[94px] max-h-[32px] flex-none object-contain"
+              class="w-[94px] max-h-8 flex-none object-contain"
             />
 
             <h1
@@ -30,10 +30,7 @@
             >
               {{ $t('paper_wallet.title') }}
             </h1>
-            <button
-              class="sm:-mr-4 min-w-[32px] ml-auto"
-              @click="setIsOpen(false)"
-            >
+            <button class="sm:-mr-4 min-w-8 ml-auto" @click="setIsOpen(false)">
               <app-btn-icon-close
                 @click="setIsOpen(false)"
                 class="print:hidden"
@@ -41,10 +38,16 @@
             </button>
           </div>
 
-          <div class="flex justify-between items-center mx-3 gap-6">
+          <div
+            class="flex flex-col sm:flex-row print:flex-row justify-between items-center mx-3 gap-6"
+          >
             <div>
               <p class="text-s-28 font-semibold mb-2">
-                {{ $t('paper_wallet.my_address', { chain: selectedChain?.nameLong || selectedChain?.name || '' }) }}
+                {{
+                  $t('paper_wallet.my_address', {
+                    chain: selectedChain?.nameLong || selectedChain?.name || '',
+                  })
+                }}
               </p>
               <div class="flex items-center justify-start mb-3">
                 <app-blockie
@@ -61,25 +64,30 @@
               </div>
             </div>
             <div
-              class="rounded-16 p-3 mr-2 shadow-button shadow-button-elevated print:shadow-none print:border-1 print:border-outline h-[174px] w-[174px] flex items-center justify-center"
+              class="rounded-16 p-3 sm:mr-2 print:mr-2 shadow-button shadow-button-elevated print:shadow-none print:border-1 print:border-border-default h-[174px] w-[174px] flex items-center justify-center"
             >
               <div v-show="!isLoadingQRCode" ref="qrCode"></div>
               <!-- Loading QR Placeholder -->
               <div
                 v-show="isLoadingQRCode"
-                class="h-[150px] w-[150px] animate-pulse bg-grey-10 rounded-xl"
+                class="h-[150px] w-[150px] animate-pulse bg-background-default-hover rounded-xl"
               ></div>
             </div>
           </div>
 
           <p
-            class="my-6 mx-auto text-s-14 text-p-130 text-info print:text-black text-center max-w-[400px]"
+            class="my-6 mx-auto text-s-14 text-p-130 text-text-subtle print:text-black text-center max-w-[400px]"
           >
-            <span class="font-semibold uppercase">{{ $t('paper_wallet.tip_label') }}</span> {{ $t('paper_wallet.tip') }}
+            <span class="font-semibold uppercase">{{
+              $t('paper_wallet.tip_label')
+            }}</span>
+            {{ $t('paper_wallet.tip') }}
           </p>
-          <hr class="h-px bg-grey-10 border-0 w-full my-6" />
+          <app-divider class="my-5" />
           <!-- TODO:  add privatekey option-->
-          <div class="flex justify-between items-center mx-6 mb-6">
+          <div
+            class="flex flex-col sm:flex-row print:flex-row justify-between items-center gap-4 mx-3 sm:mx-6 print:mx-6 mb-6"
+          >
             <img
               src="@/assets/images/peggy/peggy.webp"
               alt=""
@@ -87,15 +95,21 @@
               height="330px"
               class="w-[135px] max-h-[100px] flex-none object-contain"
             />
-            <div class="ml-auto">
+            <div class="break-all">
               <p class="mb-3">
-                <chat-bubble-bottom-center-text-icon
-                  class="inline h-4 w-4 mr-2 text-primary"
+                <AppIcon
+                  name="chat-bubble-bottom-center-text"
+                  variant="filled"
+                  size="xxs"
+                  class="inline mr-2 text-text-brand"
                 />support@myetherwallet.com
               </p>
               <p>
-                <globe-alt-icon
-                  class="inline h-4 w-4 mr-2 text-primary"
+                <AppIcon
+                  name="globe-alt"
+                  variant="filled"
+                  size="xxs"
+                  class="inline mr-2 text-text-brand"
                 />https://www.myetherwallet.com
               </p>
             </div>
@@ -103,7 +117,9 @@
           <div
             class="flex justify-center items-center mx-6 mb-6 mt-10 print:hidden"
           >
-            <app-base-button @click="print">{{ $t('paper_wallet.print') }}</app-base-button>
+            <app-base-button @click="print">{{
+              $t('paper_wallet.print')
+            }}</app-base-button>
           </div>
         </div>
       </div>
@@ -119,11 +135,8 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { computed, watch, nextTick } from 'vue'
 import { useQR } from '@/composables/useQR'
 import { storeToRefs } from 'pinia'
-import {
-  GlobeAltIcon,
-  ChatBubbleBottomCenterTextIcon,
-} from '@heroicons/vue/24/solid'
-
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 const walletStore = useWalletStore()
 const { walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()

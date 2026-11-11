@@ -4,9 +4,11 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isBenignBalanceHistoryNotAcceptable,
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
+  isEip6963NullProviderError,
   isExpectedTradeClientError,
   isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
@@ -22,8 +24,11 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectPublishFailedError,
+  isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
+import { describeMewApiFetchError } from '@/utils/mewApiFetchError'
 import configs from '@/configs'
 
 describe('isExtensionOrProviderError', () => {
@@ -78,9 +83,9 @@ describe('isExtensionOrProviderError', () => {
   })
 
   it('is false for non-benign provider-looking codes (e.g. -32603 internal)', () => {
-    expect(isExtensionOrProviderError({ code: -32603, message: 'Internal' })).toBe(
-      false,
-    )
+    expect(
+      isExtensionOrProviderError({ code: -32603, message: 'Internal' }),
+    ).toBe(false)
   })
 
   it('is false for non-object inputs', () => {
@@ -193,9 +198,9 @@ describe('isProviderNotFoundError', () => {
 
   it('is false for a genuine app error', () => {
     expect(isProviderNotFoundError(new Error('boom'))).toBe(false)
-    expect(
-      isProviderNotFoundError({ name: 'TypeError', message: 'x' }),
-    ).toBe(false)
+    expect(isProviderNotFoundError({ name: 'TypeError', message: 'x' })).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -273,7 +278,9 @@ describe('isTrezorHandshakeError', () => {
         new TypeError("Cannot read properties of undefined (reading 'x')"),
       ),
     ).toBe(false)
-    expect(isTrezorHandshakeError(new Error('popup failed to open'))).toBe(false)
+    expect(isTrezorHandshakeError(new Error('popup failed to open'))).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -481,9 +488,9 @@ describe('isRainbowKitNotFoundError', () => {
     expect(isRainbowKitNotFoundError(new Error('not found rainbowkit'))).toBe(
       true,
     )
-    expect(
-      isRainbowKitNotFoundError({ message: 'not found rainbowkit' }),
-    ).toBe(true)
+    expect(isRainbowKitNotFoundError({ message: 'not found rainbowkit' })).toBe(
+      true,
+    )
   })
 
   it('is true for a bare-string rejection', () => {
@@ -585,7 +592,8 @@ describe('isMetaMaskSdkDecryptError', () => {
 
   it('ignores an unrelated metamask-sdk error', () => {
     const err = new Error('some other failure')
-    err.stack = 'Error: some other failure\n    at /assets/metamask-sdk-RwJkC4lN.js:1:1'
+    err.stack =
+      'Error: some other failure\n    at /assets/metamask-sdk-RwJkC4lN.js:1:1'
     expect(isMetaMaskSdkDecryptError(err)).toBe(false)
   })
 
@@ -677,9 +685,9 @@ describe('isIndexedDbMutationError', () => {
         new TypeError("Cannot read properties of undefined (reading 'x')"),
       ),
     ).toBe(false)
-    expect(
-      isIndexedDbMutationError({ name: 'SomeOtherError', code: 11 }),
-    ).toBe(false)
+    expect(isIndexedDbMutationError({ name: 'SomeOtherError', code: 11 })).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -725,15 +733,15 @@ describe('isExpectedTradeClientError', () => {
         }),
       ),
     ).toBe(false)
-    expect(isExpectedTradeClientError(new Error('Some genuine 5xx failure'))).toBe(
-      false,
-    )
+    expect(
+      isExpectedTradeClientError(new Error('Some genuine 5xx failure')),
+    ).toBe(false)
   })
 
   it('is false for a genuine app error carrying unrelated properties', () => {
-    expect(
-      isExpectedTradeClientError({ message: 'boom', code: 500 }),
-    ).toBe(false)
+    expect(isExpectedTradeClientError({ message: 'boom', code: 500 })).toBe(
+      false,
+    )
   })
 
   it('is false for non-object inputs', () => {
@@ -801,9 +809,9 @@ describe('isCoinNotFoundApiError', () => {
   })
 
   it('is false for other mew-api 400s that happen to mention "not found"', () => {
-    expect(
-      isCoinNotFoundApiError(new Error('Address not found: 0x0.')),
-    ).toBe(false)
+    expect(isCoinNotFoundApiError(new Error('Address not found: 0x0.'))).toBe(
+      false,
+    )
   })
 
   it('is false for a genuine app error', () => {
@@ -870,6 +878,54 @@ describe('isBenignPurchaseInfoForbidden', () => {
   })
 })
 
+describe('isBenignBalanceHistoryNotAcceptable', () => {
+  const BALANCE_HISTORY = `${configs.MEW_PURCHASE_BASE_URL}/v5/portfolio/balance-history`
+  // Build the event the way production does: the shared useFetchMewWalletApi
+  // reporter tags it through describeMewApiFetchError (APP-MEW-WEB-1K0).
+  const eventFor = (url: string, status: number, statusText: string) => ({
+    tags: describeMewApiFetchError({
+      error: new Error(statusText),
+      data: {},
+      status,
+      statusText,
+      url,
+    }).tags,
+  })
+
+  it('is true for the production 406 from balance-history', () => {
+    expect(
+      isBenignBalanceHistoryNotAcceptable(
+        eventFor(
+          `${BALANCE_HISTORY}?address=0xe3d17904566328bab5b1662be219923195554640&period=max&chain=ETH`,
+          406,
+          'Not Acceptable',
+        ),
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for another status on balance-history (still reported)', () => {
+    expect(
+      isBenignBalanceHistoryNotAcceptable(
+        eventFor(`${BALANCE_HISTORY}?period=max&chain=ETH`, 403, 'Forbidden'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for a 406 from another MEW wallet API route', () => {
+    expect(
+      isBenignBalanceHistoryNotAcceptable(
+        eventFor(configs.MEW_PURCHASE_API, 406, 'Not Acceptable'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for events without tags and non-object inputs', () => {
+    expect(isBenignBalanceHistoryNotAcceptable({})).toBe(false)
+    expect(isBenignBalanceHistoryNotAcceptable(null)).toBe(false)
+  })
+})
+
 describe('isWalletConnectSubscribeInterruptedError', () => {
   const MSG = 'Connection interrupted while trying to subscribe'
 
@@ -880,7 +936,9 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
   })
 
   it('is true for the serialized production payload (plain object with message)', () => {
-    expect(isWalletConnectSubscribeInterruptedError({ message: MSG })).toBe(true)
+    expect(isWalletConnectSubscribeInterruptedError({ message: MSG })).toBe(
+      true,
+    )
   })
 
   it('is true for a bare-string rejection', () => {
@@ -903,7 +961,9 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
       ),
     ).toBe(false)
     expect(
-      isWalletConnectSubscribeInterruptedError(new Error('Connection is closed')),
+      isWalletConnectSubscribeInterruptedError(
+        new Error('Connection is closed'),
+      ),
     ).toBe(false)
   })
 
@@ -911,8 +971,229 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
     expect(isWalletConnectSubscribeInterruptedError(null)).toBe(false)
     expect(isWalletConnectSubscribeInterruptedError(undefined)).toBe(false)
     expect(isWalletConnectSubscribeInterruptedError({})).toBe(false)
-    expect(isWalletConnectSubscribeInterruptedError({ message: 42 })).toBe(false)
-    expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(false)
+    expect(isWalletConnectSubscribeInterruptedError({ message: 42 })).toBe(
+      false,
+    )
+    expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(
+      false,
+    )
+  })
+})
+
+describe('isWalletConnectStaleSessionTopicError', () => {
+  const BUNDLE = 'https://app.myetherwallet.com/assets/index.es-Bw52XZxW.js'
+  const MSG =
+    "No matching key. session topic doesn't exist: 8a42442134e32cf7e131fc30ca870a372e2b17d3540240c3be5dae7d8fe515df"
+  const err = (message: string, stack?: string) =>
+    Object.assign(new Error(message), { stack })
+
+  it('drops the inbound relay rejection on V8 (APP-MEW-WEB-C9, Chrome/Edge)', () => {
+    const stack = [
+      `Error: ${MSG}`,
+      `    at A$.isValidSessionTopic (${BUNDLE}:12:176340)`,
+      `    at async A$.onRelayMessage (${BUNDLE}:12:174453)`,
+    ].join('\n')
+    expect(isWalletConnectStaleSessionTopicError(err(MSG, stack))).toBe(true)
+  })
+
+  it('drops the inbound relay rejection on Firefox/Safari stack format', () => {
+    const stack = [
+      `isValidSessionTopic@${BUNDLE}:12:176340`,
+      `onRelayMessage@${BUNDLE}:12:174453`,
+    ].join('\n')
+    expect(isWalletConnectStaleSessionTopicError(err(MSG, stack))).toBe(true)
+  })
+
+  it('keeps an outbound request() on a stale session (no relay frame)', () => {
+    const stack = [
+      `Error: ${MSG}`,
+      `    at A$.isValidSessionTopic (${BUNDLE}:12:176340)`,
+      `    at A$.isValidRequest (${BUNDLE}:12:166000)`,
+      `    at A$.request (${BUNDLE}:12:140000)`,
+    ].join('\n')
+    expect(isWalletConnectStaleSessionTopicError(err(MSG, stack))).toBe(false)
+  })
+
+  it('fails open when there is no stack', () => {
+    expect(isWalletConnectStaleSessionTopicError(err(MSG))).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError(MSG)).toBe(false)
+  })
+
+  it('does NOT match other "No matching key" shapes', () => {
+    expect(
+      isWalletConnectStaleSessionTopicError(
+        err(
+          "No matching key. pairing topic doesn't exist: abc",
+          `onRelayMessage@${BUNDLE}:12:174453`,
+        ),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for non-matching inputs', () => {
+    expect(isWalletConnectStaleSessionTopicError(null)).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError(undefined)).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError({})).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError({ message: 42 })).toBe(false)
+  })
+})
+
+describe('isWalletConnectPublishFailedError', () => {
+  // Exact production message (APP-MEW-WEB-1RW): tag 1112 = wc_sessionDelete.
+  const MSG =
+    'Failed to publish payload, please try again. id:1794229263589309184 tag:1112'
+
+  it('drops the @walletconnect/core relay publish timeout (APP-MEW-WEB-1RW)', () => {
+    expect(isWalletConnectPublishFailedError(new Error(MSG))).toBe(true)
+  })
+
+  it('is true for the serialized payload and a bare-string rejection', () => {
+    expect(isWalletConnectPublishFailedError({ message: MSG })).toBe(true)
+    expect(isWalletConnectPublishFailedError(MSG)).toBe(true)
+  })
+
+  it('keeps reporting every other relay tag (fails closed)', () => {
+    // tag 1108 = wc_sessionRequest: a failed signing/send request must report.
+    expect(
+      isWalletConnectPublishFailedError(
+        new Error('Failed to publish payload, please try again. id:1 tag:1108'),
+      ),
+    ).toBe(false)
+    expect(
+      isWalletConnectPublishFailedError(
+        'Failed to publish payload, please try again. id:1 tag:11120',
+      ),
+    ).toBe(false)
+  })
+
+  it('keeps reporting an app error that wraps the message with a prefix', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error(`Signing failed: ${MSG}`)),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error and non-matching inputs', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error('Failed to publish post')),
+    ).toBe(false)
+    expect(isWalletConnectPublishFailedError(null)).toBe(false)
+    expect(isWalletConnectPublishFailedError({})).toBe(false)
+    expect(isWalletConnectPublishFailedError({ message: 42 })).toBe(false)
+  })
+})
+
+describe('isEip6963NullProviderError', () => {
+  const BUNDLE = 'https://app.myetherwallet.com/assets/index-DnJdQRhG.js'
+
+  it('is true for the mipd requestProviders null-detail crash (APP-MEW-WEB-1JM)', () => {
+    // A browser extension dispatched `eip6963:announceProvider` with a null
+    // `detail`; mipd's requestProviders callback derefs `he.info`.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at ${BUNDLE}:296:13033\n` +
+          `    at de (${BUNDLE}:296:12977)\n` +
+          `    at requestProviders (${BUNDLE}:296:12792)\n` +
+          `    at createStore$1 (${BUNDLE}:296:13106)`,
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for the "destructure property info" message variant (APP-MEW-WEB-1JM)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message:
+          "Cannot destructure property 'info' of 'object null' as it is null.",
+        stack:
+          `TypeError\n    at requestProviders (${BUNDLE}:296:12792)\n` +
+          `    at createStore$1 (${BUNDLE}:296:13106)`,
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for the wagmi getProviders enumeration crash (APP-MEW-WEB-1JN)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at ${BUNDLE}:296:19605\n` +
+          `    at createStore (${BUNDLE}:296:16404)\n` +
+          `    at createStoreImpl (${BUNDLE}:296:16361)\n` +
+          `    at createConfig (${BUNDLE}:296:19334)`,
+      }),
+    ).toBe(true)
+  })
+
+  it('is true for the first-party providerStore.addProvider crash (APP-MEW-WEB-1JG)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at ${BUNDLE}:3925:205839\n` +
+          `    at Array.find (<anonymous>)\n` +
+          `    at Proxy.addProvider (${BUNDLE}:3925:205812)\n` +
+          `    at ${BUNDLE}:3983:107689`, // App.vue announceProvider listener
+      }),
+    ).toBe(true)
+  })
+
+  it('does NOT match an unrelated null-`info` deref in app code (no discovery frame)', () => {
+    // Same message, but the stack is ordinary app code — must keep reporting.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at renderTokenInfo (${BUNDLE}:3981:833633)\n` +
+          `    at setup (${BUNDLE}:7:64256)`,
+      }),
+    ).toBe(false)
+  })
+
+  it('does NOT match a null-`info` deref through a generic zustand createStore frame', () => {
+    // `createStore` / `createStoreImpl` are zustand internals used well beyond
+    // provider discovery; a real null-`info` bug that merely passes through one
+    // must keep reporting. Only the wagmi-specific `createConfig` anchor counts.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+        stack:
+          `TypeError: Cannot read properties of null (reading 'info')\n` +
+          `    at selectState (${BUNDLE}:296:88888)\n` +
+          `    at createStore (${BUNDLE}:296:16404)\n` +
+          `    at createStoreImpl (${BUNDLE}:296:16361)`,
+      }),
+    ).toBe(false)
+  })
+
+  it('does NOT match a different null-deref even on a discovery frame', () => {
+    // A null-`uuid` read (not `info`) in the same area is a different bug.
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'uuid')",
+        stack: `TypeError\n    at requestProviders (${BUNDLE}:296:12792)`,
+      }),
+    ).toBe(false)
+  })
+
+  it('fails open when there is no stack (never suppresses on message alone)', () => {
+    expect(
+      isEip6963NullProviderError({
+        message: "Cannot read properties of null (reading 'info')",
+      }),
+    ).toBe(false)
+  })
+
+  it('is false for non-matching inputs', () => {
+    expect(isEip6963NullProviderError(null)).toBe(false)
+    expect(isEip6963NullProviderError(undefined)).toBe(false)
+    expect(isEip6963NullProviderError({})).toBe(false)
+    expect(isEip6963NullProviderError('boom')).toBe(false)
+    expect(isEip6963NullProviderError({ message: 42 })).toBe(false)
   })
 })
 

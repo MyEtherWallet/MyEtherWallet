@@ -1,63 +1,52 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    class="w-full sm:max-w-[400px] sm:mx-auto"
+  <app-modal
+    v-model="isOpen"
+    :title="$t('multi_address.rename.title')"
+    :subtitle="$t('multi_address.rename.subtitle')"
   >
-    <template #title>
-      <div class="flex flex-col gap-1 px-6 pt-6 pr-12">
-        <h1 class="text-s-20 font-bold text-black leading-[22px] tracking-[-0.4px]">
-          {{ $t('multi_address.rename.title') }}
-        </h1>
-        <p class="text-s-16 text-[#575757] leading-[22px]">
-          {{ $t('multi_address.rename.subtitle') }}
-        </p>
+    <!-- The modal header already pads its bottom (16px, 24px from sm); pt-4
+         sm:pt-2 here keeps the header↔content gap at 32px per design. -->
+    <div class="flex flex-col gap-4 px-6 pt-4 sm:pt-2 pb-6">
+      <div class="flex flex-col gap-1">
+        <input
+          ref="inputRef"
+          v-model="draft"
+          data-test="rename-modal-input"
+          :placeholder="$t('multi_address.rename.placeholder')"
+          class="h-12 w-full rounded-[24px] border px-5 text-s-14 text-black outline-none placeholder:text-text-placeholder"
+          :class="
+            isDuplicate ? 'border-border-error' : 'border-border-default'
+          "
+          @keyup.enter="save"
+        />
+        <AppInputFeedback
+          v-if="isDuplicate"
+          data-test="rename-modal-error"
+          type="error"
+          :message="$t('multi_address.rename.duplicate')"
+        />
       </div>
-    </template>
-    <template #content>
-      <!-- AppDialog's title wrapper already contributes pb-2 (8px); pt-6 here
-           makes the total header↔content gap 32px per design. -->
-      <div class="flex flex-col gap-4 px-6 pt-6 pb-6">
-        <div class="flex flex-col gap-1">
-          <input
-            ref="inputRef"
-            v-model="draft"
-            data-test="rename-modal-input"
-            :placeholder="$t('multi_address.rename.placeholder')"
-            class="h-12 w-full rounded-[24px] border px-5 text-s-14 text-black outline-none placeholder:text-[#a5a5a5]"
-            :class="isDuplicate ? 'border-error' : 'border-[#e6e6e6]'"
-            @keyup.enter="save"
-          />
-          <div
-            v-if="isDuplicate"
-            data-test="rename-modal-error"
-            class="flex items-center gap-1.5 px-1"
-          >
-            <exclamation-circle-icon class="w-4 h-4 shrink-0 text-error" />
-            <p class="text-s-12 text-error leading-[18px]">
-              {{ $t('multi_address.rename.duplicate') }}
-            </p>
-          </div>
-        </div>
-        <button
-          data-test="rename-modal-save"
-          class="h-12 w-full rounded-[24px] text-s-16 font-semibold transition-colors"
-          :class="isDisabled
-            ? 'bg-[#f5f5f5] text-[#767676] cursor-not-allowed'
-            : 'bg-primary text-white'"
-          :disabled="isDisabled"
-          @click="save"
-        >
-          {{ $t('multi_address.rename.save') }}
-        </button>
-      </div>
-    </template>
-  </app-dialog>
+      <button
+        data-test="rename-modal-save"
+        class="h-12 w-full rounded-[24px] text-s-16 font-semibold transition-colors"
+        :class="
+          isDisabled
+            ? 'bg-background-default text-text-muted cursor-not-allowed'
+            : 'bg-background-brand text-white'
+        "
+        :disabled="isDisabled"
+        @click="save"
+      >
+        {{ $t('multi_address.rename.save') }}
+      </button>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import { ExclamationCircleIcon } from '@heroicons/vue/16/solid'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 const props = defineProps<{
@@ -78,7 +67,9 @@ const isDuplicate = computed<boolean>(() => {
 })
 
 // Disabled (grey) when empty or duplicate; enabled shows the primary style.
-const isDisabled = computed<boolean>(() => !draft.value.trim() || isDuplicate.value)
+const isDisabled = computed<boolean>(
+  () => !draft.value.trim() || isDuplicate.value,
+)
 
 // Prefill with the current name each time the modal opens, then focus the field.
 watch(isOpen, async open => {

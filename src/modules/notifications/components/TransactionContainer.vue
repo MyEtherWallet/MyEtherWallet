@@ -2,24 +2,26 @@
   <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-1">
-        <p class="text-info uppercase text-s-9 font-bold">
+        <p class="text-text-subtle uppercase text-s-9 font-bold">
           {{ $t('notifications_module.transaction') }}
         </p>
         <div
           v-if="!seen"
-          class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
+          class="rounded-full bg-background-brand w-[9px] h-[9px] flex-shrink-0"
         ></div>
       </div>
-      <div
-        :class="txStatus.color"
-        class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
+      <AppTag
+        :type="txStatus.type"
+        :variant="txStatus.variant"
+        :label="$t(txStatus.labelKey)"
+        class="ml-2"
       >
-        <div
-          v-if="txStatus.key === 'pending'"
-          class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
-        ></div>
-        {{ $t(txStatus.labelKey) }}
-      </div>
+        <template v-if="txStatus.key === 'pending'" #leading>
+          <span
+            class="ml-1 bg-current w-1.5 h-1.5 rounded-full inline-flex animate-pulse"
+          ></span>
+        </template>
+      </AppTag>
     </div>
 
     <!-- Amount and Recipient -->
@@ -34,12 +36,17 @@
             {{ formatFloatingPointValue(transaction.amount).value }}
             {{ transaction.symbol }}
           </p>
-          <p v-if="transaction.usdValue" class="text-s-12 text-info">
+          <p v-if="transaction.usdValue" class="text-s-12 text-text-subtle">
             {{ formatFiat(transaction.usdValue).display }}
           </p>
         </div>
       </div>
-      <arrow-long-right-icon class="w-4 h-4 flex-shrink-0" />
+      <AppIcon
+        name="arrow-long-right"
+        variant="filled"
+        size="xxs"
+        class="flex-shrink-0"
+      />
       <div class="flex gap-2 text-right">
         <app-blockie
           :address="transaction.toAddress"
@@ -52,30 +59,36 @@
           class="font-mono text-s-12 hover:underline flex items-center justify-end gap-1"
         >
           {{ truncateHash(transaction.toAddress) }}
-          <arrow-up-right-icon class="w-2 h-2" />
+          <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
         </a>
       </div>
     </div>
     <div class="flex justify-space-between items-center">
-      <app-btn-text
+      <app-base-button
+        type="tertiary"
+        surface="alternative"
+        size="small"
         @click="showMoreDetails = !showMoreDetails"
         class="text-s-12 flex items-center -ml-2"
       >
         {{ $t('common.more_details') }}
-        <chevron-down-icon
+        <AppIcon
+          name="chevron-down"
+          variant="filled"
+          size="xxs"
           :class="[
-            'transition-transform w-3 h-3  ml-2',
+            'transition-transform ml-2',
             { 'rotate-180': showMoreDetails },
           ]"
         />
-      </app-btn-text>
+      </app-base-button>
       <!-- delete Button -->
       <app-btn-icon
         :label="$t('common.delete_notification')"
         @click="$emit('remove', transaction.hash)"
         class="ml-auto -mr-2"
       >
-        <trash-icon class="w-4 h-4" />
+        <AppIcon name="trash" variant="filled" size="xxs" />
       </app-btn-icon>
     </div>
 
@@ -84,7 +97,7 @@
         <!-- Chain -->
         <div class="flex items-center justify-between pt-2">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.chain') }}</span
           >
           <div class="flex items-center gap-1">
@@ -100,7 +113,7 @@
         <!-- Created at -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
@@ -110,7 +123,7 @@
         <!-- Transaction -->
         <div class="flex items-center justify-between mt-3">
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.tx_hash') }}</span
           >
           <a
@@ -120,7 +133,7 @@
             class="font-mono hover:underline flex items-center gap-1 text-s-12"
           >
             {{ truncateHash(transaction.hash) }}
-            <arrow-up-right-icon class="w-2 h-2" />
+            <AppIcon name="arrow-up-right" variant="filled" size="xxs" />
           </a>
         </div>
 
@@ -130,7 +143,7 @@
           class="flex items-start justify-between mt-3"
         >
           <span
-            class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
+            class="text-s-9 text-text-subtle uppercase font-semibold tracking-sp-06"
             >{{ $t('common.network_fee') }}</span
           >
           <div class="text-right">
@@ -139,7 +152,7 @@
             </p>
             <p
               v-if="transaction.networkFeeUSD"
-              class="text-s-12 text-info ml-1"
+              class="text-s-12 text-text-subtle ml-1"
             >
               {{ formatFiat(transaction.networkFeeUSD).display }}
             </p>
@@ -152,18 +165,15 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import {
-  ArrowLongRightIcon,
-  ArrowUpRightIcon,
-  ChevronDownIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppTag from '@/components/tag/AppTag.vue'
+import { getTxNotificationStatus } from '../utils/txStatus'
 import type { TransactionNotification } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { formatNotificationDate } from '@/utils/dateFormatHelper'
@@ -191,37 +201,10 @@ const truncateHash = (hash: string): string => {
   return `${hash.slice(0, 6)}...${hash.slice(-4)}`
 }
 
-const txStatus = computed(() => {
-  const status = props.transaction.status.toLowerCase()
-  const now = Math.floor(Date.now() / 1000)
-  const hoursAgo48 = 48 * 60 * 60
-  const isOlderThan48Hours = now - props.transaction.createdAt > hoursAgo48
-
-  if (status === 'sent') {
-    if (isOlderThan48Hours) {
-      return {
-        key: 'possibly_dropped',
-        labelKey: 'notifications_module.status.possibly_dropped',
-        color: 'bg-surface',
-      }
-    }
-    return {
-      key: 'pending',
-      labelKey: 'notifications_module.status.pending',
-      color: 'bg-primary',
-    }
-  } else if (status === 'failed') {
-    return {
-      key: 'failed',
-      labelKey: 'notifications_module.status.failed',
-      color: 'bg-error',
-    }
-  } else {
-    return {
-      key: 'successful',
-      labelKey: 'notifications_module.status.successful',
-      color: 'bg-success',
-    }
-  }
-})
+const txStatus = computed(() =>
+  getTxNotificationStatus(
+    props.transaction.status,
+    props.transaction.createdAt,
+  ),
+)
 </script>

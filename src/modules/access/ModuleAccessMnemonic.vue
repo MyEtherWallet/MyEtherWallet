@@ -3,7 +3,12 @@
     <div
       class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-1"
     >
-      <app-not-recommended class="mb-4 w-full" />
+      <app-banner
+        class="mb-4 w-full"
+        type="alert"
+        :title="$t('common.not_recommended')"
+        :description="$t('common.not_recommended_description')"
+      />
       <app-sheet sheet-class="px-4 sm:px-6 lg:px-10">
         <app-stepper
           :steps="steps"
@@ -17,8 +22,9 @@
               :description="stepDescription[0]"
               :activeStep="activeStep"
             />
-            <app-text-field
+            <app-text-area-legacy
               v-model="mnemonic"
+              surface="alternative"
               data-private
               :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
               class="mt-4"
@@ -40,24 +46,26 @@
                     )
                   }}
                 </p>
-                <p class="text-s-14 text-info italic">
+                <p class="text-s-14 text-text-subtle italic">
                   {{ $t('access_wallet_recovery_phrase.extra_word_known_as') }}
                 </p>
               </div>
-              <app-toggle
-                v-model="hasExtraWord"
-                :label="extraWordToggleString"
-              />
+              <div class="flex items-center gap-2">
+                <app-toggle
+                  v-model="hasExtraWord"
+                  :aria-label="extraWordToggleString"
+                />
+                <span class="text8">{{ extraWordToggleString }}</span>
+              </div>
             </div>
             <!-- Extra Word -->
             <expand-transition>
               <div v-if="hasExtraWord" class="mb-8">
                 <app-input
                   v-model="extraWord"
+                  surface="alternative"
                   data-private
-                  :placeholder="
-                    $t('access_wallet_recovery_phrase.enter_extra_word')
-                  "
+                  :label="$t('access_wallet_recovery_phrase.enter_extra_word')"
                 />
               </div>
             </expand-transition>
@@ -107,7 +115,7 @@
                 {{ $t('common.access_wallet') }}
               </app-base-button>
               <app-base-button
-                :is-outline="true"
+                type="secondary"
                 class="w-full xs:w-auto xs:min-w-[180px]"
                 @click="backStep"
               >
@@ -128,12 +136,12 @@ import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
-import AppTextField from '@/components/AppTextField.vue'
+import AppTextAreaLegacy from '@/components/AppTextAreaLegacy.vue'
 import AppToggle from '@/components/AppToggle.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import AppSheet from '@/components/AppSheet.vue'
-import AppNotRecommended from '@/components/AppNotRecommended.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
 import ButtonNoWallet from './components/ButtonNoWallet.vue'
 
 import { type StepDescription } from '@/types/components/appStepper'
@@ -152,10 +160,11 @@ import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { fromWei } from 'web3-utils'
-import { fromBase } from '@/utils/unit'
-import type { Chain, AddressBalanceResponse } from '@/mew_api/types'
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import type { Chain } from '@/mew_api/types'
+import {
+  fetchNativeBalances,
+  formatNativeBalance,
+} from '@/composables/useNativeBalances'
 import type { DerivationPath as DerivationPathType } from './common/configs/configPaths'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 
@@ -296,17 +305,25 @@ const isLoadingWalletList = ref(true)
 const selectedIndex = ref(0)
 const page = ref(0)
 
-const { useMEWFetch } = useFetchMewApi()
+// Bumped on every load so a superseded one (chain / path change, fast paging,
+// the derivation component re-syncing the stored path on mount) stops before it
+// fires its balance request and never writes into the newer list.
+let loadListGeneration = 0
 
-const loadList = async (page: number = 0) => {
+const loadList = async (pageIndex: number = 0) => {
+  const generation = ++loadListGeneration
+  const isStale = () => generation !== loadListGeneration
   isLoadingWalletList.value = true
   walletList.value = []
-  const startIndex = page * 5
+  const startIndex = pageIndex * 5
+  const chain = selectedChain.value
 
+  const entries: SelectAddress[] = []
   for (let i = startIndex; i < startIndex + 5; i++) {
     const walletInstance = await wallet.value?.getWallet(i)
+    if (isStale()) return
     if (walletInstance) {
-      walletList.value.push({
+      entries.push({
         address: await walletInstance.getAddress(),
         index: i,
         balance: '0',
@@ -314,55 +331,31 @@ const loadList = async (page: number = 0) => {
     }
   }
 
-  if (
-    walletList.value.length > 0 &&
-    selectedChain.value?.type === 'EVM' &&
-    selectedChain.value.chainID
-  ) {
+  // One batched request for the whole page (EVM and Bitcoin alike) against the
+  // chain picked in this dialog. A failure here (e.g. the endpoint's rate
+  // limit) must not block access: the addresses still show, with a 0 balance.
+  if (entries.length > 0 && chain) {
     try {
-      const addresses = walletList.value.map(w => w.address).join(',')
-      const { data } = await useMEWFetch(
-        `/v1/evm/chains/${selectedChain.value.chainID}/balances?addresses=${addresses}`,
+      const balances = await fetchNativeBalances(
+        chain,
+        entries.map(e => e.address),
       )
-        .get()
-        .json<AddressBalanceResponse[]>()
-
-      if (data.value) {
-        for (const b of data.value) {
-          const item = walletList.value.find(
-            w => w.address.toLowerCase() === b.address.toLowerCase(),
-          )
-          if (item) item.balance = fromWei(b.value, 'ether')
+      if (isStale()) return
+      for (const entry of entries) {
+        const raw = balances.get(entry.address.toLowerCase())
+        if (raw !== undefined) {
+          entry.balance = formatNativeBalance(raw, chain.type)
         }
       }
     } catch (e) {
       console.error('Error fetching balances:', e)
     }
-  } else if (
-    walletList.value.length > 0 &&
-    selectedChain.value?.type === 'BITCOIN'
-  ) {
-    for (const item of walletList.value) {
-      try {
-        const walletInstance = await wallet.value?.getWallet(item.index)
-        if (walletInstance) {
-          const fetchBalance =
-            (await walletInstance.getBalance()) as unknown as {
-              balance: { nativeValue: string }
-            }
-          item.balance = fromBase(
-            fetchBalance.balance.nativeValue,
-            8,
-          ).toString()
-        }
-      } catch (e) {
-        console.error('Error fetching BTC balance:', e)
-      }
-    }
   }
 
-  if (walletList.value.length > 0) {
-    selectedIndex.value = walletList.value[0].index
+  if (isStale()) return
+  walletList.value = entries
+  if (entries.length > 0) {
+    selectedIndex.value = entries[0].index
   }
   isLoadingWalletList.value = false
 }

@@ -9,7 +9,7 @@ defineEmits<{ 'update:modelValue': [index: number] }>()
 </script>
 
 <template>
-  <div role="tablist" class="flex gap-6 border-b border-grey-10">
+  <div role="tablist" class="flex gap-6 border-b border-border-default">
     <button
       v-for="(tab, index) in tabs"
       :key="index"
@@ -21,7 +21,7 @@ defineEmits<{ 'update:modelValue': [index: number] }>()
       :class="
         modelValue === index
           ? 'font-semibold text-black'
-          : 'font-normal text-[#575757] hover:text-black'
+          : 'font-normal text-text-subtle hover:text-black'
       "
       @click="$emit('update:modelValue', index)"
     >

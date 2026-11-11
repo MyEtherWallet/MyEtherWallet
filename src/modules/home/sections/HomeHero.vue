@@ -12,28 +12,23 @@ import HeroBanner from '@/modules/home/components/HeroBanner.vue'
 import RwaHomeBanner from '@/modules/rwa_rewards/RwaHomeBanner.vue'
 import HeroWatchlistBanner from '@/modules/home/components/HeroWatchlistBanner.vue'
 import HomeWatchlistTable from '@/modules/home/components/HomeWatchlistTable.vue'
-import HomeWatchlistOnboardingDialog from '@/modules/home/components/HomeWatchlistOnboardingDialog.vue'
+import AddToWatchlistDialog from '@/modules/home/components/AddToWatchlistDialog.vue'
 import type { TrendingRowItem } from '@/modules/home/components/heroTrending'
 import {
   ROUTES_MAIN,
   STOCK_INFO_ROUTE_NAMES,
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
-import configs from '@/configs'
 
-// Feature flags — flip to `true` to re-enable on the home page.
+// Feature flag — flip to `true` to re-enable on the home page.
 // Promo "Trade and get 5 USDC" banner above the cards (copy/campaign still TBD).
 const SHOW_HERO_TRADE_BANNER: boolean = false
-// Build-your-watchlist banner + table + add-to-watchlist modal. Hidden until
-// VITE_WATCHLIST_ENABLED is 'true' (per-env toggle, see configs.ts).
-const SHOW_WATCHLIST: boolean = configs.SHOW_WATCHLIST
 
 const { t } = useI18n()
 
 // "Build your watchlist" banner, shown below the cards only while the user's
 // watchlist is empty (first-time onboarding). Once it has items, the table
-// replaces the banner. Only wired when the flag is on so it doesn't fetch or
-// initialise perps while hidden.
+// replaces the banner.
 const watchlistStore = useWatchlistStore()
 const { watchListedTokens, watchListedStocks, watchListedPerps } =
   storeToRefs(watchlistStore)
@@ -44,24 +39,21 @@ const isWatchlistEmpty = computed(
     !watchListedPerps.value.length,
 )
 
-const watchlist = SHOW_WATCHLIST ? useWatchlistRows() : null
-watchlist?.refresh()
-const watchlistRows = computed(() => watchlist?.rows.value ?? [])
+const watchlist = useWatchlistRows()
+watchlist.refresh()
+const watchlistRows = computed(() => watchlist.rows.value)
 // Show the table only when there is actually something to render (or it's still
 // loading) — otherwise fall back to the banner. This covers both "removed
 // everything" and watchlisted ids that never resolve to a row.
 const showWatchlistTable = computed(
   () =>
-    SHOW_WATCHLIST &&
     !isWatchlistEmpty.value &&
-    ((watchlist?.isLoading.value ?? false) || watchlistRows.value.length > 0),
+    (watchlist.isLoading.value || watchlistRows.value.length > 0),
 )
 
-// Opens the build-your-watchlist onboarding wizard.
-const isOnboardingOpen = ref(false)
-const onWatchlistBegin = () => {
-  isOnboardingOpen.value = true
-}
+// The banner opens the add-to-watchlist modal (mounted on demand, like the
+// table's "Add asset").
+const isAddOpen = ref(false)
 
 // Card 2 — stocks: reuse the overview `trending` already fetched by ViewHome.
 const stocksStore = useStocksStore()
@@ -71,7 +63,7 @@ const stockItems = computed<TrendingRowItem[]>(() =>
   stockTrending.value.slice(0, 5).map(item => ({
     logo: item.iconPngUrl || item.iconSvgUrl,
     symbol: item.primaryMarket.symbol,
-    name: item.underlyingMarket.name,
+    name: item.stockAlias || item.underlyingMarket?.name || '',
     isStock: true,
     price: item.primaryMarket.price ? Number(item.primaryMarket.price) : 0,
     change: item.primaryMarket.priceChangePercentage24h
@@ -150,13 +142,8 @@ onMounted(fetchTrending)
         />
       </div>
     </div>
-    <template v-if="SHOW_WATCHLIST">
-      <HeroWatchlistBanner
-        v-if="!showWatchlistTable"
-        @begin="onWatchlistBegin"
-      />
-      <HomeWatchlistTable v-else :rows="watchlistRows" />
-      <HomeWatchlistOnboardingDialog v-model:is-open="isOnboardingOpen" />
-    </template>
+    <HeroWatchlistBanner v-if="!showWatchlistTable" @add="isAddOpen = true" />
+    <HomeWatchlistTable v-else :rows="watchlistRows" />
+    <AddToWatchlistDialog v-if="isAddOpen" v-model:is-open="isAddOpen" />
   </div>
 </template>

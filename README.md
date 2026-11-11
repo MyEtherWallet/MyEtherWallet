@@ -50,7 +50,7 @@ If you find a bug, or want a new feature added, please submit it on the [Github 
 
 ## Requirements
 
-- **Node.js** `>= v22.11.0`
+- **Node.js** `>= v24.22.1`
 - **pnpm** `>= 10.28.2`
 
 Install pnpm if you don't have it: `npm install -g pnpm`

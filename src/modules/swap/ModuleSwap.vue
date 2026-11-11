@@ -17,11 +17,13 @@
           <p class="font-bold text-s-28">
             {{ isSwapView ? $t('common.swap') : $t('common.bridge') }}
           </p>
-          <app-btn-text
+          <app-base-button
+            type="link"
+            size="small"
             v-if="supportedNetwork"
-            class="text-primary text-s-14 pb-1"
+            class="text-text-brand text-s-14 pb-1"
             @click="clearValues"
-            >{{ $t('common.clear_all') }}</app-btn-text
+            >{{ $t('common.clear_all') }}</app-base-button
           >
         </div>
         <!-- Network Not Supported -->
@@ -59,7 +61,9 @@
 
         <div :class="['relative transition-all duration-300', blockedClass]">
           <!-- From Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
+          <div
+            class="bg-background-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto"
+          >
             <p
               class="text-s-12 font-bold ml-3"
               :class="{ 'mb-1': !isSwapView }"
@@ -69,6 +73,7 @@
             <select-chain-for-app
               v-if="!isSwapView"
               :passed-chains="fromChains"
+              surface="default"
             />
             <app-swap-enter-amount
               v-model:amount="fromAmount"
@@ -108,12 +113,19 @@
             <div
               class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
             >
-              <arrow-down-icon class="w-5 h-5 text-primary" />
+              <AppIcon
+                name="arrow-down"
+                variant="filled"
+                size="s"
+                class="text-text-brand"
+              />
             </div>
           </div>
 
           <!-- To Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
+          <div
+            class="bg-background-brand-subtle rounded-20 px-4 pb-4 pt-2 mx-auto mt-2"
+          >
             <p class="text-s-12 font-bold ml-3">
               {{ $t('swap.you-are-buying') }}
             </p>
@@ -121,6 +133,7 @@
               :can-store="false"
               :passed-chains="parsedToChains"
               :preselected-chain="selectedToChain"
+              surface="default"
               :class="{
                 hidden:
                   isSwapView &&
@@ -169,26 +182,22 @@
       </div>
 
       <!-- Error Display -->
-      <div
+      <AppBanner
         v-if="!isLoading && priceImpactTooHigh"
+        type="alert"
+        :description="
+          t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
+        "
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
-      >
-        <p class="text-error text-s-14 text-center">
-          {{
-            t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
-          }}
-        </p>
-      </div>
-      <div
+        class="w-full max-w-[340px] mb-2"
+      />
+      <AppBanner
         v-if="!isLoading && generalError"
+        type="alert"
+        :description="generalError"
         :class="blockedClass"
-        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
-      >
-        <p class="text-error text-s-14 text-center">
-          {{ generalError }}
-        </p>
-      </div>
+        class="w-full max-w-[340px] mb-2"
+      />
       <app-base-button
         v-if="!isWalletConnected || isWatchOnly"
         :class="['mx-auto w-full max-w-[340px]', blockedClass]"
@@ -238,30 +247,37 @@
       :swap-gas-fee-quote="swapGasFeeQuote || undefined"
       :swap-fee-error="swapFeeError"
     />
+    <!--
+      Fed from the snapshot taken when the user confirmed the offer, not from
+      the live form: the form can be re-quoted or reset while the wallet prompt
+      is open, which left this modal showing "Unknown" / 0 (see
+      proceedWithSwap in useSwapModule).
+    -->
     <swap-initiated-modal
       v-model:swap-initiated-open="swapInitiatedOpen"
-      :from-chain="selectedChain"
-      :to-chain="selectedToChain"
-      :selected-quote="selectedQuote"
-      :tx-hash="txHash"
-      :to-address="toAddress"
-      :from-address="userAddress"
-      :swap-gas-fee-quote="swapGasFeeQuote"
+      :from-chain="initiatedSwap?.fromChain"
+      :to-chain="initiatedSwap?.toChain"
+      :selected-quote="initiatedSwap?.selectedQuote"
+      :tx-hash="initiatedSwap?.txHash ?? '0x'"
+      :to-address="initiatedSwap?.toAddress ?? ''"
+      :from-address="initiatedSwap?.fromAddress ?? ''"
     />
   </div>
 </template>
 <script setup lang="ts">
 import { computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ArrowDownIcon } from '@heroicons/vue/24/solid'
-
 // Components
+import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
+// import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
+// AppBtnText is not imported: the "clear all" text button became an
+// app-base-button link in the buttons redesign.
 import AppUnavailableCard from '@/components/AppUnavailableCard.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
@@ -277,7 +293,6 @@ const {
   selectedChain,
   isBitcoinChain,
   isWalletConnected,
-  userAddress,
   isWatchOnly,
   hasChainBalance,
   selectedToChain,
@@ -294,7 +309,7 @@ const {
   selectedQuote,
   swapInfo,
   swapGasFeeQuote,
-  txHash,
+  initiatedSwap,
   bestSwapLoadingOpen,
   bestOfferSelectionOpen,
   swapInitiatedOpen,

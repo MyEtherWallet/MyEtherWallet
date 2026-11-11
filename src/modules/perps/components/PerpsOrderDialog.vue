@@ -1,13 +1,6 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    has-content-gutter
-    class="sm:w-[440px] sm:mx-auto"
-    @close-dialog="$emit('close')"
-    z-index-overlay="z-[110]"
-    z-index-container="z-[111]"
-  >
-    <template #content>
+  <app-modal v-model="isOpen" :aria-label="base" @close="$emit('close')">
+    <div class="px-4 sm:px-6">
       <div class="flex items-center gap-3 w-full mt-5 px-4">
         <div class="flex items-center gap-3">
           <app-token-logo
@@ -22,16 +15,24 @@
             <span
               :class="[
                 'font-medium text-s-16 leading-p-100 capitalize',
-                order.side === 'buy' ? 'text-success' : 'text-error',
+                order.side === 'buy' ? 'text-text-success' : 'text-text-error',
               ]"
             >
-              {{ order.side === 'buy' ? $t('perps.order.buy') : order.side === 'sell' ? $t('perps.order.sell') : order.side }}
+              {{
+                order.side === 'buy'
+                  ? $t('perps.order.buy')
+                  : order.side === 'sell'
+                    ? $t('perps.order.sell')
+                    : order.side
+              }}
             </span>
           </div>
         </div>
       </div>
       <div class="pb-6 pt-4">
-        <div class="bg-mewBg rounded-2xl divide-y divide-grey-outline p-2">
+        <div
+          class="bg-background-brand-subtle rounded-2xl divide-y divide-border-strong p-2"
+        >
           <div
             v-for="row in rows"
             :key="row.label"
@@ -39,14 +40,10 @@
           >
             <div class="flex items-center gap-1">
               <span
-                class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
                 >{{ row.label }}</span
               >
-              <app-tooltip
-                v-if="row.tooltip"
-                :text="row.tooltip"
-                position="top-right"
-              />
+              <app-tooltip v-if="row.tooltip" :text="row.tooltip" />
             </div>
             <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
               {{ row.value }}
@@ -55,7 +52,7 @@
         </div>
         <button
           v-if="isCancellable"
-          class="rounded-full w-full mt-4 py-3 text-s-14 font-medium hoverOpacity text-white bg-error disabled:opacity-50"
+          class="rounded-full w-full mt-4 py-3 text-s-14 font-medium hoverOpacity text-white bg-background-error disabled:opacity-50"
           :disabled="cancelling"
           @click="$emit('cancel', order)"
         >
@@ -65,24 +62,25 @@
               : $t('perps.order.cancel-order-button')
           }}
         </button>
-        <app-btn-text
-          class="w-full mt-2 text-primary"
-          is-large
+        <app-base-button
+          type="link"
+          size="large"
+          class="w-full mt-2 text-text-brand"
           @click="$emit('close')"
-          >{{ $t('perps.trade.tab-close') }}</app-btn-text
+          >{{ $t('perps.trade.tab-close') }}</app-base-button
         >
       </div>
-    </template>
-  </app-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import type { ApiOrder } from '../sdk/types'
 import { perpsClient } from '../configs'
 import { capturePerps } from '../sentry'
@@ -187,7 +185,8 @@ const rows = computed(() => {
         props.order.side === 'buy'
           ? t('perps.order.buy')
           : t('perps.order.sell'),
-      colorClass: props.order.side === 'buy' ? 'text-success' : 'text-error',
+      colorClass:
+        props.order.side === 'buy' ? 'text-text-success' : 'text-text-error',
     },
     {
       label: t('perps.order.type-label'),
@@ -198,10 +197,10 @@ const rows = computed(() => {
       value: orderStatusLabels.value[props.order.status] ?? props.order.status,
       colorClass:
         props.order.status === 'open' || props.order.status === 'pending'
-          ? 'text-primary'
+          ? 'text-text-brand'
           : props.order.status === 'fullyfilled'
-            ? 'text-success'
-            : 'text-info',
+            ? 'text-text-success'
+            : 'text-text-subtle',
     },
     {
       label: t('perps.order.price-label'),

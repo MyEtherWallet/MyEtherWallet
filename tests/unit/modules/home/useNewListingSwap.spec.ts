@@ -149,9 +149,12 @@ describe('useNewListingSwap', () => {
     // An addressless contract entry has nothing to bridge, so don't fall back
     // to the native sentinel (which would prime the wrong asset). Panel still opens.
     const { openBridgeForToken } = useNewListingSwap()
-    openBridgeForToken('TOK', 'Token', [], [
-      { chainName: 'Ethereum', contract: '', decimals: 18 },
-    ])
+    openBridgeForToken(
+      'TOK',
+      'Token',
+      [],
+      [{ chainName: 'Ethereum', contract: '', decimals: 18 }],
+    )
 
     expect(storeSwapValues).not.toHaveBeenCalled()
     expect(openPanel).toHaveBeenCalledWith('bridge')

@@ -15,11 +15,20 @@
       />
     </h2>
     <div v-if="isLoading" class="pt-1">
-      <div class="h-4 mb-2 animate-pulse bg-surface rounded-6 w-full"></div>
-      <div class="h-4 mb-2 animate-pulse bg-surface rounded-6 w-full"></div>
-      <div class="h-4 animate-pulse bg-surface rounded-6 w-2/3"></div>
+      <div
+        class="h-4 mb-2 animate-pulse bg-background-default-hover rounded-6 w-full"
+      ></div>
+      <div
+        class="h-4 mb-2 animate-pulse bg-background-default-hover rounded-6 w-full"
+      ></div>
+      <div
+        class="h-4 animate-pulse bg-background-default-hover rounded-6 w-2/3"
+      ></div>
     </div>
-    <p v-else class="text-s-14 text-info leading-p-150 whitespace-pre-line">
+    <p
+      v-else
+      class="text-s-14 text-text-subtle leading-p-150 whitespace-pre-line"
+    >
       {{ description }}
     </p>
   </div>

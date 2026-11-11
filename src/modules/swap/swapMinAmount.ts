@@ -113,7 +113,10 @@ export const resolveServableMinDisplay = async (
     )
     .map(({ candidate }) => candidate)
   if (!servable.length) return displayUp(ceiling, decimals)
-  return displayUp(servable.reduce((a, b) => (b < a ? b : a)), decimals)
+  return displayUp(
+    servable.reduce((a, b) => (b < a ? b : a)),
+    decimals,
+  )
 }
 
 /**

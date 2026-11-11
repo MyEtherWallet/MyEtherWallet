@@ -87,7 +87,7 @@ const tabLabels = computed(() => [
 const stockItems = computed<ListingCardItem[]>(() =>
   stocksStore.newlyAdded.map(item => ({
     key: item.primaryMarket.symbol,
-    name: item.underlyingMarket.name,
+    name: item.stockAlias || item.underlyingMarket?.name || '',
     symbol: item.primaryMarket.symbol,
     price: item.primaryMarket.price
       ? formatFiat(item.primaryMarket.price).display
@@ -95,13 +95,13 @@ const stockItems = computed<ListingCardItem[]>(() =>
     // `description` is null until the scraping jobs generate one — card hides
     // its description line while absent.
     description: item.description ?? undefined,
-    marketCap: item.underlyingMarket.marketCap
+    marketCap: item.underlyingMarket?.marketCap
       ? formatFiatCompact(item.underlyingMarket.marketCap).display
       : '-',
     change: item.primaryMarket.priceChangePercentage24h
       ? parseFloat(item.primaryMarket.priceChangePercentage24h)
       : undefined,
-    volume: item.underlyingMarket.volume24h
+    volume: item.underlyingMarket?.volume24h
       ? formatFiatCompact(item.underlyingMarket.volume24h).display
       : '-',
     logo: item.iconPngUrl || item.iconSvgUrl,
@@ -208,6 +208,11 @@ const onTrade = (it: ListingCardItem) => {
             :volume-label="t('homePage.listings.stat.volume24h')"
             :volume="it.volume"
             :favorite="it.favorite"
+            :favorite-label="
+              it.favorite
+                ? t('common.remove_from_watchlist')
+                : t('common.add_to_watchlist')
+            "
             :trade-label="it.ctaLabel"
             :trade-disabled="it.tradeDisabled"
             @select="router.push(it.to)"

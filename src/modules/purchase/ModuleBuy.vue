@@ -49,7 +49,7 @@
         href="https://help.myetherwallet.com/"
         target="_blank"
         rel="noopener"
-        class="mt-auto self-center text-s-12 font-semibold text-primary tracking-[-0.24px] hover:underline"
+        class="mt-auto self-center text-label-xs text-text-brand hover:underline"
       >
         {{ t('purchase.buy.need_help') }}
       </a>
@@ -114,10 +114,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
-import {
-  v7ToPurchaseChain,
-  purchaseChainToChain,
-} from './helpers/chainMapping'
+import { v7ToPurchaseChain, purchaseChainToChain } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
 import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
 import { useQuoteCountdown } from './composables/useQuoteCountdown'
@@ -154,7 +151,8 @@ const {
 } = purchaseStore
 
 const walletStore = useWalletStore()
-const { isWalletConnected, isWatchOnly, walletAddress } = storeToRefs(walletStore)
+const { isWalletConnected, isWatchOnly, walletAddress } =
+  storeToRefs(walletStore)
 
 const isReady = computed(() => isWalletConnected.value && !isWatchOnly.value)
 
@@ -162,7 +160,8 @@ const chainsStore = useChainsStore()
 const { selectedChain: walletChain, chains } = storeToRefs(chainsStore)
 const globalStore = useGlobalStore()
 
-const { compatibleChainCodes, incompatibleChainCodes } = usePurchaseCompatibility(buyNetworks, walletChain, chains)
+const { compatibleChainCodes, incompatibleChainCodes } =
+  usePurchaseCompatibility(buyNetworks, walletChain, chains)
 
 const supportedNetworkChains = computed<Chain[]>(() =>
   compatibleChainCodes.value
@@ -250,7 +249,10 @@ onMounted(() => {
   analytics.trackBuyEvent(BuyEvent.SHOWN, buyPayload.value)
 })
 
-watch([() => walletMenu.selectedPurchaseCoinId, buyNetworks], applyPreselectedToken)
+watch(
+  [() => walletMenu.selectedPurchaseCoinId, buyNetworks],
+  applyPreselectedToken,
+)
 
 const currencyOptions = computed(() => {
   const tokenProviders = selectedToken.value?.providers
@@ -264,45 +266,92 @@ const currencyOptions = computed(() => {
   return Array.from(supportedFiats).filter(f => buyFiats.value.has(f))
 })
 
+// Providers that can quote the asset being bought (the chain's native token
+// when none was picked), so limits only come from providers that support it.
+const assetProviders = computed<string[]>(
+  () =>
+    selectedToken.value?.providers ??
+    buyNetworks.value
+      .find(network => network.chain === purchaseChainCode.value)
+      ?.tokens.find(token => token.symbol === tokenSymbol.value)?.providers ??
+    [],
+)
+
 const fiatLimits = computed(() => {
-  const fiat = buyFiats.value.get(selectedFiat.value)
-  return fiat?.limits ?? { min: 0, max: 0 }
+  const fallback = buyFiats.value.get(selectedFiat.value)?.limits ?? {
+    min: 0,
+    max: 0,
+  }
+  if (!assetProviders.value.length || !purchaseInfo.value?.providers) {
+    return fallback
+  }
+  const limits = purchaseInfo.value.providers
+    .filter(p => assetProviders.value.includes(p.provider))
+    .flatMap(p => p.fiats)
+    .filter(f => f.fiat_currency === selectedFiat.value)
+    .map(f => f.limits)
+  if (!limits.length) return fallback
+  return {
+    min: Math.min(...limits.map(l => l.min)),
+    max: Math.max(...limits.map(l => l.max)),
+  }
 })
 
 const USD_AMOUNTS = [15, 50, 100, 250]
-const MIN_USD = 2
-const MAX_USD = 250
 
 const currencyRate = computed(() => exchangeRates.value.get(selectedFiat.value))
 
-const formatLocalizedAmount = (usd: number, rate: number): string => {
-  const value = Math.round(usd * rate)
+const formatAmount = (value: number): string => {
   const symbol = getCurrencySymbol(selectedFiat.value)
-  return `${symbol}${value.toLocaleString('en-US')}`
+  const amount = value.toLocaleString('en-US')
+  return symbol ? `${symbol}${amount}` : `${amount} ${selectedFiat.value}`
+}
+
+const minMaxButtons = (min: number, max: number) => [
+  { label: t('purchase.min'), value: min, usdValue: min },
+  { label: t('purchase.max'), value: max, usdValue: max },
+]
+
+const roundToStep = (value: number): number => {
+  const step = value < 100 ? 5 : value < 1000 ? 10 : 50
+  return Math.round(value / step) * step
+}
+
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value))
+
+const buildButtons = (ideal: number[], min: number, max: number) => {
+  const rounded = ideal.map(v => clamp(roundToStep(v), min, max))
+  const increasing = rounded.every((v, i) => i === 0 || v > rounded[i - 1])
+  const values = increasing
+    ? rounded
+    : ideal.map(v => clamp(Math.round(v), min, max))
+  return values.map(value => ({
+    label: formatAmount(value),
+    value,
+    usdValue: value,
+  }))
 }
 
 const quickButtons = computed(() => {
   const rate = currencyRate.value
-  if (!rate) return []
-  if (Math.round(15 * rate) >= 1) {
-    return USD_AMOUNTS.map(usd => ({
-      label: formatLocalizedAmount(usd, rate),
-      value: Math.round(usd * rate),
-      usdValue: usd,
-    }))
-  }
-  return [
-    {
-      label: t('purchase.min'),
-      value: Math.round(MIN_USD * rate),
-      usdValue: MIN_USD,
-    },
-    {
-      label: t('purchase.max'),
-      value: Math.round(MAX_USD * rate),
-      usdValue: MAX_USD,
-    },
-  ]
+  const { min, max } = fiatLimits.value
+  if (!rate || max <= 0) return []
+
+  const raw = USD_AMOUNTS.map(usd => Math.round(usd * rate))
+  const largest = raw[raw.length - 1]
+
+  if (largest >= 1000) return minMaxButtons(min, max)
+
+  if (raw[0] >= min && largest <= max) return buildButtons(raw, min, max)
+
+  const lower = Math.max(min, raw[0])
+  const upper = Math.min(max, largest)
+  if (upper <= lower) return minMaxButtons(min, max)
+
+  const step = (upper - lower) / 3
+  const ideal = [0, 1, 2, 3].map(i => (i === 3 ? upper : lower + step * i))
+  return buildButtons(ideal, min, max)
 })
 
 const formattedCryptoEstimate = computed(() => {
@@ -313,7 +362,9 @@ const formattedCryptoEstimate = computed(() => {
 const buyPayload = computed<BuyPayloadShared>(() => {
   const rate = currencyRate.value
   const amountUSD =
-    rate && rate > 0 ? (Number(fiatAmount.value) / rate).toFixed(2) : fiatAmount.value
+    rate && rate > 0
+      ? (Number(fiatAmount.value) / rate).toFixed(2)
+      : fiatAmount.value
   return {
     network: displayChain.value?.name,
     token: tokenSymbol.value,
@@ -439,7 +490,9 @@ watch(selectedToken, token => {
 
 watch(currencyOptions, options => {
   if (options.length && !options.includes(selectedFiat.value)) {
-    selectedFiat.value = options.includes(DEFAULT_FIAT) ? DEFAULT_FIAT : options[0]
+    selectedFiat.value = options.includes(DEFAULT_FIAT)
+      ? DEFAULT_FIAT
+      : options[0]
   }
 })
 

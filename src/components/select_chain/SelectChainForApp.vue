@@ -5,66 +5,51 @@
       :openNetworkDialog="setOpenDialog"
       :selectedChain="selectedChain"
     >
-      <app-btn-group
-        v-if="isBtnGroup"
-        v-model:selected="selectedChain"
-        :btn-list="shownChains"
-        :use-emit-only="true"
-        :is-loaded="isLoadedChains"
-        size="large"
-        @onUpdate:selected="setSelectedChain"
-      >
-        <template #btn-content="{ data }">
-          <div class="flex items-center">
-            <img
-              :src="data.icon"
-              alt=""
-              class="w-7 h-7 mr-2 rounded-full object-contain"
-              height="32"
-              width="32"
-            />
-            <span class="mr-2"> {{ data.nameLong }}</span>
-          </div>
-        </template>
-        <template #custom>
+      <template v-if="isBtnGroup">
+        <AppSegmentedControl
+          v-if="isLoadedChains"
+          :model-value="selectedChain?.name ?? ''"
+          :items="chainItems"
+          size="default"
+          :label="$t('common.select_network')"
+          @update:model-value="selectChainByName"
+        >
+          <template #avatar="{ item, size }">
+            <AppAvatar type="network" :chain="item.value" :size="size" />
+          </template>
           <button
-            class="h-10 text-s-17 py-2 px-4 rounded-full bg-transparent font-medium hoverNoBG min-w-[89px]"
+            type="button"
+            class="flex h-10 items-center rounded-3xl px-2 text-label-sm text-text-default hover:bg-background-alternative-hover"
             @click="setOpenDialog(true)"
           >
-            <div class="flex items-center justify-center capitalize">
-              <span>{{ $t('common.more') }}</span>
-              <chevron-down-icon class="text-info w-4 h-4 ml-1" />
-            </div>
+            <span class="px-1.5 capitalize">{{ $t('common.more') }}</span>
+            <AppIcon name="chevron-down" size="s" />
           </button>
-        </template>
-      </app-btn-group>
-      <button
+        </AppSegmentedControl>
+        <div
+          v-else
+          class="h-12 w-96 animate-pulse rounded-3xl bg-background-default"
+        />
+      </template>
+      <AppPicker
         v-else
-        class="bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
+        size="l"
+        :surface="surface"
+        :title="selectedChain?.nameLong ?? ''"
+        :description="$t('common.network_label')"
+        :loading="!isLoadedChains"
+        :expanded="openDialog"
         @click="setOpenDialog(true)"
       >
-        <div v-if="selectedChain" class="flex items-center min-h-[36px]">
-          <img
-            v-if="selectedChain.icon"
-            :src="selectedChain.icon"
-            alt=""
-            class="w-8 h-8 mr-2 rounded-full object-contain flex-none bg-mewBg"
-            height="32"
-            width="32"
+        <template #avatar="{ size }">
+          <AppAvatar
+            type="network"
+            :size="size"
+            :url="selectedChain?.icon"
+            :chain="selectedChain?.name"
           />
-          <div class="ml-1 pr-1 min-w-[30px]">
-            <p class="text-info text-left text-s-12 leading-[16px] capitalize">
-              {{ $t('common.network') }}
-            </p>
-            <p
-              class="text-ellipsis truncate font-medium text-sm overflow-hidden text-left"
-            >
-              {{ selectedChain.nameLong }}
-            </p>
-          </div>
-          <chevron-down-icon class="flex-none w-4 h-4 ml-auto" />
-        </div>
-      </button>
+        </template>
+      </AppPicker>
     </slot>
     <!-- Dialog with chains list -->
     <select-chain-dialog
@@ -73,8 +58,6 @@
       :selected-chain="selectedChain"
       :passed-chains="passedChains"
       :filter-by-selected-chain-type="canStore"
-      :z-index-overlay="dialogZIndexOverlay"
-      :z-index-container="dialogZIndexContainer"
       @update:chain="setSelectedChain"
     />
   </div>
@@ -85,11 +68,14 @@ import { ref, watch, computed, onMounted } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import AppBtnGroup from '@components/AppBtnGroup.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
+import AppAvatar from '@components/avatar/AppAvatar.vue'
+import AppPicker from '@components/picker/AppPicker.vue'
+import type { PickerSurface } from '@components/picker/types'
 import SelectChainDialog from './SelectChainDialog.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
+import AppIcon from '@/components/icon/AppIcon.vue'
 const prop = defineProps({
   isBtnGroup: {
     type: Boolean,
@@ -107,13 +93,14 @@ const prop = defineProps({
     type: Object as () => Chain | null,
     default: null,
   },
-  dialogZIndexOverlay: {
-    type: String,
-    default: 'z-[200]',
-  },
-  dialogZIndexContainer: {
-    type: String,
-    default: 'z-[201]',
+  /**
+   * Picker fill. `alternative` (grey) suits a white dialog surface; pass
+   * `default` (white) when the picker sits on a tinted card next to a white
+   * amount input, as in the bridge form.
+   */
+  surface: {
+    type: String as () => PickerSurface,
+    default: 'alternative',
   },
 })
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']
@@ -208,6 +195,17 @@ onMounted(() => {
 const openDialog = defineModel<boolean>('dialogOpen', { default: false })
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
+}
+
+const chainItems = computed(() =>
+  shownChains.value.map(chain => ({
+    value: chain.name,
+    label: chain.nameLong,
+  })),
+)
+const selectChainByName = (name: string) => {
+  const chain = shownChains.value.find(c => c.name === name)
+  if (chain) setSelectedChain(chain)
 }
 
 /**

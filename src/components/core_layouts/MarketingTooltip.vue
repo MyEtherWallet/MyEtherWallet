@@ -20,7 +20,7 @@
       </p>
 
       <!-- Body -->
-      <p class="text-s-12 text-info leading-[1.4]">
+      <p class="text-s-12 text-text-subtle leading-[1.4]">
         {{ entry.description }}
       </p>
 
@@ -64,7 +64,7 @@ const marketing = useMarketingVariantStore()
 const { canShow } = storeToRefs(marketing)
 
 const walletMenu = useWalletMenuStore()
-const { walletPanel } = storeToRefs(walletMenu)
+const { walletPanel, isOpenSideMenu } = storeToRefs(walletMenu)
 
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
@@ -132,6 +132,18 @@ watch(
 // session only — it is not an answer to the offer, so the campaign continues.
 watch(walletPanel, newVal => {
   if (newVal === 'trade' && visible.value) {
+    visible.value = false
+    marketing.hideForSession()
+  }
+})
+
+// A is pinned to the Trade button in the wallet rail, and the side panel slides
+// in directly beside that rail — so with any panel open the tooltip would sit
+// on top of it. Hide A for the session, as above; B floats in the lower-left
+// and is unaffected. `walletPanel` alone misses this case: opening a panel
+// that is already selected toggles `isOpenSideMenu` without changing it.
+watch(isOpenSideMenu, isOpen => {
+  if (isOpen && visible.value && arm.value === 'A') {
     visible.value = false
     marketing.hideForSession()
   }

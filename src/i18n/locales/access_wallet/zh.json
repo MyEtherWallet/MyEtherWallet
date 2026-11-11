@@ -21,7 +21,8 @@
       "all": "全部",
       "hardware": "硬件",
       "mobile": "移动",
-      "software": "软件"
+      "software": "软件",
+      "label": "钱包类型"
     },
     "back_to_connect_options": "返回连接选项",
     "connect_wallet_title": "连接钱包",
@@ -56,7 +57,11 @@
       "could_not_connect": "无法连接到钱包",
       "connection_timed_out": "连接超时。请重试。",
       "connect_request_pending": "连接请求已在处理中，请检查您的钱包扩展程序",
-      "network_not_supported": "您的钱包不支持所选网络。请切换到受支持的网络或在钱包中启用它。"
+      "network_not_supported": "您的钱包不支持所选网络。请切换到受支持的网络或在钱包中启用它。",
+      "wallet_region_restricted": "此钱包在您所在的地区不可用。",
+      "wallet_popup_blocked": "您的浏览器阻止了钱包弹出窗口。请允许此网站的弹出窗口，然后重试。",
+      "wallet_logged_out": "您已退出钱包。请登录后重试。",
+      "wallet_update_pending": "您的钱包需要完成更新。请打开钱包完成更新，然后重试。"
     }
   },
   "access_wallet_keystore": {

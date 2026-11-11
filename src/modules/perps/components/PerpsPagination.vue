@@ -3,21 +3,17 @@
     <app-btn-icon
       :disabled="disabled || !canPrev"
       :label="t('perps.pagination.previous-page')"
-      height="h-8"
-      width="w-8"
       @click="onPrev"
     >
-      <ChevronLeftIcon class="w-4 h-4" />
+      <AppIcon name="chevron-left" size="xxs" variant="filled" />
     </app-btn-icon>
-    <span class="px-2 text-s-12 text-info font-medium">
-      <template v-if="totalPages !== undefined"
-        >{{
-          t('perps.pagination.page-of', {
-            current: currentPage + 1,
-            total: totalPages,
-          })
-        }}</template
-      >
+    <span class="px-2 text-s-12 text-text-subtle font-medium">
+      <template v-if="totalPages !== undefined">{{
+        t('perps.pagination.page-of', {
+          current: currentPage + 1,
+          total: totalPages,
+        })
+      }}</template>
       <template v-else>{{
         t('perps.pagination.page', { current: currentPage + 1 })
       }}</template>
@@ -25,11 +21,9 @@
     <app-btn-icon
       :disabled="disabled || !canNext"
       :label="t('perps.pagination.next-page')"
-      height="h-8"
-      width="w-8"
       @click="onNext"
     >
-      <ChevronRightIcon class="w-4 h-4" />
+      <AppIcon name="chevron-right" size="xxs" variant="filled" />
     </app-btn-icon>
   </div>
 </template>
@@ -38,7 +32,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 
 const { t } = useI18n()
 
@@ -71,18 +65,18 @@ const canPrev = computed(() =>
 const canNext = computed(() =>
   props.hasNext !== undefined
     ? props.hasNext
-    : props.totalPages !== undefined && props.currentPage + 1 < props.totalPages,
+    : props.totalPages !== undefined &&
+      props.currentPage + 1 < props.totalPages,
 )
 
 function scrollToTarget() {
   const target = props.scrollTarget
   if (!target) return
-  // Offset for the fixed app header (TheHeader.vue: h-[68px] sm:h-[76px]).
+  // Offset for the fixed app header (AppNavbar: 76px at every width) + 12.
   // Setting scroll-margin-top lets scrollIntoView honor the offset inside
   // whichever ancestor is the actual scroll container (the app layout uses
   // an inner overflow-y-auto wrapper, not the window).
-  const headerHeight = window.innerWidth >= 640 ? 76 : 68
-  target.style.scrollMarginTop = `${headerHeight + 12}px`
+  target.style.scrollMarginTop = '88px'
   target.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 

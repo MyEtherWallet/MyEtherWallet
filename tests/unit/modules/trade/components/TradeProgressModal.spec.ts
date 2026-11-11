@@ -15,10 +15,10 @@ import {
 } from '@/stores/tradeOrdersStore'
 import type { NewTokenInfo } from '@/composables/useSwap'
 
-const AppDialogStub = {
-  props: { isOpen: { type: Boolean, default: false } },
+const AppModalStub = {
+  props: { modelValue: { type: Boolean, default: false }, title: String },
   template:
-    '<div v-if="isOpen"><slot name="title" /><slot name="content" /></div>',
+    '<div v-if="modelValue">{{ title }}<slot name="header" /><slot /></div>',
 }
 
 const ADDRESS = '0x717ba71d4ea77d1b7c49a913c28c0bd538eecd41'
@@ -77,7 +77,7 @@ const mountModal = (order: SavedTradeOrder | null = makeOrder()) => {
     },
     global: {
       plugins: [i18n, pinia],
-      stubs: { AppDialog: AppDialogStub },
+      stubs: { AppModal: AppModalStub },
     },
   })
 }
@@ -168,5 +168,37 @@ describe('TradeProgressModal', () => {
       .find(button => button.text().includes('Close this screen'))
     await close!.trigger('click')
     expect(modal.emitted('update:isOpen')).toEqual([[false]])
+  })
+
+  it('asks for the escrow deposit while a native order has no saved entry yet', async () => {
+    const modal = mountModal(null)
+    await modal.setProps({
+      depositPending: true,
+      fromToken: { ...usdt, symbol: 'ETH' },
+    })
+    expect(modal.text()).toContain('Confirm the deposit in your wallet')
+    expect(modal.text()).toContain('Your ETH is deposited to 1inch escrow')
+    expect(modal.text()).not.toContain(
+      'The trade will be processed in the background',
+    )
+  })
+
+  it('ignores the deposit flag once the order exists', async () => {
+    const modal = mountModal()
+    await modal.setProps({ depositPending: true })
+    expect(modal.text()).toContain('Processing trade...')
+  })
+
+  it('shows the recovery instructions for an unsubmitted native order', () => {
+    const modal = mountModal(
+      makeOrder({
+        status: 'unsubmitted',
+        depositTxHash: TX_HASH,
+        proxyAddress: '0x1111111111111111111111111111111111111111',
+      }),
+    )
+    expect(modal.text()).toContain('Order not placed')
+    expect(modal.text()).toContain('recover your funds from Notifications')
+    expect(modal.find('svg.arrows-flip').exists()).toBe(false)
   })
 })

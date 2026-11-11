@@ -21,7 +21,7 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
    */
   const {
     isPending: isPendingOutOfFocusTimeout,
-    start: startOutOfFocusTimeout,
+    start: startOutOfFocusTimer,
     stop: stopOutOfFocusTimeout,
   } = useTimeoutFn(
     () => {
@@ -30,6 +30,14 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
     150,
     { immediate: false },
   )
+
+  /**
+   * Called on blur. The focus flag waits out the 150ms grace window so a
+   * trailing-button click (which briefly blurs the field) doesn't flicker it.
+   */
+  const startOutOfFocusTimeout = () => {
+    startOutOfFocusTimer()
+  }
 
   /**
    * Sets the input field to be in focus.

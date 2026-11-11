@@ -6,7 +6,7 @@ import { createI18n } from 'vue-i18n'
 // ModuleHome uses useI18n() (Composition API), which needs the i18n plugin
 // installed on the app instance — global.mocks.$t alone only covers Options
 // API / template $t usage, not the composable. Mirrors the pattern used in
-// tests/unit/components/AppSearchInput.spec.ts.
+// tests/unit/components/AppSearchbar.spec.ts.
 const i18n = createI18n({
   legacy: false,
   locale: 'en',

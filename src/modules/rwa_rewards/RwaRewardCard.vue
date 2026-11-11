@@ -12,33 +12,25 @@
 
     <div class="relative z-10 flex flex-col max-w-[250px] gap-2">
       <div class="flex flex-col">
-        <p
-          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
-        >
+        <p class="text-label-base text-black">
           {{ title }}
         </p>
-        <p
-          class="text-s-14 font-normal leading-5 text-[#575757] whitespace-pre-line"
-        >
+        <p class="text-text-sm text-text-subtle whitespace-pre-line">
           {{ description }}
         </p>
       </div>
-      <p
-        v-if="footnote"
-        class="text-s-12 font-normal leading-[18px] text-[#575757]"
-      >
+      <p v-if="footnote" class="text-text-xs text-text-subtle">
         {{ footnote }}
       </p>
     </div>
 
     <div class="relative z-10 flex flex-col items-start justify-center gap-3">
-      <div
+      <AppTag
         v-if="effectiveStatusText"
-        class="py-1 px-2 rounded-8 text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase whitespace-nowrap"
-        :style="{ color: statusBadge.text, background: statusBadge.bg }"
-      >
-        {{ effectiveStatusText }}
-      </div>
+        :type="statusTagType"
+        variant="subtle"
+        :label="effectiveStatusText"
+      />
       <div
         v-if="primaryLabel || secondaryLabel"
         class="flex items-center gap-2"
@@ -48,8 +40,8 @@
           class="flex items-center h-10 pr-3 pl-4 gap-1 rounded-full text-s-14 font-semibold"
           :class="
             effectivePrimaryDisabled
-              ? 'bg-[#f5f5f5] text-[#767676] cursor-default'
-              : 'bg-primary text-white cursor-pointer hoverOpacityHasBG'
+              ? 'bg-background-default text-text-muted cursor-default'
+              : 'bg-background-brand text-white cursor-pointer hoverOpacityHasBG'
           "
           :disabled="effectivePrimaryDisabled"
           @click="clickPrimary"
@@ -67,7 +59,7 @@
         </button>
         <button
           v-if="secondaryLabel"
-          class="hoverOpacityHasBG h-10 px-4 rounded-full bg-[#e6e6e6] text-black text-s-14 font-semibold"
+          class="hoverOpacityHasBG h-10 px-4 rounded-full bg-background-default-hover text-black text-s-14 font-semibold"
           @click="clickSecondary"
         >
           {{ secondaryLabel }}
@@ -82,6 +74,8 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import AppTag from '@/components/tag/AppTag.vue'
+import type { TagType } from '@/components/tag/types'
 import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 import illusTrade from '@/assets/images/rwa-rewards/hero-claimed.webp'
 import illusHold from '@/assets/images/rwa-rewards/hero-holding.webp'
@@ -138,6 +132,7 @@ const {
   isEligible,
   eligibilityV2,
   tradeMarketClosed,
+  tradePaused,
   tradeClaimed,
   tradeNoRewards,
   tradeRemainingCount,
@@ -151,7 +146,7 @@ const isTradeCard = computed(() => props.illustration === 'trade')
 
 const tradeStatus = computed<RwaRewardStatus>(() => {
   if (isBanned.value) return 'banned'
-  if (tradeMarketClosed.value) return 'paused'
+  if (tradeMarketClosed.value || tradePaused.value) return 'paused'
   if (tradeClaimed.value) return 'claimed'
   if (tradeNoRewards.value) return 'noRewards'
   // Only trust ineligibility once eligibility data has loaded, otherwise
@@ -229,22 +224,23 @@ const illustrationSrc = computed(() => {
   return (isGrey ? grey : normal)[props.illustration]
 })
 
-const statusBadge = computed(
-  () =>
-    ({
-      ongoing: { text: '#005ae5', bg: '#d6edff' },
-      holding: { text: '#005ae5', bg: '#d6edff' },
-      claimable: { text: '#067f71', bg: '#c8fff1' },
-      noRewards: { text: '#bb5602', bg: '#ffedc5' },
-      claimed: { text: '#067f71', bg: '#c8fff1' },
-      lost: { text: '#cc0452', bg: '#ffdbe3' },
-      expired: { text: '#cc0452', bg: '#ffdbe3' },
-      paused: { text: '#bb5602', bg: '#ffedc5' },
-      full: { text: '#cc0452', bg: '#ffdbe3' },
-      ended: { text: '#cc0452', bg: '#ffdbe3' },
-      underReview: { text: '#bb5602', bg: '#ffedc5' },
-      banned: { text: '#cc0452', bg: '#ffdbe3' },
-      notEligible: { text: '#cc0452', bg: '#ffdbe3' },
-    })[effectiveStatus.value ?? 'ongoing'],
+const STATUS_TAG_TYPE: Record<RwaRewardStatus, TagType> = {
+  ongoing: 'branded',
+  holding: 'branded',
+  claimable: 'success',
+  claimed: 'success',
+  noRewards: 'warning',
+  paused: 'warning',
+  underReview: 'warning',
+  lost: 'danger',
+  expired: 'danger',
+  full: 'danger',
+  ended: 'danger',
+  banned: 'danger',
+  notEligible: 'danger',
+}
+
+const statusTagType = computed(
+  () => STATUS_TAG_TYPE[effectiveStatus.value ?? 'ongoing'],
 )
 </script>

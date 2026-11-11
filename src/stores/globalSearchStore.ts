@@ -119,7 +119,7 @@ export const useGlobalSearchStore = defineStore('globalSearch', () => {
       return {
         id: s.primaryMarket.symbol,
         symbol: s.primaryMarket.symbol,
-        name: s.underlyingMarket.name,
+        name: s.stockAlias || s.underlyingMarket?.name || '',
         icon: s.iconPngUrl ?? s.iconSvgUrl,
         priceUsd: Number.isFinite(price) ? price : null,
         change24hPct: Number.isFinite(change) ? change : null,
@@ -151,6 +151,8 @@ export const useGlobalSearchStore = defineStore('globalSearch', () => {
   })
 
   const open = () => {
+    // The searchbar fires focusin and click together: one opening, one SHOWN.
+    if (isOpen.value) return
     isOpen.value = true
     isOverflowHidden.value = true
     analytics.trackGlobalSearchEvent(GlobalSearchEvent.SHOWN)

@@ -85,9 +85,23 @@ export const getLocalizedWalletError = (
   if (isBlindSigningDisabledError(raw)) {
     return t('common.error.ledger_blind_signing')
   }
+  // USB interface already claimed — Ledger Live, another tab, or a transport of
+  // ours that was never released (WebUSB: "Unable to claim interface", or
+  // "Access denied" from `USBDevice.open()`)
+  if (
+    message.includes('unable to claim interface') ||
+    message.includes('claiminterface') ||
+    message.includes('interface is in use') ||
+    /usbdevice.*access denied/.test(message)
+  ) {
+    return t('common.error.ledger_interface_busy')
+  }
   // Transient Trezor connect state (APP-MEW-WEB-P5)
   if (isTransientTrezorError(raw)) {
     return t('common.error.trezor_read_failed')
+  }
+  if (isDeviceInterfaceBusyError(raw)) {
+    return t('common.error.ledger_device_busy')
   }
   return undefined
 }
@@ -97,6 +111,65 @@ export const isBlindSigningDisabledError = (error: unknown): boolean => {
     error instanceof Error ? error.message : String(error ?? '')
   ).toLowerCase()
   return message.includes('blind signing') || message.includes('contract data')
+}
+
+/**
+ * Map a known wallet rejection during connect (extension / wallet SDK, e.g.
+ * Rabby, Coinbase, Enkrypt) to a localized message. These are expected
+ * wallet-side conditions, not app bugs, so callers show the message and skip
+ * Sentry.
+ *
+ * Returns `undefined` for unrecognized errors so callers keep the generic
+ * message and report them.
+ */
+export const getLocalizedWalletConnectError = (
+  error: unknown,
+): string | undefined => {
+  const rawMessage = (error as { message?: unknown } | null)?.message
+  if (typeof rawMessage !== 'string') return undefined
+  const message = rawMessage.toLowerCase()
+  const { t } = i18n.global
+  // Rabby: "Already processing unlock/connect. Please wait."
+  if (message.includes('already processing')) {
+    return t('access_wallet.toast.connect_request_pending')
+  }
+  // Enkrypt: "Enkrypt: Geo restricted https://www.myetherwallet.com/blocked"
+  if (message.includes('geo restricted')) {
+    return t('access_wallet.toast.wallet_region_restricted')
+  }
+  // Coinbase Wallet SDK
+  if (message.includes('popup window was blocked')) {
+    return t('access_wallet.toast.wallet_popup_blocked')
+  }
+  if (message.includes('user logged out')) {
+    return t('access_wallet.toast.wallet_logged_out')
+  }
+  // "Open your wallet to finish updating it, then reconnect."
+  if (message.includes('finish updating')) {
+    return t('access_wallet.toast.wallet_update_pending')
+  }
+  return undefined
+}
+
+/**
+ * Wallets reject with plain `{ code, message }` objects, which Sentry groups
+ * under one generic "Object captured as exception" issue. Wrap them in an
+ * `Error` so each wallet error gets its own issue.
+ */
+export const toReportableWalletError = (error: unknown): unknown => {
+  if (error instanceof Error || !error || typeof error !== 'object') {
+    return error
+  }
+  const { code, message } = error as { code?: unknown; message?: unknown }
+  if (typeof message !== 'string') return error
+  return new Error(code === undefined ? message : `${code}: ${message}`)
+}
+
+export const isDeviceInterfaceBusyError = (error: unknown): boolean => {
+  const message = (
+    error instanceof Error ? error.message : String(error ?? '')
+  ).toLowerCase()
+  return /claim\s*interface/.test(message)
 }
 
 /**

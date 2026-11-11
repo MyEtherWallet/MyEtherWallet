@@ -1,11 +1,6 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    has-content-gutter
-    class="sm:w-[440px] sm:mx-auto"
-    @close-dialog="$emit('close')"
-  >
-    <template #content>
+  <app-modal v-model="isOpen" :aria-label="base" @close="$emit('close')">
+    <div class="px-4 sm:px-6">
       <div class="flex items-center gap-3 w-full mt-5 px-4">
         <div class="flex items-center gap-3">
           <app-token-logo
@@ -21,8 +16,8 @@
               :class="[
                 'font-medium text-s-16 leading-p-100 capitalize',
                 fill.direction?.toLowerCase().includes('long')
-                  ? 'text-success'
-                  : 'text-error',
+                  ? 'text-text-success'
+                  : 'text-text-error',
               ]"
             >
               {{ $t(directionKey(fill.direction)) }}
@@ -31,14 +26,16 @@
         </div>
       </div>
       <div class="pb-6 pt-4">
-        <div class="bg-mewBg rounded-2xl divide-y divide-grey-outline p-2">
+        <div
+          class="bg-background-brand-subtle rounded-2xl divide-y divide-border-strong p-2"
+        >
           <div
             v-for="row in rows"
             :key="row.label"
             class="flex items-center justify-between px-5 py-4"
           >
             <span
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
               >{{ row.label }}</span
             >
             <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
@@ -50,14 +47,14 @@
           $t('perps.trade.tab-close')
         }}</app-base-button>
       </div>
-    </template>
-  </app-dialog>
+    </div>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
+import AppModal from '@/components/modal/AppModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import type { ApiFill } from '../sdk/types'

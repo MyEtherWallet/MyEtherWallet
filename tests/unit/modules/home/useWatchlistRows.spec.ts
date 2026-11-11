@@ -21,9 +21,8 @@ vi.mock('@/composables/useCurrency', () => ({
   }),
 }))
 
-const { mapTokenRow, mapStockRow, mapPerpRow, placeholderRow } = await import(
-  '@/modules/home/composables/useWatchlistRows'
-)
+const { mapTokenRow, mapStockRow, mapPerpRow, placeholderRow } =
+  await import('@/modules/home/composables/useWatchlistRows')
 const { TOKEN_INFO_ROUTE_NAMES, STOCK_INFO_ROUTE_NAMES, PERP_INFO_ROUTE_NAME } =
   await import('@/router/routeNames')
 

@@ -1,0 +1,19 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="_Perps Asset Logo" clip-path="url(#clip0_0_47)">
+<mask id="mask0_0_47" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">
+<path id="mask" d="M0 9.6C0 4.29807 4.29807 0 9.6 0H22.4C27.7019 0 32 4.29807 32 9.6V22.4C32 27.7019 27.7019 32 22.4 32H9.6C4.29807 32 0 27.7019 0 22.4V9.6Z" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_0_47)">
+<g id="icon">
+<rect id="bg" width="32" height="32" rx="16" fill="#E30613"/>
+<path id="Vector" d="M16 26.9999L18.8125 11.375C21.4794 11.375 22.3087 11.42 22.43 12.6187C22.43 12.6187 24.2194 11.9487 25.1212 10.5875C21.6006 8.94999 18.0625 8.87499 18.0625 8.87499L16 11.375L13.9375 8.87499C13.9375 8.87499 10.4 8.94874 6.87937 10.5875C7.78062 11.9481 9.57062 12.6187 9.57062 12.6187C9.6925 11.4187 10.5387 11.3769 13.1875 11.375L16 26.9999Z" fill="white"/>
+<path id="Vector_2" d="M16 8.21687C18.8462 8.195 22.04 8.665 25.375 10.125C25.8206 9.31874 26 8.87499 26 8.87499C22.3544 7.42625 18.94 7.0125 16 7C13.0594 7.0125 9.64563 7.42625 6 8.87499C6 8.87499 6.2275 9.40187 6.625 10.125C9.95938 8.665 13.1538 8.195 16 8.21687Z" fill="white"/>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_47">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>

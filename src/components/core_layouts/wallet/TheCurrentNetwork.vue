@@ -29,8 +29,11 @@
               {{ selectedChain.nameLong }}
             </p>
           </div>
-          <chevron-down-icon
-            class="flex-none w-3 h-3 xs:w-4 xs:h-4"
+          <AppIcon
+            name="chevron-down"
+            variant="filled"
+            size="xxs"
+            class="flex-none"
             :class="isIconOnly ? 'ml-0.5' : 'ml-auto xs:mr-1'"
           />
         </div>
@@ -40,7 +43,7 @@
 </template>
 <script setup lang="ts">
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppIcon from '@/components/icon/AppIcon.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { computed } from 'vue'
 
