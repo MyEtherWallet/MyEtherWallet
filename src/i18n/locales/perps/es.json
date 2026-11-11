@@ -94,6 +94,7 @@
       "target-price": "Precio objetivo de {symbol}",
       "market": "Mercado",
       "limit": "Límite",
+      "mid": "Medio",
       "margin-amount-label": "Importe del margen en USD",
       "size-percentage-label": "Tamaño de la orden como porcentaje del margen disponible",
       "size": "Tamaño",
