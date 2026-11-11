@@ -25,10 +25,15 @@ export type BtnIconSize = keyof typeof BTN_ICON_SIZE
  * set a color: the glyph inherits currentColor, so a caller tint like
  * `text-text-brand` still applies. Contrast styles sit on dark surfaces and
  * force the inverted icon color.
+ *
+ * Naked hover/pressed are the alternative tokens unless an ancestor sets
+ * `--btn-icon-hover` / `--btn-icon-pressed`. A surface that is itself
+ * alternative-hover grey (a hovered table row) sets them, or the button's
+ * hover would vanish into it.
  */
 export const BTN_ICON_VARIANT_CLASS = {
   naked:
-    'not-disabled:hover:bg-background-alternative-hover not-disabled:active:bg-background-alternative-pressed',
+    'not-disabled:hover:bg-[var(--btn-icon-hover,var(--background-alternative-hover))] not-disabled:active:bg-[var(--btn-icon-pressed,var(--background-alternative-pressed))]',
   'naked-contrast':
     'text-icon-inverted not-disabled:hover:bg-background-contrast-hover not-disabled:active:bg-background-contrast-pressed',
   filled:
