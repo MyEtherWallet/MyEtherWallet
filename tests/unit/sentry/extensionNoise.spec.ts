@@ -27,6 +27,7 @@ import {
   isWalletConnectPublishFailedError,
   isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
+  isWatchOnlyWalletSignError,
 } from '@/sentry/extensionNoise'
 import { describeMewApiFetchError } from '@/utils/mewApiFetchError'
 import configs from '@/configs'
@@ -1242,5 +1243,34 @@ describe('isProviderProxyRemoveListenerError', () => {
     expect(isProviderProxyRemoveListenerError({})).toBe(false)
     expect(isProviderProxyRemoveListenerError({ message: 42 })).toBe(false)
     expect(isProviderProxyRemoveListenerError('something else')).toBe(false)
+  })
+})
+
+describe('isWatchOnlyWalletSignError', () => {
+  // APP-MEW-WEB-1RY: Trust Wallet rejects eth_sendTransaction from one of its
+  // own watch-only accounts with this exact Error.
+  const MSG = 'Watch-only wallets cannot sign transactions or messages.'
+
+  it('is true for the exact production payload (Error from the wallet provider)', () => {
+    expect(isWatchOnlyWalletSignError(new Error(MSG))).toBe(true)
+  })
+
+  it('is true for a plain-object or lowercased (send-flow re-wrapped) payload', () => {
+    expect(isWatchOnlyWalletSignError({ message: MSG })).toBe(true)
+    expect(isWatchOnlyWalletSignError(new Error(MSG.toLowerCase()))).toBe(true)
+  })
+
+  it('is false for genuine app errors and non-matching inputs', () => {
+    expect(
+      isWatchOnlyWalletSignError(
+        new Error('Method not implemented: SignTransaction'),
+      ),
+    ).toBe(false)
+    expect(isWatchOnlyWalletSignError(new Error('insufficient funds'))).toBe(
+      false,
+    )
+    expect(isWatchOnlyWalletSignError(null)).toBe(false)
+    expect(isWatchOnlyWalletSignError(MSG)).toBe(false)
+    expect(isWatchOnlyWalletSignError({ message: 42 })).toBe(false)
   })
 })
