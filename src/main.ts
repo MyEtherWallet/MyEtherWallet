@@ -42,6 +42,7 @@ import {
   isWalletConnectPublishFailedError,
   isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
+  isWatchOnlyWalletSignError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 import {
@@ -163,6 +164,10 @@ if (dsn && process.env.NODE_ENV === 'production') {
         // which the connect flow already toasts. Other tags (e.g. signing
         // requests) keep reporting (APP-MEW-WEB-1RW / MEW-2657).
         isWalletConnectPublishFailedError(originalException) ||
+        // The wallet's active account is watch-only (Trust Wallet), so it
+        // refuses to sign. Wallet-side state, already toasted by the flow
+        // (APP-MEW-WEB-1RY / MEW-2660).
+        isWatchOnlyWalletSignError(originalException) ||
         // iOS injected-script "Maximum call stack" RangeErrors with no app
         // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
         isForeignStackOverflow(event) ||

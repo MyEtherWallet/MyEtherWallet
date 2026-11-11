@@ -50,6 +50,23 @@ export function isExtensionContextInvalidatedError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is a wallet refusing to sign because its active account is
+ * watch-only. Trust Wallet rejects `eth_sendTransaction` from one of its own
+ * watch-only accounts with "Watch-only wallets cannot sign transactions or
+ * messages." (APP-MEW-WEB-1RY). That is wallet-side user state, not app code:
+ * MEW can't see that the account is watch-only before it asks for a signature,
+ * and the send flow already shows the message in the failure toast.
+ */
+export function isWatchOnlyWalletSignError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' &&
+    message.toLowerCase().includes('watch-only wallets cannot sign')
+  )
+}
+
+/**
  * Whether an error is the external "not found rainbowkit" rejection. It is
  * emitted by a wallet's injected in-app-browser detection script (observed on
  * mobile Safari / iOS in-app wallet browsers), never by app code or any bundled
