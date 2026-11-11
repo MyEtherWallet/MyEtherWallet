@@ -26,6 +26,10 @@ import {
  * The `title-icon` / `description-icon` slots trail their line (the design
  * never puts them on the left) and take an Icon and/or Avatar. Both slots pass
  * `size` ('xs', 18px) for the consumer to bind, whatever the group `size`.
+ *
+ * The `title` / `description` slots replace the text of their line (e.g. to
+ * colour part of it). The description row still only renders when the
+ * `description` prop is set.
  */
 const props = withDefaults(
   defineProps<{
