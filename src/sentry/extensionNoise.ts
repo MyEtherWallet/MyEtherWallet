@@ -412,6 +412,31 @@ export function isWalletConnectSubscribeInterruptedError(
   return typeof message === 'string' && message.includes(MESSAGE)
 }
 
+/**
+ * Whether an error is the WalletConnect "No matching key. session topic doesn't
+ * exist" rejection thrown while processing an inbound relay message. The relay
+ * delivers a message (e.g. `wc_sessionEvent`) for a session the sign-client
+ * already removed from its store, `isValidSessionTopic` throws, and nothing
+ * inside `@walletconnect/sign-client` catches it, so it reaches Sentry as an
+ * `onunhandledrejection` with no MEW frame. The SDK just drops that message and
+ * nothing changes for the user (APP-MEW-WEB-C9 / MEW-2656).
+ *
+ * Anchored on the `onRelayMessage` frame (a non-mangled class property name,
+ * present in Chrome, Edge, Firefox and Safari stacks) so an outbound `request()`
+ * on a stale session, which would break a signing flow, keeps reporting. Fails
+ * open when no stack is present.
+ */
+export function isWalletConnectStaleSessionTopicError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const { message, stack } = err as { message?: unknown; stack?: unknown }
+  return (
+    typeof message === 'string' &&
+    message.includes("No matching key. session topic doesn't exist") &&
+    typeof stack === 'string' &&
+    stack.includes('onRelayMessage')
+  )
+}
+
 // The null-`info` deref message, in both shapes the crash surfaces as: the
 // `he.info` read (`Cannot read properties of null (reading 'info')`) and the
 // `({ info }) =>` destructure (`Cannot destructure property 'info' of ...`).
