@@ -80,7 +80,6 @@
             surface="alternative"
             :title="displaySymbol"
             :description="marketPrice"
-            :aria-label="$t('select_token.title')"
             @click="openTokenSelect"
           >
             <template #avatar>
