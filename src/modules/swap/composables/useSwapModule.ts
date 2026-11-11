@@ -17,6 +17,10 @@ import {
   meetsOutputFloor,
   inputForOutputFloor,
 } from '@/modules/swap/swapMinAmount'
+import {
+  isPriceImpactTooHigh,
+  quotePriceImpact,
+} from '@/modules/swap/swapPriceImpact'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import { useSwapForm, type InitiatedSwap } from './useSwapForm'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -135,18 +139,19 @@ interface SwapModuleBindings {
   fromLoadingState: ComputedRef<boolean>
   fromAmountError: ComputedRef<string>
   toAmountError: ComputedRef<string>
-  priceImpact: ComputedRef<number>
+  priceImpact: ComputedRef<number | null>
   priceImpactTooHigh: ComputedRef<boolean>
+  priceImpactUnknown: ComputedRef<boolean>
   isSwapDisabled: ComputedRef<boolean>
   swapFeeError: ComputedRef<string | undefined>
-  isInternalWallet: () => boolean
-  handleMaxClick: () => void
+  /** MAX availability: any wallet on a token, internal wallets on native. */
+  canUseMax: () => boolean
+  /** Max (100) or a % preset of the from balance. */
+  handleMaxClick: (percentage?: number) => void
   switchGlobalNetwork: (chain: Chain) => void
-  clearValues: () => void
   validateToAddress: () => Promise<void>
   proceedWithSwap: (quoteId: string) => Promise<void>
   swapButton: () => Promise<void>
-  cancelSwap: () => void
   setToChain: (chain: Chain) => void
   connectWalletForSwap: () => void
   bindWatchers: () => void
@@ -155,7 +160,6 @@ interface SwapModuleBindings {
 
 export function useSwapModule(): SwapModuleBindings {
   const isDevMode = configs.IS_DEV_MODE
-  const MAX_PRICE_IMPACT = 10
   // --- Stores ---
   const walletMenu = useWalletMenuStore()
   const { walletPanel } = storeToRefs(walletMenu)
@@ -406,20 +410,20 @@ export function useSwapModule(): SwapModuleBindings {
     return ''
   })
 
-  const priceImpact = computed(() => {
-    const fromAmt = parseFloat(fromAmount.value)
-    const toAmt = parseFloat(toAmount.value)
-    const fromPrice = fromTokenSelected.value?.price || 0
-    const toPrice = toTokenSelected.value?.price || 0
-    if (!fromAmt || !toAmt || !fromPrice || !toPrice) return 0
-    const fromValue = fromAmt * fromPrice
-    const toValue = toAmt * toPrice
-    return ((fromValue - toValue) / fromValue) * 100
-  })
-
-  const priceImpactTooHigh = computed(
-    () => priceImpact.value > MAX_PRICE_IMPACT,
+  const priceImpact = computed(() =>
+    quotePriceImpact(
+      providers.value[0],
+      fromTokenSelected.value,
+      toTokenSelected.value,
+    ),
   )
+
+  const priceImpactTooHigh = computed(() =>
+    isPriceImpactTooHigh(priceImpact.value),
+  )
+
+  // A token without a price leaves the impact unknown: warn, don't block.
+  const priceImpactUnknown = computed(() => priceImpact.value === null)
 
   const isSwapDisabled = computed(
     () =>
@@ -474,39 +478,44 @@ export function useSwapModule(): SwapModuleBindings {
     return gasFee + additionalFees
   }
 
-  const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
-    useMaxAmount({
-      getBalance: () => {
-        if (!fromTokenSelected.value) return 0n
-        const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
-        return tokenParams.totalBalance
-      },
-      getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
-      getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
-      isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
-      isTokenSelected: () => !!fromTokenSelected.value,
-      getAmount: () => fromAmount.value,
-      onAmountChange: value => {
-        fromAmount.value = String(value)
-      },
-      markFormDirty,
-      resetFormPristine: resetPristine,
-      getTokenIdentifier: () => fromTokenSelected.value?.address,
-      getDependencies: () => [
-        fromTokenSelected.value?.balance,
-        swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
-          swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
-        selectedQuote.value?.additionalNativeFees?.toString(),
-      ],
-    })
+  const {
+    setMaxAmount,
+    resetMaxState,
+    canUseMax,
+    isMaxSelected,
+    selectedPercentage,
+  } = useMaxAmount({
+    getBalance: () => {
+      if (!fromTokenSelected.value) return 0n
+      const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
+      return tokenParams.totalBalance
+    },
+    getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
+    getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
+    isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
+    isTokenSelected: () => !!fromTokenSelected.value,
+    getAmount: () => fromAmount.value,
+    onAmountChange: value => {
+      fromAmount.value = String(value)
+    },
+    markFormDirty,
+    resetFormPristine: resetPristine,
+    getTokenIdentifier: () => fromTokenSelected.value?.address,
+    getDependencies: () => [
+      fromTokenSelected.value?.balance,
+      swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
+        swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
+      selectedQuote.value?.additionalNativeFees?.toString(),
+    ],
+  })
 
-  const handleMaxClick = (): void => {
-    if (isMaxSelected.value) return
+  const handleMaxClick = (percentage = 100): void => {
+    if (isMaxSelected.value && selectedPercentage.value === percentage) return
     // Discard any prior quote/fee so the new max is calculated against the full
     // balance, not against a fee that was estimated for a smaller manual amount.
     selectedQuote.value = undefined
     swapGasFeeQuote.value = undefined
-    setMaxAmount()
+    setMaxAmount(percentage)
   }
 
   const switchGlobalNetwork = (chain: Chain) => {
@@ -932,10 +941,6 @@ export function useSwapModule(): SwapModuleBindings {
     return isBitcoinChain.value ? swapForBtc() : swapForEvm()
   }
 
-  const cancelSwap = () => {
-    bestOfferSelectionOpen.value = false
-  }
-
   // Monotonic id so a superseded in-flight request can't apply its results or
   // clear the loading state over a newer one (requests can overlap despite the
   // debounce when the amount/pair changes mid-flight) — MEW-2293.
@@ -1324,6 +1329,7 @@ export function useSwapModule(): SwapModuleBindings {
     isSameToken,
     priceImpact,
     priceImpactTooHigh,
+    priceImpactUnknown,
     swapFeeError,
   })
   const swapQuoteFeature = useSwapQuote({
@@ -1744,16 +1750,15 @@ export function useSwapModule(): SwapModuleBindings {
     toAmountError: swapValidationFeature.toAmountError,
     priceImpact: swapValidationFeature.priceImpact,
     priceImpactTooHigh: swapValidationFeature.priceImpactTooHigh,
+    priceImpactUnknown: swapValidationFeature.priceImpactUnknown,
     isSwapDisabled: swapValidationFeature.isSwapDisabled,
     swapFeeError: swapValidationFeature.swapFeeError,
-    isInternalWallet,
+    canUseMax,
     handleMaxClick,
     switchGlobalNetwork,
-    clearValues,
     validateToAddress,
     proceedWithSwap: swapExecutionFeature.proceedWithSwap,
     swapButton: swapExecutionFeature.swapButton,
-    cancelSwap,
     setToChain,
     connectWalletForSwap,
     bindWatchers,

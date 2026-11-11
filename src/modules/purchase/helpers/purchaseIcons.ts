@@ -37,3 +37,18 @@ export const getPurchaseTokenIcon = (
 
 // Fiat flag icons live in a shared util so they can be reused app-wide.
 export { getFiatIcon } from '@/utils/fiatIcons'
+
+/**
+ * Icon of the asset being bought or sold: the chain icon for its native
+ * coin (or before a token is picked), else the coin image, then the market
+ * data icon. A token with neither gets none (the logo shows its symbol)
+ * rather than the chain's coin.
+ */
+export const getSelectedTokenIcon = (
+  token: PurchaseAsset | null,
+  chain: { icon?: string; currencyName?: string } | undefined,
+  coinImages: Map<string, string>,
+): string | undefined => {
+  if (!token || token.symbol === chain?.currencyName) return chain?.icon
+  return coinImages.get(token.coingecko_id) ?? token.market_data?.icon
+}

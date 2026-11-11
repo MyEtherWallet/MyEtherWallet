@@ -71,9 +71,10 @@ vi.mock('pinia', async importOriginal => {
 
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 
-const mountWithFees = (fees: unknown) =>
+const mountWithFees = (fees: unknown, extra: Record<string, unknown> = {}) =>
   mount(AppSelectTxFee, {
-    props: { fees: fees as never, isLoadingFees: false },
+    props: { fees: fees as never, isLoadingFees: false, ...extra },
+    attachTo: document.body,
     global: {
       stubs: { AppModal: true, AppIcon: true },
       mocks: { $t: (k: string) => k },
@@ -97,6 +98,95 @@ describe('AppSelectTxFee', () => {
     expect(wrapper.find('button').attributes('disabled')).toBeUndefined()
   })
 
+  it('hides the fee row but keeps emitting the selected fee with hideSelector', () => {
+    const tier = { nativeValue: '1000', fiatValue: '1', nativeSymbol: 'ETH' }
+    const wrapper = mountWithFees(
+      {
+        quoteId: 'q',
+        fees: { ECONOMY: tier, REGULAR: tier, FAST: tier, FASTEST: tier },
+      },
+      { hideSelector: true },
+    )
+    expect(wrapper.find('button').exists()).toBe(false)
+    expect(wrapper.emitted('update:selectedFeeNativeValue')?.at(-1)).toEqual([
+      '1000',
+    ])
+  })
+
+  describe('dropdown', () => {
+    const tier = (fiat: string) => ({
+      nativeValue: '1000',
+      fiatValue: fiat,
+      nativeSymbol: 'ETH',
+    })
+    const fees = {
+      quoteId: 'q',
+      fees: {
+        ECONOMY: tier('1'),
+        REGULAR: tier('2'),
+        FAST: tier('3'),
+        FASTEST: tier('4'),
+      },
+    }
+
+    it('shows the selected fee and its tier tag on the trigger', () => {
+      const wrapper = mountWithFees(fees, { dropdown: true })
+      const trigger = wrapper.get('[data-testid="dropdown-trigger"]')
+      expect(trigger.attributes('disabled')).toBeUndefined()
+      expect(trigger.text()).toContain('$2')
+      expect(trigger.text()).toContain('select_fee.regular.title')
+    })
+
+    it('lists every tier and picks the clicked one', async () => {
+      globalStore.gasPriceType = 'REGULAR'
+      const wrapper = mountWithFees(fees, { dropdown: true })
+      await wrapper.get('[data-testid="dropdown-trigger"]').trigger('click')
+      const rows = wrapper.findAll('[role="option"]')
+      expect(rows).toHaveLength(4)
+      await rows[0].trigger('click')
+      expect(globalStore.gasPriceType).toBe('ECONOMY')
+      expect(wrapper.find('[role="option"]').exists()).toBe(false)
+    })
+
+    it('keeps the picked fee on mount when resetToDefault is off', () => {
+      globalStore.gasPriceType = 'FAST'
+      globalStore.defaultGasPriceType = 'REGULAR'
+      mountWithFees(fees, { dropdown: true, resetToDefault: false })
+      expect(globalStore.gasPriceType).toBe('FAST')
+      mountWithFees(fees, { dropdown: true })
+      expect(globalStore.gasPriceType).toBe('REGULAR')
+    })
+
+    it('stays disabled while there are no fee tiers', () => {
+      const wrapper = mountWithFees({}, { dropdown: true })
+      expect(
+        wrapper.get('[data-testid="dropdown-trigger"]').attributes('disabled'),
+      ).toBeDefined()
+    })
+
+    it('locks the choice when disabled, e.g. while the tx is being signed', () => {
+      const wrapper = mountWithFees(fees, { dropdown: true, disabled: true })
+      expect(
+        wrapper.get('[data-testid="dropdown-trigger"]').attributes('disabled'),
+      ).toBeDefined()
+    })
+
+    it('skips tiers the quote omits instead of throwing', async () => {
+      globalStore.gasPriceType = 'ECONOMY'
+      const partial = {
+        quoteId: 'q',
+        fees: { ECONOMY: tier('1'), FAST: tier('3') },
+      }
+      const wrapper = mountWithFees(partial, { dropdown: true })
+      await wrapper.get('[data-testid="dropdown-trigger"]').trigger('click')
+      const rows = wrapper.findAll('[role="option"]')
+      expect(rows.map(r => r.text())).toEqual([
+        expect.stringContaining('select_fee.economy.title'),
+        expect.stringContaining('select_fee.fast.title'),
+      ])
+    })
+  })
+
   // useFetch reads the payload when execute() runs; a string captured at setup
   // re-posted the mount-time body after every txRequestBody change.
   it('posts the current txRequestBody, not the one from setup', async () => {
@@ -112,7 +202,7 @@ describe('AppSelectTxFee', () => {
         txRequestBody: body('0xA000000000000000000000000000000000000001'),
       },
       global: {
-        stubs: { AppDialog: true, AppIcon: true },
+        stubs: { AppModal: true, AppIcon: true },
         mocks: { $t: (k: string) => k },
       },
     })

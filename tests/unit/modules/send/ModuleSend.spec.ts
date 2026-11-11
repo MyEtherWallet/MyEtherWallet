@@ -76,6 +76,9 @@ vi.mock('@/stores/toastStore', () => ({
 vi.mock('@/stores/accessStore', () => ({
   useAccessStore: () => ({ openAccessDialog: vi.fn() }),
 }))
+// Only the confirmation dialog (stubbed below) reads this store; importing the
+// real one pulls in the hardware-wallet configs, which Vitest can't load.
+vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => ({}) }))
 vi.mock('@/composables/useAddressInput', async () => {
   const { ref } = await import('vue')
   return {
@@ -96,7 +99,8 @@ vi.mock('@/composables/useMaxAmount', async () => {
     useMaxAmount: () => ({
       setMaxAmount: vi.fn(),
       resetMaxState: vi.fn(),
-      isInternalWallet: () => true,
+      applyMaxAmount: vi.fn(),
+      canUseMax: () => true,
       isMaxSelected: ref(false),
     }),
   }
@@ -161,7 +165,10 @@ const makeWallet = () => ({
 })
 
 const clickSend = async (w: ReturnType<typeof mount>) => {
-  const btn = w.findAll('button').find(b => b.text().trim() === 'common.send')
+  // The CTA reads "Review send" once an amount is entered.
+  const btn = w
+    .findAll('button')
+    .find(b => b.text().trim() === 'send.review-send')
   expect(btn).toBeDefined()
   await btn!.trigger('click')
   await flushPromises()

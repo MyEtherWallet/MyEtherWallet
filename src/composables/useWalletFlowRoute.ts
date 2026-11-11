@@ -53,6 +53,9 @@ export const useWalletFlowRoute = () => {
   const closeWalletFlowRoute = () => {
     const query = { ...route.query }
     delete query.type
+    // The connect modal's remembered tab and network (WalletTabs / ModuleAccessWallet).
+    delete query.walletTab
+    delete query.walletNetwork
     return router.push({ name: hostRouteName.value, query })
   }
 
@@ -98,5 +101,14 @@ export const useWalletFlowUrlSync = (
       ...target,
       query: { ...target.query, type: currentView.value },
     })
+  })
+
+  // While the overlay is up, keep ?type= in step with the view (Back, sign-up, …),
+  // so a refresh reopens the step the user is on — not a stale one they left.
+  // Replace, not push: in-dialog steps shouldn't pile up browser history.
+  watch(currentView, view => {
+    if (!isOpen.value || route.meta.walletFlow !== kind) return
+    if (route.query.type === view) return
+    void router.replace({ query: { ...route.query, type: view } })
   })
 }

@@ -1,67 +1,56 @@
 <template>
-  <div>
-    <div class="static w-full flex flex-col items-center justify-items-stretch">
-      <div class="w-full max-w-[500px]">
-        <div class="flex items-end justify-between mb-4 px-4">
-          <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
-          <app-base-button
-            type="link"
-            size="small"
-            class="text-text-brand text-s-15 pb-1"
-            @click="resetSendModule"
-            >{{ $t('common.clear_all') }}</app-base-button
-          >
-        </div>
-        <div
-          class="p-5 rounded-20 bg-background-brand-subtle mb-6 flex flex-col gap-4"
+  <div class="flex h-full flex-col sm:px-1 sm:pt-2">
+    <!-- The shared panel pads 16/24px; Figma side panels sit at 20/32 on desktop -->
+    <div class="flex w-full flex-col gap-5">
+      <AppContentGroup
+        size="l"
+        :title="$t('common.send')"
+        :description="$t('send.description')"
+      />
+      <div class="flex w-full flex-col gap-2">
+        <app-enter-amount
+          v-model:amount="amount"
+          v-model:selected-token="tokenSelectedContract"
+          v-model:error="amountError"
+          :validate-input="checkAmountForError"
+          :is-pristine="isPristine"
         >
-          <app-enter-amount
-            v-model:amount="amount"
-            v-model:selected-token="tokenSelectedContract"
-            v-model:error="amountError"
-            :validate-input="checkAmountForError"
-            :is-pristine="isPristine"
+          <template
+            v-if="
+              isWalletConnected && !isWatchOnly && tokenSelected && canUseMax()
+            "
+            #footer
           >
-            <template #balance-action>
-              <div
-                v-if="
-                  isWalletConnected &&
-                  !isWatchOnly &&
-                  tokenSelected &&
-                  isInternalWallet()
-                "
-              >
-                <button
-                  type="button"
-                  class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                  @click="setMaxAmount()"
-                >
-                  {{ $t('common.max') }}
-                </button>
-              </div>
-            </template>
-          </app-enter-amount>
-          <address-input
-            v-model:adr-input="adrInput"
-            :resolved-address="toAddress"
-            :address-error-messages="toAddressError"
-            :network="selectedChain"
-            :found-nick-name="foundNickName"
-            :is-pristine="isPristine"
-            @validate:address="validateAddressInput"
-            @immediate-update:resolved-address="onInput"
-          />
-          <app-select-tx-fee
-            v-if="isBitcoinChain ? hasChainBalance : true"
-            :fees="gasFees"
-            :is-loading-fees="isLoadingFees"
-            :txRequestBody="gasFeeTxEstimate"
-            v-model:gas-fee-error="gasFeeError"
-            v-model:selected-fee-native-value="selectedFeeNativeValue"
-            @fee-is-loading="setDefaultFee"
-          />
-        </div>
+            <app-chip
+              :label="$t('common.max')"
+              class="ml-auto uppercase"
+              @click="setMaxAmount()"
+            />
+          </template>
+        </app-enter-amount>
+        <address-input
+          v-model:adr-input="adrInput"
+          :resolved-address="toAddress"
+          :address-error-messages="toAddressError"
+          :network="selectedChain"
+          :found-nick-name="foundNickName"
+          :is-pristine="isPristine"
+          filled
+          @validate:address="validateAddressInput"
+          @immediate-update:resolved-address="onInput"
+        />
       </div>
+      <!-- Fee row moves to the summary screen; the fee logic and its error stay -->
+      <app-select-tx-fee
+        v-if="isBitcoinChain ? hasChainBalance : true"
+        hide-selector
+        :fees="gasFees"
+        :is-loading-fees="isLoadingFees"
+        :txRequestBody="gasFeeTxEstimate"
+        v-model:gas-fee-error="gasFeeError"
+        v-model:selected-fee-native-value="selectedFeeNativeValue"
+        @fee-is-loading="setDefaultFee"
+      />
       <app-base-button
         v-if="!isWalletConnected || isWatchOnly"
         class="w-full capitalize"
@@ -69,29 +58,18 @@
       >
         {{ $t('common.connect_wallet') }}</app-base-button
       >
-      <div v-else class="flex w-full">
-        <app-no-chain-balance
-          v-if="!hasChainBalance"
-          source="send"
-          class="mb-5 -mt-1"
-        />
-        <app-base-button
-          v-else
-          :disabled="!validSend"
-          :is-loading="isLoadingFees"
-          @click="handleSubmit"
-          class="w-full max-w-[340px]"
-        >
-          {{ $t('common.send') }}</app-base-button
-        >
-      </div>
-
-      <app-need-help
-        :title="$t('send.need-help')"
-        help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-        class="mt-5"
-      />
+      <app-no-chain-balance v-else-if="!hasChainBalance" source="send" />
+      <app-base-button
+        v-else
+        :disabled="!validSend"
+        :is-loading="isLoadingFees"
+        class="w-full"
+        @click="handleSubmit"
+      >
+        {{ ctaLabel }}</app-base-button
+      >
     </div>
+
     <!-- TODO: replace network with actual selected network info -->
     <evm-transaction-confirmation
       v-if="isWalletConnected && tokenSelected && toAddress"
@@ -104,6 +82,10 @@
       :to-amount="new BigNumber(amount).toFixed()"
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
+      :gas-fees="gasFees"
+      :tx-request-body="gasFeeTxEstimate"
+      :is-preparing="isPreparingTx"
+      v-model:gas-fee-error="gasFeeError"
       v-model="openTxModal"
       @tx-sent="onTxSent"
     />
@@ -122,13 +104,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed, type Ref, watch } from 'vue'
+import { nextTick, onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { fromWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
+import AppChip from '@/components/chip/AppChip.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import type {
@@ -158,7 +142,6 @@ import { useAddressInput } from '@/composables/useAddressInput'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useFormPristine } from '@/composables/useFormPristine'
 import { useAccessStore } from '@/stores/accessStore'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import {
   analytics,
   ConnectWalletEvent,
@@ -208,6 +191,8 @@ const gasFeeError = ref('')
 const selectedFeeNativeValue = ref('0')
 
 const openTxModal = ref(false)
+// AppSelectTxFee's code for a fee the balance can't cover.
+const NOT_ENOUGH_BALANCE = 'NOT_ENOUGH_BALANCE'
 const sendInitiatedOpen = ref(false)
 const isLoadingFees = ref(false)
 
@@ -291,26 +276,31 @@ const isNativeTokenSelected = computed(() => {
 /** ----------------
  * Max Amount
  ------------------*/
-const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
-  useMaxAmount({
-    getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
-    getDecimals: () => tokenSelected.value?.decimals ?? 18,
-    getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
-    isNativeToken: () => isNativeTokenSelected.value,
-    isTokenSelected: () => !!tokenSelected.value,
-    getAmount: () => amount.value,
-    onAmountChange: value => {
-      amount.value = value
-    },
-    markFormDirty,
-    resetFormPristine: resetPristine,
-    getTokenIdentifier: () => tokenSelectedContract.value,
-    getDependencies: () => [
-      tokenSelected.value?.balanceWei,
-      selectedFeeNativeValue.value,
-    ],
-    onMaxApplied: () => checkAmountForError(),
-  })
+const {
+  setMaxAmount,
+  resetMaxState,
+  canUseMax,
+  isMaxSelected,
+  applyMaxAmount,
+} = useMaxAmount({
+  getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
+  getDecimals: () => tokenSelected.value?.decimals ?? 18,
+  getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
+  isNativeToken: () => isNativeTokenSelected.value,
+  isTokenSelected: () => !!tokenSelected.value,
+  getAmount: () => amount.value,
+  onAmountChange: value => {
+    amount.value = value
+  },
+  markFormDirty,
+  resetFormPristine: resetPristine,
+  getTokenIdentifier: () => tokenSelectedContract.value,
+  getDependencies: () => [
+    tokenSelected.value?.balanceWei,
+    selectedFeeNativeValue.value,
+  ],
+  onMaxApplied: () => checkAmountForError(),
+})
 
 const checkAmountForError = () => {
   // Skip validation if form is pristine (just cleared or initial state)
@@ -389,6 +379,12 @@ const validSend = computed(() => {
     hasChainBalance.value
   )
 })
+
+const ctaLabel = computed(() =>
+  BigNumber(amount.value).gt(0)
+    ? t('send.review-send')
+    : t('common.enter_amount'),
+)
 
 const amountToFiat = computed(() => {
   if (isLoadingBalances.value || !tokenSelected.value?.price) return '0'
@@ -586,39 +582,49 @@ const saveToAddressBookAfterSending = () => {
 // toast store
 const toastStore = useToastStore()
 
+// Selected fee plus the amount sent, against the native balance.
+const exceedsBalance = (
+  body: EstimatesRequestBody | BitcoinQuotesRequestBody,
+) => {
+  const btcValue = (body as BitcoinQuotesRequestBody).outputs?.[0].amount
+  const evmValue = (body as EstimatesRequestBody).value
+  const fee = gasFees.value?.fees[selectedFee.value]
+  const totalBalanceNeeded =
+    BigInt(fee?.nativeValue || fee?.nativeFeeTotal || '0') +
+    BigInt(isEvmChain.value ? evmValue : (btcValue ?? 0))
+  return totalBalanceNeeded > BigInt(balanceWei.value)
+}
+
 // Get quotes:
+// Only the latest request may write gasFees, so a slower, superseded
+// response can't replace the fees of the quote the tx is built from.
+let latestGasQuoteRequest = 0
 const getGasFeeQuotes = async () => {
+  const request = ++latestGasQuoteRequest
   try {
     gasFeeError.value = ''
     const body = getTxRequestBody()
     if (!body || !tokenSelected.value) return
     gasFeeTxEstimate.value = body
     isLoadingFees.value = true
-    if (isEvmChain.value) {
-      gasFees.value = await wallet.value?.getGasFee?.(
-        gasFeeTxEstimate.value as EstimatesRequestBody,
-      )
-    } else {
-      gasFees.value = (await wallet.value?.getBtcGasFee?.(
-        gasFeeTxEstimate.value as BitcoinQuotesRequestBody,
-      )) as QuotesResponse
-    }
+    const fees = isEvmChain.value
+      ? await wallet.value?.getGasFee?.(body as EstimatesRequestBody)
+      : ((await wallet.value?.getBtcGasFee?.(
+          body as BitcoinQuotesRequestBody,
+        )) as QuotesResponse)
+    if (request !== latestGasQuoteRequest) return undefined
+    gasFees.value = fees
     //Check if user has enough balance to cover gas fees
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
     }
-    const btcValue = (body as BitcoinQuotesRequestBody).outputs?.[0].amount
-    const evmValue = (body as EstimatesRequestBody).value
-    const totalBalanceNeeded =
-      BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
-      BigInt(isEvmChain.value ? evmValue : (btcValue ?? 0))
-
-    if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
+    if (exceedsBalance(body)) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
     }
     isLoadingFees.value = false
     return gasFees.value
   } catch (e) {
+    if (request !== latestGasQuoteRequest) return undefined
     if (e instanceof Error) {
       if (e.message) {
         const isInsufficientFundsError = e.message
@@ -644,50 +650,147 @@ const getGasFeeQuotes = async () => {
   }
 }
 
+/** ----------------
+ * Signable transaction
+ ------------------*/
+const isPreparingTx = ref(false)
+// Each build bumps the id, so a slower earlier build can't overwrite a newer one.
+let latestTxBuildId = 0
+
+/**
+ * Builds the transaction for the selected fee; private key and mnemonic
+ * wallets sign it here too, the rest sign on confirm. Resolves false when
+ * signing failed (already reported) and null when a newer build took over.
+ */
+const buildSignedTx = async (quoteId: string): Promise<boolean | null> => {
+  if (!wallet.value) return false
+  const buildId = ++latestTxBuildId
+  isPreparingTx.value = true
+  const isStale = () => buildId !== latestTxBuildId
+  try {
+    let signableTx
+    try {
+      signableTx = await wallet.value.getSignableTransaction({
+        priority: selectedFee.value,
+        quoteId,
+      })
+    } catch (e) {
+      if (isStale()) return null
+      throw e
+    }
+    let serialized = signableTx.serialized as string
+    if (
+      wallet.value.getWalletType() === WalletType.PRIVATE_KEY ||
+      wallet.value.getWalletType() === WalletType.MNEMONIC
+    ) {
+      if (!wallet.value.SignTransaction) {
+        console.error('SignTransaction not implemented')
+        return false
+      }
+      try {
+        const signResponse = await wallet.value.SignTransaction(
+          serialized as HexPrefixedString,
+        )
+        serialized = signResponse.signed
+      } catch (e) {
+        if (isStale()) return null
+        const errorMsg =
+          e instanceof Error ? e.message : (e as { message?: string })?.message
+        analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
+          token: tokenSelected.value?.symbol,
+          errorMsg: errorMsg ?? 'Unknown error during signing',
+        })
+        toastStore.addToastMessage({
+          type: ToastType.Error,
+          text: t('send.toast.failed_to_sign'),
+          textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
+        })
+        return false
+      }
+    }
+    if (isStale()) return null
+    signedTx.value = serialized
+    return true
+  } finally {
+    if (!isStale()) isPreparingTx.value = false
+  }
+}
+
 const handleSubmit = async () => {
   analytics.trackSendEvent(SendEvent.CLICK_SEND, {
     token: tokenSelected.value?.symbol,
   })
   const latestGasFees = await getGasFeeQuotes()
   if (!wallet.value || !latestGasFees || gasFeeError.value) return
-  // generate signable transaction
-  const signableTx = await wallet.value?.getSignableTransaction({
-    priority: selectedFee.value,
-    quoteId: latestGasFees.quoteId,
-  })
-
-  if (
-    wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
-    wallet.value?.getWalletType() === WalletType.MNEMONIC
-  ) {
-    if (!wallet.value?.SignTransaction) {
-      console.error('SignTransaction not implemented')
-      return
-    }
-    try {
-      const signResponse = await wallet.value?.SignTransaction(
-        signableTx.serialized as HexPrefixedString,
-      )
-
-      signedTx.value = signResponse.signed
-      openTxModal.value = true
-    } catch (e) {
-      const errorMsg =
-        e instanceof Error ? e.message : (e as { message?: string })?.message
-      analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
-        token: tokenSelected.value?.symbol,
-        errorMsg: errorMsg ?? 'Unknown error during signing',
-      })
-      toastStore.addToastMessage({
-        type: ToastType.Error,
-        text: t('send.toast.failed_to_sign'),
-        textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
-      })
-    }
-    return
-  }
-
-  openTxModal.value = true
-  signedTx.value = signableTx.serialized
+  if (await buildSignedTx(latestGasFees.quoteId)) openTxModal.value = true
 }
+
+// A fee picked on the review changes the tx, so rebuild (and re-sign) it
+// before it can be confirmed. Only the latest pick may update it.
+let latestFeeChange = 0
+// Each opening of the review is its own session: work left over from an
+// earlier one must not touch the current review.
+let reviewSession = 0
+watch(openTxModal, open => {
+  if (open) reviewSession++
+})
+// Native MAX sends balance minus fee, and the panel takes that fee from the
+// quote, so a new quote can move the amount again. Re-quote until it holds.
+const MAX_REQUOTES = 3
+watch(selectedFee, async () => {
+  if (!openTxModal.value || !gasFees.value?.quoteId) return
+  const change = ++latestFeeChange
+  const session = reviewSession
+  const isStale = () =>
+    change !== latestFeeChange ||
+    session !== reviewSession ||
+    !openTxModal.value
+  isPreparingTx.value = true
+  try {
+    let quoteId = gasFees.value.quoteId
+    if (isMaxSelected.value && isNativeTokenSelected.value) {
+      let settled = false
+      for (let i = 0; i < MAX_REQUOTES && !settled; i++) {
+        await nextTick()
+        await applyMaxAmount()
+        const quotedAmount = amount.value
+        const quote = await getGasFeeQuotes()
+        if (isStale()) return
+        if (!quote || gasFeeError.value) {
+          openTxModal.value = false
+          return
+        }
+        quoteId = quote.quoteId
+        await nextTick()
+        await applyMaxAmount()
+        settled = amount.value === quotedAmount
+      }
+      if (!settled) {
+        openTxModal.value = false
+        return
+      }
+    } else {
+      const body = gasFeeTxEstimate.value
+      if (body && exceedsBalance(body)) {
+        gasFeeError.value = NOT_ENOUGH_BALANCE
+        return
+      }
+      if (gasFeeError.value === NOT_ENOUGH_BALANCE) gasFeeError.value = ''
+    }
+    if ((await buildSignedTx(quoteId)) === false && !isStale())
+      openTxModal.value = false
+  } catch (e) {
+    if (isStale()) return
+    openTxModal.value = false
+    const errorMsg =
+      e instanceof Error ? e.message : (e as { message?: string })?.message
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('send.toast.failed_to_sign'),
+      textSecondary: getLocalizedWalletError(errorMsg) ?? errorMsg,
+    })
+  } finally {
+    if (change === latestFeeChange) isPreparingTx.value = false
+  }
+})
 </script>
