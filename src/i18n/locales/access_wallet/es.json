@@ -57,7 +57,11 @@
       "could_not_connect": "No se pudo conectar a la billetera",
       "connection_timed_out": "Se agotó el tiempo de conexión. Inténtalo de nuevo.",
       "connect_request_pending": "Ya hay una solicitud de conexión pendiente, revisa la extensión de tu billetera",
-      "network_not_supported": "Tu billetera no admite la red seleccionada. Cambia a una red compatible o actívala en tu billetera."
+      "network_not_supported": "Tu billetera no admite la red seleccionada. Cambia a una red compatible o actívala en tu billetera.",
+      "wallet_region_restricted": "Esta billetera no está disponible en tu región.",
+      "wallet_popup_blocked": "Tu navegador bloqueó la ventana emergente de la billetera. Permite las ventanas emergentes para este sitio e inténtalo de nuevo.",
+      "wallet_logged_out": "Cerraste sesión en tu billetera. Inicia sesión e inténtalo de nuevo.",
+      "wallet_update_pending": "Tu billetera necesita terminar de actualizarse. Ábrela, completa la actualización e inténtalo de nuevo."
     }
   },
   "access_wallet_keystore": {
