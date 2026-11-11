@@ -86,10 +86,11 @@
           </p>
           <app-divider class="my-5" />
           <!-- TODO:  add privatekey option-->
-          <!-- Below xs Peggy hides so the contacts fit on one line each -->
-          <div
-            class="flex justify-between items-center mx-6 mb-6 max-xs:mx-3 max-xs:justify-center"
-          >
+          <!-- Below xs Peggy hides so the contacts fit on one line each. They
+               centre with auto margins, not justify-center: a line wider than
+               the card then overflows to the right only, where the card can
+               scroll to it. -->
+          <div class="flex justify-between items-center mx-6 mb-6 max-xs:mx-3">
             <img
               src="@/assets/images/peggy/peggy.webp"
               alt=""
@@ -97,7 +98,9 @@
               height="330px"
               class="w-[135px] max-h-[100px] flex-none object-contain max-xs:hidden"
             />
-            <div class="ml-auto whitespace-nowrap max-xs:ml-0 max-xs:text-s-14">
+            <div
+              class="ml-auto whitespace-nowrap max-xs:mx-auto max-xs:text-s-14"
+            >
               <p class="mb-3">
                 <AppIcon
                   name="chat-bubble-bottom-center-text"

@@ -17,7 +17,8 @@ import { truncateAddress } from '@/utils/filters'
  * Beyond Figma, to keep today's header behaviour: `loading` swaps the balance
  * for a placeholder bar, and an empty `address` shows the network with a
  * "No address" label. Below 450 the text hides so the navbar fits on mobile;
- * the aria-label still names the balance and account.
+ * the aria-label still names the balance and account. ("No address" stays
+ * when there is no network icon to stand in for it.)
  *
  * @example <AppAddressSelector :address="addr" balance="$130.23" connected :open="menuOpen" @click="toggle" />
  */
@@ -155,9 +156,12 @@ const ariaLabel = computed(() =>
         alt=""
         class="size-6 shrink-0 rounded-full object-contain"
       />
+      <!-- Below 450 the network icon stands in for the label; without one the
+           label stays, or the pill would be a bare chevron. -->
       <span
         data-test="address-selector-no-address"
-        class="text-label-sm text-text-subtle max-[450px]:hidden"
+        class="text-label-sm text-text-subtle"
+        :class="{ 'max-[450px]:hidden': networkIcon }"
       >
         {{ t('multi_address.no_address_pill') }}
       </span>

@@ -119,8 +119,9 @@
               />
             </template>
             <!-- At S the leverage tag moves under the ticker so it doesn't
-                 truncate it, at 10px (QA, below the type scale). -->
-            <template v-if="size !== 's'" #title-icon>
+                 truncate it, at 10px (QA, below the type scale). A market
+                 with no long name has no second line, so it stays put. -->
+            <template v-if="size !== 's' || !contract.longName" #title-icon>
               <AppTag
                 variant="subtle"
                 :label="`${contract.defaultLeverage}x`"

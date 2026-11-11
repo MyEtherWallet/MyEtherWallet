@@ -72,8 +72,9 @@ import { analytics } from '@/analytics'
 import { TRADE_CAMPAIGN_UTM } from '@/composables/useTradeCampaignEntry'
 import { ROUTES_MAIN, STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
-const factory = () =>
-  mount(LayoutWallet, { global: { mocks: { $t: (k: string) => k } } })
+// Attach it for focus: document.activeElement only follows connected elements.
+const factory = (attachTo?: HTMLElement) =>
+  mount(LayoutWallet, { attachTo, global: { mocks: { $t: (k: string) => k } } })
 
 const flush = async () => {
   await nextTick()
@@ -175,6 +176,26 @@ describe('LayoutWallet action bar wiring', () => {
     await nextTick()
     expect(menu.isOpenSideMenu).toBe(false)
     expect(bar.props('activeId')).toBeNull()
+  })
+
+  it('returns focus to the rail button of the panel the drawer X closes', async () => {
+    const w = factory(document.body)
+    const menu = useWalletMenuStore()
+    const send = w.get<HTMLElement>('[data-action-id="send"]')
+    await send.trigger('click')
+
+    // The X holds focus, as it does for a keyboard user about to press it.
+    const close = w.get<HTMLElement>(
+      'button[aria-label="common.close_side_menu"]',
+    )
+    close.element.focus()
+    expect(document.activeElement).toBe(close.element)
+
+    await close.trigger('click')
+    expect(menu.isOpenSideMenu).toBe(false)
+    expect(close.element.isConnected).toBe(false)
+    expect(document.activeElement).toBe(send.element)
+    w.unmount()
   })
 
   it('anchors the marketing tooltip on the Trade button', async () => {

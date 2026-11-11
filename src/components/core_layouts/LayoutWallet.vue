@@ -37,7 +37,7 @@
         <app-btn-icon-close
           :label="$t('common.close_side_menu')"
           class="relative z-10 flex-none self-start sm:self-end"
-          @close="walletMenu.setIsOpenSideMenu(false)"
+          @close="closePanel"
         />
         <div class="flex-1 min-h-0">
           <transition name="fade" mode="out-in">
@@ -193,11 +193,19 @@ const onSelect = (id: ActionId) => {
   else openPanel(id)
 }
 
-// MarketingTooltip anchors on the Trade button inside the rail.
 const actionBar = useTemplateRef<ComponentPublicInstance>('actionBar')
-const tradeBtnRef = computed<HTMLElement | null>(
-  () => actionBar.value?.$el.querySelector('[data-action-id="trade"]') ?? null,
-)
+const actionButton = (id: ActionId): HTMLElement | null =>
+  actionBar.value?.$el.querySelector(`[data-action-id="${id}"]`) ?? null
+
+// MarketingTooltip anchors on the Trade button inside the rail.
+const tradeBtnRef = computed(() => actionButton('trade'))
+
+// The drawer's X leaves the DOM with the panel, so focus goes back to the
+// rail button of the panel it closes rather than dropping to <body>.
+const closePanel = () => {
+  walletMenu.setIsOpenSideMenu(false)
+  actionButton(walletPanel.value)?.focus()
+}
 
 const comingSoon = computed(() => t('common.coming_soon'))
 </script>

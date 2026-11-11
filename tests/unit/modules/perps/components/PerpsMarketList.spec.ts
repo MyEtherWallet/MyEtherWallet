@@ -1,9 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, RouterLinkStub } from '@vue/test-utils'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import { createI18n } from 'vue-i18n'
 import enPerps from '@/i18n/locales/perps/en.json'
 import AppTableCell from '@/components/table/AppTableCell.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 
 const contract = (baseCurrency: string, usdVolume: string) => ({
   market: `${baseCurrency}-USD`,
@@ -25,8 +26,17 @@ const positions = ref<{ market: string; direction: string }[]>([])
 const restricted = ref(false)
 const watchOnly = ref(false)
 
+// The trading pair behind a contract: its description and leverage tag.
+const market = (baseCurrency: string, longName: string) => ({
+  market: `${baseCurrency}-USD`,
+  displayName: baseCurrency,
+  longName,
+  defaultLeverage: '20',
+})
+const markets = ref<ReturnType<typeof market>[]>([])
+
 vi.mock('@/modules/perps/composables/usePerpsMarkets', () => ({
-  usePerpsMarkets: () => ({ markets: ref([]) }),
+  usePerpsMarkets: () => ({ markets }),
   usePerpsContracts: () => ({
     contracts,
     isLoading: contractsLoading,
@@ -102,6 +112,46 @@ const menuItem = (w: Awaited<ReturnType<typeof mountList>>, text: string) =>
 const nameHeader = (w: Awaited<ReturnType<typeof mountList>>) =>
   w.findAll('[role="columnheader"] button')[0]
 
+// AppTableWrapper sizes the table from its own width through a ResizeObserver,
+// which jsdom lacks. This one keeps the observers so a test can resize them.
+const observers: { cb: ResizeObserverCallback; el: Element }[] = []
+class ResizeObserverStub {
+  constructor(private cb: ResizeObserverCallback) {}
+  observe(el: Element) {
+    observers.push({ cb: this.cb, el })
+  }
+  unobserve() {}
+  disconnect() {}
+}
+const resizeTo = async (width: number) => {
+  for (const { cb, el } of observers)
+    cb(
+      [
+        {
+          target: el,
+          borderBoxSize: [{ inlineSize: width, blockSize: 100 }],
+          contentRect: { width, height: 100 },
+        } as unknown as ResizeObserverEntry,
+      ],
+      {} as ResizeObserver,
+    )
+  await nextTick()
+}
+
+// Which line of the first row's name cell holds its leverage tag.
+const tagLine = (w: Awaited<ReturnType<typeof mountList>>) => {
+  const name = w.get('[role="rowgroup"] [data-testid="cg-root"]')
+  const tag = name.findComponent(AppTag)
+  if (!tag.exists()) return 'none'
+  expect(tag.text()).toBe('20x')
+  for (const line of ['title', 'description']) {
+    const text = name.find(`[data-testid="cg-${line}"]`)
+    if (text.exists() && text.element.parentElement!.contains(tag.element))
+      return line
+  }
+  return 'elsewhere'
+}
+
 describe('PerpsMarketList', () => {
   beforeEach(() => {
     contracts.value = [
@@ -109,6 +159,7 @@ describe('PerpsMarketList', () => {
       contract('AAA', '100'),
       contract('CCC', '200'),
     ]
+    markets.value = []
     contractsLoading.value = false
     positions.value = []
     restricted.value = false
@@ -192,5 +243,44 @@ describe('PerpsMarketList', () => {
       .find(c => c.props('column') === 'PERCENT')!
     expect(cell.props('change')).toBeUndefined()
     expect(cell.props('value')).toBe('—')
+  })
+
+  describe('leverage tag', () => {
+    beforeEach(() => {
+      observers.length = 0
+      vi.stubGlobal('ResizeObserver', ResizeObserverStub)
+      markets.value = [market('BBB', 'Bravo Inc')]
+    })
+    afterEach(() => vi.unstubAllGlobals())
+
+    it('sits under the ticker at S and beside it at M and L, also as the table resizes', async () => {
+      const w = await mountList()
+      await resizeTo(400)
+      expect(
+        w.get('[role="rowgroup"] [data-testid="cg-description"]').text(),
+      ).toBe('Bravo Inc')
+      expect(tagLine(w)).toBe('description')
+
+      await resizeTo(900)
+      expect(tagLine(w)).toBe('title')
+      await resizeTo(1300)
+      expect(tagLine(w)).toBe('title')
+      await resizeTo(400)
+      expect(tagLine(w)).toBe('description')
+    })
+
+    it('stays beside the ticker at S when the market has no long name', async () => {
+      markets.value = [market('BBB', '')]
+      const w = await mountList()
+      await resizeTo(400)
+      // No description, so the name cell has no second line to hold the tag.
+      expect(
+        w
+          .get('[role="rowgroup"] [data-testid="cg-root"]')
+          .find('[data-testid="cg-description"]')
+          .exists(),
+      ).toBe(false)
+      expect(tagLine(w)).toBe('title')
+    })
   })
 })

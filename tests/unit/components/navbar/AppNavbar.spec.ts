@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AppNavbar from '@/components/navbar/AppNavbar.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
 
 const i18n = createI18n({
@@ -52,6 +53,22 @@ const desktopCtas = (wrapper: ReturnType<typeof mountNavbar>) =>
 
 const menuButton = (wrapper: ReturnType<typeof mountNavbar>) =>
   wrapper.get('button[aria-label="Open Menu"]')
+
+/** AppPopUpMenu's own open flag: set synchronously, before the DOM updates. */
+const isMenuOpen = (wrapper: ReturnType<typeof mountNavbar>) =>
+  (wrapper.getComponent(AppPopUpMenu).vm as unknown as { openSelect: boolean })
+    .openSelect
+
+/**
+ * Whether the compact menu is on screen. AppPopUpMenu v-shows its panel, and
+ * isVisible() is always false on an unattached mount, so read the display.
+ */
+const isMenuShown = (wrapper: ReturnType<typeof mountNavbar>) => {
+  let el: HTMLElement | null = wrapper.get<HTMLElement>(MENU_CTAS).element
+  for (; el; el = el.parentElement)
+    if (el.style.display === 'none') return false
+  return true
+}
 
 describe('AppNavbar', () => {
   it('renders a header landmark with a labelled nav holding the links slot', () => {
@@ -124,22 +141,42 @@ describe('AppNavbar', () => {
   })
 
   it('below 550 shows one Connect that opens a menu with both CTAs', async () => {
-    const wrapper = mountNavbar()
+    // The menu's open flag as each CTA's event reaches the parent (the DOM
+    // only catches up on the next tick).
+    const openAtEmit: boolean[] = []
+    const recordMenu = () => openAtEmit.push(isMenuOpen(wrapper))
+    const wrapper = mountNavbar({
+      onCreateWallet: recordMenu,
+      onConnectWallet: recordMenu,
+    })
     const trigger = wrapper.get('[data-testid="navbar-wallet-menu"]')
     expect(trigger.element.closest('.min-\\[550px\\]\\:hidden')).not.toBeNull()
     expect(trigger.attributes('aria-haspopup')).toBe('menu')
     expect(trigger.text()).toBe('Connect')
+    expect(isMenuShown(wrapper)).toBe(false)
 
-    await trigger.trigger('click')
-    // The same two buttons as desktop, stacked: secondary Create, primary Connect.
-    const [create, connect] = wrapper.get(MENU_CTAS).findAll('button')
+    // The same two buttons as desktop, stacked: secondary Create, primary
+    // Connect. Queried on each open, so no click lands on a closed menu.
+    const openMenu = async () => {
+      await trigger.trigger('click')
+      expect(isMenuShown(wrapper)).toBe(true)
+      return wrapper.get(MENU_CTAS).findAll('button')
+    }
+
+    const [create] = await openMenu()
     expect(create.text()).toBe('Create wallet')
-    expect(connect.text()).toBe('Connect wallet')
     await create.trigger('click')
     expect(wrapper.emitted('create-wallet')).toHaveLength(1)
-    await trigger.trigger('click')
+    expect(isMenuShown(wrapper)).toBe(false)
+
+    const [, connect] = await openMenu()
+    expect(connect.text()).toBe('Connect wallet')
     await connect.trigger('click')
     expect(wrapper.emitted('connect-wallet')).toHaveLength(1)
+    expect(isMenuShown(wrapper)).toBe(false)
+
+    // Each selection closed the menu before its event went out.
+    expect(openAtEmit).toEqual([false, false])
   })
 
   it('with a saved wallet renders the wallet slot instead of the CTAs', () => {

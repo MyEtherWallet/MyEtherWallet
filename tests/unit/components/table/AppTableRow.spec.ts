@@ -185,7 +185,13 @@ describe('AppTableRow', () => {
         'description-icon': '<i data-test="desc-tag">{{ params.size }}</i>',
       },
     })
-    expect(w.get('[data-test="desc-tag"]').text()).toBe('xs')
+    const tag = w.get('[data-test="desc-tag"]')
+    expect(tag.text()).toBe('xs')
+    // On the description's line, not the title's.
+    const line = (id: string) =>
+      w.get(`[data-testid="${id}"]`).element.parentElement!
+    expect(line('cg-description').contains(tag.element)).toBe(true)
+    expect(line('cg-title').contains(tag.element)).toBe(false)
   })
 
   it('links the title over the whole row when given `to`', async () => {
