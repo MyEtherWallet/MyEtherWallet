@@ -82,6 +82,9 @@ export const getLocalizedWalletError = (
   ) {
     return t('common.error.ledger_app_not_open')
   }
+  if (isBlindSigningDisabledError(raw)) {
+    return t('common.error.ledger_blind_signing')
+  }
   // USB interface already claimed — Ledger Live, another tab, or a transport of
   // ours that was never released (WebUSB: "Unable to claim interface", or
   // "Access denied" from `USBDevice.open()`)
@@ -101,6 +104,13 @@ export const getLocalizedWalletError = (
     return t('common.error.ledger_device_busy')
   }
   return undefined
+}
+
+export const isBlindSigningDisabledError = (error: unknown): boolean => {
+  const message = (
+    error instanceof Error ? error.message : String(error ?? '')
+  ).toLowerCase()
+  return message.includes('blind signing') || message.includes('contract data')
 }
 
 /**
