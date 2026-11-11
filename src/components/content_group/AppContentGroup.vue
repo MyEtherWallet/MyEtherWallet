@@ -151,7 +151,7 @@ const descriptionClass = computed(() => [
           class="min-w-0"
           :class="descriptionClass"
         >
-          {{ description }}
+          <slot name="description">{{ description }}</slot>
         </span>
         <span
           v-if="slots['description-icon']"
