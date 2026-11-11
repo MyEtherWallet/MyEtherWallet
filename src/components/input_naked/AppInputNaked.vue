@@ -86,7 +86,7 @@ import { computed, ref, useAttrs, useId } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import { measureTextWidth } from '@/utils/measureText'
-import { sanitizeAmount } from './sanitizeAmount'
+import { sanitizeAmount, type AmountEdit } from './sanitizeAmount'
 import {
   INPUT_NAKED_SCALE,
   type AppInputNakedProps,
@@ -174,10 +174,54 @@ const infoColorClass = computed(() => {
   return props.error ? 'text-text-error' : 'text-text-subtle'
 })
 
+/** Edits that replace text wholesale, however short the text is. */
+const WHOLE_VALUE_INPUTS = [
+  'insertFromPaste',
+  'insertFromDrop',
+  'insertFromYank',
+  'insertReplacementText',
+]
+
+/**
+ * One typed character is typing, and so is whatever a composing keyboard
+ * hands over; anything else is read like a paste.
+ */
+const describeEdit = (event: Event, input: HTMLInputElement): AmountEdit => {
+  const isTyping =
+    event instanceof InputEvent &&
+    !WHOLE_VALUE_INPUTS.includes(event.inputType) &&
+    (event.data?.length === 1 || event.inputType === 'insertCompositionText')
+  if (!isTyping) return { kind: 'paste' }
+  const typedAt = (input.selectionStart ?? 0) - 1
+  const isSeparator =
+    (event.data === '.' || event.data === ',') &&
+    input.value[typedAt] === event.data
+  return isSeparator
+    ? { kind: 'typing', separatorAt: typedAt }
+    : { kind: 'typing' }
+}
+
 const onInput = (event: Event) => {
   const input = event.target as HTMLInputElement
-  const cleaned = sanitizeAmount(input.value, props.maxDecimals)
-  if (cleaned !== input.value) input.value = cleaned
+  const caretAt = input.selectionStart ?? input.value.length
+  const beforeCaret = input.value.slice(0, caretAt)
+  const afterCaret = input.value.length - caretAt
+  // A paste that is not an amount is ignored: the field keeps what it had.
+  const cleaned =
+    sanitizeAmount(
+      input.value,
+      props.maxDecimals,
+      describeEdit(event, input),
+    ) ?? model.value
+  if (cleaned !== input.value) {
+    input.value = cleaned
+    // Writing the value sends the caret to the end. Put it back: where it was
+    // when only text after it changed, else as far from the end as it was.
+    const caret = cleaned.startsWith(beforeCaret)
+      ? caretAt
+      : Math.max(0, cleaned.length - afterCaret)
+    input.setSelectionRange(caret, caret)
+  }
   model.value = cleaned
 }
 </script>

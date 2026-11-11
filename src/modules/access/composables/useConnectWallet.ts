@@ -9,6 +9,7 @@ import {
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
 import { buildWalletConnectQrData } from '@/modules/access/common/walletConnectQrUri'
+import { findWalletConnector } from '@/modules/access/common/walletConnector'
 import type { Wallet } from '@rainbow-me/rainbowkit'
 import { useProviderStore, type Provider } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
@@ -28,6 +29,17 @@ import {
   isUserRejectionError,
   toReportableWalletError,
 } from '@/utils/walletUtils'
+
+/**
+ * RainbowKit details of the wallet whose WalletConnect QR code is on screen.
+ *
+ * Module-scoped on purpose. Every WalletConnect connector shares one provider,
+ * and wagmi hands its `display_uri` to the first connector that connected, so
+ * the listener that fires may belong to an earlier click, or to another
+ * `useConnectWallet()` instance. It has to read the wallet clicked last
+ * instead of capturing its own.
+ */
+let walletOnScreen: Wallet | undefined
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -291,10 +303,7 @@ export const useConnectWallet = () => {
 
     // find connector by id
     // some connectors have different ids in our config vs wagmi (e.g. rabby)
-    const connector = connectors.find(
-      c =>
-        c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
-    )
+    const connector = findWalletConnector(connectors, wallet)
     // No matching wagmi connector (e.g. wallet not installed / not registered).
     // Surface a friendly, handled error instead of constructing a WagmiWallet
     // with an undefined connector and dereferencing it on connect().
@@ -307,14 +316,14 @@ export const useConnectWallet = () => {
       return
     }
     connector.onDisconnect()
-    const rkDetails = (connector as unknown as { rkDetails?: Wallet }).rkDetails
+    walletOnScreen = (connector as unknown as { rkDetails?: Wallet }).rkDetails
     connector.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
-        // Encode the clicked wallet's universal link (when it exposes one) so a
+        // Encode the clicked wallet's QR link (when it defines one) so a
         // native-camera scan opens that wallet instead of the OS default `wc:`
         // handler. Falls back to the raw uri. (MEW-2288)
         wagmiWalletData.value = buildWalletConnectQrData(
-          rkDetails,
+          walletOnScreen,
           msg.data as string,
         )
         accessStore.setWagmiWalletData(wagmiWalletData.value)
