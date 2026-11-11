@@ -23,6 +23,8 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectPublishFailedError,
+  isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
 } from '@/sentry/extensionNoise'
 import configs from '@/configs'
@@ -925,6 +927,108 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
     expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(
       false,
     )
+  })
+})
+
+describe('isWalletConnectStaleSessionTopicError', () => {
+  const BUNDLE = 'https://app.myetherwallet.com/assets/index.es-Bw52XZxW.js'
+  const MSG =
+    "No matching key. session topic doesn't exist: 8a42442134e32cf7e131fc30ca870a372e2b17d3540240c3be5dae7d8fe515df"
+  const err = (message: string, stack?: string) =>
+    Object.assign(new Error(message), { stack })
+
+  it('drops the inbound relay rejection on V8 (APP-MEW-WEB-C9, Chrome/Edge)', () => {
+    const stack = [
+      `Error: ${MSG}`,
+      `    at A$.isValidSessionTopic (${BUNDLE}:12:176340)`,
+      `    at async A$.onRelayMessage (${BUNDLE}:12:174453)`,
+    ].join('\n')
+    expect(isWalletConnectStaleSessionTopicError(err(MSG, stack))).toBe(true)
+  })
+
+  it('drops the inbound relay rejection on Firefox/Safari stack format', () => {
+    const stack = [
+      `isValidSessionTopic@${BUNDLE}:12:176340`,
+      `onRelayMessage@${BUNDLE}:12:174453`,
+    ].join('\n')
+    expect(isWalletConnectStaleSessionTopicError(err(MSG, stack))).toBe(true)
+  })
+
+  it('keeps an outbound request() on a stale session (no relay frame)', () => {
+    const stack = [
+      `Error: ${MSG}`,
+      `    at A$.isValidSessionTopic (${BUNDLE}:12:176340)`,
+      `    at A$.isValidRequest (${BUNDLE}:12:166000)`,
+      `    at A$.request (${BUNDLE}:12:140000)`,
+    ].join('\n')
+    expect(isWalletConnectStaleSessionTopicError(err(MSG, stack))).toBe(false)
+  })
+
+  it('fails open when there is no stack', () => {
+    expect(isWalletConnectStaleSessionTopicError(err(MSG))).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError(MSG)).toBe(false)
+  })
+
+  it('does NOT match other "No matching key" shapes', () => {
+    expect(
+      isWalletConnectStaleSessionTopicError(
+        err(
+          "No matching key. pairing topic doesn't exist: abc",
+          `onRelayMessage@${BUNDLE}:12:174453`,
+        ),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for non-matching inputs', () => {
+    expect(isWalletConnectStaleSessionTopicError(null)).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError(undefined)).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError({})).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError({ message: 42 })).toBe(false)
+  })
+})
+
+describe('isWalletConnectPublishFailedError', () => {
+  // Exact production message (APP-MEW-WEB-1RW): tag 1112 = wc_sessionDelete.
+  const MSG =
+    'Failed to publish payload, please try again. id:1794229263589309184 tag:1112'
+
+  it('drops the @walletconnect/core relay publish timeout (APP-MEW-WEB-1RW)', () => {
+    expect(isWalletConnectPublishFailedError(new Error(MSG))).toBe(true)
+  })
+
+  it('is true for the serialized payload and a bare-string rejection', () => {
+    expect(isWalletConnectPublishFailedError({ message: MSG })).toBe(true)
+    expect(isWalletConnectPublishFailedError(MSG)).toBe(true)
+  })
+
+  it('keeps reporting every other relay tag (fails closed)', () => {
+    // tag 1108 = wc_sessionRequest: a failed signing/send request must report.
+    expect(
+      isWalletConnectPublishFailedError(
+        new Error('Failed to publish payload, please try again. id:1 tag:1108'),
+      ),
+    ).toBe(false)
+    expect(
+      isWalletConnectPublishFailedError(
+        'Failed to publish payload, please try again. id:1 tag:11120',
+      ),
+    ).toBe(false)
+  })
+
+  it('keeps reporting an app error that wraps the message with a prefix', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error(`Signing failed: ${MSG}`)),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error and non-matching inputs', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error('Failed to publish post')),
+    ).toBe(false)
+    expect(isWalletConnectPublishFailedError(null)).toBe(false)
+    expect(isWalletConnectPublishFailedError({})).toBe(false)
+    expect(isWalletConnectPublishFailedError({ message: 42 })).toBe(false)
   })
 })
 
