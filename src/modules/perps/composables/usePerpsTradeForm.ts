@@ -943,6 +943,10 @@ export function usePerpsTradeForm() {
       inputAmount.value = margin.toFixed(2)
       const maxBase = getBaseSizeForPercent(100) || 1
       sliderValue.value = Math.min((baseSize / maxBase) * 100, 100)
+    } else if (availableMargin.value > 0) {
+      // No max order size yet: same fallback as the slider
+      inputAmount.value = ((availableMargin.value * pct) / 100).toFixed(2)
+      sliderValue.value = pct
     }
   }
 
