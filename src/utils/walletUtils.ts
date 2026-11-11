@@ -83,11 +83,13 @@ export const getLocalizedWalletError = (
     return t('common.error.ledger_app_not_open')
   }
   // USB interface already claimed — Ledger Live, another tab, or a transport of
-  // ours that was never released (WebUSB: "Unable to claim interface")
+  // ours that was never released (WebUSB: "Unable to claim interface", or
+  // "Access denied" from `USBDevice.open()`)
   if (
     message.includes('unable to claim interface') ||
     message.includes('claiminterface') ||
-    message.includes('interface is in use')
+    message.includes('interface is in use') ||
+    /usbdevice.*access denied/.test(message)
   ) {
     return t('common.error.ledger_interface_busy')
   }
