@@ -33,8 +33,9 @@ describe('AppBtnIcon', () => {
       'button',
     )
     expect(btn.classes()).toContain('size-10')
+    // an ancestor can swap the hover through --btn-icon-hover
     expect(btn.classes()).toContain(
-      'not-disabled:hover:bg-background-alternative-hover',
+      'not-disabled:hover:bg-[var(--btn-icon-hover,var(--background-alternative-hover))]',
     )
   })
 
