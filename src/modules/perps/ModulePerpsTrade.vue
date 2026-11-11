@@ -1,5 +1,8 @@
 <template>
-  <div class="flex h-full flex-col sm:px-1 sm:pt-2">
+  <!-- pb-5 lives here, not only on the panel: the panel's own bottom padding
+       is lost once this form is taller than the panel and scrolls, which
+       left the CTA flush with the bottom edge. -->
+  <div class="flex flex-col pb-5 sm:px-1 sm:pt-2">
     <perps-signing-prompt
       :show="showSigningPrompt"
       :message="signingMessage"
