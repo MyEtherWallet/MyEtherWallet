@@ -429,6 +429,14 @@ describe('usePerpsTradeForm — panel price change and % presets (MEW-2661)', ()
     expect(form.inputAmount.value).toBe('45.71')
   })
 
+  it('floors without binary float drift (0.29 stays 0.29)', () => {
+    mockContracts.contracts.value = [contract('0')]
+    mockPerpsState.balance.value = { availableMargin: '0.29' } as PerpsBalance
+    const form = usePerpsTradeForm()
+    form.setPercentage(100)
+    expect(form.inputAmount.value).toBe('0.29')
+  })
+
   it('blocks a market order when the market has no quote', () => {
     mockContracts.contracts.value = [
       { ...contract('0'), bid: undefined, ask: undefined } as Contract,

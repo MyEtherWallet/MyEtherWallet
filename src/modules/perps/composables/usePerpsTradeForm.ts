@@ -1,4 +1,5 @@
 import { ref, computed, watch, onMounted } from 'vue'
+import { BigNumber } from 'bignumber.js'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -948,11 +949,12 @@ export function usePerpsTradeForm() {
     } else if (baseSize === null && availableMargin.value > 0) {
       // No max order size data yet: same fallback as the slider. A reported
       // max of 0 is not missing data, so it fills nothing.
-      // Floored so 100% never rounds above the balance
-      inputAmount.value = floorToIncrement(
-        (availableMargin.value * pct) / 100,
-        0.01,
-      )
+      // Floored in decimal math so 100% never goes above the balance, and
+      // 0.29 doesn't drift to 0.28 the way float division does
+      inputAmount.value = new BigNumber(availableMargin.value)
+        .times(pct)
+        .div(100)
+        .toFixed(2, BigNumber.ROUND_DOWN)
       sliderValue.value = pct
     }
   }
