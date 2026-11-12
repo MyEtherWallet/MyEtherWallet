@@ -38,6 +38,7 @@ const TOAST_KEYS = [
   'common.error.ledger_locked',
   'common.error.ledger_app_not_open',
   'common.error.ledger_interface_busy',
+  'common.error.ledger_not_found',
   // Balances processing (App.vue)
   'common.processing_tokens_title',
   'common.processing_tokens_description',
