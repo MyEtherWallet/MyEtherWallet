@@ -136,6 +136,7 @@ import {
   getLedgerBLETransport,
   closeLedgerTransport,
   isLedgerInterfaceBusyError,
+  isLedgerListenTimeoutError,
   isWebUSBSupported,
   isWebBLESupported,
 } from '@/providers/hw/ledger/transport'
@@ -353,7 +354,8 @@ const unlockWallet = async () => {
     // Don't report expected user / environment errors to Sentry
     if (
       !errorMessage.includes('Make sure you have') &&
-      !isLedgerInterfaceBusyError(e)
+      !isLedgerInterfaceBusyError(e) &&
+      !isLedgerListenTimeoutError(e)
     ) {
       captureException(e, SENTRY_MODULE_TAGS.ACCESS)
     }
@@ -418,9 +420,10 @@ const openTransport = async (getTransport: () => Promise<unknown>) => {
       text: t('error_connecting'),
       textSecondary: getLocalizedWalletError(errorMessage) ?? errorMessage,
     })
-    // The device being held by Ledger Live / another tab is the user's
-    // environment, not a defect — keep it out of Sentry.
-    if (!isLedgerInterfaceBusyError(e)) {
+    // The device being held by Ledger Live / another tab, or never picked
+    // before the listen timeout, is the user's environment, not a defect —
+    // keep it out of Sentry.
+    if (!isLedgerInterfaceBusyError(e) && !isLedgerListenTimeoutError(e)) {
       captureException(e, SENTRY_MODULE_TAGS.ACCESS)
     }
     return false

@@ -96,6 +96,10 @@ export const getLocalizedWalletError = (
   ) {
     return t('common.error.ledger_interface_busy')
   }
+  // Device picker timed out without a Ledger being chosen (APP-MEW-WEB-19N)
+  if (message.includes('no ledger device found')) {
+    return t('common.error.ledger_not_found')
+  }
   // Transient Trezor connect state (APP-MEW-WEB-P5)
   if (isTransientTrezorError(raw)) {
     return t('common.error.trezor_read_failed')

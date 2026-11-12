@@ -58,6 +58,7 @@ import {
   getLedgerTransport,
   closeLedgerTransport,
   isLedgerInterfaceBusyError,
+  isLedgerListenTimeoutError,
   LedgerInterfaceBusyError,
 } from '@/providers/hw/ledger/transport'
 
@@ -169,5 +170,25 @@ describe('isLedgerInterfaceBusyError', () => {
       isLedgerInterfaceBusyError(new Error('Locked device (0x5515)')),
     ).toBe(false)
     expect(isLedgerInterfaceBusyError(null)).toBe(false)
+  })
+})
+
+describe('isLedgerListenTimeoutError', () => {
+  it("recognises @ledgerhq's ListenTimeout by id and by message", () => {
+    const listenTimeout = Object.assign(
+      new Error('No Ledger device found (timeout)'),
+      { name: 'TransportError', id: 'ListenTimeout' },
+    )
+    expect(isLedgerListenTimeoutError(listenTimeout)).toBe(true)
+    expect(
+      isLedgerListenTimeoutError(new Error('No Ledger device found (timeout)')),
+    ).toBe(true)
+  })
+
+  it('leaves other errors alone', () => {
+    expect(
+      isLedgerListenTimeoutError(new Error('Locked device (0x5515)')),
+    ).toBe(false)
+    expect(isLedgerListenTimeoutError(null)).toBe(false)
   })
 })
