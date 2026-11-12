@@ -427,6 +427,29 @@ export function isBenignBalanceHistoryNotAcceptable(event: unknown): boolean {
 }
 
 /**
+ * Whether a Sentry event is the legacy 7d back-projection endpoint
+ * (`/v1/web/chains/<CHAIN>/addresses/<address>/7d-balances-back-projection`)
+ * answering 500. `PortfolioHistory.vue` calls it for chains the
+ * balance-history endpoint doesn't cover, and the backend 500s on several of
+ * them (MOONBEAM, CANTO, MOONRIVER, BLAST, RARI, ...). The
+ * chart already shows its "No chart data" state, so the client report is
+ * unactionable noise (APP-MEW-WEB-1FJ / MEW-2665). Matched on the
+ * `describeMewApiFetchError` tags, so other statuses from this endpoint and a
+ * 500 from any other route still report.
+ */
+export function isBenignBackProjectionServerError(event: unknown): boolean {
+  if (!event || typeof event !== 'object') return false
+  const tags = (event as { tags?: Record<string, unknown> }).tags
+  const url = tags?.mew_api_url
+  return (
+    typeof url === 'string' &&
+    url.startsWith(`${configs.MEW_API_URL}/v1/web/chains/`) &&
+    url.endsWith('/7d-balances-back-projection') &&
+    tags?.mew_api_status === '500'
+  )
+}
+
+/**
  * Whether an error is the WalletConnect relay "Connection interrupted while
  * trying to subscribe" rejection. Thrown entirely inside `@walletconnect/core`'s
  * Relayer when the relay WebSocket (`wss://relay.walletconnect.org`) disconnects

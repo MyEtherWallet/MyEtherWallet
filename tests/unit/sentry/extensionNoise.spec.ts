@@ -4,6 +4,7 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isBenignBackProjectionServerError,
   isBenignBalanceHistoryNotAcceptable,
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
@@ -924,6 +925,54 @@ describe('isBenignBalanceHistoryNotAcceptable', () => {
   it('is false for events without tags and non-object inputs', () => {
     expect(isBenignBalanceHistoryNotAcceptable({})).toBe(false)
     expect(isBenignBalanceHistoryNotAcceptable(null)).toBe(false)
+  })
+})
+
+describe('isBenignBackProjectionServerError', () => {
+  const backProjection = (chain: string) =>
+    `${configs.MEW_API_URL}/v1/web/chains/${chain}/addresses/0xfa115dd970090b24c1019ee65bd69f1b181ae059/7d-balances-back-projection`
+  // The production context (APP-MEW-WEB-1FJ): HTTP/2 500 with an empty
+  // statusText and the generic body message, tagged by the shared reporter.
+  const eventFor = (url: string, status: number) => ({
+    tags: describeMewApiFetchError({
+      error: new Error(''),
+      data: { message: 'Something went wrong.' },
+      status,
+      statusText: '',
+      url,
+    }).tags,
+  })
+
+  it('is true for the production 500 from 7d-balances-back-projection', () => {
+    for (const chain of ['MOONBEAM', 'CANTO', 'MOONRIVER', 'BLAST', 'RARI']) {
+      expect(
+        isBenignBackProjectionServerError(eventFor(backProjection(chain), 500)),
+      ).toBe(true)
+    }
+  })
+
+  it('is false for another status on back-projection (still reported)', () => {
+    expect(
+      isBenignBackProjectionServerError(
+        eventFor(backProjection('MOONBEAM'), 404),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for a 500 from another MEW API route', () => {
+    expect(
+      isBenignBackProjectionServerError(
+        eventFor(
+          `${configs.MEW_API_URL}/v1/web/pages/stocks-info/stocks/blkhion/summary`,
+          500,
+        ),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for events without tags and non-object inputs', () => {
+    expect(isBenignBackProjectionServerError({})).toBe(false)
+    expect(isBenignBackProjectionServerError(null)).toBe(false)
   })
 })
 
