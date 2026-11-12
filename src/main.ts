@@ -19,6 +19,7 @@ import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
+  isBenignBackProjectionServerError,
   isBenignBalanceHistoryNotAcceptable,
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
@@ -177,7 +178,11 @@ if (dsn && process.env.NODE_ENV === 'production') {
         isBenignPurchaseInfoForbidden(event) ||
         // Intermittent backend 406 from portfolio balance-history; the chart
         // already shows its empty state (APP-MEW-WEB-1K0 / MEW-2547).
-        isBenignBalanceHistoryNotAcceptable(event)
+        isBenignBalanceHistoryNotAcceptable(event) ||
+        // Backend 500 from the legacy 7d back-projection endpoint on chains
+        // it doesn't serve; the chart already shows its empty state
+        // (APP-MEW-WEB-1FJ / MEW-2665).
+        isBenignBackProjectionServerError(event)
       )
         return null
       return event
