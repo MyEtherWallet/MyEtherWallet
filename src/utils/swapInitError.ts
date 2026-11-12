@@ -17,12 +17,15 @@ export function isTransientSwapInitError(e: unknown): boolean {
   // WebKit's Response.json() on a non-JSON body throws a DOMException named
   // "SyntaxError" (code 12) with "The string did not match the expected
   // pattern" — same transient upstream case, but without "json" in the message.
-  if (e instanceof DOMException) return e.name === 'SyntaxError'
+  if (e instanceof DOMException) {
+    return e.name === 'SyntaxError' || e.name === 'AbortError'
+  }
   // Explicit transport phrases only. A bare `includes('network')` also matched
   // application bugs such as "Cannot read properties of undefined (reading
   // 'network')", which were then retried and dropped from Sentry as expected.
   return (
     msg.includes('network error') ||
+    msg.includes('networkerror when attempting to fetch') ||
     msg.includes('network request failed') ||
     msg.includes('failed to fetch') ||
     msg.includes('fetch failed') ||
