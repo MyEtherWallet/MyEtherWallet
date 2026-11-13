@@ -102,11 +102,9 @@ const props = withDefaults(
     /** Show the error message below the amount (e.g. "Remove 2 decimals")
      *  instead of the red conversion; the CTA always carries the message. */
     inlineError?: boolean
-    /** Sell side only: a line of its own under the info row while the input
-     *  is empty, for a constraint worth knowing before typing. */
-    emptyHint?: string
-    /** Sell side only: show the error message on that same line. The info row
-     *  shares its width with the balance and truncates a full sentence. */
+    /** Sell side only: show the error message on a line of its own under the
+     *  info row, which shares its width with the balance and truncates a full
+     *  sentence. */
     feedbackError?: boolean
     showBalance?: boolean
     isPristine?: boolean
@@ -120,7 +118,6 @@ const props = withDefaults(
     fiatLoading: false,
     balanceError: false,
     inlineError: false,
-    emptyHint: '',
     feedbackError: false,
     showBalance: true,
     isPristine: false,
@@ -243,8 +240,6 @@ const feedback = computed<InputFeedback | null>(() => {
   if (props.side !== 'sell') return null
   if (isErrorVisible.value && errorIsFeedback.value && errorMessage.value)
     return { type: 'error', message: errorMessage.value }
-  if (!amount.value && props.emptyHint)
-    return { type: 'text', message: props.emptyHint }
   return null
 })
 

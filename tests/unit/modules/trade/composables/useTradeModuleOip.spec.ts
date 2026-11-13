@@ -378,7 +378,10 @@ describe('useTradeModule OIP wiring', () => {
       const api = await mountModule()
       userPicksFrom(api, 'USDT')
       userPicksTo(api, 'BIG5ON')
-      expect(api.isToTokenOip.value).toBe(true)
+      expect(pair(api)).toBe('USDT>BIG5ON')
+      // Nothing is said about the minimum until an amount is entered.
+      expect(api.fromAmountError.value).toBe('')
+      expect(api.isOipMinimumError.value).toBe(false)
 
       enter(api, '9.99')
       expect(api.fromAmountError.value).toBe('trade.error.oip_minimum')
@@ -399,7 +402,6 @@ describe('useTradeModule OIP wiring', () => {
       const api = await mountModule()
       userPicksFrom(api, 'BIG5ON')
       expect(pair(api)).toBe('BIG5ON>USDT')
-      expect(api.isToTokenOip.value).toBe(false)
 
       enter(api, '0.4')
       expect(api.fromAmountError.value).toBe('trade.error.oip_minimum')
@@ -413,7 +415,6 @@ describe('useTradeModule OIP wiring', () => {
     it('leaves a pair without an OIP token on the existing floor', async () => {
       const api = await mountModule()
       userPicksTo(api, 'AAPLON')
-      expect(api.isToTokenOip.value).toBe(false)
 
       enter(api, '0.0008')
       expect(api.fromAmountError.value).toBe('')
@@ -436,7 +437,6 @@ describe('useTradeModule OIP wiring', () => {
     api.fromAmount.value = '1'
     api.toAmount.value = '1'
     expect(api.fromAmountError.value).toBe('')
-    expect(api.isToTokenOip.value).toBe(false)
     expect(api.isTradeDisabled.value).toBe(false)
   })
 })

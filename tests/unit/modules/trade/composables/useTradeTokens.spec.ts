@@ -205,25 +205,21 @@ describe('useTradeTokens OIP pair rules', () => {
   })
 
   it('flags an OIP trade with the OIP token on either side', () => {
-    const { form, isOipTrade, isToTokenOip, isFromTokenStable } =
-      setup(ETHEREUM)
+    const { form, isOipTrade, isFromTokenStable } = setup(ETHEREUM)
 
     form.fromTokenSelected.value = token(ADDRESS.BIG5.eth)
     form.toTokenSelected.value = token(ADDRESS.USDT.eth)
     expect(isOipTrade.value).toBe(true)
-    expect(isToTokenOip.value).toBe(false)
     expect(isFromTokenStable.value).toBe(false)
 
     form.fromTokenSelected.value = token(ADDRESS.USDT.eth)
     form.toTokenSelected.value = token(ADDRESS.BIG5.eth)
     expect(isOipTrade.value).toBe(true)
-    expect(isToTokenOip.value).toBe(true)
     expect(isFromTokenStable.value).toBe(true)
 
     form.fromTokenSelected.value = token(MAIN_TOKEN_CONTRACT)
     form.toTokenSelected.value = token(ADDRESS.AAPL.eth)
     expect(isOipTrade.value).toBe(false)
-    expect(isToTokenOip.value).toBe(false)
     expect(isFromTokenStable.value).toBe(false)
   })
 
@@ -262,14 +258,8 @@ describe('useTradeTokens OIP pair rules', () => {
   })
 
   it('applies nothing on a chain id the rules do not gate', () => {
-    const {
-      form,
-      symbols,
-      isOipTrade,
-      isToTokenOip,
-      isOipPairAllowed,
-      isOipSymbol,
-    } = setup(UNGATED)
+    const { form, symbols, isOipTrade, isOipPairAllowed, isOipSymbol } =
+      setup(UNGATED)
 
     form.fromTokenSelected.value = token(ADDRESS.BIG5.eth)
     form.toTokenSelected.value = token(ADDRESS.MAG7X.eth)
@@ -282,7 +272,6 @@ describe('useTradeTokens OIP pair rules', () => {
       'USDC',
     ])
     expect(isOipTrade.value).toBe(false)
-    expect(isToTokenOip.value).toBe(false)
     expect(isOipPairAllowed.value).toBe(true)
     expect(isOipSymbol('BIG5on')).toBe(false)
 

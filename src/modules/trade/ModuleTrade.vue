@@ -122,7 +122,6 @@
             :balance-error="isInsufficientBalanceError"
             :inline-error="isDecimalsError"
             :feedback-error="isOipMinimumError"
-            :empty-hint="isToTokenOip ? $t('trade.error.oip_minimum') : ''"
             :tokens="fromTokens"
             :show-balance="isWalletConnected"
             :network-name="selectedFromChain?.name"
@@ -339,7 +338,6 @@ const {
   isInsufficientBalanceError,
   isDecimalsError,
   isOipMinimumError,
-  isToTokenOip,
   isPairUnavailable,
   pillStatus,
   untilText,

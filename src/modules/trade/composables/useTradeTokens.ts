@@ -283,9 +283,6 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
   const fromTokenClass = computed(() => classOf(fromTokenSelected.value))
   const toTokenClass = computed(() => classOf(toTokenSelected.value))
 
-  const isToTokenOip = computed(
-    () => isOipRulesActive.value && toTokenClass.value === 'oip',
-  )
   const isOipTrade = computed(
     () =>
       isOipRulesActive.value &&
@@ -333,7 +330,6 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     disabledTokenAddresses,
     toTokens,
     stockMarketCapOf,
-    isToTokenOip,
     isOipTrade,
     isFromTokenStable,
     isOipPairAllowed,

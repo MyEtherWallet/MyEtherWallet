@@ -40,34 +40,12 @@ describe('TradeAmountCard', () => {
     expect(mountCard().text()).toContain('Enter amount')
   })
 
-  // The info row shares its width with the balance and truncates a sentence,
-  // so the caller's hint gets a line of its own under it.
-  it('shows the caller\'s hint on its own line, under "Enter amount", while the sell input is empty', () => {
-    const hint = 'Minimum to trade OIP is $10'
-    const card = mountCard({ emptyHint: hint })
-    const info = card.get('[data-testid="transaction-input-card-info"]')
-    const feedback = card.get(FEEDBACK)
-
-    expect(info.text()).toBe('Enter amount')
-    expect(feedback.text()).toBe(hint)
-    expect(feedback.attributes('role')).toBe('status')
-    expect(feedback.classes()).toContain('text-text-subtle')
-    expect(info.element.contains(feedback.element)).toBe(false)
-  })
-
-  it('drops the hint once an amount is entered, and never shows it on the buy side', () => {
-    const hint = 'Minimum to trade OIP is $10'
-
-    expect(mountCard({ emptyHint: hint, amount: '12' }).text()).not.toContain(
-      hint,
-    )
-    expect(mountCard({ emptyHint: hint, side: 'buy' }).text()).not.toContain(
-      hint,
-    )
-  })
-
   it('renders no feedback line unless it has something to say', () => {
     expect(mountCard().find(FEEDBACK).exists()).toBe(false)
+    // An empty input shows nothing ahead of time, feedback error or not.
+    expect(mountCard({ feedbackError: true }).find(FEEDBACK).exists()).toBe(
+      false,
+    )
     expect(mountCard({ amount: '12' }).find(FEEDBACK).exists()).toBe(false)
     expect(mountCard({ side: 'buy' }).find(FEEDBACK).exists()).toBe(false)
   })
@@ -227,11 +205,11 @@ describe('TradeAmountCard', () => {
     vi.useFakeTimers()
     try {
       const message = 'Minimum to trade OIP is $10'
-      const card = mountCard({ feedbackError: true, emptyHint: message })
+      const card = mountCard({ feedbackError: true })
       const info = () => card.get('[data-testid="transaction-input-card-info"]')
 
       await card.setProps({ amount: '9.99', error: message })
-      // Typing drops the hint; the error waits for the debounce.
+      // The error waits for the debounce.
       expect(card.find(FEEDBACK).exists()).toBe(false)
 
       vi.advanceTimersByTime(1000)
