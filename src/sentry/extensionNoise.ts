@@ -67,6 +67,22 @@ export function isWatchOnlyWalletSignError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is Enkrypt refusing to connect because the extension has no
+ * wallet set up yet. Enkrypt rejects `eth_requestAccounts` with a plain
+ * `{ code: 8546, message: "Enkrypt not initialized" }` object, which the
+ * connect flow wraps as "8546: Enkrypt not initialized" (APP-MEW-WEB-2W).
+ * Wallet-side user state, and the flow already shows "check your wallet".
+ */
+export function isEnkryptNotInitializedError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' &&
+    /^(?:8546: )?enkrypt not initialized$/i.test(message)
+  )
+}
+
+/**
  * Whether an error is the external "not found rainbowkit" rejection. It is
  * emitted by a wallet's injected in-app-browser detection script (observed on
  * mobile Safari / iOS in-app wallet browsers), never by app code or any bundled

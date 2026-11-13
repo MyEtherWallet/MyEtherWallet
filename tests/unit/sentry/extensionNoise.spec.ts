@@ -10,6 +10,7 @@ import {
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
   isEip6963NullProviderError,
+  isEnkryptNotInitializedError,
   isExpectedTradeClientError,
   isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
@@ -31,6 +32,7 @@ import {
   isWatchOnlyWalletSignError,
 } from '@/sentry/extensionNoise'
 import { describeMewApiFetchError } from '@/utils/mewApiFetchError'
+import { toReportableWalletError } from '@/utils/walletUtils'
 import configs from '@/configs'
 
 describe('isExtensionOrProviderError', () => {
@@ -1321,5 +1323,46 @@ describe('isWatchOnlyWalletSignError', () => {
     expect(isWatchOnlyWalletSignError(null)).toBe(false)
     expect(isWatchOnlyWalletSignError(MSG)).toBe(false)
     expect(isWatchOnlyWalletSignError({ message: 42 })).toBe(false)
+  })
+})
+
+describe('isEnkryptNotInitializedError', () => {
+  // APP-MEW-WEB-2W: Enkrypt rejects the connect request with a plain
+  // { code: 8546, message } object when the extension has no wallet set up yet.
+  const rejection = { code: 8546, message: 'Enkrypt not initialized' }
+
+  it('is true for the exact production payload (connect flow wraps the rejection)', () => {
+    // What useConnectWallet hands to captureException: "8546: Enkrypt not initialized"
+    expect(
+      isEnkryptNotInitializedError(toReportableWalletError(rejection)),
+    ).toBe(true)
+  })
+
+  it('is true for the raw plain-object rejection', () => {
+    expect(isEnkryptNotInitializedError(rejection)).toBe(true)
+  })
+
+  it('is false for other Enkrypt errors, app errors and non-matching inputs', () => {
+    expect(
+      isEnkryptNotInitializedError({
+        code: 8546,
+        message:
+          'Enkrypt: Geo restricted https://www.myetherwallet.com/blocked',
+      }),
+    ).toBe(false)
+    expect(
+      isEnkryptNotInitializedError(new Error('Store not initialized')),
+    ).toBe(false)
+    // A distinct failure that only mentions the phrase must still be reported.
+    expect(
+      isEnkryptNotInitializedError(
+        new Error(
+          'Unexpected failure after Enkrypt not initialized: recovery failed',
+        ),
+      ),
+    ).toBe(false)
+    expect(isEnkryptNotInitializedError(null)).toBe(false)
+    expect(isEnkryptNotInitializedError('Enkrypt not initialized')).toBe(false)
+    expect(isEnkryptNotInitializedError({ message: 42 })).toBe(false)
   })
 })
