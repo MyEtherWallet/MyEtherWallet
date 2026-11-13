@@ -3,11 +3,13 @@
     <h3 class="text-sm font-semibold">
       {{ t('access_wallet.sign_up.download_official') }}
     </h3>
-    <div class="grid grid-cols-1 gap-3 xs:grid-cols-2">
+    <!-- Below 400px both (compact) cards share one row. -->
+    <div class="grid grid-cols-1 gap-3 max-[400px]:grid-cols-2 xs:grid-cols-2">
       <AccessCell
         as="button"
         type="button"
         data-testid="download-mew-mobile"
+        compact
         title="MEW Mobile"
         :description="t('access_wallet.sign_up.ios_android')"
         @click="accessStore.setCurrentView('download_mobile')"
@@ -22,6 +24,7 @@
       <AccessCell
         as="a"
         data-testid="download-enkrypt"
+        compact
         title="Enkrypt"
         :description="t('access_wallet.sign_up.browser_extension')"
         :href="walletConfigs.enkrypt.downloadUrls?.browserExtension"

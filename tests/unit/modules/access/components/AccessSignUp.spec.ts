@@ -73,6 +73,21 @@ describe('AccessSignUp', () => {
     expect(w.find('[data-testid="download-mew-mobile"]').exists()).toBe(true)
   })
 
+  // MEW-2669: stacked, the two cards took most of a small phone's modal.
+  it('puts both download cards in one compact row below 400px', () => {
+    configs.SHOW_SOCIAL_LOGIN = false
+    const w = mountSignUp()
+    const mobile = w.get('[data-testid="download-mew-mobile"]')
+    expect(mobile.element.parentElement!.classList).toContain(
+      'max-[400px]:grid-cols-2',
+    )
+    for (const id of ['download-mew-mobile', 'download-enkrypt']) {
+      expect(
+        w.get(`[data-testid="${id}"] [data-testid="cell-description"]`).classes(),
+      ).toContain('max-[400px]:sr-only')
+    }
+  })
+
   it('opens the MEW Mobile download view and links Enkrypt externally', async () => {
     const w = mountSignUp()
     await w.get('[data-testid="download-mew-mobile"]').trigger('click')
