@@ -120,4 +120,31 @@ describe('AccessCell', () => {
       'truncate',
     )
   })
+
+  it('compact shrinks the text and drops the trailing slot below xs', () => {
+    wrapper = mount(AccessCell, {
+      props: { title: 'MEW Mobile', description: 'iOS & Android', compact: true },
+      slots: { trailing: '<svg data-testid="trailing" />' },
+    })
+    expect(wrapper.classes()).toEqual(
+      expect.arrayContaining(['max-xs:px-3', 'max-xs:gap-2']),
+    )
+    expect(wrapper.get('[data-testid="cell-title"]').classes()).toContain(
+      'max-xs:text-sm',
+    )
+    expect(wrapper.get('[data-testid="cell-description"]').classes()).toEqual(
+      expect.arrayContaining(['max-xs:text-xs', 'max-[400px]:sr-only']),
+    )
+    expect(
+      wrapper.get('[data-testid="trailing"]').element.parentElement!.classList,
+    ).toContain('max-xs:hidden')
+  })
+
+  it('leaves the layout alone without compact', () => {
+    wrapper = mount(AccessCell, {
+      props: { title: 'Ledger', description: 'USB' },
+      slots: { trailing: '<svg data-testid="trailing" />' },
+    })
+    expect(wrapper.html()).not.toMatch(/max-(xs|\[400px\])/)
+  })
 })
