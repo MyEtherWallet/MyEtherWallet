@@ -91,6 +91,18 @@ describe('AppPicker', () => {
     expect(atS.find(description()).exists()).toBe(false)
   })
 
+  it('forwards a description slot to the Content Group', () => {
+    const wrapper = mount(AppPicker, {
+      props: { title: 'ETH', description: 'Fallback', size: 'l' },
+      slots: { description: '<b data-testid="custom-description">$1</b>' },
+    })
+    expect(
+      wrapper.get(description()).find('[data-testid="custom-description"]')
+        .exists(),
+    ).toBe(true)
+    expect(wrapper.text()).not.toContain('Fallback')
+  })
+
   it('toggles the avatar slot region with the avatar prop', () => {
     const shown = mount(AppPicker, {
       props: { title: 'T', avatar: true },

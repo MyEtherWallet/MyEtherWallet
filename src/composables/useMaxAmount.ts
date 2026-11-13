@@ -20,7 +20,7 @@ export interface UseMaxAmountOptions {
 }
 
 /**
- * Handles "Max" button for Send/Swap. Only for internal wallets (PRIVATE_KEY, MNEMONIC).
+ * Handles "Max" button for Send/Swap (availability rule in `canUseMax`).
  * Subtracts fee from native token balance and recalculates when dependencies change.
  */
 export function useMaxAmount(options: UseMaxAmountOptions) {
@@ -56,6 +56,12 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     )
   }
 
+  // MEW-2612: MAX on a token sends its whole balance, so any wallet can use it.
+  // On the native token it holds back our fee estimate, which only holds for
+  // wallets that sign here (private key, keystore, mnemonic): an external
+  // wallet can change the gas outside the app.
+  const canUseMax = (): boolean => !isNativeToken() || isInternalWallet()
+
   // `Math.trunc(Math.min(100, Math.max(0, NaN)))` is NaN, and `BigInt(NaN)`
   // throws — so non-finite input has to be rejected before either use.
   const normalizePercentage = (percentage: number): number =>
@@ -90,7 +96,10 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
       // amount the user set — fee validation surfaces the insufficient-gas error.
       // On an explicit Max click (isFresh), always apply regardless.
       const shouldUpdate =
-        isFresh || maxAmount !== '0' || currentAmount === '' || currentAmount === '0'
+        isFresh ||
+        maxAmount !== '0' ||
+        currentAmount === '' ||
+        currentAmount === '0'
 
       if (shouldUpdate && currentAmount !== maxAmount) {
         onAmountChange(maxAmount)
@@ -105,7 +114,8 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
 
   const setMaxAmount = (percentage = 100): void => {
     const boundedPercentage = normalizePercentage(percentage)
-    if (isMaxSelected.value && selectedPercentage.value === boundedPercentage) return
+    if (isMaxSelected.value && selectedPercentage.value === boundedPercentage)
+      return
 
     markFormDirty()
     isFreshMaxClick.value = true
@@ -173,6 +183,6 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     applyMaxAmount,
     setMaxAmount,
     resetMaxState,
-    isInternalWallet,
+    canUseMax,
   }
 }

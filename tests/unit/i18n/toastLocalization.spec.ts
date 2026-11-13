@@ -24,10 +24,6 @@ const TOAST_KEYS = [
   'access_wallet.toast.connect_request_pending',
   'access_wallet.toast.network_not_supported',
   'common.dont_have_wallet',
-  // Derivation paths (derivationStore.ts)
-  'derivation_path.label_exists',
-  'derivation_path.added_successfully',
-  'derivation_path.invalid_path',
   // Network change (walletStore.ts)
   'common.network_change_failed',
   'common.network_change_failed_description',

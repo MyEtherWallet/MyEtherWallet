@@ -19,7 +19,6 @@ const ITEMS: ActionBarItem[] = [
 ]
 
 const activeId = ref<string | null>('swap')
-const expanded = ref(false)
 const disablePerps = ref(false)
 
 const items = computed(() =>
@@ -61,10 +60,6 @@ const onSelect = (id: string) => {
           </select>
         </label>
         <label class="flex items-center gap-2">
-          <input v-model="expanded" type="checkbox" />
-          Expanded
-        </label>
-        <label class="flex items-center gap-2">
           <input v-model="disablePerps" type="checkbox" />
           Disable Perps
         </label>
@@ -76,9 +71,7 @@ const onSelect = (id: string) => {
           class="h-full"
           :items="items"
           :active-id="activeId"
-          :expanded="expanded"
           @select="onSelect"
-          @toggle="expanded = !expanded"
         />
       </div>
     </section>

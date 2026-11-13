@@ -8,6 +8,9 @@ import {
   type WalletConfig,
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
+import { buildWalletConnectQrData } from '@/modules/access/common/walletConnectQrUri'
+import { findWalletConnector } from '@/modules/access/common/walletConnector'
+import type { Wallet } from '@rainbow-me/rainbowkit'
 import { useProviderStore, type Provider } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
@@ -21,7 +24,22 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
-import { isUserRejectionError } from '@/utils/walletUtils'
+import {
+  getLocalizedWalletConnectError,
+  isUserRejectionError,
+  toReportableWalletError,
+} from '@/utils/walletUtils'
+
+/**
+ * RainbowKit details of the wallet whose WalletConnect QR code is on screen.
+ *
+ * Module-scoped on purpose. Every WalletConnect connector shares one provider,
+ * and wagmi hands its `display_uri` to the first connector that connected, so
+ * the listener that fires may belong to an earlier click, or to another
+ * `useConnectWallet()` instance. It has to read the wallet clicked last
+ * instead of capturing its own.
+ */
+let walletOnScreen: Wallet | undefined
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -71,7 +89,9 @@ export const useConnectWallet = () => {
     }
     wagmiWalletData.value = ''
     accessStore.setWagmiWalletData(wagmiWalletData.value) // clear stored data in access store as well
-    setWallet(wallet, config.name, config.type[0])
+    // Await so a getAddress()/restriction failure reaches the caller's catch
+    // instead of closing the dialog with no wallet (MEW-2185).
+    await setWallet(wallet, config.name, config.type[0])
     addWallet(config)
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
     analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
@@ -147,10 +167,10 @@ export const useConnectWallet = () => {
 
       unisatWallet
         .connect()
-        .then(res => {
+        .then(async res => {
           if (res) {
             try {
-              void _storeWallet(unisatWallet, wallet)
+              await _storeWallet(unisatWallet, wallet)
             } catch (error) {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
@@ -163,12 +183,18 @@ export const useConnectWallet = () => {
         })
         .catch(err => {
           let error = t('error_connecting')
+          const walletConnectError = getLocalizedWalletConnectError(err)
           if (isUserRejectionError(err)) {
             error = t('common.error.user_canceled_request')
+          } else if (walletConnectError) {
+            error = walletConnectError
           }
           accessStore.setWeb3ConnectionError(error)
-          if (error !== t('common.error.user_canceled_request')) {
-            captureException(err, SENTRY_MODULE_TAGS.ACCESS)
+          if (error === t('error_connecting')) {
+            captureException(
+              toReportableWalletError(err),
+              SENTRY_MODULE_TAGS.ACCESS,
+            )
           }
         })
       return
@@ -196,14 +222,15 @@ export const useConnectWallet = () => {
             title: t('common.dont_have_wallet'),
             url: 'https://enkrypt.com',
           }
+        // A fixed id replaces the toast on a repeat click instead of stacking it.
         toastStore.addToastMessage({
+          id: 'web3-wallet-not-detected',
           text: t('access_wallet.toast.web3_wallet_not_detected'),
           textSecondary: t('access_wallet.toast.install_extension_or_select', {
             name: wallet.name,
           }),
           link: link,
           type: ToastType.Warning,
-          isInfinite: true,
         })
       }
     } else {
@@ -237,6 +264,7 @@ export const useConnectWallet = () => {
         })
         .catch(err => {
           let error = t('error_connecting')
+          const walletConnectError = getLocalizedWalletConnectError(err)
           if (isUserRejectionError(err)) {
             error = t('common.error.user_canceled_request')
           } else if (
@@ -249,10 +277,15 @@ export const useConnectWallet = () => {
             err.message.toLowerCase().includes('unrecognized chain id')
           ) {
             error = t('access_wallet.toast.network_not_supported')
+          } else if (walletConnectError) {
+            error = walletConnectError
           }
           accessStore.setWeb3ConnectionError(error)
           if (error === t('error_connecting')) {
-            captureException(err, SENTRY_MODULE_TAGS.ACCESS)
+            captureException(
+              toReportableWalletError(err),
+              SENTRY_MODULE_TAGS.ACCESS,
+            )
           }
         })
     }
@@ -270,10 +303,7 @@ export const useConnectWallet = () => {
 
     // find connector by id
     // some connectors have different ids in our config vs wagmi (e.g. rabby)
-    const connector = connectors.find(
-      c =>
-        c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
-    )
+    const connector = findWalletConnector(connectors, wallet)
     // No matching wagmi connector (e.g. wallet not installed / not registered).
     // Surface a friendly, handled error instead of constructing a WagmiWallet
     // with an undefined connector and dereferencing it on connect().
@@ -286,9 +316,16 @@ export const useConnectWallet = () => {
       return
     }
     connector.onDisconnect()
+    walletOnScreen = (connector as unknown as { rkDetails?: Wallet }).rkDetails
     connector.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
-        wagmiWalletData.value = msg.data as string // possibly a temp fix
+        // Encode the clicked wallet's QR link (when it defines one) so a
+        // native-camera scan opens that wallet instead of the OS default `wc:`
+        // handler. Falls back to the raw uri. (MEW-2288)
+        wagmiWalletData.value = buildWalletConnectQrData(
+          walletOnScreen,
+          msg.data as string,
+        )
         accessStore.setWagmiWalletData(wagmiWalletData.value)
       }
     })
@@ -299,10 +336,10 @@ export const useConnectWallet = () => {
     )
     return wagWallet
       .connect()
-      .then(res => {
+      .then(async res => {
         if (res) {
           try {
-            void _storeWallet(wagWallet, wallet)
+            await _storeWallet(wagWallet, wallet)
           } catch (error: unknown) {
             toastStore.addToastMessage({
               text: t('access_wallet.toast.could_not_connect'),
@@ -317,6 +354,7 @@ export const useConnectWallet = () => {
       .catch(err => {
         let error = t('error_connecting')
         let _type = ToastType.Warning
+        const walletConnectError = getLocalizedWalletConnectError(err)
         if (isUserRejectionError(err)) {
           error = t('common.error.user_canceled_request')
           _type = ToastType.Info
@@ -326,6 +364,8 @@ export const useConnectWallet = () => {
         ) {
           error = t('access_wallet.toast.connection_timed_out')
           _type = ToastType.Info
+        } else if (walletConnectError) {
+          error = walletConnectError
         }
         toastStore.addToastMessage({
           text: t('access_wallet.toast.could_not_connect'),
@@ -333,7 +373,10 @@ export const useConnectWallet = () => {
           type: _type,
         })
         if (error === t('error_connecting')) {
-          captureException(err, SENTRY_MODULE_TAGS.ACCESS)
+          captureException(
+            toReportableWalletError(err),
+            SENTRY_MODULE_TAGS.ACCESS,
+          )
         }
       })
   }

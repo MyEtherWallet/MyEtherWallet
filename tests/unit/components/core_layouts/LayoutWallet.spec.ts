@@ -64,6 +64,7 @@ vi.mock('@/components/core_layouts/wallet/TheDepositDialog.vue', () => ({
 }))
 
 import LayoutWallet from '@/components/core_layouts/LayoutWallet.vue'
+import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import AppActionBar from '@/components/action_bar/AppActionBar.vue'
 import MarketingTooltip from '@/components/core_layouts/MarketingTooltip.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -71,8 +72,9 @@ import { analytics } from '@/analytics'
 import { TRADE_CAMPAIGN_UTM } from '@/composables/useTradeCampaignEntry'
 import { ROUTES_MAIN, STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
-const factory = () =>
-  mount(LayoutWallet, { global: { mocks: { $t: (k: string) => k } } })
+// Attach it for focus: document.activeElement only follows connected elements.
+const factory = (attachTo?: HTMLElement) =>
+  mount(LayoutWallet, { attachTo, global: { mocks: { $t: (k: string) => k } } })
 
 const flush = async () => {
   await nextTick()
@@ -160,22 +162,40 @@ describe('LayoutWallet action bar wiring', () => {
     expect(analytics.trackClickMainMenuEvent).not.toHaveBeenCalled()
   })
 
-  it('toggles the side menu and only marks the open panel active', async () => {
+  it('opens from an action, closes from the drawer X and only marks the open panel active', async () => {
     const w = factory()
     const menu = useWalletMenuStore()
     const bar = w.findComponent(AppActionBar)
     expect(bar.props('activeId')).toBeNull()
 
-    bar.vm.$emit('toggle')
-    await nextTick()
+    await w.get('[data-action-id="swap"]').trigger('click')
     expect(menu.isOpenSideMenu).toBe(true)
-    expect(bar.props('expanded')).toBe(true)
     expect(bar.props('activeId')).toBe('swap')
 
-    bar.vm.$emit('toggle')
+    w.findComponent(AppBtnIconClose).vm.$emit('close')
     await nextTick()
     expect(menu.isOpenSideMenu).toBe(false)
     expect(bar.props('activeId')).toBeNull()
+  })
+
+  it('returns focus to the rail button of the panel the drawer X closes', async () => {
+    const w = factory(document.body)
+    const menu = useWalletMenuStore()
+    const send = w.get<HTMLElement>('[data-action-id="send"]')
+    await send.trigger('click')
+
+    // The X holds focus, as it does for a keyboard user about to press it.
+    const close = w.get<HTMLElement>(
+      'button[aria-label="common.close_side_menu"]',
+    )
+    close.element.focus()
+    expect(document.activeElement).toBe(close.element)
+
+    await close.trigger('click')
+    expect(menu.isOpenSideMenu).toBe(false)
+    expect(close.element.isConnected).toBe(false)
+    expect(document.activeElement).toBe(send.element)
+    w.unmount()
   })
 
   it('anchors the marketing tooltip on the Trade button', async () => {

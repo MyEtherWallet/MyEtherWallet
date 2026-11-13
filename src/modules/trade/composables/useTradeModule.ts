@@ -36,7 +36,6 @@ import { useTradeExecution, type TradeFlowStep } from './useTradeExecution'
 import { useTradeForm } from './useTradeForm'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
-import configs from '@/configs'
 import type { Chain } from '@/mew_api/types'
 import { ToastType } from '@/types/notification'
 
@@ -45,7 +44,6 @@ export function useTradeModule() {
 
   // Dev-only until the help center has a trade article to point at — the href
   // in ModuleTrade still targets the gas-fees article as a placeholder.
-  const showHelpLink = configs.BUILD_MODE !== 'production'
 
   // --- Stores ---
   const pairStore = usePairStore()
@@ -301,6 +299,7 @@ export function useTradeModule() {
     hasPreQuoteError,
     fromAmountError,
     isInsufficientBalanceError,
+    isDecimalsError,
     isTradeDisabled,
     isSameTokenSelected,
   } = useTradeValidation({
@@ -396,6 +395,17 @@ export function useTradeModule() {
     })
   }
 
+  // Mirrored from the sell card, so the CTA spins and shows the error in sync with it.
+  const isFromAmountBusy = ref(false)
+  const isFromAmountErrorVisible = ref(false)
+
+  const isCtaLoading = computed(
+    () =>
+      isFromAmountBusy.value &&
+      fromAmount.value !== '' &&
+      fromAmount.value !== '0',
+  )
+
   const ctaDisabledLabel = computed(() => {
     if (!isTradingSessionOpen.value) {
       return t('trade.market_status.paused')
@@ -406,6 +416,9 @@ export function useTradeModule() {
     const parsedAmount = Number(fromAmount.value)
     if (fromAmount.value.trim() === '' || !parsedAmount) {
       return t('trade.enter_amount')
+    }
+    if (isFromAmountErrorVisible.value && fromAmountError.value) {
+      return fromAmountError.value
     }
     return t('trade.review_trade')
   })
@@ -849,8 +862,11 @@ export function useTradeModule() {
     quoteRefreshFailed,
     refreshExpiredQuote,
     ctaDisabledLabel,
-    showHelpLink,
+    isFromAmountBusy,
+    isFromAmountErrorVisible,
+    isCtaLoading,
     isInsufficientBalanceError,
+    isDecimalsError,
     isPairUnavailable,
     pillStatus,
     untilText,

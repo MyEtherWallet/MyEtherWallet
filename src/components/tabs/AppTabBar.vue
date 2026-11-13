@@ -7,7 +7,7 @@
  * @example
  * <AppTabBar v-model="tab" :items="[{ id: 'stocks', label: 'Stocks' }]" label="Assets" />
  */
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import AppTabItem from './AppTabItem.vue'
 import type { TabBarItem, TabBarSurface } from './types'
 
@@ -41,6 +41,29 @@ const select = (id: TId) => {
   if (id !== model.value) model.value = id
 }
 
+// Tab focus ring room (2px outline + 4px offset); the tablist pads as much
+const RING_SPACE = 6
+
+// Nearest-edge scroll of the tablist alone, keeping the ring space in view.
+// scrollIntoView would also scroll whatever holds the bar.
+const scrollToTab = (tab?: HTMLElement | null) => {
+  const list = listRef.value
+  if (!list || !tab) return
+  const { offsetLeft, offsetWidth } = tab
+  const start = offsetLeft - RING_SPACE
+  const end = offsetLeft + offsetWidth + RING_SPACE
+  if (start < list.scrollLeft) list.scrollLeft = start
+  else if (end > list.scrollLeft + list.clientWidth)
+    list.scrollLeft = end - list.clientWidth
+}
+
+const scrollToSelected = () =>
+  scrollToTab(
+    listRef.value?.querySelector<HTMLElement>('[aria-selected="true"]'),
+  )
+onMounted(scrollToSelected)
+watch(model, scrollToSelected, { flush: 'post' })
+
 const onKeydown = (event: KeyboardEvent) => {
   if (!listRef.value) return
   const tabs = Array.from(
@@ -59,18 +82,21 @@ const onKeydown = (event: KeyboardEvent) => {
   const next = nextIndexByKey[event.key]
   if (next === undefined) return
   event.preventDefault()
-  tabs[next].focus()
+  tabs[next].focus({ preventScroll: true })
+  scrollToTab(tabs[next])
 }
 </script>
 
 <template>
   <div class="w-full border-b" :class="ruleClass" data-testid="tab-bar">
-    <!-- -mb-px puts the item underline on top of the rule, as in Figma -->
+    <!-- Scrolls sideways when the tabs don't fit. -m-1.5/p-1.5 keeps the focus
+         ring inside the scroll box; -mb-[7px] (6px + 1px) keeps the underline on
+         the rule, as in Figma. `relative` measures offsetLeft from the list. -->
     <div
       ref="listRef"
       role="tablist"
       :aria-label="label"
-      class="-mb-px flex items-center gap-3"
+      class="no-scrollbar relative -m-1.5 -mb-[7px] flex items-center gap-3 overflow-x-auto p-1.5"
       @keydown="onKeydown"
     >
       <AppTabItem

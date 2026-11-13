@@ -1,8 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import i18n from '@/i18n'
 import {
+  getLocalizedWalletConnectError,
   getLocalizedWalletError,
   isTransientTrezorError,
+  toReportableWalletError,
 } from '@/utils/walletUtils'
 
 /**
@@ -131,5 +133,104 @@ describe('isTransientTrezorError (MEW-2080)', () => {
     expect(isTransientTrezorError('some unrelated rpc error')).toBe(false)
     expect(isTransientTrezorError(undefined)).toBe(false)
     expect(isTransientTrezorError(null)).toBe(false)
+  })
+})
+
+/**
+ * APP-MEW-WEB-1R4 — wallet rejections during connect are expected conditions,
+ * not app bugs: they are shown localized and kept out of Sentry.
+ */
+describe('getLocalizedWalletConnectError (APP-MEW-WEB-1R4)', () => {
+  beforeEach(() => {
+    i18n.global.locale.value = 'en'
+  })
+
+  it('maps known wallet rejections to localized messages', () => {
+    const cases: [unknown, string][] = [
+      [
+        { code: -32001, message: 'Already processing unlock. Please wait.' },
+        'Request to connect already pending, please check your wallet extension',
+      ],
+      [
+        { code: -32001, message: 'Already processing connect. Please wait.' },
+        'Request to connect already pending, please check your wallet extension',
+      ],
+      [
+        {
+          code: 8546,
+          message:
+            'Enkrypt: Geo restricted https://www.myetherwallet.com/blocked',
+        },
+        "This wallet isn't available in your region.",
+      ],
+      [
+        { code: -32603, message: 'Popup window was blocked' },
+        'Your browser blocked the wallet popup. Allow popups for this site and try again.',
+      ],
+      [
+        { code: 4100, message: 'User logged out.' },
+        "You're signed out of your wallet. Sign in and try again.",
+      ],
+      [
+        {
+          code: -32603,
+          message: 'Open your wallet to finish updating it, then reconnect.',
+        },
+        'Your wallet needs to finish updating. Open it, complete the update, and try again.',
+      ],
+    ]
+    for (const [walletError, expected] of cases) {
+      expect(getLocalizedWalletConnectError(walletError)).toBe(expected)
+    }
+  })
+
+  it('localizes to the active locale', () => {
+    i18n.global.locale.value = 'es'
+    expect(
+      getLocalizedWalletConnectError({
+        code: 4100,
+        message: 'User logged out.',
+      }),
+    ).toBe(
+      'Cerraste sesión en tu billetera. Inicia sesión e inténtalo de nuevo.',
+    )
+  })
+
+  it('returns undefined for unrecognized errors so they are still reported', () => {
+    expect(
+      getLocalizedWalletConnectError({
+        code: -32603,
+        message: 'Internal error',
+      }),
+    ).toBeUndefined()
+    expect(getLocalizedWalletConnectError(new Error('boom'))).toBeUndefined()
+    expect(getLocalizedWalletConnectError('some string')).toBeUndefined()
+    expect(getLocalizedWalletConnectError(null)).toBeUndefined()
+    expect(getLocalizedWalletConnectError(undefined)).toBeUndefined()
+  })
+})
+
+describe('toReportableWalletError', () => {
+  it('wraps a plain { code, message } rejection in an Error', () => {
+    const reportable = toReportableWalletError({
+      code: -32603,
+      message: 'Internal error',
+    })
+    expect(reportable).toBeInstanceOf(Error)
+    expect((reportable as Error).message).toBe('-32603: Internal error')
+  })
+
+  it('uses the message alone when there is no code', () => {
+    const reportable = toReportableWalletError({ message: 'Something failed' })
+    expect((reportable as Error).message).toBe('Something failed')
+  })
+
+  it('returns Errors and non-objects untouched', () => {
+    const error = new Error('boom')
+    expect(toReportableWalletError(error)).toBe(error)
+    expect(toReportableWalletError('raw string')).toBe('raw string')
+    expect(toReportableWalletError(null)).toBeNull()
+    const noMessage = { code: 1 }
+    expect(toReportableWalletError(noMessage)).toBe(noMessage)
   })
 })

@@ -19,6 +19,8 @@ import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 import {
+  isBenignBackProjectionServerError,
+  isBenignBalanceHistoryNotAcceptable,
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
@@ -38,7 +40,10 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectPublishFailedError,
+  isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
+  isWatchOnlyWalletSignError,
 } from '@/sentry/extensionNoise'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 import {
@@ -150,13 +155,34 @@ if (dsn && process.env.NODE_ENV === 'production') {
         // no app frame, already handled by the connect flow (APP-MEW-WEB-61 /
         // MEW-2240).
         isWalletConnectSubscribeInterruptedError(originalException) ||
+        // WalletConnect "No matching key. session topic doesn't exist" thrown
+        // inside @walletconnect/sign-client when the relay delivers a message
+        // for an already-removed session; no app frame, no user impact
+        // (APP-MEW-WEB-C9 / MEW-2656).
+        isWalletConnectStaleSessionTopicError(originalException) ||
+        // WalletConnect relay publish timeout ("Failed to publish payload")
+        // for tag 1112 only, i.e. deleting a stale session before connect,
+        // which the connect flow already toasts. Other tags (e.g. signing
+        // requests) keep reporting (APP-MEW-WEB-1RW / MEW-2657).
+        isWalletConnectPublishFailedError(originalException) ||
+        // The wallet's active account is watch-only (Trust Wallet), so it
+        // refuses to sign. Wallet-side state, already toasted by the flow
+        // (APP-MEW-WEB-1RY / MEW-2660).
+        isWatchOnlyWalletSignError(originalException) ||
         // iOS injected-script "Maximum call stack" RangeErrors with no app
         // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
         isForeignStackOverflow(event) ||
         // Purchase-info 403 from a region/wallet the fiat-purchase backend
         // denies — expected, already-handled business rule, not an app bug
         // (APP-MEW-WEB-1F5 / MEW-2173).
-        isBenignPurchaseInfoForbidden(event)
+        isBenignPurchaseInfoForbidden(event) ||
+        // Intermittent backend 406 from portfolio balance-history; the chart
+        // already shows its empty state (APP-MEW-WEB-1K0 / MEW-2547).
+        isBenignBalanceHistoryNotAcceptable(event) ||
+        // Backend 500 from the legacy 7d back-projection endpoint on chains
+        // it doesn't serve; the chart already shows its empty state
+        // (APP-MEW-WEB-1FJ / MEW-2665).
+        isBenignBackProjectionServerError(event)
       )
         return null
       return event

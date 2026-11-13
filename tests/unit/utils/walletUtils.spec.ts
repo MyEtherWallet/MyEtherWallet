@@ -3,6 +3,7 @@ import {
   isTrezorSupported,
   isInsufficientFundsError,
   isUserRejectionError,
+  isBlindSigningDisabledError,
 } from '@/utils/walletUtils'
 
 // ---------------------------------------------------------------------------
@@ -88,5 +89,39 @@ describe('isInsufficientFundsError', () => {
     expect(isInsufficientFundsError(null)).toBe(false)
     expect(isInsufficientFundsError({})).toBe(false)
     expect(isInsufficientFundsError('insufficient funds')).toBe(false)
+  })
+})
+
+describe('isBlindSigningDisabledError', () => {
+  it('detects the Ledger Ethereum app error thrown when blind signing is off', () => {
+    const error = new Error(
+      'Please enable Blind signing or Contract data in the Ethereum app Settings',
+    )
+    error.name = 'EthAppPleaseEnableContractData'
+    expect(isBlindSigningDisabledError(error)).toBe(true)
+  })
+
+  it('detects the Celo app variant', () => {
+    expect(
+      isBlindSigningDisabledError(
+        new Error('Please enable Contract data in the Celo app Settings'),
+      ),
+    ).toBe(true)
+  })
+
+  it('matches the raw message string passed by getLocalizedWalletError', () => {
+    expect(
+      isBlindSigningDisabledError(
+        'please enable blind signing or contract data in the ethereum app settings',
+      ),
+    ).toBe(true)
+  })
+
+  it('leaves other signing failures reportable', () => {
+    expect(
+      isBlindSigningDisabledError(new Error('Ledger device: locked (0x5515)')),
+    ).toBe(false)
+    expect(isBlindSigningDisabledError(undefined)).toBe(false)
+    expect(isBlindSigningDisabledError(null)).toBe(false)
   })
 })

@@ -1,125 +1,89 @@
 <template>
   <app-modal v-model="isOpen" :title="dialogTitle">
-    <template #header>
-      <div class="flex items-center gap-2.5">
-        <app-token-logo
-          :url="getLogoUrl(displaySymbol)"
-          :symbol="displaySymbol"
-          width="w-8"
-          height="h-8"
-        />
-        <span class="font-bold text-s-20">{{ dialogTitle }}</span>
-      </div>
-    </template>
-    <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
-      <!-- Order Details -->
-      <div class="bg-background-brand-subtle rounded-[20px] p-5 space-y-3">
-        <div class="flex justify-between text-s-14">
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.side-label')
-          }}</span>
-          <span
-            class="font-bold"
-            :class="
-              orderSide === 'buy' ? 'text-text-success' : 'text-text-error'
-            "
-            >{{ orderSideLabel }}</span
-          >
-        </div>
-        <div class="flex justify-between text-s-14">
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.order-type-label')
-          }}</span>
-          <span class="font-bold">{{
-            orderType === 'market'
-              ? $t('perps.confirm.market')
-              : $t('perps.confirm.limit')
-          }}</span>
-        </div>
-        <div class="flex justify-between text-s-14">
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.market-price')
-          }}</span>
-          <span class="font-bold">{{ formatUsd(currentPrice) }}</span>
-        </div>
+    <div class="flex flex-col gap-6 px-6 pb-6">
+      <div class="flex flex-col items-center gap-3">
         <div
-          v-if="orderType === 'limit'"
-          class="flex justify-between text-s-14"
+          class="flex w-full flex-col overflow-hidden rounded-16 bg-background-default p-4"
         >
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.limit-price')
-          }}</span>
-          <span class="font-bold">${{ limitPrice }}</span>
+          <div class="flex flex-col gap-4">
+            <div
+              v-for="row in priceRows"
+              :key="row.label"
+              class="flex items-center gap-3"
+            >
+              <p class="flex-1 truncate text-label-base text-text-default">
+                {{ row.label }}
+              </p>
+              <p class="text-label-base text-text-default">{{ row.value }}</p>
+            </div>
+            <template v-if="protectionRows.length">
+              <app-divider class="-my-1" />
+              <div
+                v-for="row in protectionRows"
+                :key="row.label"
+                class="flex items-center gap-3"
+              >
+                <p class="flex-1 truncate text-label-base text-text-default">
+                  {{ row.label }}
+                </p>
+                <p class="text-label-base text-text-default">
+                  {{ row.value }}
+                </p>
+              </div>
+            </template>
+            <app-divider class="-my-1" />
+            <div
+              v-for="row in positionRows"
+              :key="row.label"
+              class="flex items-center gap-3"
+            >
+              <p class="flex-1 truncate text-label-base text-text-default">
+                {{ row.label }}
+              </p>
+              <p class="text-label-base text-text-default">{{ row.value }}</p>
+            </div>
+          </div>
+          <expand-transition>
+            <div v-if="isBreakdownOpen" class="flex flex-col gap-4 pt-4">
+              <app-divider class="-my-1" />
+              <div
+                v-for="row in breakdownRows"
+                :key="row.label"
+                class="flex items-center gap-2"
+              >
+                <p class="flex-1 truncate text-text-base text-text-subtle">
+                  {{ row.label }}
+                </p>
+                <p class="text-label-base text-text-default">
+                  {{ row.value }}
+                </p>
+              </div>
+            </div>
+          </expand-transition>
         </div>
-        <div class="flex justify-between text-s-14">
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.margin')
-          }}</span>
-          <span class="font-bold">{{
-            formatUsd(parseFloat(inputAmount) || 0)
-          }}</span>
-        </div>
-        <div class="flex justify-between text-s-14">
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.leverage')
-          }}</span>
-          <span class="font-bold">{{ leverage }}&times;</span>
-        </div>
-        <div class="flex justify-between text-s-14">
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.position-size')
-          }}</span>
-          <span class="font-bold">{{ formatUsd(positionSizeUsd) }}</span>
-        </div>
-        <div class="flex justify-between text-s-14">
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.size', { symbol: displaySymbol })
-          }}</span>
-          <span class="font-bold">{{ orderSize }}</span>
-        </div>
-        <div class="flex justify-between text-s-14">
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.est-liquidation')
-          }}</span>
-          <span class="font-bold">{{
-            estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
-          }}</span>
-        </div>
-        <div class="flex justify-between text-s-14">
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.est-fee', {
-              type: isMaker
-                ? $t('perps.confirm.maker')
-                : $t('perps.confirm.taker'),
-            })
-          }}</span>
-          <span class="font-bold">{{ formatUsdc(estimatedFee) }}</span>
-        </div>
-        <div
-          v-if="takeProfitPrice !== null"
-          class="flex justify-between text-s-14"
+
+        <app-base-button
+          type="tertiary"
+          surface="alternative"
+          size="small"
+          @click="isBreakdownOpen = !isBreakdownOpen"
         >
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.take-profit')
-          }}</span>
-          <span class="text-text-success font-bold">{{
-            formatUsd(takeProfitPrice!)
-          }}</span>
-        </div>
-        <div
-          v-if="stopLossPrice !== null"
-          class="flex justify-between text-s-14"
-        >
-          <span class="text-text-subtle font-medium">{{
-            $t('perps.confirm.stop-loss')
-          }}</span>
-          <span class="text-text-error font-bold">{{
-            formatUsd(stopLossPrice!)
-          }}</span>
-        </div>
+          {{
+            isBreakdownOpen
+              ? $t('perps.confirm.close-breakdown')
+              : $t('perps.confirm.expand-breakdown')
+          }}
+          <template #trailing>
+            <AppIcon
+              name="chevron-down"
+              size="xxs"
+              class="transition-transform"
+              :class="{ 'rotate-180': isBreakdownOpen }"
+            />
+          </template>
+        </app-base-button>
       </div>
 
-      <!-- Error -->
       <AppBanner
         v-if="orderError || leverageError || limitPriceOutOfTolerance"
         type="alert"
@@ -128,44 +92,33 @@
         "
       />
 
-      <!-- Actions -->
-      <div class="flex flex-col gap-1">
-        <app-base-button
-          :tone="orderSide === 'buy' ? 'success' : 'danger'"
-          :disabled="
-            isSubmitting ||
-            !!orderError ||
-            !!leverageError ||
-            limitPriceOutOfTolerance
-          "
-          :is-loading="isSubmitting"
-          class="flex-1"
-          @click="$emit('confirm')"
-          >{{ confirmButtonLabel }}</app-base-button
-        >
-        <app-base-button
-          type="tertiary"
-          surface="alternative"
-          size="large"
-          :disabled="isSubmitting"
-          class="mx-auto w-full"
-          @click="isOpen = false"
-          >{{ $t('perps.confirm.cancel') }}</app-base-button
-        >
-      </div>
+      <app-base-button
+        :tone="orderSide === 'buy' ? 'success' : 'danger'"
+        :disabled="!!orderError || !!leverageError || limitPriceOutOfTolerance"
+        :is-loading="isSubmitting"
+        class="w-full"
+        @click="$emit('confirm')"
+      >
+        {{
+          orderSide === 'buy'
+            ? $t('perps.confirm.confirm-long')
+            : $t('perps.confirm.confirm-short')
+        }}
+      </app-base-button>
     </div>
   </app-modal>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppModal from '@/components/modal/AppModal.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBanner from '@/components/banner/AppBanner.vue'
-import { formatUsd, formatUsdc } from '../utils/formatters'
-import { getLogoUrl } from '../utils/market'
+import AppDivider from '@/components/divider/AppDivider.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
+import { formatUsd } from '../utils/formatters'
 
 const { t } = useI18n()
 
@@ -196,23 +149,15 @@ defineEmits<{
   confirm: []
 }>()
 
-const orderSideLabel = computed(() =>
-  props.orderSide === 'buy'
-    ? t('perps.confirm.long')
-    : t('perps.confirm.short'),
-)
+const isBreakdownOpen = ref(false)
+watch(isOpen, open => {
+  if (open) isBreakdownOpen.value = false
+})
 
 const dialogTitle = computed(() =>
-  t('perps.confirm.title', {
-    side: orderSideLabel.value,
-    symbol: props.displaySymbol,
-  }),
-)
-
-const confirmButtonLabel = computed(() =>
-  props.isSubmitting
-    ? t('perps.confirm.processing')
-    : t('perps.confirm.confirm-action', { side: orderSideLabel.value }),
+  props.orderSide === 'buy'
+    ? t('perps.confirm.review-long', { symbol: props.displaySymbol })
+    : t('perps.confirm.review-short', { symbol: props.displaySymbol }),
 )
 
 // Per-ticket maker/taker rules: market orders are always taker; limit orders
@@ -243,4 +188,80 @@ const estimatedFee = computed(() => {
     return 0
   return size * price * rate
 })
+
+type Row = { label: string; value: string }
+
+const priceRows = computed<Row[]>(() => [
+  {
+    label: t('perps.confirm.order-type-label'),
+    value:
+      props.orderType === 'market'
+        ? t('perps.confirm.market')
+        : t('perps.confirm.limit'),
+  },
+  {
+    label: t('perps.confirm.market-price'),
+    value: formatUsd(props.currentPrice),
+  },
+  ...(props.orderType === 'limit'
+    ? [
+        {
+          label: t('perps.confirm.place-order-at'),
+          value: formatUsd(props.limitPrice),
+        },
+      ]
+    : []),
+])
+
+const protectionRows = computed<Row[]>(() => [
+  ...(props.takeProfitPrice !== null
+    ? [
+        {
+          label: t('perps.confirm.take-profit-at'),
+          value: formatUsd(props.takeProfitPrice),
+        },
+      ]
+    : []),
+  ...(props.stopLossPrice !== null
+    ? [
+        {
+          label: t('perps.confirm.stop-loss-at'),
+          value: formatUsd(props.stopLossPrice),
+        },
+      ]
+    : []),
+])
+
+const positionRows = computed<Row[]>(() => [
+  {
+    label: t('perps.confirm.margin'),
+    value: formatUsd(parseFloat(props.inputAmount) || 0),
+  },
+  { label: t('perps.confirm.leverage'), value: `${props.leverage}x` },
+  {
+    label: t('perps.confirm.position-size'),
+    value: formatUsd(props.positionSizeUsd),
+  },
+  {
+    label: t('perps.confirm.order-size'),
+    value: `${props.orderSize} ${props.displaySymbol}`,
+  },
+])
+
+const breakdownRows = computed<Row[]>(() => [
+  {
+    label: t('perps.confirm.est-liquidation-price'),
+    value: props.estimatedLiquidation
+      ? formatUsd(props.estimatedLiquidation)
+      : '$0.00',
+  },
+  // Figma shows the fee in $; keep formatUsdc's 6-decimal precision.
+  {
+    label: t('perps.confirm.tx-fee'),
+    value: `$${(Number(estimatedFee.value) || 0).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 6,
+    })}`,
+  },
+])
 </script>

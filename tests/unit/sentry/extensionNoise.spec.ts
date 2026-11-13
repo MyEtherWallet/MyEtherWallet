@@ -4,6 +4,8 @@ import {
   WaitForTransactionReceiptTimeoutError,
 } from 'viem'
 import {
+  isBenignBackProjectionServerError,
+  isBenignBalanceHistoryNotAcceptable,
   isBenignPurchaseInfoForbidden,
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
@@ -23,8 +25,12 @@ import {
   isStorageQuotaExceededError,
   isTransactionReceiptTimeoutError,
   isTrezorHandshakeError,
+  isWalletConnectPublishFailedError,
+  isWalletConnectStaleSessionTopicError,
   isWalletConnectSubscribeInterruptedError,
+  isWatchOnlyWalletSignError,
 } from '@/sentry/extensionNoise'
+import { describeMewApiFetchError } from '@/utils/mewApiFetchError'
 import configs from '@/configs'
 
 describe('isExtensionOrProviderError', () => {
@@ -874,6 +880,102 @@ describe('isBenignPurchaseInfoForbidden', () => {
   })
 })
 
+describe('isBenignBalanceHistoryNotAcceptable', () => {
+  const BALANCE_HISTORY = `${configs.MEW_PURCHASE_BASE_URL}/v5/portfolio/balance-history`
+  // Build the event the way production does: the shared useFetchMewWalletApi
+  // reporter tags it through describeMewApiFetchError (APP-MEW-WEB-1K0).
+  const eventFor = (url: string, status: number, statusText: string) => ({
+    tags: describeMewApiFetchError({
+      error: new Error(statusText),
+      data: {},
+      status,
+      statusText,
+      url,
+    }).tags,
+  })
+
+  it('is true for the production 406 from balance-history', () => {
+    expect(
+      isBenignBalanceHistoryNotAcceptable(
+        eventFor(
+          `${BALANCE_HISTORY}?address=0xe3d17904566328bab5b1662be219923195554640&period=max&chain=ETH`,
+          406,
+          'Not Acceptable',
+        ),
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for another status on balance-history (still reported)', () => {
+    expect(
+      isBenignBalanceHistoryNotAcceptable(
+        eventFor(`${BALANCE_HISTORY}?period=max&chain=ETH`, 403, 'Forbidden'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for a 406 from another MEW wallet API route', () => {
+    expect(
+      isBenignBalanceHistoryNotAcceptable(
+        eventFor(configs.MEW_PURCHASE_API, 406, 'Not Acceptable'),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for events without tags and non-object inputs', () => {
+    expect(isBenignBalanceHistoryNotAcceptable({})).toBe(false)
+    expect(isBenignBalanceHistoryNotAcceptable(null)).toBe(false)
+  })
+})
+
+describe('isBenignBackProjectionServerError', () => {
+  const backProjection = (chain: string) =>
+    `${configs.MEW_API_URL}/v1/web/chains/${chain}/addresses/0xfa115dd970090b24c1019ee65bd69f1b181ae059/7d-balances-back-projection`
+  // The production context (APP-MEW-WEB-1FJ): HTTP/2 500 with an empty
+  // statusText and the generic body message, tagged by the shared reporter.
+  const eventFor = (url: string, status: number) => ({
+    tags: describeMewApiFetchError({
+      error: new Error(''),
+      data: { message: 'Something went wrong.' },
+      status,
+      statusText: '',
+      url,
+    }).tags,
+  })
+
+  it('is true for the production 500 from 7d-balances-back-projection', () => {
+    for (const chain of ['MOONBEAM', 'CANTO', 'MOONRIVER', 'BLAST', 'RARI']) {
+      expect(
+        isBenignBackProjectionServerError(eventFor(backProjection(chain), 500)),
+      ).toBe(true)
+    }
+  })
+
+  it('is false for another status on back-projection (still reported)', () => {
+    expect(
+      isBenignBackProjectionServerError(
+        eventFor(backProjection('MOONBEAM'), 404),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for a 500 from another MEW API route', () => {
+    expect(
+      isBenignBackProjectionServerError(
+        eventFor(
+          `${configs.MEW_API_URL}/v1/web/pages/stocks-info/stocks/blkhion/summary`,
+          500,
+        ),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for events without tags and non-object inputs', () => {
+    expect(isBenignBackProjectionServerError({})).toBe(false)
+    expect(isBenignBackProjectionServerError(null)).toBe(false)
+  })
+})
+
 describe('isWalletConnectSubscribeInterruptedError', () => {
   const MSG = 'Connection interrupted while trying to subscribe'
 
@@ -925,6 +1027,108 @@ describe('isWalletConnectSubscribeInterruptedError', () => {
     expect(isWalletConnectSubscribeInterruptedError('something else')).toBe(
       false,
     )
+  })
+})
+
+describe('isWalletConnectStaleSessionTopicError', () => {
+  const BUNDLE = 'https://app.myetherwallet.com/assets/index.es-Bw52XZxW.js'
+  const MSG =
+    "No matching key. session topic doesn't exist: 8a42442134e32cf7e131fc30ca870a372e2b17d3540240c3be5dae7d8fe515df"
+  const err = (message: string, stack?: string) =>
+    Object.assign(new Error(message), { stack })
+
+  it('drops the inbound relay rejection on V8 (APP-MEW-WEB-C9, Chrome/Edge)', () => {
+    const stack = [
+      `Error: ${MSG}`,
+      `    at A$.isValidSessionTopic (${BUNDLE}:12:176340)`,
+      `    at async A$.onRelayMessage (${BUNDLE}:12:174453)`,
+    ].join('\n')
+    expect(isWalletConnectStaleSessionTopicError(err(MSG, stack))).toBe(true)
+  })
+
+  it('drops the inbound relay rejection on Firefox/Safari stack format', () => {
+    const stack = [
+      `isValidSessionTopic@${BUNDLE}:12:176340`,
+      `onRelayMessage@${BUNDLE}:12:174453`,
+    ].join('\n')
+    expect(isWalletConnectStaleSessionTopicError(err(MSG, stack))).toBe(true)
+  })
+
+  it('keeps an outbound request() on a stale session (no relay frame)', () => {
+    const stack = [
+      `Error: ${MSG}`,
+      `    at A$.isValidSessionTopic (${BUNDLE}:12:176340)`,
+      `    at A$.isValidRequest (${BUNDLE}:12:166000)`,
+      `    at A$.request (${BUNDLE}:12:140000)`,
+    ].join('\n')
+    expect(isWalletConnectStaleSessionTopicError(err(MSG, stack))).toBe(false)
+  })
+
+  it('fails open when there is no stack', () => {
+    expect(isWalletConnectStaleSessionTopicError(err(MSG))).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError(MSG)).toBe(false)
+  })
+
+  it('does NOT match other "No matching key" shapes', () => {
+    expect(
+      isWalletConnectStaleSessionTopicError(
+        err(
+          "No matching key. pairing topic doesn't exist: abc",
+          `onRelayMessage@${BUNDLE}:12:174453`,
+        ),
+      ),
+    ).toBe(false)
+  })
+
+  it('is false for non-matching inputs', () => {
+    expect(isWalletConnectStaleSessionTopicError(null)).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError(undefined)).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError({})).toBe(false)
+    expect(isWalletConnectStaleSessionTopicError({ message: 42 })).toBe(false)
+  })
+})
+
+describe('isWalletConnectPublishFailedError', () => {
+  // Exact production message (APP-MEW-WEB-1RW): tag 1112 = wc_sessionDelete.
+  const MSG =
+    'Failed to publish payload, please try again. id:1794229263589309184 tag:1112'
+
+  it('drops the @walletconnect/core relay publish timeout (APP-MEW-WEB-1RW)', () => {
+    expect(isWalletConnectPublishFailedError(new Error(MSG))).toBe(true)
+  })
+
+  it('is true for the serialized payload and a bare-string rejection', () => {
+    expect(isWalletConnectPublishFailedError({ message: MSG })).toBe(true)
+    expect(isWalletConnectPublishFailedError(MSG)).toBe(true)
+  })
+
+  it('keeps reporting every other relay tag (fails closed)', () => {
+    // tag 1108 = wc_sessionRequest: a failed signing/send request must report.
+    expect(
+      isWalletConnectPublishFailedError(
+        new Error('Failed to publish payload, please try again. id:1 tag:1108'),
+      ),
+    ).toBe(false)
+    expect(
+      isWalletConnectPublishFailedError(
+        'Failed to publish payload, please try again. id:1 tag:11120',
+      ),
+    ).toBe(false)
+  })
+
+  it('keeps reporting an app error that wraps the message with a prefix', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error(`Signing failed: ${MSG}`)),
+    ).toBe(false)
+  })
+
+  it('is false for a genuine app error and non-matching inputs', () => {
+    expect(
+      isWalletConnectPublishFailedError(new Error('Failed to publish post')),
+    ).toBe(false)
+    expect(isWalletConnectPublishFailedError(null)).toBe(false)
+    expect(isWalletConnectPublishFailedError({})).toBe(false)
+    expect(isWalletConnectPublishFailedError({ message: 42 })).toBe(false)
   })
 })
 
@@ -1088,5 +1292,34 @@ describe('isProviderProxyRemoveListenerError', () => {
     expect(isProviderProxyRemoveListenerError({})).toBe(false)
     expect(isProviderProxyRemoveListenerError({ message: 42 })).toBe(false)
     expect(isProviderProxyRemoveListenerError('something else')).toBe(false)
+  })
+})
+
+describe('isWatchOnlyWalletSignError', () => {
+  // APP-MEW-WEB-1RY: Trust Wallet rejects eth_sendTransaction from one of its
+  // own watch-only accounts with this exact Error.
+  const MSG = 'Watch-only wallets cannot sign transactions or messages.'
+
+  it('is true for the exact production payload (Error from the wallet provider)', () => {
+    expect(isWatchOnlyWalletSignError(new Error(MSG))).toBe(true)
+  })
+
+  it('is true for a plain-object or lowercased (send-flow re-wrapped) payload', () => {
+    expect(isWatchOnlyWalletSignError({ message: MSG })).toBe(true)
+    expect(isWatchOnlyWalletSignError(new Error(MSG.toLowerCase()))).toBe(true)
+  })
+
+  it('is false for genuine app errors and non-matching inputs', () => {
+    expect(
+      isWatchOnlyWalletSignError(
+        new Error('Method not implemented: SignTransaction'),
+      ),
+    ).toBe(false)
+    expect(isWatchOnlyWalletSignError(new Error('insufficient funds'))).toBe(
+      false,
+    )
+    expect(isWatchOnlyWalletSignError(null)).toBe(false)
+    expect(isWatchOnlyWalletSignError(MSG)).toBe(false)
+    expect(isWatchOnlyWalletSignError({ message: 42 })).toBe(false)
   })
 })
