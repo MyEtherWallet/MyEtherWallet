@@ -1,4 +1,5 @@
 import { ref, computed, watch, onMounted } from 'vue'
+import { BigNumber } from 'bignumber.js'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -297,14 +298,15 @@ export function usePerpsTradeForm() {
     return 0
   })
 
+  // null when the contract has no 24h change, so the panel can hide it
+  // instead of showing 0.00%
   const priceChange = computed(() => {
     const contract = contracts.value.find(
       c => c.market === fullMarketName.value,
     )
-    if (contract?.priceChangePercent) {
-      return parseFloat(contract.priceChangePercent)
-    }
-    return 0
+    return contract?.priceChangePercent
+      ? parseFloat(contract.priceChangePercent)
+      : null
   })
 
   const availableMargin = computed(() =>
@@ -852,6 +854,8 @@ export function usePerpsTradeForm() {
   const submitDisabled = computed(() => {
     const amt = parseFloat(inputAmount.value)
     if (!amt || amt <= 0 || isSubmitting.value) return true
+    // No price (e.g. a market with no quote) means no order size to send
+    if (!(parseFloat(orderSize.value) > 0)) return true
     if (limitPriceHasError.value) return true
     if (marginPrecisionError.value) return true
     if (takeProfitErrorMessage.value || stopLossErrorMessage.value) return true
@@ -942,6 +946,16 @@ export function usePerpsTradeForm() {
       inputAmount.value = margin.toFixed(2)
       const maxBase = getBaseSizeForPercent(100) || 1
       sliderValue.value = Math.min((baseSize / maxBase) * 100, 100)
+    } else if (baseSize === null && availableMargin.value > 0) {
+      // No max order size data yet: same fallback as the slider. A reported
+      // max of 0 is not missing data, so it fills nothing.
+      // Floored in decimal math so 100% never goes above the balance, and
+      // 0.29 doesn't drift to 0.28 the way float division does
+      inputAmount.value = new BigNumber(availableMargin.value)
+        .times(pct)
+        .div(100)
+        .toFixed(2, BigNumber.ROUND_DOWN)
+      sliderValue.value = pct
     }
   }
 

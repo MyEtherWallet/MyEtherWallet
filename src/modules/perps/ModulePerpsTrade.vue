@@ -1,5 +1,8 @@
 <template>
-  <div class="flex h-full flex-col sm:px-1 sm:pt-2">
+  <!-- pb-5 lives here, not only on the panel: the panel's own bottom padding
+       is lost once this form is taller than the panel and scrolls, which
+       left the CTA flush with the bottom edge. -->
+  <div class="flex flex-col pb-5 sm:px-1 sm:pt-2">
     <perps-signing-prompt
       :show="showSigningPrompt"
       :message="signingMessage"
@@ -79,8 +82,7 @@
             size="l"
             surface="alternative"
             :title="displaySymbol"
-            :description="marketName"
-            :aria-label="$t('select_token.title')"
+            :description="marketPrice"
             @click="openTokenSelect"
           >
             <template #avatar>
@@ -91,6 +93,15 @@
                 height="h-8"
                 no-shadow
               />
+            </template>
+            <template #description>
+              {{ marketPrice }}
+              <span
+                v-if="priceChange !== null"
+                :class="pnlColor(String(priceChange))"
+              >
+                ({{ formatChange(priceChange) }})
+              </span>
             </template>
           </AppPicker>
 
@@ -232,14 +243,25 @@
 
           <!-- Target Price (Limit Orders). The capture listener cleans the
                typed value before AppInput's v-model reads it. -->
-          <AppInput
-            v-if="orderType === 'limit'"
-            v-model="limitPrice"
-            :label="$t('perps.trade.target-price', { symbol: displaySymbol })"
-            :error-message="limitPriceErrorMessage"
-            inputmode="decimal"
-            @input.capture="onLimitPriceInput"
-          />
+          <template v-if="orderType === 'limit'">
+            <AppInput
+              v-model="limitPrice"
+              :label="$t('perps.trade.target-price', { symbol: displaySymbol })"
+              :error-message="limitPriceErrorMessage"
+              inputmode="decimal"
+              @input.capture="onLimitPriceInput"
+            />
+            <div class="flex gap-2">
+              <AppChip
+                v-for="pct in [-5, -2.5, 0, 2.5, 5]"
+                :key="pct"
+                surface="alternative"
+                :label="limitPresetLabel(pct)"
+                class="min-w-0 flex-1"
+                @click="setLimitPricePct(pct)"
+              />
+            </div>
+          </template>
 
           <!-- Margin (new position or add to it) -->
           <template v-if="!activePosition || manageMode === 'add'">
@@ -299,6 +321,15 @@
                 <p class="w-10 shrink-0 text-right text-label-sm">
                   {{ formatSliderPercent(sliderValue) }}
                 </p>
+              </div>
+              <div class="flex gap-2">
+                <AppChip
+                  v-for="pct in [10, 25, 50, 75, 100]"
+                  :key="pct"
+                  :label="`${pct}%`"
+                  class="min-w-0 flex-1"
+                  @click="setPercentage(pct)"
+                />
               </div>
 
               <AppDivider />
@@ -382,6 +413,16 @@
                 <p class="w-10 shrink-0 text-right text-label-sm">
                   {{ formatSliderPercent(closeSliderValue) }}
                 </p>
+              </div>
+              <div class="flex gap-2">
+                <AppChip
+                  v-for="pct in [5, 25, 50, 75, 100]"
+                  :key="pct"
+                  :label="`${pct}%`"
+                  :disabled="isClosePillDisabled(pct)"
+                  class="min-w-0 flex-1"
+                  @click="setClosePercentage(pct)"
+                />
               </div>
 
               <AppDivider />
@@ -564,7 +605,13 @@
 
 <script setup lang="ts">
 import { computed, nextTick, watch } from 'vue'
-import { formatUsd, formatPnl } from './utils/formatters'
+import {
+  formatUsd,
+  formatPnl,
+  formatContractPrice,
+  pnlColor,
+} from './utils/formatters'
+import { formatChange } from '@/components/cell/cellSizes'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 import { usePerpsAuth } from './composables/usePerpsAuth'
@@ -584,6 +631,7 @@ import AppPicker from '@/components/picker/AppPicker.vue'
 import AppSegmentedControl from '@/components/segmented_control/AppSegmentedControl.vue'
 import type { SegmentItem } from '@/components/segmented_control/types'
 import AppSlider from '@/components/slider/AppSlider.vue'
+import AppChip from '@/components/chip/AppChip.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
@@ -726,6 +774,7 @@ const {
   // Market info
   displaySymbol,
   currentPrice,
+  priceChange,
   // Order form
   orderSide,
   orderSideButtons,
@@ -757,6 +806,8 @@ const {
   isClosing,
   showCloseConfirmModal,
   onCloseSliderInput,
+  setClosePercentage,
+  isClosePillDisabled,
   confirmAndClosePosition,
   showCloseConfirmation,
   // Auto Close
@@ -796,9 +847,11 @@ const {
   newMarginRatio,
   // Slider
   onSliderInput,
+  setPercentage,
   setOrderType,
   limitPrice,
   activeLimitPill,
+  setLimitPricePct,
   // Market selector
   showMarketModal,
   marketSearch,
@@ -897,9 +950,13 @@ const activeContract = computed(() =>
 )
 
 const logoUrl = computed(() => getLogoUrl(displaySymbol.value))
-const marketName = computed(() =>
-  activeContract.value ? getMarketDisplayName(activeContract.value) : '',
+// Same price as the market selector rows: "—" when the contract has no quote
+const marketPrice = computed(() =>
+  activeContract.value ? formatContractPrice(activeContract.value) : '',
 )
+
+const limitPresetLabel = (pct: number) =>
+  pct === 0 ? t('perps.trade.mid') : `${pct > 0 ? '+' : ''}${pct}%`
 
 const SIDE_TONE = { buy: 'success', sell: 'danger' } as const
 const sideTone = computed(() => SIDE_TONE[orderSide.value])

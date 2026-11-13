@@ -94,6 +94,7 @@
       "target-price": "Target {symbol} price",
       "market": "Market",
       "limit": "Limit",
+      "mid": "Mid",
       "margin-amount-label": "Margin amount in USD",
       "size-percentage-label": "Order size as a percentage of available margin",
       "size": "Size",
