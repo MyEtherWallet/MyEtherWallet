@@ -66,8 +66,8 @@ const SLOT_SIZE = 'xs' as const
 const hasDescription = computed(() => !!props.description)
 
 // Text alignment cascades to the (possibly wrapping) text. The rows themselves
-// stay full-width (default stretch) so the title can actually clip —
-// items-start/end would shrink them to content width.
+// stay full-width (default stretch) so the title can actually clip (or wrap,
+// with wrapTitle) — items-start/end would shrink them to content width.
 const ALIGN_CLASS: Record<ContentGroupAlign, string> = {
   left: 'text-left',
   center: 'text-center',
