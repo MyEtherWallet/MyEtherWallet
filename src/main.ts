@@ -25,6 +25,7 @@ import {
   isBluetoothGattDisconnectedError,
   isCoinNotFoundApiError,
   isEip6963NullProviderError,
+  isEnkryptNotInitializedError,
   isExpectedTradeClientError,
   isExtensionContextInvalidatedError,
   isExtensionOrProviderError,
@@ -169,6 +170,9 @@ if (dsn && process.env.NODE_ENV === 'production') {
         // refuses to sign. Wallet-side state, already toasted by the flow
         // (APP-MEW-WEB-1RY / MEW-2660).
         isWatchOnlyWalletSignError(originalException) ||
+        // Enkrypt has no wallet set up yet, so it rejects connect. Wallet-side
+        // state, already shown by the connect flow (APP-MEW-WEB-2W / MEW-2677).
+        isEnkryptNotInitializedError(originalException) ||
         // iOS injected-script "Maximum call stack" RangeErrors with no app
         // frame — external, unactionable noise (APP-MEW-WEB-BB / MEW-2065).
         isForeignStackOverflow(event) ||
