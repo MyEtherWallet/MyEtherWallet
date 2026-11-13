@@ -1,0 +1,46 @@
+{
+  "send": {
+    "send-tokens": "Send Tokens",
+    "send-nfts": "Send NFTs",
+    "need-help": "Need help sending?",
+    "approve-tx-on-device": "Approve Tx on your device",
+    "unknown": "Unknown",
+    "unknown_chain": "Unknown Chain",
+    "toast": {
+      "failed_to_sign": "Failed to sign transaction",
+      "tx-send-success": "Transaction sent successfully",
+      "tx-send-failed": "Transaction failed to send",
+      "failed_to_fetch_gas_fees": "Failed to fetch gas fees",
+      "frozen_token": "Sending failed. Token may be frozen, please contact us"
+    },
+    "initiated": {
+      "title": "Send initiated",
+      "completed-note": "Once completed, {symbol} will be sent to",
+      "on-chain": "on {chain}",
+      "status": {
+        "pending": "Pending",
+        "successful": "Successful",
+        "failed": "Failed"
+      },
+      "tx-hash": "Transaction Hash",
+      "track-progress": "Track progress in notifications",
+      "close-window": "You can close this window and",
+      "check-explorer": "or check block explorer"
+    }
+  },
+  "verify-tx": {
+    "title": "Verify Transaction",
+    "description": "Double check the information before confirming the transaction.",
+    "unknown-network": "Unknown network",
+    "confirm": "Confirm and send"
+  },
+  "error": {
+    "amount": {
+      "required": "amount is required",
+      "less_than_zero": "amount must be greater than 0"
+    },
+    "balance": {
+      "insufficient": "insufficient balance"
+    }
+  }
+}
