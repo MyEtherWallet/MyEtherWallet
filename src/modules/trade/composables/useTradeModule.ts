@@ -34,6 +34,7 @@ import { useTradeValidation } from './useTradeValidation'
 import { useTradeQuote } from './useTradeQuote'
 import { useTradeExecution, type TradeFlowStep } from './useTradeExecution'
 import { useTradeForm } from './useTradeForm'
+import { useOipPairGuard } from './useOipPairGuard'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useBlockedContent } from '@/composables/useBlockedContent'
 import type { Chain } from '@/mew_api/types'
@@ -275,6 +276,11 @@ export function useTradeModule() {
     disabledTokenAddresses,
     toTokens,
     stockMarketCapOf,
+    isOipTrade,
+    isFromTokenStable,
+    isOipPairAllowed,
+    isCashToken,
+    isOipSymbol,
   } = useTradeTokens({
     form,
     fromTokens,
@@ -300,6 +306,7 @@ export function useTradeModule() {
     fromAmountError,
     isInsufficientBalanceError,
     isDecimalsError,
+    isOipMinimumError,
     isTradeDisabled,
     isSameTokenSelected,
   } = useTradeValidation({
@@ -310,6 +317,9 @@ export function useTradeModule() {
     isMarketOpen: isTradingSessionOpen,
     isSelectedAssetTradeable,
     supportedNetwork,
+    isOipTrade,
+    isFromTokenStable,
+    isOipPairAllowed,
   })
 
   // --- Trade Quote ---
@@ -430,7 +440,31 @@ export function useTradeModule() {
   const isToTokenAvailable = (token: NewTokenInfo) =>
     !disabledTokenAddresses.value.includes(token.address.toLowerCase())
 
+  // An OIP token requested from outside the panel only trades against native
+  // or a stable. Any other From filters it out of `toTokens`, and the request
+  // would silently resolve to a different token — so From gives way instead.
+  const makeFromTradableWithOip = (symbol: string) => {
+    const from = fromTokenSelected.value
+    if (!from || isCashToken(from) || !isOipSymbol(symbol)) return
+    const defaultFrom = getDefaultFromToken()
+    // The default ends on the first listed token, which need not be cash.
+    const cashFrom =
+      defaultFrom && isCashToken(defaultFrom)
+        ? defaultFrom
+        : fromTokens.value.find(token => isCashToken(token))
+    if (!cashFrom) return
+    fromTokenSelected.value = cashFrom
+    fromTokenManuallySelected.value = false
+    // The amount was typed for the token being replaced.
+    resetPristine()
+    fromAmount.value = ''
+    toAmount.value = ''
+  }
+
   const restoreToToken = () => {
+    // First: it changes which tokens the list below holds.
+    if (selectedTradeTokenSymbol.value)
+      makeFromTradableWithOip(selectedTradeTokenSymbol.value)
     if (!toTokens.value.length) return
     const storedToSymbol = tradeToSymbol.value
     if (selectedTradeTokenSymbol.value) {
@@ -782,6 +816,20 @@ export function useTradeModule() {
   const buyMarketCapOf = (token: NewTokenInfo): number =>
     stockMarketCapOf(token) || walletMarketCapOf(token)
 
+  const { ensureValidPair } = useOipPairGuard({
+    form,
+    isOipPairAllowed,
+    // Skips the From token: the first entry of a list the From itself belongs
+    // to would trade it against itself.
+    getDefaultToToken: () =>
+      pickFirstAvailableToken(
+        toTokens.value.filter(
+          token => !sameAddress(token, fromTokenSelected.value),
+        ),
+        disabledTokenAddresses.value,
+      ),
+  })
+
   const onFromTokenSelected = (token: NewTokenInfo) => {
     // The child emits `select:token` only on an explicit user pick, so this is
     // the one place a selection can be attributed to the user.
@@ -802,6 +850,8 @@ export function useTradeModule() {
         toTokenManuallySelected.value = false
       }
     }
+    // Before the toast, so it names the To token the pair ends up with.
+    ensureValidPair()
     notifyTokensSwitched(token, toTokenSelected.value)
   }
   const onToTokenSelected = (token: NewTokenInfo) => {
@@ -867,6 +917,7 @@ export function useTradeModule() {
     isCtaLoading,
     isInsufficientBalanceError,
     isDecimalsError,
+    isOipMinimumError,
     isPairUnavailable,
     pillStatus,
     untilText,

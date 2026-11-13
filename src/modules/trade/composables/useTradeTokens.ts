@@ -17,6 +17,14 @@ import {
   getActivePauseReason,
   type PauseReason,
 } from '../common/tradeSession'
+import {
+  buildOipIndex,
+  classifyTradeToken,
+  filterToTokensForFrom,
+  isCashClass,
+  isOipChain,
+  isOipPairAllowed as isOipClassPairAllowed,
+} from '../common/oipRules'
 import type { TradeForm } from './useTradeForm'
 
 // Individual asset type from the response arrays
@@ -210,8 +218,8 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     )
   })
 
-  // Build toTokens list from tradable assets
-  const toTokens = computed(() => {
+  // Build the To list from tradable assets, before the OIP pair rules
+  const unfilteredToTokens = computed(() => {
     if (!tradableAssets.value || !selectedFromChain.value)
       return [] as NewTokenInfo[]
 
@@ -257,6 +265,64 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     return tradableTokens
   })
 
+  const oipIndex = computed(() =>
+    buildOipIndex(tradableAssets.value, additionalBuyAssets.value),
+  )
+
+  // Off unless the chain is gated AND the backend flags at least one asset, so
+  // a payload without `isPortfolio` leaves every rule below a no-op.
+  const isOipRulesActive = computed(
+    () =>
+      isOipChain(selectedFromChain.value?.chainID) &&
+      oipIndex.value.oipAddresses.size > 0,
+  )
+
+  const classOf = (token: NewTokenInfo | null) =>
+    token ? classifyTradeToken(token.address, oipIndex.value) : null
+
+  const fromTokenClass = computed(() => classOf(fromTokenSelected.value))
+  const toTokenClass = computed(() => classOf(toTokenSelected.value))
+
+  const isOipTrade = computed(
+    () =>
+      isOipRulesActive.value &&
+      (fromTokenClass.value === 'oip' || toTokenClass.value === 'oip'),
+  )
+  const isFromTokenStable = computed(() => fromTokenClass.value === 'stable')
+
+  // Vacuously true until both sides are selected: there is no pair to refuse.
+  const isOipPairAllowed = computed(() => {
+    const from = fromTokenClass.value
+    const to = toTokenClass.value
+    if (!isOipRulesActive.value || !from || !to) return true
+    return isOipClassPairAllowed(from, to)
+  })
+
+  const isCashToken = (token: NewTokenInfo | null) => {
+    const tokenClass = classOf(token)
+    return tokenClass !== null && isCashClass(tokenClass)
+  }
+
+  // Looked up in the unfiltered list: the point is to recognise an OIP token
+  // the current From has filtered out of `toTokens`.
+  const isOipSymbol = (symbol: string) =>
+    isOipRulesActive.value &&
+    unfilteredToTokens.value.some(
+      token =>
+        token.symbol.toUpperCase() === symbol.toUpperCase() &&
+        classOf(token) === 'oip',
+    )
+
+  const toTokens = computed(() => {
+    const fromClass = fromTokenClass.value
+    if (!isOipRulesActive.value || !fromClass) return unfilteredToTokens.value
+    return filterToTokensForFrom(
+      unfilteredToTokens.value,
+      fromClass,
+      oipIndex.value,
+    )
+  })
+
   return {
     isCashOutTradableAsset,
     isSelectedAssetTradeable,
@@ -264,6 +330,11 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     disabledTokenAddresses,
     toTokens,
     stockMarketCapOf,
+    isOipTrade,
+    isFromTokenStable,
+    isOipPairAllowed,
+    isCashToken,
+    isOipSymbol,
   }
 }
 

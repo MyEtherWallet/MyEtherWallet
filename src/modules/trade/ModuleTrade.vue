@@ -121,6 +121,7 @@
             :fiat-loading="isLoadingQuote"
             :balance-error="isInsufficientBalanceError"
             :inline-error="isDecimalsError"
+            :feedback-error="isOipMinimumError"
             :tokens="fromTokens"
             :show-balance="isWalletConnected"
             :network-name="selectedFromChain?.name"
@@ -336,6 +337,7 @@ const {
   isCtaLoading,
   isInsufficientBalanceError,
   isDecimalsError,
+  isOipMinimumError,
   isPairUnavailable,
   pillStatus,
   untilText,

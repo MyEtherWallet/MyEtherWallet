@@ -17,6 +17,8 @@ import { createPinia } from 'pinia'
 import i18n from '@/i18n'
 import TradeAmountCard from '@/modules/trade/components/TradeAmountCard.vue'
 
+const FEEDBACK = '[data-testid="trade-amount-card-feedback"]'
+
 const mountCard = (props: Record<string, unknown> = {}) =>
   mount(TradeAmountCard, {
     props: {
@@ -36,6 +38,16 @@ describe('TradeAmountCard', () => {
 
   it('hints "Enter amount" while the sell input is empty', () => {
     expect(mountCard().text()).toContain('Enter amount')
+  })
+
+  it('renders no feedback line unless it has something to say', () => {
+    expect(mountCard().find(FEEDBACK).exists()).toBe(false)
+    // An empty input shows nothing ahead of time, feedback error or not.
+    expect(mountCard({ feedbackError: true }).find(FEEDBACK).exists()).toBe(
+      false,
+    )
+    expect(mountCard({ amount: '12' }).find(FEEDBACK).exists()).toBe(false)
+    expect(mountCard({ side: 'buy' }).find(FEEDBACK).exists()).toBe(false)
   })
 
   it('swaps the fiat value for a spinner while the quote loads', () => {
@@ -184,6 +196,68 @@ describe('TradeAmountCard', () => {
       await nextTick()
       expect(info(decimals).text()).toBe('Remove 1 decimal')
       expect(info(decimals).classes()).toContain('text-text-error')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('shows a feedback error on its own line once it is visible, leaving the red conversion in the info row', async () => {
+    vi.useFakeTimers()
+    try {
+      const message = 'Minimum to trade OIP is $10'
+      const card = mountCard({ feedbackError: true })
+      const info = () => card.get('[data-testid="transaction-input-card-info"]')
+
+      await card.setProps({ amount: '9.99', error: message })
+      // The error waits for the debounce.
+      expect(card.find(FEEDBACK).exists()).toBe(false)
+
+      vi.advanceTimersByTime(1000)
+      await nextTick()
+      const alert = card.get(FEEDBACK)
+      expect(alert.attributes('role')).toBe('alert')
+      expect(alert.text()).toBe(message)
+      expect(alert.classes()).toContain('text-text-error')
+      expect(info().text()).toMatch(/^≈ /)
+      expect(info().classes()).toContain('text-text-error')
+
+      await card.setProps({ amount: '10', error: '' })
+      vi.advanceTimersByTime(1000)
+      await nextTick()
+      expect(card.find(FEEDBACK).exists()).toBe(false)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('keeps other errors off the feedback line', async () => {
+    vi.useFakeTimers()
+    try {
+      const settle = async () => {
+        vi.advanceTimersByTime(1000)
+        await nextTick()
+      }
+
+      const generic = mountCard()
+      await generic.setProps({ amount: '0.5', error: 'Minimum not reached' })
+      await settle()
+      expect(generic.find(FEEDBACK).exists()).toBe(false)
+
+      const decimals = mountCard({ inlineError: true })
+      await decimals.setProps({
+        amount: '1.1234567',
+        error: 'Remove 1 decimal',
+      })
+      await settle()
+      expect(decimals.find(FEEDBACK).exists()).toBe(false)
+
+      const buySide = mountCard({ side: 'buy', feedbackError: true })
+      await buySide.setProps({
+        amount: '9.99',
+        error: 'Minimum to trade OIP is $10',
+      })
+      await settle()
+      expect(buySide.find(FEEDBACK).exists()).toBe(false)
     } finally {
       vi.useRealTimers()
     }

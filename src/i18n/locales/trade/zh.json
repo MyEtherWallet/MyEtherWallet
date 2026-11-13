@@ -99,6 +99,7 @@
       "deposit-not-confirmed": "存款尚未在链上确认。请在其上链后重试。",
       "not_enough_balance": "余额不足",
       "minimum_not_reached": "未达到最低金额",
+      "oip_minimum": "交易 OIP 的最低金额为 $10",
       "remove_decimals": "请减少 {count} 位小数 | 请减少 {count} 位小数"
     },
     "market_status": {
