@@ -78,7 +78,7 @@ export function isEnkryptNotInitializedError(err: unknown): boolean {
   const message = (err as { message?: unknown }).message
   return (
     typeof message === 'string' &&
-    message.toLowerCase().includes('enkrypt not initialized')
+    /^(?:8546: )?enkrypt not initialized$/i.test(message)
   )
 }
 

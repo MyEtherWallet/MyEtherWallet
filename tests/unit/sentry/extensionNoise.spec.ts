@@ -1353,6 +1353,14 @@ describe('isEnkryptNotInitializedError', () => {
     expect(
       isEnkryptNotInitializedError(new Error('Store not initialized')),
     ).toBe(false)
+    // A distinct failure that only mentions the phrase must still be reported.
+    expect(
+      isEnkryptNotInitializedError(
+        new Error(
+          'Unexpected failure after Enkrypt not initialized: recovery failed',
+        ),
+      ),
+    ).toBe(false)
     expect(isEnkryptNotInitializedError(null)).toBe(false)
     expect(isEnkryptNotInitializedError('Enkrypt not initialized')).toBe(false)
     expect(isEnkryptNotInitializedError({ message: 42 })).toBe(false)
