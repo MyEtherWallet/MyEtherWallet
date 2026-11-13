@@ -79,6 +79,8 @@ const { useConnectWallet } = await import(
 )
 import { useAccessStore } from '@/stores/accessStore'
 import { useToastStore } from '@/stores/toastStore'
+import { captureException } from '@sentry/vue'
+import UnisatInjectWallet from '@/providers/bitcoin/unisatInjectedWallet'
 
 // --- Helpers -------------------------------------------------------------
 
@@ -158,5 +160,25 @@ describe('useConnectWallet — Bitcoin injected wallet guard (MEW-2040)', () => 
 
     expect(unisatCtorSpy).toHaveBeenCalledTimes(1)
     expect(unisatCtorSpy).toHaveBeenCalledWith(unisatInjection, 'BITCOIN')
+  })
+
+  it('treats an Enkrypt Bitcoin rejection (a bare string) as a user cancel and does not report it (APP-MEW-WEB-1Z)', async () => {
+    window.enkrypt = {
+      providers: { bitcoin: {} },
+    } as unknown as typeof window.enkrypt
+    // Enkrypt's Bitcoin provider rejects with a plain string, not an Error.
+    vi.spyOn(UnisatInjectWallet.prototype, 'connect').mockRejectedValueOnce(
+      'User Rejected Request: The user rejected the request.',
+    )
+    vi.mocked(captureException).mockClear()
+
+    const { connect } = useConnectWallet()
+    await connect(makeWallet('enkrypt', 'Enkrypt'))
+    await flush()
+
+    expect(useAccessStore().web3ConnectionError).toBe(
+      'common.error.user_canceled_request',
+    )
+    expect(captureException).not.toHaveBeenCalled()
   })
 })
