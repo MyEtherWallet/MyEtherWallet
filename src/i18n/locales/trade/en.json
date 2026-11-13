@@ -82,6 +82,7 @@
     "error": {
       "not_enough_balance": "Not enough balance",
       "minimum_not_reached": "Minimum not reached",
+      "oip_minimum": "Minimum to trade OIP is $10",
       "remove_decimals": "Remove {count} decimal | Remove {count} decimals",
       "approval-failed": "Could not approve token",
       "submit-failed": "Failed to submit trade order",

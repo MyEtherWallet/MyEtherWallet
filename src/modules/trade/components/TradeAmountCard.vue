@@ -58,6 +58,18 @@
         </template>
       </trade-select-asset-modal>
     </template>
+    <template #feedback>
+      <transition name="fade" mode="out-in">
+        <!-- Inside the card padding, so no side inset of its own -->
+        <app-input-feedback
+          v-if="feedback"
+          :type="feedback.type"
+          :message="feedback.message"
+          class="px-0!"
+          data-testid="trade-amount-card-feedback"
+        />
+      </transition>
+    </template>
   </app-transaction-input-card>
 </template>
 
@@ -70,6 +82,8 @@ import { useDebounceFn } from '@vueuse/core'
 import AppTransactionInputCard from '@components/AppTransactionInputCard.vue'
 import AppPicker from '@components/picker/AppPicker.vue'
 import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppInputFeedback from '@components/input_feedback/AppInputFeedback.vue'
+import type { InputFeedback } from '@components/input_feedback/types'
 import TradeSelectAssetModal from './TradeSelectAssetModal.vue'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { useStocksStore } from '@/stores/stocksStore'
@@ -88,6 +102,12 @@ const props = withDefaults(
     /** Show the error message below the amount (e.g. "Remove 2 decimals")
      *  instead of the red conversion; the CTA always carries the message. */
     inlineError?: boolean
+    /** Sell side only: a line of its own under the info row while the input
+     *  is empty, for a constraint worth knowing before typing. */
+    emptyHint?: string
+    /** Sell side only: show the error message on that same line. The info row
+     *  shares its width with the balance and truncates a full sentence. */
+    feedbackError?: boolean
     showBalance?: boolean
     isPristine?: boolean
     networkName?: string
@@ -100,6 +120,8 @@ const props = withDefaults(
     fiatLoading: false,
     balanceError: false,
     inlineError: false,
+    emptyHint: '',
+    feedbackError: false,
     showBalance: true,
     isPristine: false,
     networkName: undefined,
@@ -138,6 +160,7 @@ const hasError = ref(false)
 const errorMessage = ref('')
 const errorIsBalance = ref(false)
 const errorIsInline = ref(false)
+const errorIsFeedback = ref(false)
 const isErrorPending = ref(false)
 const showError = computed(
   () => hasError.value && !isOpenSelectToken.value && !props.isPristine,
@@ -157,6 +180,7 @@ const applyError = () => {
   errorMessage.value = error.value
   errorIsBalance.value = props.balanceError
   errorIsInline.value = props.inlineError
+  errorIsFeedback.value = props.feedbackError
   isErrorPending.value = false
 }
 
@@ -213,6 +237,15 @@ const infoText = computed(() => {
   if (showError.value && errorIsInline.value) return errorMessage.value
   if (props.side === 'sell' && !amount.value) return t('trade.enter_amount')
   return `≈ ${fiatText.value}`
+})
+
+const feedback = computed<InputFeedback | null>(() => {
+  if (props.side !== 'sell') return null
+  if (isErrorVisible.value && errorIsFeedback.value && errorMessage.value)
+    return { type: 'error', message: errorMessage.value }
+  if (!amount.value && props.emptyHint)
+    return { type: 'text', message: props.emptyHint }
+  return null
 })
 
 const balanceText = computed(() => {
