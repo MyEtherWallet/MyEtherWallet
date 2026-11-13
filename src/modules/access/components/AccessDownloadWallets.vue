@@ -3,8 +3,7 @@
     <h3 class="text-sm font-semibold">
       {{ t('access_wallet.sign_up.download_official') }}
     </h3>
-    <!-- Below 400px both (compact) cards share one row. -->
-    <div class="grid grid-cols-1 gap-3 max-[400px]:grid-cols-2 xs:grid-cols-2">
+    <div class="grid grid-cols-2 gap-3">
       <AccessCell
         as="button"
         type="button"

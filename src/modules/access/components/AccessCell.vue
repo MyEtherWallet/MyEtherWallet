@@ -5,7 +5,7 @@
     :class="{
       'w-full text-left cursor-pointer transition-colors hover:bg-background-default-hover':
         as !== 'div',
-      'max-[400px]:gap-2 max-[400px]:px-3': compact,
+      'max-xs:gap-2 max-xs:px-3': compact,
     }"
   >
     <slot name="avatar" />
@@ -13,7 +13,7 @@
       <span
         data-testid="cell-title"
         class="text-base font-semibold text-text-default"
-        :class="{ truncate, 'max-[400px]:text-sm': compact }"
+        :class="{ truncate, 'max-xs:text-sm': compact }"
       >
         {{ title }}
       </span>
@@ -21,14 +21,14 @@
         v-if="description"
         data-testid="cell-description"
         class="text-sm text-text-subtle"
-        :class="{ truncate, 'max-[400px]:sr-only': compact }"
+        :class="{ truncate, 'max-xs:text-xs max-[400px]:sr-only': compact }"
       >
         {{ description }}
       </span>
     </span>
     <!-- `contents` keeps the slot's own flex layout; it only gives compact a
          hook to hide it. -->
-    <span class="contents" :class="{ 'max-[400px]:hidden': compact }">
+    <span class="contents" :class="{ 'max-xs:hidden': compact }">
       <slot name="trailing" />
     </span>
   </component>
@@ -48,8 +48,9 @@ withDefaults(
     /** Single-line title/description with ellipsis (e.g. long file names). */
     truncate?: boolean
     /**
-     * Below 400px: avatar + smaller title only, tighter padding, so two cells
-     * fit side by side. The description stays for screen readers.
+     * Below xs (576px): smaller title and description, tighter padding and no
+     * trailing slot, so two cells fit side by side. Below 400px the
+     * description only stays for screen readers.
      */
     compact?: boolean
   }>(),

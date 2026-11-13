@@ -121,23 +121,23 @@ describe('AccessCell', () => {
     )
   })
 
-  it('compact drops to avatar + name below 400px, description kept for screen readers', () => {
+  it('compact shrinks the text and drops the trailing slot below xs', () => {
     wrapper = mount(AccessCell, {
       props: { title: 'MEW Mobile', description: 'iOS & Android', compact: true },
       slots: { trailing: '<svg data-testid="trailing" />' },
     })
     expect(wrapper.classes()).toEqual(
-      expect.arrayContaining(['max-[400px]:px-3', 'max-[400px]:gap-2']),
+      expect.arrayContaining(['max-xs:px-3', 'max-xs:gap-2']),
     )
     expect(wrapper.get('[data-testid="cell-title"]').classes()).toContain(
-      'max-[400px]:text-sm',
+      'max-xs:text-sm',
     )
-    expect(wrapper.get('[data-testid="cell-description"]').classes()).toContain(
-      'max-[400px]:sr-only',
+    expect(wrapper.get('[data-testid="cell-description"]').classes()).toEqual(
+      expect.arrayContaining(['max-xs:text-xs', 'max-[400px]:sr-only']),
     )
     expect(
       wrapper.get('[data-testid="trailing"]').element.parentElement!.classList,
-    ).toContain('max-[400px]:hidden')
+    ).toContain('max-xs:hidden')
   })
 
   it('leaves the layout alone without compact', () => {
@@ -145,6 +145,6 @@ describe('AccessCell', () => {
       props: { title: 'Ledger', description: 'USB' },
       slots: { trailing: '<svg data-testid="trailing" />' },
     })
-    expect(wrapper.html()).not.toContain('max-[400px]')
+    expect(wrapper.html()).not.toMatch(/max-(xs|\[400px\])/)
   })
 })
