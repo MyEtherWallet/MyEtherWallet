@@ -170,6 +170,13 @@ describe('AppContentGroup', () => {
     expect(wrapper.get(description()).classes()).toContain('truncate')
   })
 
+  it('wrapTitle lets the title wrap', () => {
+    const wrapper = mount(AppContentGroup, {
+      props: { title: 'T', wrapTitle: true },
+    })
+    expect(wrapper.get(title()).classes()).not.toContain('truncate')
+  })
+
   it('loading replaces text with skeletons', () => {
     const wrapper = mount(AppContentGroup, {
       props: { title: 'Secret', description: 'Hidden', loading: true },
