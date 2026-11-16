@@ -100,6 +100,7 @@
   },
   "devDependencies": {
     "@nightwatch/vue": "^3.1.2",
+    "@privy-io/js-sdk-core": "^0.79.4",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
     "@types/hdkey": "^2.1.0",
