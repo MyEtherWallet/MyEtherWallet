@@ -47,10 +47,13 @@
                     : ''
                 }}
               </p>
+              <!-- Max 4 tags, so an article with many tickers doesn't make
+                   this card taller than Newly Added / Trending next to it. -->
               <AppTag
-                v-for="ticker in article.tickers || []"
+                v-for="ticker in article.tickers?.slice(0, 4) ?? []"
                 :key="ticker"
                 variant="subtle"
+                class="text-[10px]/[12px]!"
                 :label="ticker"
               />
             </div>
