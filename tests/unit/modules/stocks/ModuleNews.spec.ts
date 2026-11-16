@@ -25,6 +25,7 @@ vi.mock('@/stores/stocksStore', () => ({
 }))
 
 import ModuleNews from '@/modules/stocks/ModuleNews.vue'
+import AppTag from '@/components/tag/AppTag.vue'
 
 describe('ModuleNews', () => {
   const tagLabels = () => {
@@ -33,7 +34,7 @@ describe('ModuleNews', () => {
     })
     return wrapper
       .findAll('a')
-      .map(a => a.findAll('span.rounded-full').map(t => t.text()))
+      .map(a => a.findAllComponents(AppTag).map(t => t.props('label')))
   }
 
   it('caps each article at 4 ticker tags', () => {
