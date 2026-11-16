@@ -78,11 +78,19 @@ describe('selectTabWallets', () => {
     expect(r.find(x => x.wallet.name === 'MetaMask')?.status).toBeUndefined()
   })
 
-  it('lists Hardware, Mobile and Advanced curated sets', () => {
+  it('lists Hardware and Advanced curated sets', () => {
     expect(names(selectTabWallets({ ...base, tab: 'hardware' }))).toEqual([
       'Ledger',
       'Trezor',
     ])
+    expect(names(selectTabWallets({ ...base, tab: 'advanced' }))).toEqual([
+      'Private Key',
+      'Recovery (mnemonic) Phrase',
+      'Keystore',
+    ])
+  })
+
+  it('lists every mobile wallet in Mobile: the curated set first, then the rest A-Z', () => {
     expect(names(selectTabWallets({ ...base, tab: 'mobile' }))).toEqual([
       'MEW Mobile',
       'WalletConnect',
@@ -92,11 +100,10 @@ describe('selectTabWallets', () => {
       'Core',
       'Trust Wallet',
       'Rainbow',
-    ])
-    expect(names(selectTabWallets({ ...base, tab: 'advanced' }))).toEqual([
-      'Private Key',
-      'Recovery (mnemonic) Phrase',
-      'Keystore',
+      'Coinbase Wallet',
+      'MetaMask',
+      'Phantom',
+      'Zerion',
     ])
   })
 
