@@ -47,6 +47,8 @@ export default [
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      // Components read top to bottom: markup, then logic, then styles.
+      'vue/block-order': ['error', { order: ['template', 'script', 'style'] }],
       'check-file/filename-naming-convention': [
         'error',
         {
