@@ -1,9 +1,6 @@
 <template>
   <div class="flex flex-col gap-6">
-    <section
-      v-if="showSocialLogin"
-      class="flex flex-col gap-4 rounded-16 bg-background-default p-5"
-    >
+    <section class="flex flex-col gap-4 rounded-16 bg-background-default p-5">
       <!-- The embedded wallet is Ethereum-only: with Bitcoin selected only
            the wallet row is offered. -->
       <template v-if="!isBitcoinChain">
@@ -118,7 +115,6 @@ defineProps<{
 }>()
 const emit = defineEmits<{ 'sign-up': [payload: SignUpPayload] }>()
 const { t } = useI18n()
-const showSocialLogin = configs.SHOW_SOCIAL_LOGIN
 const accessStore = useAccessStore()
 const isBitcoinChain = computed(() => accessStore.isBitcoinChain)
 

@@ -315,10 +315,7 @@ const openAccess = () => {
     source: 'WalletCard_Connect',
   })
   // A Privy address is reconnected by logging in again, not from the chooser.
-  if (
-    configs.SHOW_SOCIAL_LOGIN &&
-    wallet.value?.getWalletType() === WalletType.PRIVY
-  ) {
+  if (wallet.value?.getWalletType() === WalletType.PRIVY) {
     accessStore.openSignUpDialog()
   } else {
     openAccessDialog()
@@ -335,7 +332,6 @@ const deleteWallet = async () => {
   // Deleting a Privy address also ends its login, as disconnecting it does.
   // Best effort: the address is deleted even if Privy cannot be reached.
   if (
-    configs.SHOW_SOCIAL_LOGIN &&
     walletAddress.value &&
     wallet.value?.getWalletType() === WalletType.PRIVY
   ) {

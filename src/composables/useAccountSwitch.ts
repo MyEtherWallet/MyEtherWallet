@@ -13,7 +13,6 @@ import {
 import type { Chain, ChainType } from '@/mew_api/types'
 import { WalletType } from '@/providers/types'
 import { useAuthStore } from '@/stores/authStore'
-import configs from '@/configs'
 
 export function useAccountSwitch() {
   const walletStore = useWalletStore()
@@ -93,10 +92,7 @@ export function useAccountSwitch() {
   const deleteAccount = async (account: SavedAccount): Promise<void> => {
     // Deleting a Privy address also ends its login, as disconnecting it does.
     // Best effort: the address is deleted even if Privy cannot be reached.
-    if (
-      configs.SHOW_SOCIAL_LOGIN &&
-      account.providerType === WalletType.PRIVY
-    ) {
+    if (account.providerType === WalletType.PRIVY) {
       await useAuthStore()
         .endLoginFor(account.address)
         .catch(() => undefined)

@@ -62,10 +62,7 @@
             <WalletTabs />
             <div class="flex flex-col gap-4 pt-2">
               <AppDivider />
-              <AccessCell
-                v-if="showSocialLogin"
-                :title="$t('common.dont_have_wallet')"
-              >
+              <AccessCell :title="$t('common.dont_have_wallet')">
                 <template #avatar>
                   <span
                     class="flex size-8 shrink-0 items-center justify-center rounded-full bg-white"
@@ -84,11 +81,9 @@
                   </button>
                 </template>
               </AccessCell>
-              <AccessDownloadWallets v-else />
             </div>
           </div>
           <PrivyFlow v-else-if="inLoginFlow" />
-          <AccessSignUp v-else-if="currentView === 'sign_up'" />
           <AccessDownloadMobile v-else-if="currentView === 'download_mobile'" />
           <module-access-keystore v-else-if="currentView === 'keystore'" />
           <module-access-private-key
@@ -116,12 +111,9 @@
 import NetworkChips from '@/modules/access/components/NetworkChips.vue'
 import WalletTabs from '@/modules/access/components/WalletTabs.vue'
 import AccessCell from '@/modules/access/components/AccessCell.vue'
-import AccessSignUp from '@/modules/access/components/AccessSignUp.vue'
 import PrivyFlow from '@/modules/access/components/privy/PrivyFlow.vue'
 import { usePrivyOnboarding } from '@/modules/access/composables/usePrivyOnboarding'
 import AccessDownloadMobile from '@/modules/access/components/AccessDownloadMobile.vue'
-import AccessDownloadWallets from '@/modules/access/components/AccessDownloadWallets.vue'
-import configs from '@/configs'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
 import { parentView } from '@/modules/access/common/accessViews'
@@ -152,7 +144,6 @@ const { t } = useI18n()
  * Access Wallet Dialog
  -------------------------------*/
 const accessStore = useAccessStore()
-const showSocialLogin = configs.SHOW_SOCIAL_LOGIN
 const {
   isOpenAccessDialog,
   currentView,
@@ -186,9 +177,7 @@ const {
   back: loginBack,
   cancel: cancelLogin,
 } = usePrivyOnboarding()
-const inLoginFlow = computed(
-  () => showSocialLogin && currentView.value === 'sign_up',
-)
+const inLoginFlow = computed(() => currentView.value === 'sign_up')
 const showBack = computed(
   () =>
     currentView.value !== 'default' &&
@@ -199,7 +188,7 @@ const showBack = computed(
 // the login flow is told, so nothing carries on behind a closed modal and the
 // next open starts clean.
 watch(isOpenAccessDialog, open => {
-  if (!open && showSocialLogin) void cancelLogin()
+  if (!open) void cancelLogin()
 })
 
 const closeAccess = () => {
@@ -330,7 +319,7 @@ const getTitle = computed(() => {
       ? t('access_wallet.social.title')
       : ''
   }
-  if (currentView.value === 'default' || currentView.value === 'sign_up') {
+  if (currentView.value === 'default') {
     return t('connect_wallet')
   }
   if (currentView.value === 'download_mobile') {

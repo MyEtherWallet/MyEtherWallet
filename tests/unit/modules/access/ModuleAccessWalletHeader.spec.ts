@@ -110,7 +110,6 @@ vi.mock('@/stores/globalStore', () => ({
   useGlobalStore: () => ({ setSelectedNetwork: vi.fn() }),
 }))
 
-const { default: configs } = await import('@/configs')
 const { default: ModuleAccessWallet } =
   await import('@/modules/access/ModuleAccessWallet.vue')
 const i18n = createI18n({
@@ -136,7 +135,6 @@ const mountAt = (view: string, step = 1) => {
   return wrapper
 }
 beforeEach(() => {
-  configs.SHOW_SOCIAL_LOGIN = true
   flow.state.value = 'entry'
   flow.backTarget.value = 'chooser'
   flow.isPersistent.value = false
@@ -256,16 +254,6 @@ describe('ModuleAccessWallet header', () => {
     )
   })
 
-  it('shows the plain sign-up view, not the login flow, while social login is off', () => {
-    configs.SHOW_SOCIAL_LOGIN = false
-
-    const w = mountAt('sign_up')
-
-    expect(w.findComponent({ name: 'AccessSignUp' }).exists()).toBe(true)
-    expect(w.findComponent({ name: 'PrivyFlow' }).exists()).toBe(false)
-    expect(title(w)).toBe('connect_wallet')
-  })
-
   it('goes back from the download screen to sign-up', async () => {
     const w = mountAt('download_mobile')
     expect(title(w)).toBe('access_wallet.download_mobile.title')
@@ -273,25 +261,13 @@ describe('ModuleAccessWallet header', () => {
     expect(setCurrentView).toHaveBeenCalledWith('sign_up')
   })
 
-  it('swaps the Sign Up row for the download cards while social login is off', () => {
-    const signUp = (w: VueWrapper) => w.find('[data-testid="sign-up-cta"]')
-    const downloads = (w: VueWrapper) =>
-      w.findComponent({ name: 'AccessDownloadWallets' })
-    let w = mountAt('default')
-    expect(signUp(w).exists()).toBe(true)
-    expect(downloads(w).exists()).toBe(false)
-    w.unmount()
-    configs.SHOW_SOCIAL_LOGIN = false
-    w = mountAt('default')
-    expect(signUp(w).exists()).toBe(false)
-    expect(downloads(w).exists()).toBe(true)
-  })
+  it('offers Sign Up under the wallet list, not the download cards', () => {
+    const w = mountAt('default')
 
-  it('goes back from the download screen to the chooser while social login is off', async () => {
-    configs.SHOW_SOCIAL_LOGIN = false
-    const w = mountAt('download_mobile')
-    await back(w).trigger('click')
-    expect(setCurrentView).toHaveBeenCalledWith('default')
+    expect(w.find('[data-testid="sign-up-cta"]').exists()).toBe(true)
+    expect(w.findComponent({ name: 'AccessDownloadWallets' }).exists()).toBe(
+      false,
+    )
   })
 
   it('closes like the backdrop does, without resetting the add-account intent', async () => {

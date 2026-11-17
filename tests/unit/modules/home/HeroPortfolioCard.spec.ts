@@ -4,7 +4,6 @@ import { setActivePinia, createPinia } from 'pinia'
 import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import BigNumber from 'bignumber.js'
-import configs from '@/configs'
 
 // Mock only useClipboard so we can assert the copy call; keep useIntervalFn
 // real (the 2-minute balance poll depends on it).
@@ -130,7 +129,6 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     openAccessDialog.mockClear()
     openCreateDialog.mockClear()
     openSignUpDialog.mockClear()
-    configs.SHOW_SOCIAL_LOGIN = false
     openPanel.mockClear()
     refreshBalances.mockClear()
     copySpy.mockClear()
@@ -146,20 +144,12 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     expect(w.find('[data-test="hero-portfolio-notconnected"]').exists()).toBe(
       true,
     )
+    // "Create wallet" starts with Log in / Sign Up.
     await w.get('[data-test="hero-create"]').trigger('click')
-    expect(openCreateDialog).toHaveBeenCalled()
-    await w.get('[data-test="hero-connect"]').trigger('click')
-    expect(openAccessDialog).toHaveBeenCalled()
-  })
-
-  it('opens Log in / Sign Up from "Create wallet" while social login is on', async () => {
-    configs.SHOW_SOCIAL_LOGIN = true
-    const w = mountCard()
-
-    await w.get('[data-test="hero-create"]').trigger('click')
-
     expect(openSignUpDialog).toHaveBeenCalledTimes(1)
     expect(openCreateDialog).not.toHaveBeenCalled()
+    await w.get('[data-test="hero-connect"]').trigger('click')
+    expect(openAccessDialog).toHaveBeenCalled()
   })
 
   it('renders skeletons while balances are loading', () => {

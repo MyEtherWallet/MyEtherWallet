@@ -99,7 +99,6 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletFlowRoute } from '@/composables/useWalletFlowRoute'
-import configs from '@/configs'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
@@ -127,7 +126,7 @@ const { selectedChain } = storeToRefs(chainStore)
 const { refreshDetectedAddress } = useDetectedAddress()
 // Both CTAs open the flow over the CURRENT page (/stocks/access, not /portfolio/access),
 // so cancelling returns the user here instead of rerouting them.
-const { accessRoute, createRoute } = useWalletFlowRoute()
+const { accessRoute } = useWalletFlowRoute()
 const watchOnlyStore = useWatchOnlyStore()
 // The perps nav entry is no longer gated on region — perps renders a blocked
 // state instead of disappearing. The check is still kicked off here, on a
@@ -183,16 +182,12 @@ const createWallet = (): void => {
   analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
     source: 'Header_Create',
   })
-  // With Google / email login on, creating a wallet starts with Log in /
-  // Sign Up: the connect overlay, opened on its sign-up view.
-  if (configs.SHOW_SOCIAL_LOGIN) {
-    void router.push({
-      ...accessRoute.value,
-      query: { ...accessRoute.value.query, type: 'sign_up' },
-    })
-    return
-  }
-  void router.push(createRoute.value)
+  // Creating a wallet starts with Log in / Sign Up: the connect overlay,
+  // opened on its sign-up view.
+  void router.push({
+    ...accessRoute.value,
+    query: { ...accessRoute.value.query, type: 'sign_up' },
+  })
 }
 const connectWallet = (): void => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {

@@ -40,7 +40,6 @@ vi.mock('@/providers/common/watchOnlyWallet', () => ({
 }))
 
 import { useAccountSwitch } from '@/composables/useAccountSwitch'
-import configs from '@/configs'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 
 const acc = (over: Partial<SavedAccount> = {}): SavedAccount => ({
@@ -94,7 +93,6 @@ describe('useAccountSwitch', () => {
   })
 
   it('deleteAccount ends the Privy login of a deleted Privy address before removing it', async () => {
-    configs.SHOW_SOCIAL_LOGIN = true
     const order: string[] = []
     authStore.endLoginFor.mockImplementationOnce(async () => {
       order.push('end-login')
@@ -111,20 +109,8 @@ describe('useAccountSwitch', () => {
   })
 
   it('deleteAccount leaves Privy alone when another kind of address is deleted', async () => {
-    configs.SHOW_SOCIAL_LOGIN = true
 
     await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xother', address: '0xother' }))
-
-    expect(authStore.endLoginFor).not.toHaveBeenCalled()
-  })
-
-  it('deleteAccount leaves Privy alone while social login is off', async () => {
-    configs.SHOW_SOCIAL_LOGIN = false
-
-    await useAccountSwitch().deleteAccount({
-      ...acc({ id: 'EVM:0xprivy', address: '0xprivy' }),
-      providerType: 'PRIVY',
-    } as SavedAccount)
 
     expect(authStore.endLoginFor).not.toHaveBeenCalled()
   })

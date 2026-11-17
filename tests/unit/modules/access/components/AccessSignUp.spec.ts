@@ -48,7 +48,6 @@ const mountSignUp = (props: Record<string, unknown> = {}) => {
   return wrapper
 }
 beforeEach(() => {
-  configs.SHOW_SOCIAL_LOGIN = true
   access.isBitcoinChain = false
 })
 afterEach(() => wrapper?.unmount())
@@ -80,14 +79,6 @@ describe('AccessSignUp', () => {
     await input.trigger('keydown', { key: 'Enter' })
     await input.trigger('keyup', { key: 'Enter' })
     expect(w.emitted('sign-up')).toBeUndefined()
-  })
-
-  it('hides the Google/email login while the flag is off', () => {
-    configs.SHOW_SOCIAL_LOGIN = false
-    const w = mountSignUp()
-    expect(w.find('[data-testid="google"]').exists()).toBe(false)
-    expect(w.find('input[type="email"]').exists()).toBe(false)
-    expect(w.find('[data-testid="download-mew-mobile"]').exists()).toBe(true)
   })
 
   it('links the Terms and the Privacy Policy under the email field', () => {
