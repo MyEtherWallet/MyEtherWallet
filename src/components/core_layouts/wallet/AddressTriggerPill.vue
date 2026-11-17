@@ -39,11 +39,13 @@ const watchOnlyStore = useWatchOnlyStore()
 const chainsStore = useChainsStore()
 
 // A Google / email account is known by its email, but only while its wallet
-// is the connected one: the login outlives a switch to another saved account,
-// and after a reload the account is watch-only like any other.
+// is the connected one. The login outlives a switch to another saved account,
+// and a saved account that is only being viewed is a watch-only wallet that
+// keeps its saved type, so the type alone would put this login's email over
+// another account's address.
 const { email } = storeToRefs(useAuthStore())
 const loginEmail = computed(() =>
-  wallet.value?.getWalletType() === WalletType.PRIVY
+  !isWatchOnly.value && wallet.value?.getWalletType() === WalletType.PRIVY
     ? (email.value ?? undefined)
     : undefined,
 )

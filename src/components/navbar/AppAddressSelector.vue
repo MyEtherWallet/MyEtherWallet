@@ -3,7 +3,8 @@
     type="button"
     data-testid="address-selector"
     :aria-expanded="open"
-    :aria-label="ariaLabel"
+    :aria-label="namedByEmail ? undefined : ariaLabel"
+    :aria-labelledby="namedByEmail ? `${emailId} ${stateId}` : undefined"
     class="inline-flex h-10 shrink-0 items-center gap-2.5 whitespace-nowrap rounded-full border border-border-default bg-background-alternative pl-2 pr-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus"
     :class="{ 'hover:bg-background-default': !open }"
   >
@@ -28,17 +29,21 @@
 
       <!-- Below 450 only the avatar, network and chevron fit the navbar -->
       <!-- A Google / email account shows its email alone (Figma Onboarding
-           2008:213274). `data-private` keeps it out of session replay; the
-           width cap keeps a long one from stretching the navbar. -->
-      <span
-        v-if="email"
-        data-test="address-selector-email"
-        data-private
-        class="max-w-50 truncate text-label-sm leading-3.5 text-text-default max-[450px]:hidden"
-        :title="email"
-      >
-        {{ email }}
-      </span>
+           2008:213274). `data-private` keeps the text out of session replay,
+           which records attributes regardless: so no title and no aria-label
+           with the email. The button is named by pointing at this element.
+           The width cap keeps a long email from stretching the navbar. -->
+      <template v-if="email">
+        <span
+          :id="emailId"
+          data-test="address-selector-email"
+          data-private
+          class="max-w-50 truncate text-label-sm leading-3.5 text-text-default max-[450px]:hidden"
+        >
+          {{ email }}
+        </span>
+        <span :id="stateId" class="sr-only">{{ connectionLabel }}</span>
+      </template>
       <span
         v-else
         data-test="address-selector-text"
@@ -108,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useId } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
@@ -124,7 +129,8 @@ import { truncateAddress } from '@/utils/filters'
  * store data (it passes formatted strings).
  *
  * With an `email` (an account logged in with Google or email) the text is
- * that email alone, as in the Onboarding design.
+ * that email alone, as in the Onboarding design. The email is personal data:
+ * it is rendered as text only, never copied into an attribute.
  *
  * Beyond Figma, to keep today's header behaviour: `loading` swaps the balance
  * for a placeholder bar, and an empty `address` shows the network with a
@@ -180,21 +186,22 @@ const isLabelTruncated = computed(
   () => visibleLabel.value !== accountLabel.value,
 )
 
+const connectionLabel = computed(() =>
+  t(props.connected ? 'multi_address.connected' : 'multi_address.watch_only'),
+)
+
+// With an email on show the button is named through aria-labelledby instead.
+const namedByEmail = computed(() => !!props.email && !!props.address)
+const emailId = useId()
+const stateId = useId()
+
 const ariaLabel = computed(() =>
   props.address
     ? [
         // The placeholder hides the balance, so don't announce a stale one.
-        ...(props.email
-          ? [props.email]
-          : [
-              props.loading ? t('common.loading') : props.balance,
-              accountLabel.value,
-            ]),
-        t(
-          props.connected
-            ? 'multi_address.connected'
-            : 'multi_address.watch_only',
-        ),
+        props.loading ? t('common.loading') : props.balance,
+        accountLabel.value,
+        connectionLabel.value,
       ]
         .filter(Boolean)
         .join(', ')
