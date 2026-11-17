@@ -147,10 +147,10 @@ const back = (w: VueWrapper) => w.find('button[aria-label="common.back"]')
 const title = (w: VueWrapper) => w.get('h1').text()
 
 describe('ModuleAccessWallet header', () => {
-  it('hides back on the wallet chooser and shows the Connect wallet title', () => {
+  it('hides back on the wallet chooser and titles it "Log in/Sign Up"', () => {
     const w = mountAt('default')
     expect(back(w).exists()).toBe(false)
-    expect(title(w)).toBe('connect_wallet')
+    expect(title(w)).toBe('access_wallet.social.title')
   })
 
   it('caps the chooser under the title so only the wallet grid scrolls', () => {
@@ -261,10 +261,58 @@ describe('ModuleAccessWallet header', () => {
     expect(setCurrentView).toHaveBeenCalledWith('sign_up')
   })
 
-  it('offers Sign Up under the wallet list, not the download cards', () => {
+  it('goes back from the download screen to the chooser when it was opened there', async () => {
+    const w = mountAt('default')
+    currentView.value = 'download_mobile'
+    await nextTick()
+
+    await back(w).trigger('click')
+
+    expect(setCurrentView).toHaveBeenLastCalledWith('default')
+  })
+
+  it('offers Sign Up under the wallet list, with the wallets to create folded away', () => {
     const w = mountAt('default')
 
     expect(w.find('[data-testid="sign-up-cta"]').exists()).toBe(true)
+    expect(w.findComponent({ name: 'AccessDownloadWallets' }).exists()).toBe(
+      false,
+    )
+  })
+
+  it('unfolds the wallets to create when the + is pressed', async () => {
+    const w = mountAt('default')
+
+    await w.get('[data-testid="create-wallet-toggle"]').trigger('click')
+
+    expect(w.findComponent({ name: 'AccessDownloadWallets' }).exists()).toBe(
+      true,
+    )
+  })
+
+  it('keeps them unfolded across a trip to the download screen', async () => {
+    const w = mountAt('default')
+    await w.get('[data-testid="create-wallet-toggle"]').trigger('click')
+
+    currentView.value = 'download_mobile'
+    await nextTick()
+    currentView.value = 'default'
+    await nextTick()
+
+    expect(w.findComponent({ name: 'AccessDownloadWallets' }).exists()).toBe(
+      true,
+    )
+  })
+
+  it('folds them again once the dialog has been closed', async () => {
+    const w = mountAt('default')
+    await w.get('[data-testid="create-wallet-toggle"]').trigger('click')
+
+    isOpenAccessDialog.value = false
+    await nextTick()
+    isOpenAccessDialog.value = true
+    await nextTick()
+
     expect(w.findComponent({ name: 'AccessDownloadWallets' }).exists()).toBe(
       false,
     )

@@ -58,7 +58,8 @@
       "protected_by": "Protected by",
       "download_official": "Download MEW Official wallets",
       "ios_android": "iOS & Android",
-      "browser_extension": "Browser extension"
+      "browser_extension": "Browser extension",
+      "create_options": "Wallets you can create"
     },
     "download_mobile": {
       "title": "Download MEW Mobile App",
@@ -113,6 +114,7 @@
     },
     "social": {
       "title": "Log in/Sign Up",
+      "title_short": "Log in/Sign Up",
       "terms": "By logging in I agree to the {terms} & {privacy}",
       "terms_link": "Terms",
       "privacy_link": "Privacy Policy",

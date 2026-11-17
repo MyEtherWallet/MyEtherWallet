@@ -58,7 +58,8 @@
       "protected_by": "安全保障：",
       "download_official": "下载 MEW 官方钱包",
       "ios_android": "iOS 和 Android",
-      "browser_extension": "浏览器扩展"
+      "browser_extension": "浏览器扩展",
+      "create_options": "可创建的钱包"
     },
     "download_mobile": {
       "title": "下载 MEW Mobile 应用",
@@ -113,6 +114,7 @@
     },
     "social": {
       "title": "登录/注册",
+      "title_short": "登录/注册",
       "terms": "登录即表示我同意{terms}和{privacy}",
       "terms_link": "条款",
       "privacy_link": "隐私政策",

@@ -10,8 +10,7 @@
       :menu-open="isSideMenuOpen"
       :scrolled="scrolled"
       @toggle-menu="isSideMenuOpen = !isSideMenuOpen"
-      @create-wallet="createWallet"
-      @connect-wallet="connectWallet"
+      @log-in="logIn"
     >
       <template #links>
         <!-- Own stacking context (as the old logo group had) so the More
@@ -109,7 +108,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
 import { useDetectedAddress } from '@/composables/useDetectedAddress'
 import { analytics } from '@/analytics'
-import { ConnectWalletEvent, CreateWalletEvent } from '@/analytics/events'
+import { ConnectWalletEvent } from '@/analytics/events'
 
 defineProps<{
   /** The app's scroll container has left the top: shows the navbar border. */
@@ -124,7 +123,7 @@ const { isWalletConnected } = storeToRefs(store)
 const { setWatchOnlyIfExist } = store
 const { selectedChain } = storeToRefs(chainStore)
 const { refreshDetectedAddress } = useDetectedAddress()
-// Both CTAs open the flow over the CURRENT page (/stocks/access, not /portfolio/access),
+// The login opens over the CURRENT page (/stocks/access, not /portfolio/access),
 // so cancelling returns the user here instead of rerouting them.
 const { accessRoute } = useWalletFlowRoute()
 const watchOnlyStore = useWatchOnlyStore()
@@ -176,24 +175,19 @@ watch(isXLAndUp, desktop => {
 })
 
 /** ------------------------------
- * Wallet CTAs
+ * Log in / Sign Up
+ * The one wallet button of the logged-out header (it replaced Create and
+ * Connect). It opens the connect overlay on its login view, which also leads
+ * to every wallet; analytics keep counting it as the header's connect click.
  ------------------------------*/
-const createWallet = (): void => {
-  analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
-    source: 'Header_Create',
+const logIn = (): void => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Header_Connect',
   })
-  // Creating a wallet starts with Log in / Sign Up: the connect overlay,
-  // opened on its sign-up view.
   void router.push({
     ...accessRoute.value,
     query: { ...accessRoute.value.query, type: 'sign_up' },
   })
-}
-const connectWallet = (): void => {
-  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-    source: 'Header_Connect',
-  })
-  void router.push(accessRoute.value)
 }
 
 /** ------------------------------

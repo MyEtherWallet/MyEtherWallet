@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import AppNavbar from '@/components/navbar/AppNavbar.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
 
 const i18n = createI18n({
@@ -11,12 +10,9 @@ const i18n = createI18n({
   messages: {
     en: {
       home: 'Home',
-      connect_wallet: 'Connect wallet',
       menu: { 'open-menu': 'Open Menu', main: 'Main' },
-      common: {
-        create_wallet: 'Create wallet',
-        create_wallet_short: 'Create',
-        connect_wallet_short: 'Connect',
+      access_wallet: {
+        social: { title: 'Log in/Sign Up', title_short: 'Log in' },
       },
     },
   },
@@ -38,37 +34,11 @@ const mountNavbar = (
     },
   })
 
-const MENU_CTAS = '[data-testid="navbar-wallet-menu-ctas"]'
-
-/** Create + Connect shown from 550 up (not the compact menu or its buttons). */
-const desktopCtas = (wrapper: ReturnType<typeof mountNavbar>) =>
-  wrapper
-    .findAll('button')
-    .filter(
-      b =>
-        b.attributes('data-testid') !== 'navbar-wallet-menu' &&
-        !b.element.closest(MENU_CTAS) &&
-        (b.text().includes('Create') || b.text().includes('Connect')),
-    )
+const logIn = (wrapper: ReturnType<typeof mountNavbar>) =>
+  wrapper.get('[data-testid="navbar-log-in"]')
 
 const menuButton = (wrapper: ReturnType<typeof mountNavbar>) =>
   wrapper.get('button[aria-label="Open Menu"]')
-
-/** AppPopUpMenu's own open flag: set synchronously, before the DOM updates. */
-const isMenuOpen = (wrapper: ReturnType<typeof mountNavbar>) =>
-  (wrapper.getComponent(AppPopUpMenu).vm as unknown as { openSelect: boolean })
-    .openSelect
-
-/**
- * Whether the compact menu is on screen. AppPopUpMenu v-shows its panel, and
- * isVisible() is always false on an unattached mount, so read the display.
- */
-const isMenuShown = (wrapper: ReturnType<typeof mountNavbar>) => {
-  let el: HTMLElement | null = wrapper.get<HTMLElement>(MENU_CTAS).element
-  for (; el; el = el.parentElement)
-    if (el.style.display === 'none') return false
-  return true
-}
 
 describe('AppNavbar', () => {
   it('renders a header landmark with a labelled nav holding the links slot', () => {
@@ -107,85 +77,39 @@ describe('AppNavbar', () => {
     expect(menuButton(wrapper).attributes('aria-expanded')).toBe('false')
   })
 
-  it('without a saved wallet shows Create + Connect from 550 up and emits each', async () => {
+  it('without a saved wallet shows one Log in/Sign Up button and emits log-in', async () => {
     const wrapper = mountNavbar({}, { wallet: '<div id="wallet" />' })
     expect(wrapper.find('#wallet').exists()).toBe(false)
-    const [create, connect] = desktopCtas(wrapper)
-    // max-[550px]:hidden, not hidden: AppBaseButton's own inline-flex beats a plain hidden
-    for (const cta of [create, connect]) {
-      expect(cta.classes()).toContain('max-[550px]:hidden')
-      expect(cta.classes()).not.toContain('hidden')
-    }
-    await create.trigger('click')
-    await connect.trigger('click')
-    expect(wrapper.emitted('create-wallet')).toHaveLength(1)
-    expect(wrapper.emitted('connect-wallet')).toHaveLength(1)
+    const cta = logIn(wrapper)
+    expect(cta.text()).toContain('Log in/Sign Up')
+    await cta.trigger('click')
+    expect(wrapper.emitted('log-in')).toHaveLength(1)
+    // Create and Connect are gone: logging in covers both. No menu stands in
+    // for them on phones either.
+    expect(wrapper.findAll('button').filter(b => b.text())).toHaveLength(1)
+    expect(wrapper.find('[data-testid="navbar-wallet-menu"]').exists()).toBe(
+      false,
+    )
   })
 
-  it('shortens the desktop CTAs only in the tight 1280-1440 band', () => {
-    for (const [cta, label, shortLabel] of desktopCtas(mountNavbar()).map(
-      (b, i) =>
-        [
-          b,
-          ...(i ? ['Connect wallet', 'Connect'] : ['Create wallet', 'Create']),
-        ] as const,
-    )) {
-      const [full, short] = cta.findAll('span span')
-      expect(full.text()).toBe(label)
-      expect(full.classes()).toContain('xl:max-2xl:hidden')
-      expect(short.text()).toBe(shortLabel)
-      expect(short.classes()).toEqual(
-        expect.arrayContaining(['hidden', 'xl:max-2xl:inline']),
-      )
-    }
+  it('swaps to the short label below 450, where a long translation would crush the logo', () => {
+    const cta = logIn(mountNavbar())
+    // The button itself shows at every width; only its wording changes.
+    expect(cta.classes().some(c => c.includes('hidden'))).toBe(false)
+    const [full, short] = cta.findAll('span span')
+    expect(full.text()).toBe('Log in/Sign Up')
+    expect(full.classes()).toContain('max-[450px]:hidden')
+    expect(short.text()).toBe('Log in')
+    expect(short.classes()).toContain('min-[450px]:hidden')
   })
 
-  it('below 550 shows one Connect that opens a menu with both CTAs', async () => {
-    // The menu's open flag as each CTA's event reaches the parent (the DOM
-    // only catches up on the next tick).
-    const openAtEmit: boolean[] = []
-    const recordMenu = () => openAtEmit.push(isMenuOpen(wrapper))
-    const wrapper = mountNavbar({
-      onCreateWallet: recordMenu,
-      onConnectWallet: recordMenu,
-    })
-    const trigger = wrapper.get('[data-testid="navbar-wallet-menu"]')
-    expect(trigger.element.closest('.min-\\[550px\\]\\:hidden')).not.toBeNull()
-    expect(trigger.attributes('aria-haspopup')).toBe('menu')
-    expect(trigger.text()).toBe('Connect')
-    expect(isMenuShown(wrapper)).toBe(false)
-
-    // The same two buttons as desktop, stacked: secondary Create, primary
-    // Connect. Queried on each open, so no click lands on a closed menu.
-    const openMenu = async () => {
-      await trigger.trigger('click')
-      expect(isMenuShown(wrapper)).toBe(true)
-      return wrapper.get(MENU_CTAS).findAll('button')
-    }
-
-    const [create] = await openMenu()
-    expect(create.text()).toBe('Create wallet')
-    await create.trigger('click')
-    expect(wrapper.emitted('create-wallet')).toHaveLength(1)
-    expect(isMenuShown(wrapper)).toBe(false)
-
-    const [, connect] = await openMenu()
-    expect(connect.text()).toBe('Connect wallet')
-    await connect.trigger('click')
-    expect(wrapper.emitted('connect-wallet')).toHaveLength(1)
-    expect(isMenuShown(wrapper)).toBe(false)
-
-    // Each selection closed the menu before its event went out.
-    expect(openAtEmit).toEqual([false, false])
-  })
-
-  it('with a saved wallet renders the wallet slot instead of the CTAs', () => {
+  it('with a saved wallet renders the wallet slot instead of the button', () => {
     const wrapper = mountNavbar(
       { walletSaved: true },
       { wallet: '<div id="wallet" />' },
     )
     expect(wrapper.find('#wallet').exists()).toBe(true)
-    expect(wrapper.text()).not.toContain('Connect')
+    expect(wrapper.find('[data-testid="navbar-log-in"]').exists()).toBe(false)
   })
 
   it('renders the search and actions slots', () => {

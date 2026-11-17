@@ -32,6 +32,8 @@ vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd
 vi.mock('@/composables/useAccountBalances', () => ({ BALANCE_TTL_MS: 75000, useAccountBalances: () => ({ cached: vi.fn(() => undefined), loadingFor: vi.fn(() => false), fetchIfStale, refreshOne, set: vi.fn() }) }))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/providerStore', () => ({ useProviderStore: () => ({ providers: [] }) }))
+// The trigger pill reads the login email; the real store reaches the wallet configs (ledger).
+vi.mock('@/stores/authStore', () => ({ useAuthStore: () => ({ email: ref(null) }) }))
 vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => ({ connectAddressInfo: ref(null), closeAccessDialog: vi.fn(), clearConnectAddressInfo: vi.fn() }) }))
 // Mock the module to cut the useConnectWallet → wagmi/ledger import chain.
 vi.mock('@/components/core_layouts/wallet/ManageAccountsConnectAddressView.vue', () => ({ default: { name: 'ManageAccountsConnectAddressView', template: '<div />' } }))

@@ -133,6 +133,45 @@ describe('AppAddressSelector — design-library Address selector (MEW-2462)', ()
     expect(hasEye(watchOnly)).toBe(true)
   })
 
+  it('shows only the login email for a Google / email account', () => {
+    const wrapper = mountSelector({ email: 'ada@example.com', name: 'Privy' })
+    const email = wrapper.get('[data-test="address-selector-email"]')
+    expect(email.text()).toBe('ada@example.com')
+    // Figma: the email stands alone, without balance, name or connected dot.
+    expect(wrapper.text()).not.toContain('$130.23')
+    expect(wrapper.text()).not.toContain('Privy')
+    expect(
+      wrapper.find('[data-test="address-selector-connected"]').exists(),
+    ).toBe(false)
+    expect(wrapper.findComponent(AppAvatar).props('address')).toBe(ADDRESS)
+    expect(button(wrapper).attributes('aria-label')).toBe(
+      'ada@example.com, Connected',
+    )
+  })
+
+  it('keeps the email out of session replay and from stretching the navbar', () => {
+    const address =
+      'a.very.long.name.for.an.inbox@a-long-company-domain.example'
+    const email = mountSelector({ email: address }).get(
+      '[data-test="address-selector-email"]',
+    )
+    expect(email.attributes('data-private')).toBeDefined()
+    expect(email.classes()).toContain('truncate')
+    expect(email.classes().some(c => c.startsWith('max-w-'))).toBe(true)
+    // The whole address is still there to read on hover.
+    expect(email.attributes('title')).toBe(address)
+  })
+
+  it('shows the email even while balances load', () => {
+    const wrapper = mountSelector({ email: 'ada@example.com', loading: true })
+    expect(wrapper.get('[data-test="address-selector-email"]').text()).toBe(
+      'ada@example.com',
+    )
+    expect(
+      wrapper.find('[data-test="address-selector-loading"]').exists(),
+    ).toBe(false)
+  })
+
   it('flips the chevron, drops the hover fill and reports aria-expanded while open', () => {
     const closed = button(mountSelector())
     expect(closed.attributes('aria-expanded')).toBe('false')

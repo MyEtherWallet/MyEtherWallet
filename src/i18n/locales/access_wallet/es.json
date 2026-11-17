@@ -58,7 +58,8 @@
       "protected_by": "Protegido por",
       "download_official": "Descarga las wallets oficiales de MEW",
       "ios_android": "iOS y Android",
-      "browser_extension": "Extensión de navegador"
+      "browser_extension": "Extensión de navegador",
+      "create_options": "Billeteras que puedes crear"
     },
     "download_mobile": {
       "title": "Descarga la app MEW Mobile",
@@ -113,6 +114,7 @@
     },
     "social": {
       "title": "Iniciar sesión/Registrarse",
+      "title_short": "Acceder",
       "terms": "Al iniciar sesión acepto los {terms} y la {privacy}",
       "terms_link": "Términos",
       "privacy_link": "Política de privacidad",

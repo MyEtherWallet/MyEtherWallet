@@ -229,6 +229,15 @@ describe('authStore', () => {
       expect(store.isNew).toBe(true)
     })
 
+    it('knows the email of the logged-in user, and forgets it when the login ends', async () => {
+      const store = await loggedInStore(userWithWallet)
+      expect(store.email).toBe('ada@example.com')
+
+      await store.useDifferentAccount()
+
+      expect(store.email).toBeNull()
+    })
+
     it('records the error code of a wrong confirmation code', async () => {
       fake.privy.auth.email.loginWithCode.mockRejectedValue(
         Object.assign(new Error('Invalid code'), {

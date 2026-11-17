@@ -27,7 +27,20 @@
       </AppAvatar>
 
       <!-- Below 450 only the avatar, network and chevron fit the navbar -->
+      <!-- A Google / email account shows its email alone (Figma Onboarding
+           2008:213274). `data-private` keeps it out of session replay; the
+           width cap keeps a long one from stretching the navbar. -->
       <span
+        v-if="email"
+        data-test="address-selector-email"
+        data-private
+        class="max-w-50 truncate text-label-sm leading-3.5 text-text-default max-[450px]:hidden"
+        :title="email"
+      >
+        {{ email }}
+      </span>
+      <span
+        v-else
         data-test="address-selector-text"
         class="flex flex-col items-start gap-0.5 max-[450px]:hidden"
       >
@@ -110,6 +123,9 @@ import { truncateAddress } from '@/utils/filters'
  * flips while `open`. Hover is CSS; the parent owns the popup it opens and the
  * store data (it passes formatted strings).
  *
+ * With an `email` (an account logged in with Google or email) the text is
+ * that email alone, as in the Onboarding design.
+ *
  * Beyond Figma, to keep today's header behaviour: `loading` swaps the balance
  * for a placeholder bar, and an empty `address` shows the network with a
  * "No address" label. Below 450 the text hides so the navbar fits on mobile;
@@ -123,6 +139,8 @@ const props = withDefaults(
     /** Full address; seeds the avatar and is truncated when there is no name. */
     address?: string
     name?: string
+    /** Login email; shown alone, in place of the balance and the name. */
+    email?: string
     /** Formatted fiat balance. */
     balance?: string
     loading?: boolean
@@ -134,6 +152,7 @@ const props = withDefaults(
   {
     address: '',
     name: undefined,
+    email: undefined,
     balance: '',
     loading: false,
     connected: true,
@@ -165,8 +184,12 @@ const ariaLabel = computed(() =>
   props.address
     ? [
         // The placeholder hides the balance, so don't announce a stale one.
-        props.loading ? t('common.loading') : props.balance,
-        accountLabel.value,
+        ...(props.email
+          ? [props.email]
+          : [
+              props.loading ? t('common.loading') : props.balance,
+              accountLabel.value,
+            ]),
         t(
           props.connected
             ? 'multi_address.connected'

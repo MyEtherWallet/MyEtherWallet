@@ -61,6 +61,8 @@ const errorCode = (error: unknown): string => {
 export const useAuthStore = defineStore('authStore', () => {
   const status = ref<AuthStatus>('anonymous')
   const user = shallowRef<PrivyUser | null>(null)
+  /** The logged-in user's email, shown in the header in place of the address. */
+  const email = ref<string | null>(null)
   const walletAddress = ref<string | null>(null)
   /** Whether the logged-in user already has an embedded wallet. */
   const hasWallet = ref(false)
@@ -81,6 +83,7 @@ export const useAuthStore = defineStore('authStore', () => {
     loginEpoch += 1
     status.value = 'anonymous'
     user.value = null
+    email.value = null
     walletAddress.value = null
     hasWallet.value = false
     isNew.value = false
@@ -152,6 +155,7 @@ export const useAuthStore = defineStore('authStore', () => {
 
   const applyUser = (loggedIn: PrivyUser, loaded: PrivyModules): void => {
     user.value = loggedIn
+    email.value = loaded.primaryEmail(loggedIn) ?? null
     hasWallet.value = loaded.embeddedWallet(loggedIn) !== null
     status.value = 'authenticated'
   }
@@ -327,6 +331,7 @@ export const useAuthStore = defineStore('authStore', () => {
   return {
     status,
     user,
+    email,
     walletAddress,
     hasWallet,
     isNew,

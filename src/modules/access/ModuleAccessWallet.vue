@@ -62,25 +62,7 @@
             <WalletTabs />
             <div class="flex flex-col gap-4 pt-2">
               <AppDivider />
-              <AccessCell :title="$t('common.dont_have_wallet')">
-                <template #avatar>
-                  <span
-                    class="flex size-8 shrink-0 items-center justify-center rounded-full bg-white"
-                  >
-                    <AppIcon name="plus" size="xs" />
-                  </span>
-                </template>
-                <template #trailing>
-                  <button
-                    type="button"
-                    data-testid="sign-up-cta"
-                    class="shrink-0 text-base font-semibold text-text-brand cursor-pointer"
-                    @click="accessStore.setCurrentView('sign_up')"
-                  >
-                    {{ $t('access_wallet.sign_up.cta') }}
-                  </button>
-                </template>
-              </AccessCell>
+              <AccessCreateWallet v-model:expanded="isCreateWalletOpen" />
             </div>
           </div>
           <PrivyFlow v-else-if="inLoginFlow" />
@@ -110,7 +92,7 @@
 <script setup lang="ts">
 import NetworkChips from '@/modules/access/components/NetworkChips.vue'
 import WalletTabs from '@/modules/access/components/WalletTabs.vue'
-import AccessCell from '@/modules/access/components/AccessCell.vue'
+import AccessCreateWallet from '@/modules/access/components/AccessCreateWallet.vue'
 import PrivyFlow from '@/modules/access/components/privy/PrivyFlow.vue'
 import { usePrivyOnboarding } from '@/modules/access/composables/usePrivyOnboarding'
 import AccessDownloadMobile from '@/modules/access/components/AccessDownloadMobile.vue'
@@ -119,7 +101,6 @@ import AppDivider from '@/components/divider/AppDivider.vue'
 import { parentView } from '@/modules/access/common/accessViews'
 import type { WalletView } from '@/modules/access/common/walletConfigs'
 import AppModal from '@/components/modal/AppModal.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { type Chain } from '@/mew_api/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -184,11 +165,26 @@ const showBack = computed(
     (!inLoginFlow.value || backTarget.value !== null),
 )
 
+/**-------------------------------
+ * "Don't have a wallet?" (under the chooser)
+ * Its list of wallets to create stays open across a trip to the MEW Mobile
+ * download step, whose Back then returns here instead of to the login view.
+ -------------------------------*/
+const isCreateWalletOpen = ref(false)
+const downloadOpenedFromChooser = ref(false)
+watch(currentView, (view, previous) => {
+  if (view === 'download_mobile') {
+    downloadOpenedFromChooser.value = previous === 'default'
+  }
+})
+
 // However the dialog closes (its own buttons, browser Back, a link elsewhere)
 // the login flow is told, so nothing carries on behind a closed modal and the
 // next open starts clean.
 watch(isOpenAccessDialog, open => {
-  if (!open) void cancelLogin()
+  if (open) return
+  void cancelLogin()
+  isCreateWalletOpen.value = false
 })
 
 const closeAccess = () => {
@@ -204,7 +200,11 @@ const goBack = () => {
     accessStep.value -= 1
     return
   }
-  accessStore.setCurrentView(parentView(currentView.value))
+  accessStore.setCurrentView(
+    currentView.value === 'download_mobile' && downloadOpenedFromChooser.value
+      ? 'default'
+      : parentView(currentView.value),
+  )
 }
 
 /** Views built on the new onboarding design (white surface, no help link). */
@@ -319,8 +319,9 @@ const getTitle = computed(() => {
       ? t('access_wallet.social.title')
       : ''
   }
+  // The chooser is part of logging in, so it carries the same title.
   if (currentView.value === 'default') {
-    return t('connect_wallet')
+    return t('access_wallet.social.title')
   }
   if (currentView.value === 'download_mobile') {
     return t('access_wallet.download_mobile.title')

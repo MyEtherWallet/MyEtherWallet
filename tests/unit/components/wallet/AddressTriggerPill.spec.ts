@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import { reactive } from 'vue'
 
 const walletStore = reactive({
+  wallet: null as { getWalletType: () => string } | null,
   walletAddress: '0xA000000000000000000000000000000000000001',
   isWatchOnly: false,
   isLoadingBalances: false,
@@ -17,11 +18,14 @@ const chainsStore = {
   selectedChain: { icon: 'https://example.com/eth.png', name: 'ETHEREUM' },
 }
 
+const authStore = reactive({ email: null as string | null })
+
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/watchOnlyStore', () => ({
   useWatchOnlyStore: () => watchOnlyStore,
 }))
 vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => chainsStore }))
+vi.mock('@/stores/authStore', () => ({ useAuthStore: () => authStore }))
 
 vi.mock('pinia', async importOriginal => {
   const actual = await importOriginal<typeof import('pinia')>()
@@ -39,6 +43,7 @@ const AppAddressSelector = {
   props: [
     'address',
     'name',
+    'email',
     'balance',
     'loading',
     'connected',
@@ -73,6 +78,25 @@ describe('AddressTriggerPill', () => {
     const selector = factory().findComponent({ name: 'AppAddressSelector' })
     expect(selector.props('connected')).toBe(false)
     walletStore.isWatchOnly = false
+  })
+
+  it('shows the login email while the Google / email wallet is connected', () => {
+    walletStore.wallet = { getWalletType: () => 'PRIVY' }
+    authStore.email = 'ada@example.com'
+    const selector = factory().findComponent({ name: 'AppAddressSelector' })
+    expect(selector.props('email')).toBe('ada@example.com')
+    walletStore.wallet = null
+    authStore.email = null
+  })
+
+  it('keeps the address for any other wallet, even with a login still in the tab', () => {
+    // Switching to another saved account leaves the login in place.
+    walletStore.wallet = { getWalletType: () => 'WATCH_ONLY' }
+    authStore.email = 'ada@example.com'
+    const selector = factory().findComponent({ name: 'AppAddressSelector' })
+    expect(selector.props('email')).toBeUndefined()
+    walletStore.wallet = null
+    authStore.email = null
   })
 
   it('passes the loading and open states through', () => {

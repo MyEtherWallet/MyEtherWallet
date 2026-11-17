@@ -40,8 +40,7 @@
         <AppNavbar
           v-bind="bar.props"
           @toggle-menu="record('toggle-menu')"
-          @create-wallet="record('create-wallet')"
-          @connect-wallet="record('connect-wallet')"
+          @log-in="record('log-in')"
         >
           <template #links>
             <AppNavLink
@@ -68,6 +67,7 @@
               address="0x32Be343B94f860124dC4fEe278FDCBD38C102D88"
               balance="$130.23"
               :network-icon="ethIcon"
+              :email="bar.email"
             />
           </template>
           <template #actions>
@@ -114,6 +114,11 @@ const record = (event: string) => {
 const bars = computed(() => [
   { title: 'Wallet saved? Off', props: { walletSaved: false } },
   { title: 'Wallet saved? On', props: { walletSaved: true } },
+  {
+    title: 'Wallet saved? On, logged in with Google / email',
+    props: { walletSaved: true },
+    email: 'sara.cheikh@gmail.com',
+  },
   {
     title: 'Live',
     props: {
