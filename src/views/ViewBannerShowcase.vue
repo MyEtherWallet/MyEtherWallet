@@ -1,32 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Banner (MEW-2448), reachable at /dev/banner via the
-// design-library shell — see routesDefault.ts. Figma `Banner` 3740:42238 (four
-// types), the `_base` 3740:42018 sizes on both surfaces, then actions, no
-// close, long copy, and a live v-model dismiss.
-import { ref } from 'vue'
-import AppBanner from '@/components/banner/AppBanner.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import { BANNER_TYPES } from '@/components/banner/types'
-
-const TITLE = 'Title of notification'
-const DESCRIPTION = 'Description of issue, error or info.'
-const SHORT = 'Short feedback message of only 1 line'
-
-// Figma "Style": the surface each banner sits on, and the panel that shows it.
-const SURFACES = [
-  {
-    surface: 'alternative',
-    label: 'On alternative',
-    panel: 'bg-background-alternative',
-  },
-  { surface: 'default', label: 'On default', panel: 'bg-background-default' },
-] as const
-const LONG =
-  'Bridging from Arbitrum usually takes a few minutes, but during network congestion it can take up to an hour. Your funds stay safe while the transfer is pending, and you can follow its progress from the activity panel.'
-
-const isShown = ref(true)
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -129,3 +100,32 @@ const isShown = ref(true)
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Banner (MEW-2448), reachable at /dev/banner via the
+// design-library shell — see routesDefault.ts. Figma `Banner` 3740:42238 (four
+// types), the `_base` 3740:42018 sizes on both surfaces, then actions, no
+// close, long copy, and a live v-model dismiss.
+import { ref } from 'vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import { BANNER_TYPES } from '@/components/banner/types'
+
+const TITLE = 'Title of notification'
+const DESCRIPTION = 'Description of issue, error or info.'
+const SHORT = 'Short feedback message of only 1 line'
+
+// Figma "Style": the surface each banner sits on, and the panel that shows it.
+const SURFACES = [
+  {
+    surface: 'alternative',
+    label: 'On alternative',
+    panel: 'bg-background-alternative',
+  },
+  { surface: 'default', label: 'On default', panel: 'bg-background-default' },
+] as const
+const LONG =
+  'Bridging from Arbitrum usually takes a few minutes, but during network congestion it can take up to an hour. Your funds stay safe while the transfer is pending, and you can follow its progress from the activity panel.'
+
+const isShown = ref(true)
+</script>

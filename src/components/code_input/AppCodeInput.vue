@@ -1,3 +1,37 @@
+<template>
+  <div
+    role="group"
+    :aria-label="label ?? t('common.code_input.label')"
+    class="flex items-start justify-center gap-2"
+  >
+    <input
+      v-for="(digit, index) in digits"
+      :key="index"
+      :ref="
+        el => {
+          if (el) cells[index] = el as HTMLInputElement
+        }
+      "
+      :value="digit"
+      type="text"
+      inputmode="numeric"
+      autocomplete="one-time-code"
+      :maxlength="length"
+      :disabled="disabled"
+      :aria-label="
+        t('common.code_input.digit_label', { index: index + 1, total: length })
+      "
+      :aria-invalid="status === 'error' ? 'true' : undefined"
+      class="h-18 w-full max-w-16 min-w-0 rounded-16 border-[1.5px] bg-background-alternative text-center text-s-24 font-bold text-text-default caret-text-default outline-none transition-colors focus:border-2 disabled:opacity-50"
+      :class="cellClass"
+      @input="onInput(index, $event)"
+      @keydown="onKeydown(index, $event)"
+      @paste="onPaste"
+      @focus="($event.target as HTMLInputElement).select()"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 // One-time-code field: one box per digit (Figma "OTP Digit Input", 143:529).
 // Typing advances, backspace goes back, and a pasted or autofilled code is
@@ -142,37 +176,3 @@ const onKeydown = (index: number, event: KeyboardEvent): void => {
 const focus = (): void => focusCell(0)
 defineExpose({ focus })
 </script>
-
-<template>
-  <div
-    role="group"
-    :aria-label="label ?? t('common.code_input.label')"
-    class="flex items-start justify-center gap-2"
-  >
-    <input
-      v-for="(digit, index) in digits"
-      :key="index"
-      :ref="
-        el => {
-          if (el) cells[index] = el as HTMLInputElement
-        }
-      "
-      :value="digit"
-      type="text"
-      inputmode="numeric"
-      autocomplete="one-time-code"
-      :maxlength="length"
-      :disabled="disabled"
-      :aria-label="
-        t('common.code_input.digit_label', { index: index + 1, total: length })
-      "
-      :aria-invalid="status === 'error' ? 'true' : undefined"
-      class="h-18 w-full max-w-16 min-w-0 rounded-16 border-[1.5px] bg-background-alternative text-center text-s-24 font-bold text-text-default caret-text-default outline-none transition-colors focus:border-2 disabled:opacity-50"
-      :class="cellClass"
-      @input="onInput(index, $event)"
-      @keydown="onKeydown(index, $event)"
-      @paste="onPaste"
-      @focus="($event.target as HTMLInputElement).select()"
-    />
-  </div>
-</template>

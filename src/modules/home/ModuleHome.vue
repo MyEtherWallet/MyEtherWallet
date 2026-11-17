@@ -1,3 +1,16 @@
+<template>
+  <div class="w-full">
+    <AppHomeSection
+      v-for="s in visible"
+      :key="s.id"
+      :title="s.titleKey ? t(s.titleKey) : undefined"
+      :subtitle="s.subtitleKey ? t(s.subtitleKey) : undefined"
+    >
+      <component :is="s.component" />
+    </AppHomeSection>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -15,16 +28,3 @@ const visible = computed(() =>
   ),
 )
 </script>
-
-<template>
-  <div class="w-full">
-    <AppHomeSection
-      v-for="s in visible"
-      :key="s.id"
-      :title="s.titleKey ? t(s.titleKey) : undefined"
-      :subtitle="s.subtitleKey ? t(s.subtitleKey) : undefined"
-    >
-      <component :is="s.component" />
-    </AppHomeSection>
-  </div>
-</template>

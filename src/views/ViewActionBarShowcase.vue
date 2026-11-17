@@ -1,38 +1,3 @@
-<script setup lang="ts">
-// Gallery for the ActionBar design-library components (MEW-2398), reachable at
-// /dev/action-bar via the design-library shell — see routesDefault.ts. Compare
-// against Figma ActionBar (776:259) and ActionBarButton (776:214). Hover is
-// native; the static row forces the Hover look with the same background class.
-import { computed, ref } from 'vue'
-import AppActionBar from '@/components/action_bar/AppActionBar.vue'
-import AppActionBarButton from '@/components/action_bar/AppActionBarButton.vue'
-import type { ActionBarItem } from '@/components/action_bar/types'
-
-const ITEMS: ActionBarItem[] = [
-  { id: 'trade', icon: 'chart-bar', label: 'Trade' },
-  { id: 'swap', icon: 'arrow-path-rounded-square', label: 'Swap' },
-  { id: 'perps', icon: 'perpetuals', label: 'Perps' },
-  { id: 'bridge', icon: 'arrow-uturn-right', label: 'Bridge' },
-  { id: 'deposit', icon: 'arrow-down-tray', label: 'Deposit' },
-  { id: 'send', icon: 'paper-airplane', label: 'Send' },
-  { id: 'purchase', icon: 'currency-dollar', label: 'Buy/Sell' },
-]
-
-const activeId = ref<string | null>('swap')
-const disablePerps = ref(false)
-
-const items = computed(() =>
-  ITEMS.map(item =>
-    item.id === 'perps' ? { ...item, disabled: disablePerps.value } : item,
-  ),
-)
-
-// Clicking an item toggles its drawer, like the app rail.
-const onSelect = (id: string) => {
-  activeId.value = activeId.value === id ? null : id
-}
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -95,3 +60,38 @@ const onSelect = (id: string) => {
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the ActionBar design-library components (MEW-2398), reachable at
+// /dev/action-bar via the design-library shell — see routesDefault.ts. Compare
+// against Figma ActionBar (776:259) and ActionBarButton (776:214). Hover is
+// native; the static row forces the Hover look with the same background class.
+import { computed, ref } from 'vue'
+import AppActionBar from '@/components/action_bar/AppActionBar.vue'
+import AppActionBarButton from '@/components/action_bar/AppActionBarButton.vue'
+import type { ActionBarItem } from '@/components/action_bar/types'
+
+const ITEMS: ActionBarItem[] = [
+  { id: 'trade', icon: 'chart-bar', label: 'Trade' },
+  { id: 'swap', icon: 'arrow-path-rounded-square', label: 'Swap' },
+  { id: 'perps', icon: 'perpetuals', label: 'Perps' },
+  { id: 'bridge', icon: 'arrow-uturn-right', label: 'Bridge' },
+  { id: 'deposit', icon: 'arrow-down-tray', label: 'Deposit' },
+  { id: 'send', icon: 'paper-airplane', label: 'Send' },
+  { id: 'purchase', icon: 'currency-dollar', label: 'Buy/Sell' },
+]
+
+const activeId = ref<string | null>('swap')
+const disablePerps = ref(false)
+
+const items = computed(() =>
+  ITEMS.map(item =>
+    item.id === 'perps' ? { ...item, disabled: disablePerps.value } : item,
+  ),
+)
+
+// Clicking an item toggles its drawer, like the app rail.
+const onSelect = (id: string) => {
+  activeId.value = activeId.value === id ? null : id
+}
+</script>

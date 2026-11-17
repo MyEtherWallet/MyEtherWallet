@@ -1,3 +1,16 @@
+<template>
+  <div
+    aria-hidden="true"
+    data-testid="skeleton"
+    :class="[
+      'relative overflow-hidden bg-[var(--skeleton-base)]',
+      SKELETON_SHAPE_CLASS[shape],
+    ]"
+  >
+    <div class="skeleton-shimmer absolute inset-y-0 left-0 w-[200%]" />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { SKELETON_SHAPE_CLASS, type SkeletonShape } from './types'
 
@@ -15,16 +28,3 @@ withDefaults(defineProps<{ shape?: SkeletonShape }>(), {
   shape: 'rectangle',
 })
 </script>
-
-<template>
-  <div
-    aria-hidden="true"
-    data-testid="skeleton"
-    :class="[
-      'relative overflow-hidden bg-[var(--skeleton-base)]',
-      SKELETON_SHAPE_CLASS[shape],
-    ]"
-  >
-    <div class="skeleton-shimmer absolute inset-y-0 left-0 w-[200%]" />
-  </div>
-</template>

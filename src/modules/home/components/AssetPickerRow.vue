@@ -1,27 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
-import { useCurrency } from '@/composables/useCurrency'
-import { formatPercentageValue } from '@/utils/numberFormatHelper'
-import type { AssetPickerItem } from '@/modules/home/composables/useAssetPicker'
-
-const props = defineProps<{ item: AssetPickerItem; selected: boolean }>()
-
-defineEmits<{ toggle: [] }>()
-
-const { formatFiat } = useCurrency()
-
-const changeText = computed(() => {
-  const { change } = props.item
-  if (change == null) return ''
-  // formatPercentageValue returns a bare '0' (no %) for zero.
-  if (change === 0) return '0%'
-  return `${change < 0 ? '-' : '+'}${formatPercentageValue(Math.abs(change)).value}`
-})
-</script>
-
 <template>
   <!-- Selectable cell (Figma "Cell" with a prefix watchlist toggle): the whole
        row toggles the pick; the parent commits picks on confirm. -->
@@ -82,3 +58,27 @@ const changeText = computed(() => {
     </span>
   </button>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import { useCurrency } from '@/composables/useCurrency'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import type { AssetPickerItem } from '@/modules/home/composables/useAssetPicker'
+
+const props = defineProps<{ item: AssetPickerItem; selected: boolean }>()
+
+defineEmits<{ toggle: [] }>()
+
+const { formatFiat } = useCurrency()
+
+const changeText = computed(() => {
+  const { change } = props.item
+  if (change == null) return ''
+  // formatPercentageValue returns a bare '0' (no %) for zero.
+  if (change === 0) return '0%'
+  return `${change < 0 ? '-' : '+'}${formatPercentageValue(Math.abs(change)).value}`
+})
+</script>

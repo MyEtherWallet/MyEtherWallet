@@ -1,3 +1,41 @@
+<template>
+  <nav :aria-label="t('common.pagination')" class="@container w-full">
+    <div class="flex flex-col gap-3 @3xl:gap-5">
+      <AppDivider :variant="PAGINATION_DIVIDER[variant]" />
+      <div class="flex items-center gap-3">
+        <p
+          class="min-w-0 flex-1 text-text-sm text-text-default @3xl:text-text-base"
+          aria-live="polite"
+        >
+          {{
+            label
+              ? label(page, totalPages)
+              : t('common.showing_page', { current: page, total: totalPages })
+          }}
+        </p>
+        <AppBtnIcon
+          variant="filled"
+          size="l"
+          :label="t('common.previous_page')"
+          :disabled="page <= 1"
+          @click="go(page - 1)"
+        >
+          <AppIcon name="chevron-left" variant="filled" size="m" />
+        </AppBtnIcon>
+        <AppBtnIcon
+          variant="filled"
+          size="l"
+          :label="t('common.next_page')"
+          :disabled="page >= totalPages"
+          @click="go(page + 1)"
+        >
+          <AppIcon name="chevron-right" variant="filled" size="m" />
+        </AppBtnIcon>
+      </div>
+    </div>
+  </nav>
+</template>
+
 <script setup lang="ts">
 /**
  * Pagination (Figma: MEW Web App — Design Library › Pagination, component set
@@ -41,41 +79,3 @@ const go = (n: number) => {
   if (next !== page.value) page.value = next
 }
 </script>
-
-<template>
-  <nav :aria-label="t('common.pagination')" class="@container w-full">
-    <div class="flex flex-col gap-3 @3xl:gap-5">
-      <AppDivider :variant="PAGINATION_DIVIDER[variant]" />
-      <div class="flex items-center gap-3">
-        <p
-          class="min-w-0 flex-1 text-text-sm text-text-default @3xl:text-text-base"
-          aria-live="polite"
-        >
-          {{
-            label
-              ? label(page, totalPages)
-              : t('common.showing_page', { current: page, total: totalPages })
-          }}
-        </p>
-        <AppBtnIcon
-          variant="filled"
-          size="l"
-          :label="t('common.previous_page')"
-          :disabled="page <= 1"
-          @click="go(page - 1)"
-        >
-          <AppIcon name="chevron-left" variant="filled" size="m" />
-        </AppBtnIcon>
-        <AppBtnIcon
-          variant="filled"
-          size="l"
-          :label="t('common.next_page')"
-          :disabled="page >= totalPages"
-          @click="go(page + 1)"
-        >
-          <AppIcon name="chevron-right" variant="filled" size="m" />
-        </AppBtnIcon>
-      </div>
-    </div>
-  </nav>
-</template>

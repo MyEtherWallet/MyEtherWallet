@@ -1,117 +1,3 @@
-<script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useIntervalFn, useClipboard } from '@vueuse/core'
-import { storeToRefs } from 'pinia'
-import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
-import AppIcon from '@/components/icon/AppIcon.vue'
-import { useWalletStore } from '@/stores/walletStore'
-import { useChainsStore } from '@/stores/chainsStore'
-import { useGlobalStore } from '@/stores/globalStore'
-import { useAccessStore } from '@/stores/accessStore'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import { usePortfolio24hChange } from '@/composables/usePortfolio24hChange'
-import { useRefreshBalances } from '@/composables/useRefreshBalances'
-import { truncateAddress } from '@/utils/filters'
-import { formatPercentageValue } from '@/utils/numberFormatHelper'
-import { ROUTES_MAIN } from '@/router/routeNames'
-import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
-import AppTooltip from '@/components/tooltip/AppTooltip.vue'
-
-const { t } = useI18n()
-const router = useRouter()
-
-const walletStore = useWalletStore()
-const {
-  isWalletConnected,
-  walletAddress,
-  isLoadingBalances,
-  totalFiatPortfolioValueBN,
-  formattedTotalFiatPortfolioValue,
-} = storeToRefs(walletStore)
-
-// "assets" only when the portfolio is actually worth something. `hasBalances`
-// is true for dust / price-less tokens (balanceWei > 0 but $0 value), which is
-// why a chain like BNB showed "$0.00" instead of the empty state.
-const hasValue = computed(() =>
-  totalFiatPortfolioValueBN.value.isGreaterThan(0),
-)
-const { selectedChain } = storeToRefs(useChainsStore())
-const globalStore = useGlobalStore()
-const { hideBalances } = storeToRefs(globalStore)
-const { toggleHideBalances } = globalStore
-// "Create wallet" starts with Log in / Sign Up.
-const { openAccessDialog, openSignUpDialog } = useAccessStore()
-const { openPanel } = useWalletMenuStore()
-const { lastTwentyFourHours } = usePortfolio24hChange()
-const { refreshBalances } = useRefreshBalances()
-
-const openDepositDialog = ref(false)
-
-// Copy the full (untruncated) address from the hero address chip. `copied`
-// flips true for a beat so the tooltip can confirm the action.
-const { copy: copyToClipboard, copied: addressCopied } = useClipboard()
-const copyAddress = () => copyToClipboard(walletAddress.value ?? '')
-
-// Track whether the first balance load has completed. Only the *first* load
-// shows the full-card skeleton; later refreshes keep the current layout and
-// skeleton just the amount (see below), so refreshing a no-assets account no
-// longer swaps to a separate loading screen.
-const hasLoadedOnce = ref(false)
-watch(isLoadingBalances, (loading, wasLoading) => {
-  if (wasLoading && !loading) hasLoadedOnce.value = true
-})
-
-// Keep the refresh icon spinning for a beat on click even if the fetch is
-// instant, plus for the whole duration of an actual load.
-const refreshing = ref(false)
-const isRefreshing = computed(() => refreshing.value || isLoadingBalances.value)
-const onRefresh = () => {
-  refreshing.value = true
-  refreshBalances()
-  setTimeout(() => (refreshing.value = false), 800)
-}
-
-// Keep the balance fresh with a silent background refetch every 2 minutes
-// (matches the refresh tooltip copy). `silent` skips the loading skeleton so
-// the amount updates in place; useIntervalFn auto-clears on unmount and
-// refreshBalances no-ops while disconnected.
-const BALANCE_REFRESH_MS = 120_000
-useIntervalFn(() => refreshBalances({ silent: true }), BALANCE_REFRESH_MS)
-
-type State = 'notconnected' | 'initialLoading' | 'noassets' | 'assets'
-const state = computed<State>(() => {
-  if (!isWalletConnected.value) return 'notconnected'
-  if (isLoadingBalances.value && !hasLoadedOnce.value) return 'initialLoading'
-  if (!hasValue.value) return 'noassets'
-  return 'assets'
-})
-
-const percentChange = computed(() => lastTwentyFourHours.value.percentChange)
-const isUp = computed(() => !percentChange.value.isNegative())
-
-// Mask by replacing only the digits with `*`, preserving the string's length
-// and shape (symbol, separators). Same character count ⇒ same width ⇒ the
-// masked value wraps exactly like the real one (no extra line when hidden).
-const maskDigits = (value: string) => value.replace(/\d/g, '*')
-
-const totalText = computed(() =>
-  hideBalances.value
-    ? maskDigits(formattedTotalFiatPortfolioValue.value)
-    : formattedTotalFiatPortfolioValue.value,
-)
-const percentText = computed(() => {
-  // formatPercentageValue suffixes '%' for every case except an exact 0 (which
-  // returns '0'), so append '%' only when it's missing — never duplicate it (MEW-2215)
-  const formatted = formatPercentageValue(percentChange.value.abs()).value
-  const withUnit = formatted.endsWith('%') ? formatted : `${formatted}%`
-  const shown = `${isUp.value ? '+' : '-'}${withUnit}`
-  return hideBalances.value ? maskDigits(shown) : shown
-})
-
-const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
-</script>
-
 <template>
   <div
     data-test="hero-portfolio-card"
@@ -372,3 +258,117 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
     <TheDepositDialog v-model:open-dialog="openDepositDialog" />
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+import { useIntervalFn, useClipboard } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useAccessStore } from '@/stores/accessStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { usePortfolio24hChange } from '@/composables/usePortfolio24hChange'
+import { useRefreshBalances } from '@/composables/useRefreshBalances'
+import { truncateAddress } from '@/utils/filters'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { ROUTES_MAIN } from '@/router/routeNames'
+import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
+
+const { t } = useI18n()
+const router = useRouter()
+
+const walletStore = useWalletStore()
+const {
+  isWalletConnected,
+  walletAddress,
+  isLoadingBalances,
+  totalFiatPortfolioValueBN,
+  formattedTotalFiatPortfolioValue,
+} = storeToRefs(walletStore)
+
+// "assets" only when the portfolio is actually worth something. `hasBalances`
+// is true for dust / price-less tokens (balanceWei > 0 but $0 value), which is
+// why a chain like BNB showed "$0.00" instead of the empty state.
+const hasValue = computed(() =>
+  totalFiatPortfolioValueBN.value.isGreaterThan(0),
+)
+const { selectedChain } = storeToRefs(useChainsStore())
+const globalStore = useGlobalStore()
+const { hideBalances } = storeToRefs(globalStore)
+const { toggleHideBalances } = globalStore
+// "Create wallet" starts with Log in / Sign Up.
+const { openAccessDialog, openSignUpDialog } = useAccessStore()
+const { openPanel } = useWalletMenuStore()
+const { lastTwentyFourHours } = usePortfolio24hChange()
+const { refreshBalances } = useRefreshBalances()
+
+const openDepositDialog = ref(false)
+
+// Copy the full (untruncated) address from the hero address chip. `copied`
+// flips true for a beat so the tooltip can confirm the action.
+const { copy: copyToClipboard, copied: addressCopied } = useClipboard()
+const copyAddress = () => copyToClipboard(walletAddress.value ?? '')
+
+// Track whether the first balance load has completed. Only the *first* load
+// shows the full-card skeleton; later refreshes keep the current layout and
+// skeleton just the amount (see below), so refreshing a no-assets account no
+// longer swaps to a separate loading screen.
+const hasLoadedOnce = ref(false)
+watch(isLoadingBalances, (loading, wasLoading) => {
+  if (wasLoading && !loading) hasLoadedOnce.value = true
+})
+
+// Keep the refresh icon spinning for a beat on click even if the fetch is
+// instant, plus for the whole duration of an actual load.
+const refreshing = ref(false)
+const isRefreshing = computed(() => refreshing.value || isLoadingBalances.value)
+const onRefresh = () => {
+  refreshing.value = true
+  refreshBalances()
+  setTimeout(() => (refreshing.value = false), 800)
+}
+
+// Keep the balance fresh with a silent background refetch every 2 minutes
+// (matches the refresh tooltip copy). `silent` skips the loading skeleton so
+// the amount updates in place; useIntervalFn auto-clears on unmount and
+// refreshBalances no-ops while disconnected.
+const BALANCE_REFRESH_MS = 120_000
+useIntervalFn(() => refreshBalances({ silent: true }), BALANCE_REFRESH_MS)
+
+type State = 'notconnected' | 'initialLoading' | 'noassets' | 'assets'
+const state = computed<State>(() => {
+  if (!isWalletConnected.value) return 'notconnected'
+  if (isLoadingBalances.value && !hasLoadedOnce.value) return 'initialLoading'
+  if (!hasValue.value) return 'noassets'
+  return 'assets'
+})
+
+const percentChange = computed(() => lastTwentyFourHours.value.percentChange)
+const isUp = computed(() => !percentChange.value.isNegative())
+
+// Mask by replacing only the digits with `*`, preserving the string's length
+// and shape (symbol, separators). Same character count ⇒ same width ⇒ the
+// masked value wraps exactly like the real one (no extra line when hidden).
+const maskDigits = (value: string) => value.replace(/\d/g, '*')
+
+const totalText = computed(() =>
+  hideBalances.value
+    ? maskDigits(formattedTotalFiatPortfolioValue.value)
+    : formattedTotalFiatPortfolioValue.value,
+)
+const percentText = computed(() => {
+  // formatPercentageValue suffixes '%' for every case except an exact 0 (which
+  // returns '0'), so append '%' only when it's missing — never duplicate it (MEW-2215)
+  const formatted = formatPercentageValue(percentChange.value.abs()).value
+  const withUnit = formatted.endsWith('%') ? formatted : `${formatted}%`
+  const shown = `${isUp.value ? '+' : '-'}${withUnit}`
+  return hideBalances.value ? maskDigits(shown) : shown
+})
+
+const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
+</script>

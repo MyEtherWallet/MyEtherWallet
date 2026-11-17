@@ -1,36 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import type { CellSurface } from '@/components/cell/cellSizes'
-import type { TableSize } from '@/components/table/types'
-import type { ApiOrder } from '../sdk/types'
-
-/**
- * Row actions of the Perps orders tables (positions page and market page),
- * for an AppTableRow's `#actions` slot (`size`, `surface`). Only an open order
- * has any. At L/M viewing is the row click, so the action is a Cancel button;
- * at S the row has no room for it and a menu holds view and cancel. Cancel
- * asks the parent to confirm; `cancelling` shows the spinner meanwhile.
- */
-const props = defineProps<{
-  order: ApiOrder
-  size: TableSize
-  surface: CellSurface
-  cancelling?: boolean
-}>()
-
-const emit = defineEmits<{
-  view: [order: ApiOrder]
-  cancel: [order: ApiOrder]
-}>()
-
-const cancellable = computed(() =>
-  ['pending', 'untriggered', 'open'].includes(props.order.status),
-)
-</script>
-
 <template>
   <AppBaseButton
     v-if="cancellable && size !== 's'"
@@ -79,3 +46,36 @@ const cancellable = computed(() =>
     </template>
   </AppPopUpMenu>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import type { CellSurface } from '@/components/cell/cellSizes'
+import type { TableSize } from '@/components/table/types'
+import type { ApiOrder } from '../sdk/types'
+
+/**
+ * Row actions of the Perps orders tables (positions page and market page),
+ * for an AppTableRow's `#actions` slot (`size`, `surface`). Only an open order
+ * has any. At L/M viewing is the row click, so the action is a Cancel button;
+ * at S the row has no room for it and a menu holds view and cancel. Cancel
+ * asks the parent to confirm; `cancelling` shows the spinner meanwhile.
+ */
+const props = defineProps<{
+  order: ApiOrder
+  size: TableSize
+  surface: CellSurface
+  cancelling?: boolean
+}>()
+
+const emit = defineEmits<{
+  view: [order: ApiOrder]
+  cancel: [order: ApiOrder]
+}>()
+
+const cancellable = computed(() =>
+  ['pending', 'untriggered', 'open'].includes(props.order.status),
+)
+</script>

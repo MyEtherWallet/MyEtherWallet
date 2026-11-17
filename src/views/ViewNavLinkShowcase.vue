@@ -1,27 +1,3 @@
-<script setup lang="ts">
-// Preview for the NavLink design-library component (MEW-2461) at /dev/navlink.
-// Matches Figma component set 575:3434 (Status × Show dropdown), on the white
-// surface the Navbar sits on.
-import { ref } from 'vue'
-import AppNavLink from '@/components/navbar/AppNavLink.vue'
-
-const STATUSES = [
-  { label: 'Default', selected: false },
-  { label: 'Hover (point at it)', selected: false },
-  { label: 'Selected', selected: true },
-]
-
-// Real router links: the one for this page is Selected by the route match.
-const ROUTER_LINKS = [
-  { name: 'DevNavLink', label: 'NavLink' },
-  { name: 'DevDivider', label: 'Divider' },
-  { name: 'DevTabBar', label: 'Tab Bar' },
-  { name: 'DevTooltip', label: 'Tooltip' },
-]
-
-const menuOpen = ref(false)
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -84,3 +60,27 @@ const menuOpen = ref(false)
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the NavLink design-library component (MEW-2461) at /dev/navlink.
+// Matches Figma component set 575:3434 (Status × Show dropdown), on the white
+// surface the Navbar sits on.
+import { ref } from 'vue'
+import AppNavLink from '@/components/navbar/AppNavLink.vue'
+
+const STATUSES = [
+  { label: 'Default', selected: false },
+  { label: 'Hover (point at it)', selected: false },
+  { label: 'Selected', selected: true },
+]
+
+// Real router links: the one for this page is Selected by the route match.
+const ROUTER_LINKS = [
+  { name: 'DevNavLink', label: 'NavLink' },
+  { name: 'DevDivider', label: 'Divider' },
+  { name: 'DevTabBar', label: 'Tab Bar' },
+  { name: 'DevTooltip', label: 'Tooltip' },
+]
+
+const menuOpen = ref(false)
+</script>

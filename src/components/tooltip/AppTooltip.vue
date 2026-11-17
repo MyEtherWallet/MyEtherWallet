@@ -1,3 +1,77 @@
+<template>
+  <span
+    ref="triggerRef"
+    v-bind="$attrs"
+    class="inline-flex"
+    data-testid="tooltip-trigger"
+    :aria-describedby="visible ? tooltipId : undefined"
+    @mouseenter="onEnter"
+    @mouseleave="onLeave"
+    @focusin="onFocus"
+    @focusout="onBlur"
+    @click="onClick"
+  >
+    <slot>
+      <span
+        tabindex="0"
+        class="inline-flex rounded-full text-text-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-brand"
+        data-testid="tooltip-default-trigger"
+      >
+        <AppIcon name="information-circle" class="p-1 cursor-pointer" />
+      </span>
+    </slot>
+  </span>
+
+  <!-- z-[2150]: above modals (AppModal stacks from 2110), below teleported
+       menus (2200) and toasts (2300). -->
+  <Teleport to="body">
+    <div
+      v-if="visible && !disabled"
+      :id="tooltipId"
+      ref="tipRef"
+      role="tooltip"
+      data-testid="tooltip"
+      :data-placement="effectivePlacement"
+      class="pointer-events-none fixed z-[2150] flex items-center"
+      :class="PLACEMENT_FLEX[effectivePlacement]"
+      :style="{ top: pos.y + 'px', left: pos.x + 'px' }"
+    >
+      <div
+        class="flex max-w-60 items-center justify-center gap-2 rounded-8 bg-background-info px-2 py-1 text-center text-label-xs text-text-inverted shadow-button-elevated"
+      >
+        <span v-if="$slots.content" class="shrink-0"
+          ><slot name="content"
+        /></span>
+        <span v-if="hasText">{{ text }}</span>
+      </div>
+
+      <span
+        class="text-background-info"
+        :class="[
+          ARROW_ROTATE[effectivePlacement],
+          ARROW_BEFORE[effectivePlacement] ? 'order-first' : '',
+        ]"
+      >
+        <svg
+          v-if="isVertical"
+          viewBox="0 0 12 10"
+          class="block h-2.5 w-3 fill-current"
+        >
+          <!-- Figma polygon (12×8.11, rounded tip); the rest of the 10px box is the gap to the trigger. -->
+          <path
+            d="M4.28501 7.14169C5.06182 8.43637 6.93818 8.43637 7.71499 7.14169L12 0H0L4.28501 7.14169Z"
+          />
+        </svg>
+        <svg v-else viewBox="0 0 10 12" class="block h-3 w-2.5 fill-current">
+          <path
+            d="M7.14169 4.28501C8.43637 5.06182 8.43637 6.93818 7.14169 7.71499L0 12V0L7.14169 4.28501Z"
+          />
+        </svg>
+      </span>
+    </div>
+  </Teleport>
+</template>
+
 <script setup lang="ts">
 import {
   ref,
@@ -200,77 +274,3 @@ watch(
 
 onBeforeUnmount(close)
 </script>
-
-<template>
-  <span
-    ref="triggerRef"
-    v-bind="$attrs"
-    class="inline-flex"
-    data-testid="tooltip-trigger"
-    :aria-describedby="visible ? tooltipId : undefined"
-    @mouseenter="onEnter"
-    @mouseleave="onLeave"
-    @focusin="onFocus"
-    @focusout="onBlur"
-    @click="onClick"
-  >
-    <slot>
-      <span
-        tabindex="0"
-        class="inline-flex rounded-full text-text-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-brand"
-        data-testid="tooltip-default-trigger"
-      >
-        <AppIcon name="information-circle" class="p-1 cursor-pointer" />
-      </span>
-    </slot>
-  </span>
-
-  <!-- z-[2150]: above modals (AppModal stacks from 2110), below teleported
-       menus (2200) and toasts (2300). -->
-  <Teleport to="body">
-    <div
-      v-if="visible && !disabled"
-      :id="tooltipId"
-      ref="tipRef"
-      role="tooltip"
-      data-testid="tooltip"
-      :data-placement="effectivePlacement"
-      class="pointer-events-none fixed z-[2150] flex items-center"
-      :class="PLACEMENT_FLEX[effectivePlacement]"
-      :style="{ top: pos.y + 'px', left: pos.x + 'px' }"
-    >
-      <div
-        class="flex max-w-60 items-center justify-center gap-2 rounded-8 bg-background-info px-2 py-1 text-center text-label-xs text-text-inverted shadow-button-elevated"
-      >
-        <span v-if="$slots.content" class="shrink-0"
-          ><slot name="content"
-        /></span>
-        <span v-if="hasText">{{ text }}</span>
-      </div>
-
-      <span
-        class="text-background-info"
-        :class="[
-          ARROW_ROTATE[effectivePlacement],
-          ARROW_BEFORE[effectivePlacement] ? 'order-first' : '',
-        ]"
-      >
-        <svg
-          v-if="isVertical"
-          viewBox="0 0 12 10"
-          class="block h-2.5 w-3 fill-current"
-        >
-          <!-- Figma polygon (12×8.11, rounded tip); the rest of the 10px box is the gap to the trigger. -->
-          <path
-            d="M4.28501 7.14169C5.06182 8.43637 6.93818 8.43637 7.71499 7.14169L12 0H0L4.28501 7.14169Z"
-          />
-        </svg>
-        <svg v-else viewBox="0 0 10 12" class="block h-3 w-2.5 fill-current">
-          <path
-            d="M7.14169 4.28501C8.43637 5.06182 8.43637 6.93818 7.14169 7.71499L0 12V0L7.14169 4.28501Z"
-          />
-        </svg>
-      </span>
-    </div>
-  </Teleport>
-</template>

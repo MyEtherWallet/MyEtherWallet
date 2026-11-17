@@ -1,23 +1,3 @@
-<script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import stockSpot from '@/assets/images/watchlist/stock-spot.png'
-import stockIbm from '@/assets/images/watchlist/stock-ibm.png'
-import stockNke from '@/assets/images/watchlist/stock-nke.png'
-import stockLly from '@/assets/images/watchlist/stock-lly.png'
-
-import AppIcon from '@/components/icon/AppIcon.vue'
-const { t } = useI18n()
-
-defineEmits<{
-  // The parent opens the add-to-watchlist modal.
-  add: []
-}>()
-
-// Decorative sample stock logos (SPOT / IBM / NKE / LLY), exported from Figma.
-// SPOT is intentionally clipped — it fades out under the white gradient at the
-// left edge (matches the design).
-</script>
-
 <template>
   <!-- The whole banner is the launch target (not just the CTA): one interactive
        surface with a button role + keyboard support, so the inner CTA is a plain
@@ -93,3 +73,23 @@ defineEmits<{
     />
   </div>
 </template>
+
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import stockSpot from '@/assets/images/watchlist/stock-spot.png'
+import stockIbm from '@/assets/images/watchlist/stock-ibm.png'
+import stockNke from '@/assets/images/watchlist/stock-nke.png'
+import stockLly from '@/assets/images/watchlist/stock-lly.png'
+
+import AppIcon from '@/components/icon/AppIcon.vue'
+const { t } = useI18n()
+
+defineEmits<{
+  // The parent opens the add-to-watchlist modal.
+  add: []
+}>()
+
+// Decorative sample stock logos (SPOT / IBM / NKE / LLY), exported from Figma.
+// SPOT is intentionally clipped — it fades out under the white gradient at the
+// left edge (matches the design).
+</script>

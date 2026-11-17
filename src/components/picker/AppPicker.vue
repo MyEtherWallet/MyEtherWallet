@@ -1,3 +1,44 @@
+<template>
+  <button
+    type="button"
+    :disabled="disabled || loading"
+    :aria-busy="loading || undefined"
+    aria-haspopup="dialog"
+    :aria-expanded="expanded"
+    data-testid="picker"
+    class="items-center text-left transition-colors duration-200 hover:bg-background-alternative-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-border-brand disabled:pointer-events-none"
+    :class="rootClass"
+  >
+    <span
+      v-if="avatar && $slots.avatar"
+      class="shrink-0"
+      data-testid="picker-avatar"
+    >
+      <slot name="avatar" :size="avatarSize" />
+    </span>
+
+    <AppContentGroup
+      :title="title"
+      :description="description"
+      :loading="loading"
+      size="m"
+      no-wrap
+      :class="[isPill ? 'shrink-0' : 'flex-1', PICKER_TEXT_PAD_CLASS[size]]"
+    >
+      <template v-if="$slots.description" #description>
+        <slot name="description" />
+      </template>
+    </AppContentGroup>
+
+    <span
+      class="flex size-4 shrink-0 items-center justify-center text-icon-subtle"
+      data-testid="picker-chevron"
+    >
+      <AppIcon name="chevron-right" size="xxs" />
+    </span>
+  </button>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -69,44 +110,3 @@ const rootClass = computed(() => [
   props.disabled ? 'opacity-40' : '',
 ])
 </script>
-
-<template>
-  <button
-    type="button"
-    :disabled="disabled || loading"
-    :aria-busy="loading || undefined"
-    aria-haspopup="dialog"
-    :aria-expanded="expanded"
-    data-testid="picker"
-    class="items-center text-left transition-colors duration-200 hover:bg-background-alternative-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-border-brand disabled:pointer-events-none"
-    :class="rootClass"
-  >
-    <span
-      v-if="avatar && $slots.avatar"
-      class="shrink-0"
-      data-testid="picker-avatar"
-    >
-      <slot name="avatar" :size="avatarSize" />
-    </span>
-
-    <AppContentGroup
-      :title="title"
-      :description="description"
-      :loading="loading"
-      size="m"
-      no-wrap
-      :class="[isPill ? 'shrink-0' : 'flex-1', PICKER_TEXT_PAD_CLASS[size]]"
-    >
-      <template v-if="$slots.description" #description>
-        <slot name="description" />
-      </template>
-    </AppContentGroup>
-
-    <span
-      class="flex size-4 shrink-0 items-center justify-center text-icon-subtle"
-      data-testid="picker-chevron"
-    >
-      <AppIcon name="chevron-right" size="xxs" />
-    </span>
-  </button>
-</template>

@@ -1,3 +1,21 @@
+<template>
+  <AppToast
+    :type="type"
+    :title="toast.text"
+    :description="toast.textSecondary"
+    :asset="asset"
+    :button-label="toast.link?.title"
+    class="mt-4"
+    :class="{ 'mx-auto': isXS }"
+    @dismiss="dismiss"
+    @action="openLink"
+    @mouseenter="isHovered = true"
+    @mouseleave="isHovered = false"
+    @focusin="hasFocus = true"
+    @focusout="onFocusOut"
+  />
+</template>
+
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import AppToast from '@/components/toast/AppToast.vue'
@@ -77,21 +95,3 @@ watch(
 onMounted(startTimer)
 onBeforeUnmount(() => clearTimeout(timer))
 </script>
-
-<template>
-  <AppToast
-    :type="type"
-    :title="toast.text"
-    :description="toast.textSecondary"
-    :asset="asset"
-    :button-label="toast.link?.title"
-    class="mt-4"
-    :class="{ 'mx-auto': isXS }"
-    @dismiss="dismiss"
-    @action="openLink"
-    @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
-    @focusin="hasFocus = true"
-    @focusout="onFocusOut"
-  />
-</template>

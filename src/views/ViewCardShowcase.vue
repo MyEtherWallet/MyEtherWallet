@@ -1,46 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Card design-library component (MEW-2339), reachable at
-// /dev/card via the design-library shell — see routesDefault.ts. Shows the
-// Variant × State matrix from Figma 2276:5773. Hover, pressed and focus are
-// native: hover, press or Tab to an interactive card to see them. The toggles
-// show or hide the optional header avatar, action and button group.
-import { ref } from 'vue'
-import AppCard from '@/components/card/AppCard.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import type { CardSurface } from '@/components/card/types'
-
-// Each surface fills the opposite of the surface it sits on, so preview each
-// on its designed surface or the fill would vanish (white on white).
-const SURFACES: { surface: CardSurface; label: string; page: string }[] = [
-  {
-    surface: 'default',
-    label: 'Surface: default — fills white, sits on a default (grey) surface',
-    page: 'bg-background-default',
-  },
-  {
-    surface: 'alternative',
-    label: 'Surface: alternative — fills grey, sits on a white surface',
-    page: 'bg-white',
-  },
-]
-
-const STATES = [
-  { name: 'Default', props: { interactive: true } },
-  { name: 'Selected', props: { interactive: true, selected: true } },
-  { name: 'Loading', props: { interactive: true, loading: true } },
-  { name: 'Non-interactive', props: {} },
-] as const
-
-const showAvatar = ref(true)
-const showAction = ref(true)
-const showButtons = ref(true)
-
-// Live toggle so Selected can be flipped by clicking a card.
-const picked = ref(false)
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-5xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -140,3 +97,46 @@ const picked = ref(false)
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Card design-library component (MEW-2339), reachable at
+// /dev/card via the design-library shell — see routesDefault.ts. Shows the
+// Variant × State matrix from Figma 2276:5773. Hover, pressed and focus are
+// native: hover, press or Tab to an interactive card to see them. The toggles
+// show or hide the optional header avatar, action and button group.
+import { ref } from 'vue'
+import AppCard from '@/components/card/AppCard.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import type { CardSurface } from '@/components/card/types'
+
+// Each surface fills the opposite of the surface it sits on, so preview each
+// on its designed surface or the fill would vanish (white on white).
+const SURFACES: { surface: CardSurface; label: string; page: string }[] = [
+  {
+    surface: 'default',
+    label: 'Surface: default — fills white, sits on a default (grey) surface',
+    page: 'bg-background-default',
+  },
+  {
+    surface: 'alternative',
+    label: 'Surface: alternative — fills grey, sits on a white surface',
+    page: 'bg-white',
+  },
+]
+
+const STATES = [
+  { name: 'Default', props: { interactive: true } },
+  { name: 'Selected', props: { interactive: true, selected: true } },
+  { name: 'Loading', props: { interactive: true, loading: true } },
+  { name: 'Non-interactive', props: {} },
+] as const
+
+const showAvatar = ref(true)
+const showAction = ref(true)
+const showButtons = ref(true)
+
+// Live toggle so Selected can be flipped by clicking a card.
+const picked = ref(false)
+</script>

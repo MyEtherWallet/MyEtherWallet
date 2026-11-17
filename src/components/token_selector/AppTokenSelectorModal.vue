@@ -1,150 +1,3 @@
-<script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import AppModal from '@/components/modal/AppModal.vue'
-import AppSearchbar from '@/components/AppSearchbar.vue'
-import AppDropdown from '@/components/dropdown/AppDropdown.vue'
-import AppCard from '@/components/card/AppCard.vue'
-import AppCell from '@/components/cell/AppCell.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import TokenSelectorAvatar from './TokenSelectorAvatar.vue'
-import { MODAL_HEADER_CLASS } from './tokenSelector'
-import TokenSelectorList from './TokenSelectorList.vue'
-import type {
-  TokenSelectorItem,
-  TokenSelectorNetwork,
-  TokenSelectorSortDirection,
-  TokenSelectorSortOption,
-} from './types'
-
-/**
- * Token selector (design library, MEW-2554, Figma 12526:110349): search and
- * network on top, quick-pick cards, "Recently viewed", "Your assets", then the
- * main list under a sort control and the unavailable group last. Presentational:
- * callers filter and sort the lists from `search` and `sort`, so each flow
- * keeps its own pipeline. Closes itself after `select`.
- */
-const props = withDefaults(
-  defineProps<{
-    title: string
-    subtitle?: string
-    /** Main list, already filtered and sorted. Disabled items stay in place. */
-    items: TokenSelectorItem[]
-    /** Replaces "All tokens" over the main list. */
-    listTitle?: string
-    quickPicks?: TokenSelectorItem[]
-    recentItems?: TokenSelectorItem[]
-    /** "Your assets", between "Recently viewed" and the main list. */
-    ownedItems?: TokenSelectorItem[]
-    selectedId?: string
-    sortOptions?: TokenSelectorSortOption[]
-    /** Active sort; every pick emits `sort`, a repeat pick included. */
-    sortValue?: string
-    sortDirection?: TokenSelectorSortDirection
-    /** Shows the network dropdown when set. */
-    networks?: TokenSelectorNetwork[]
-    /** Badge for rows that don't carry their own `chainIcon`. */
-    networkIcon?: string | null
-    loading?: boolean
-    hasMore?: boolean
-    loadingMore?: boolean
-    /** Drawn last, dimmed and never picked, under `unavailableTitle`. */
-    unavailableItems?: TokenSelectorItem[]
-    unavailableTitle?: string
-  }>(),
-  {
-    subtitle: undefined,
-    listTitle: undefined,
-    quickPicks: () => [],
-    recentItems: () => [],
-    ownedItems: () => [],
-    selectedId: undefined,
-    sortOptions: () => [],
-    sortValue: undefined,
-    sortDirection: 'desc',
-    networks: () => [],
-    networkIcon: undefined,
-    loading: false,
-    hasMore: false,
-    loadingMore: false,
-    unavailableItems: () => [],
-    unavailableTitle: undefined,
-  },
-)
-
-const open = defineModel<boolean>({ required: true })
-const search = defineModel<string>('search', { default: '' })
-const network = defineModel<string | null>('network', { default: null })
-
-const emit = defineEmits<{
-  select: [item: TokenSelectorItem]
-  sort: [value: string]
-  'load-more': []
-}>()
-
-const { t, locale } = useI18n()
-
-const isSearching = computed(() => search.value.trim() !== '')
-// Pinned sections make way for the results while searching.
-const showPinned = computed(() => !isSearching.value && !props.loading)
-
-const mainTitle = computed(
-  () => props.listTitle ?? t('select_token.all_tokens'),
-)
-const unavailableRows = computed(() =>
-  props.unavailableItems.map(item => ({ ...item, disabled: true })),
-)
-
-const emptyCopy = computed(() =>
-  t(
-    isSearching.value
-      ? 'select_token.no_tokens_match'
-      : 'select_token.no_tokens_available',
-  ),
-)
-
-const currentNetwork = computed(
-  () =>
-    props.networks.find(item => item.value === network.value) ??
-    props.networks[0],
-)
-const networkQuery = ref('')
-const shownNetworks = computed(() => {
-  const query = networkQuery.value.trim().toLowerCase()
-  return query
-    ? props.networks.filter(item => item.name.toLowerCase().includes(query))
-    : props.networks
-})
-
-const activeSort = computed(
-  () =>
-    props.sortOptions.find(option => option.value === props.sortValue) ??
-    props.sortOptions[0],
-)
-const sortTitle = computed(() =>
-  activeSort.value
-    ? t('select_token.sort_by', {
-        option: activeSort.value.label.toLocaleLowerCase(locale.value),
-      })
-    : '',
-)
-const sortIcon = computed(() =>
-  props.sortDirection === 'asc' ? 'arrow-long-up' : 'arrow-long-down',
-)
-
-const pick = (item: TokenSelectorItem) => {
-  if (item.disabled) return
-  emit('select', item)
-  open.value = false
-}
-
-const onClosed = () => {
-  search.value = ''
-  networkQuery.value = ''
-}
-</script>
-
 <template>
   <AppModal
     v-model="open"
@@ -380,3 +233,150 @@ const onClosed = () => {
     </div>
   </AppModal>
 </template>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import AppModal from '@/components/modal/AppModal.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
+import AppDropdown from '@/components/dropdown/AppDropdown.vue'
+import AppCard from '@/components/card/AppCard.vue'
+import AppCell from '@/components/cell/AppCell.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import TokenSelectorAvatar from './TokenSelectorAvatar.vue'
+import { MODAL_HEADER_CLASS } from './tokenSelector'
+import TokenSelectorList from './TokenSelectorList.vue'
+import type {
+  TokenSelectorItem,
+  TokenSelectorNetwork,
+  TokenSelectorSortDirection,
+  TokenSelectorSortOption,
+} from './types'
+
+/**
+ * Token selector (design library, MEW-2554, Figma 12526:110349): search and
+ * network on top, quick-pick cards, "Recently viewed", "Your assets", then the
+ * main list under a sort control and the unavailable group last. Presentational:
+ * callers filter and sort the lists from `search` and `sort`, so each flow
+ * keeps its own pipeline. Closes itself after `select`.
+ */
+const props = withDefaults(
+  defineProps<{
+    title: string
+    subtitle?: string
+    /** Main list, already filtered and sorted. Disabled items stay in place. */
+    items: TokenSelectorItem[]
+    /** Replaces "All tokens" over the main list. */
+    listTitle?: string
+    quickPicks?: TokenSelectorItem[]
+    recentItems?: TokenSelectorItem[]
+    /** "Your assets", between "Recently viewed" and the main list. */
+    ownedItems?: TokenSelectorItem[]
+    selectedId?: string
+    sortOptions?: TokenSelectorSortOption[]
+    /** Active sort; every pick emits `sort`, a repeat pick included. */
+    sortValue?: string
+    sortDirection?: TokenSelectorSortDirection
+    /** Shows the network dropdown when set. */
+    networks?: TokenSelectorNetwork[]
+    /** Badge for rows that don't carry their own `chainIcon`. */
+    networkIcon?: string | null
+    loading?: boolean
+    hasMore?: boolean
+    loadingMore?: boolean
+    /** Drawn last, dimmed and never picked, under `unavailableTitle`. */
+    unavailableItems?: TokenSelectorItem[]
+    unavailableTitle?: string
+  }>(),
+  {
+    subtitle: undefined,
+    listTitle: undefined,
+    quickPicks: () => [],
+    recentItems: () => [],
+    ownedItems: () => [],
+    selectedId: undefined,
+    sortOptions: () => [],
+    sortValue: undefined,
+    sortDirection: 'desc',
+    networks: () => [],
+    networkIcon: undefined,
+    loading: false,
+    hasMore: false,
+    loadingMore: false,
+    unavailableItems: () => [],
+    unavailableTitle: undefined,
+  },
+)
+
+const open = defineModel<boolean>({ required: true })
+const search = defineModel<string>('search', { default: '' })
+const network = defineModel<string | null>('network', { default: null })
+
+const emit = defineEmits<{
+  select: [item: TokenSelectorItem]
+  sort: [value: string]
+  'load-more': []
+}>()
+
+const { t, locale } = useI18n()
+
+const isSearching = computed(() => search.value.trim() !== '')
+// Pinned sections make way for the results while searching.
+const showPinned = computed(() => !isSearching.value && !props.loading)
+
+const mainTitle = computed(
+  () => props.listTitle ?? t('select_token.all_tokens'),
+)
+const unavailableRows = computed(() =>
+  props.unavailableItems.map(item => ({ ...item, disabled: true })),
+)
+
+const emptyCopy = computed(() =>
+  t(
+    isSearching.value
+      ? 'select_token.no_tokens_match'
+      : 'select_token.no_tokens_available',
+  ),
+)
+
+const currentNetwork = computed(
+  () =>
+    props.networks.find(item => item.value === network.value) ??
+    props.networks[0],
+)
+const networkQuery = ref('')
+const shownNetworks = computed(() => {
+  const query = networkQuery.value.trim().toLowerCase()
+  return query
+    ? props.networks.filter(item => item.name.toLowerCase().includes(query))
+    : props.networks
+})
+
+const activeSort = computed(
+  () =>
+    props.sortOptions.find(option => option.value === props.sortValue) ??
+    props.sortOptions[0],
+)
+const sortTitle = computed(() =>
+  activeSort.value
+    ? t('select_token.sort_by', {
+        option: activeSort.value.label.toLocaleLowerCase(locale.value),
+      })
+    : '',
+)
+const sortIcon = computed(() =>
+  props.sortDirection === 'asc' ? 'arrow-long-up' : 'arrow-long-down',
+)
+
+const pick = (item: TokenSelectorItem) => {
+  if (item.disabled) return
+  emit('select', item)
+  open.value = false
+}
+
+const onClosed = () => {
+  search.value = ''
+  networkQuery.value = ''
+}
+</script>

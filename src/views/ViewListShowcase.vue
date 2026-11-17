@@ -1,30 +1,3 @@
-<script setup lang="ts">
-// Preview for the List design-library component (MEW-2467) at /dev/list.
-// Figma: MEW Web App — Design Library › List (2287:17344) — its Types, with
-// and without the header slot, plus the props Figma only describes.
-import { ref } from 'vue'
-import AppList from '@components/list/AppList.vue'
-import AppCell from '@components/cell/AppCell.vue'
-import AppCard from '@components/card/AppCard.vue'
-import AppAvatar from '@components/avatar/AppAvatar.vue'
-import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
-import AppBaseButton from '@components/AppBaseButton.vue'
-import AppBtnIcon from '@components/AppBtnIcon.vue'
-import AppTag from '@components/tag/AppTag.vue'
-import type { CellRightAccessory } from '@components/cell/cellSizes'
-import type { ListAction } from '@components/list/types'
-
-const BALANCE: CellRightAccessory = {
-  kind: 'balance',
-  primary: '$1,230',
-  secondary: '1,230 USDC',
-}
-
-const STAR: ListAction = { icon: 'star', label: 'Add to watchlist' }
-
-const actions = ref(0)
-</script>
-
 <template>
   <div class="mx-auto flex max-w-5xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -214,3 +187,30 @@ const actions = ref(0)
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the List design-library component (MEW-2467) at /dev/list.
+// Figma: MEW Web App — Design Library › List (2287:17344) — its Types, with
+// and without the header slot, plus the props Figma only describes.
+import { ref } from 'vue'
+import AppList from '@components/list/AppList.vue'
+import AppCell from '@components/cell/AppCell.vue'
+import AppCard from '@components/card/AppCard.vue'
+import AppAvatar from '@components/avatar/AppAvatar.vue'
+import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppTag from '@components/tag/AppTag.vue'
+import type { CellRightAccessory } from '@components/cell/cellSizes'
+import type { ListAction } from '@components/list/types'
+
+const BALANCE: CellRightAccessory = {
+  kind: 'balance',
+  primary: '$1,230',
+  secondary: '1,230 USDC',
+}
+
+const STAR: ListAction = { icon: 'star', label: 'Add to watchlist' }
+
+const actions = ref(0)
+</script>

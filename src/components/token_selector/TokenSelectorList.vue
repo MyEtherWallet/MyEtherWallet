@@ -1,18 +1,3 @@
-<script setup lang="ts">
-import AppCell from '@/components/cell/AppCell.vue'
-import TokenSelectorAvatar from './TokenSelectorAvatar.vue'
-import type { TokenSelectorItem } from './types'
-
-// A run of 68px token rows: avatar + badge, symbol / name, right accessory.
-defineProps<{
-  items: TokenSelectorItem[]
-  selectedId?: string
-  networkIcon?: string | null
-}>()
-
-const emit = defineEmits<{ select: [item: TokenSelectorItem] }>()
-</script>
-
 <template>
   <!-- Figma draws the rows flush, without List's padded container -->
   <div role="list" class="flex flex-col gap-0.5">
@@ -42,3 +27,18 @@ const emit = defineEmits<{ select: [item: TokenSelectorItem] }>()
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import AppCell from '@/components/cell/AppCell.vue'
+import TokenSelectorAvatar from './TokenSelectorAvatar.vue'
+import type { TokenSelectorItem } from './types'
+
+// A run of 68px token rows: avatar + badge, symbol / name, right accessory.
+defineProps<{
+  items: TokenSelectorItem[]
+  selectedId?: string
+  networkIcon?: string | null
+}>()
+
+const emit = defineEmits<{ select: [item: TokenSelectorItem] }>()
+</script>

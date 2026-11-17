@@ -1,3 +1,74 @@
+<template>
+  <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
+    <header class="flex flex-col gap-1">
+      <h1 class="text-heading-lg">Token Selector</h1>
+      <p class="text-text-sm text-text-subtle">
+        Shared modal for picking a token in Swap, Bridge, Send, Trade and
+        Buy/Sell. The flows filter and sort the list; the modal renders it.
+      </p>
+    </header>
+
+    <section class="flex flex-col gap-4 rounded-12 bg-background-default p-6">
+      <div class="flex items-center gap-3 text-text-sm">
+        <AppToggle v-model="withNetworks" aria-label="Network dropdown" />
+        Network dropdown
+      </div>
+      <div class="flex items-center gap-3 text-text-sm">
+        <AppToggle v-model="withSort" aria-label="Sort control" />
+        Sort control
+      </div>
+      <div class="flex items-center gap-3 text-text-sm">
+        <AppToggle v-model="loading" aria-label="Loading" />
+        Loading
+      </div>
+      <div class="flex items-center gap-4">
+        <AppBaseButton @click="open = true">Open token selector</AppBaseButton>
+        <span v-if="picked" class="text-text-sm text-text-subtle">
+          Picked: {{ picked }}
+        </span>
+      </div>
+    </section>
+
+    <AppTokenSelectorModal
+      v-model="open"
+      v-model:search="search"
+      v-model:network="network"
+      title="Select asset to buy"
+      :items="items"
+      :quick-picks="quickPicks"
+      :recent-items="recentItems"
+      :owned-items="ownedItems"
+      :unavailable-items="unavailableItems"
+      unavailable-title="Unavailable during post-market"
+      :selected-id="selectedId"
+      :network-icon="ethLogo"
+      :networks="
+        withNetworks
+          ? [
+              { value: null, name: 'All networks' },
+              { value: 'Ethereum', name: 'Ethereum', icon: ethLogo },
+              { value: 'Base', name: 'Base' },
+              { value: 'Solana', name: 'Solana', disabled: true },
+            ]
+          : []
+      "
+      :sort-options="
+        withSort
+          ? [
+              { value: 'market_cap', label: 'Market cap' },
+              { value: 'price', label: 'Price' },
+            ]
+          : []
+      "
+      :sort-value="sortValue"
+      :sort-direction="sortDirection"
+      :loading="loading"
+      @sort="onSort"
+      @select="onSelect"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 // Preview for the Token Selector (MEW-2554) at /dev/token-selector, Figma
 // 12526:110349. Mock data only: search and sort run here the way a flow would.
@@ -166,74 +237,3 @@ const onSelect = (item: TokenSelectorItem) => {
   picked.value = item.symbol
 }
 </script>
-
-<template>
-  <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
-    <header class="flex flex-col gap-1">
-      <h1 class="text-heading-lg">Token Selector</h1>
-      <p class="text-text-sm text-text-subtle">
-        Shared modal for picking a token in Swap, Bridge, Send, Trade and
-        Buy/Sell. The flows filter and sort the list; the modal renders it.
-      </p>
-    </header>
-
-    <section class="flex flex-col gap-4 rounded-12 bg-background-default p-6">
-      <div class="flex items-center gap-3 text-text-sm">
-        <AppToggle v-model="withNetworks" aria-label="Network dropdown" />
-        Network dropdown
-      </div>
-      <div class="flex items-center gap-3 text-text-sm">
-        <AppToggle v-model="withSort" aria-label="Sort control" />
-        Sort control
-      </div>
-      <div class="flex items-center gap-3 text-text-sm">
-        <AppToggle v-model="loading" aria-label="Loading" />
-        Loading
-      </div>
-      <div class="flex items-center gap-4">
-        <AppBaseButton @click="open = true">Open token selector</AppBaseButton>
-        <span v-if="picked" class="text-text-sm text-text-subtle">
-          Picked: {{ picked }}
-        </span>
-      </div>
-    </section>
-
-    <AppTokenSelectorModal
-      v-model="open"
-      v-model:search="search"
-      v-model:network="network"
-      title="Select asset to buy"
-      :items="items"
-      :quick-picks="quickPicks"
-      :recent-items="recentItems"
-      :owned-items="ownedItems"
-      :unavailable-items="unavailableItems"
-      unavailable-title="Unavailable during post-market"
-      :selected-id="selectedId"
-      :network-icon="ethLogo"
-      :networks="
-        withNetworks
-          ? [
-              { value: null, name: 'All networks' },
-              { value: 'Ethereum', name: 'Ethereum', icon: ethLogo },
-              { value: 'Base', name: 'Base' },
-              { value: 'Solana', name: 'Solana', disabled: true },
-            ]
-          : []
-      "
-      :sort-options="
-        withSort
-          ? [
-              { value: 'market_cap', label: 'Market cap' },
-              { value: 'price', label: 'Price' },
-            ]
-          : []
-      "
-      :sort-value="sortValue"
-      :sort-direction="sortDirection"
-      :loading="loading"
-      @sort="onSort"
-      @select="onSelect"
-    />
-  </div>
-</template>

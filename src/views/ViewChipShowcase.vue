@@ -1,34 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Chip design-library component (MEW-2273), reachable at
-// /dev/chip via the design-library shell — see routesDefault.ts. Lets us eyeball
-// the Variant × state matrix, avatar and trailing-icon on/off, and the
-// single-select chip group against Figma (node 3280-20635). Hover, pressed and
-// focus are native — hover a chip, press it, or Tab to it to see those states.
-import { ref } from 'vue'
-import AppChip from '@/components/chip/AppChip.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import type { ChipSurface } from '@/components/chip/types'
-
-// Each surface fills the opposite of the page it sits on, so preview each on
-// the surface it is designed for or the fill is invisible (white on white).
-const VARIANTS: { surface: ChipSurface; label: string; page: string }[] = [
-  {
-    surface: 'default',
-    label: 'Variant: base — fills white, sits on a default (grey) surface',
-    page: 'bg-background-default',
-  },
-  {
-    surface: 'alternative',
-    label: 'Variant: surface — fills grey, sits on a white surface',
-    page: 'bg-white',
-  },
-]
-
-// Single-select chip group (e.g. the Trade % presets).
-const PRESETS = ['10%', '25%', '50%', 'Max']
-const activePreset = ref('25%')
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -94,3 +63,34 @@ const activePreset = ref('25%')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Chip design-library component (MEW-2273), reachable at
+// /dev/chip via the design-library shell — see routesDefault.ts. Lets us eyeball
+// the Variant × state matrix, avatar and trailing-icon on/off, and the
+// single-select chip group against Figma (node 3280-20635). Hover, pressed and
+// focus are native — hover a chip, press it, or Tab to it to see those states.
+import { ref } from 'vue'
+import AppChip from '@/components/chip/AppChip.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import type { ChipSurface } from '@/components/chip/types'
+
+// Each surface fills the opposite of the page it sits on, so preview each on
+// the surface it is designed for or the fill is invisible (white on white).
+const VARIANTS: { surface: ChipSurface; label: string; page: string }[] = [
+  {
+    surface: 'default',
+    label: 'Variant: base — fills white, sits on a default (grey) surface',
+    page: 'bg-background-default',
+  },
+  {
+    surface: 'alternative',
+    label: 'Variant: surface — fills grey, sits on a white surface',
+    page: 'bg-white',
+  },
+]
+
+// Single-select chip group (e.g. the Trade % presets).
+const PRESETS = ['10%', '25%', '50%', 'Max']
+const activePreset = ref('25%')
+</script>

@@ -1,3 +1,30 @@
+<template>
+  <span
+    class="inline-flex items-center rounded-full p-1 text-label-sm whitespace-nowrap"
+    :class="TAG_CLASSES[type][variant]"
+  >
+    <slot name="leading">
+      <AppIcon
+        v-if="leadingIcon"
+        :name="leadingIcon"
+        size="xs"
+        variant="filled"
+      />
+    </slot>
+    <span class="px-1"
+      ><slot>{{ label }}</slot></span
+    >
+    <slot name="trailing">
+      <AppIcon
+        v-if="trailingIcon"
+        :name="trailingIcon"
+        size="xs"
+        variant="filled"
+      />
+    </slot>
+  </span>
+</template>
+
 <script setup lang="ts">
 import AppIcon from '@/components/icon/AppIcon.vue'
 import type { IconName } from '@/components/icon/icons'
@@ -30,30 +57,3 @@ withDefaults(
   },
 )
 </script>
-
-<template>
-  <span
-    class="inline-flex items-center rounded-full p-1 text-label-sm whitespace-nowrap"
-    :class="TAG_CLASSES[type][variant]"
-  >
-    <slot name="leading">
-      <AppIcon
-        v-if="leadingIcon"
-        :name="leadingIcon"
-        size="xs"
-        variant="filled"
-      />
-    </slot>
-    <span class="px-1"
-      ><slot>{{ label }}</slot></span
-    >
-    <slot name="trailing">
-      <AppIcon
-        v-if="trailingIcon"
-        :name="trailingIcon"
-        size="xs"
-        variant="filled"
-      />
-    </slot>
-  </span>
-</template>

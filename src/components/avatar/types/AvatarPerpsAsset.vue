@@ -1,3 +1,12 @@
+<template>
+  <AvatarRemoteImage
+    :url="url"
+    :fallback-text="symbol"
+    :fallback-text-class="fallbackTextClass"
+    :fit="fit"
+  />
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import AvatarRemoteImage from '../AvatarRemoteImage.vue'
@@ -16,12 +25,3 @@ defineOptions({ inheritAttrs: false })
 
 const fallbackTextClass = computed(() => AVATAR_FALLBACK_TEXT_CLASS[props.size])
 </script>
-
-<template>
-  <AvatarRemoteImage
-    :url="url"
-    :fallback-text="symbol"
-    :fallback-text-class="fallbackTextClass"
-    :fit="fit"
-  />
-</template>

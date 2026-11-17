@@ -1,13 +1,3 @@
-<script setup lang="ts">
-// Preview for the TabItem design-library component (MEW-2406) at /dev/tab-item.
-// Matches Figma node 1072:611; hover an unselected tab or Tab to one for focus.
-import { ref } from 'vue'
-import AppTabItem from '@/components/tabs/AppTabItem.vue'
-
-const TABS = ['Stocks', 'Crypto', 'Perps']
-const activeTab = ref('Stocks')
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -71,3 +61,13 @@ const activeTab = ref('Stocks')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the TabItem design-library component (MEW-2406) at /dev/tab-item.
+// Matches Figma node 1072:611; hover an unselected tab or Tab to one for focus.
+import { ref } from 'vue'
+import AppTabItem from '@/components/tabs/AppTabItem.vue'
+
+const TABS = ['Stocks', 'Crypto', 'Perps']
+const activeTab = ref('Stocks')
+</script>

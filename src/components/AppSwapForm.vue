@@ -1,3 +1,86 @@
+<template>
+  <div class="flex w-full flex-col gap-5" data-testid="swap-form">
+    <div class="flex w-full flex-col">
+      <AppSwapEnterAmount
+        v-model:amount="fromAmount"
+        v-model:selected-token="fromToken"
+        v-model:error="fromError"
+        :network-name="fromNetworkName"
+        :external-loading="fromLoading"
+        :tokens="fromTokens"
+        :show-balance="showBalance"
+        :is-pristine="isPristine"
+      >
+        <template v-if="showFromNetwork" #header>
+          <SelectChainPicker :passed-chains="fromChains" />
+        </template>
+        <template v-if="showQuickActions" #actions>
+          <AppChip
+            v-for="pct in QUICK_ACTIONS"
+            :key="pct"
+            :label="chipLabel(pct)"
+            :disabled="pct === 100 && maxDisabled"
+            class="flex-1 uppercase"
+            @click="emit('percent', pct)"
+          />
+        </template>
+      </AppSwapEnterAmount>
+
+      <!-- The arrow straddles the 8px gap between the two cards -->
+      <div class="relative z-10 flex h-2 items-center justify-center">
+        <div
+          class="absolute flex size-8 items-center justify-center rounded-full bg-background-alternative text-text-brand"
+          aria-hidden="true"
+          data-testid="swap-form-arrow"
+        >
+          <AppIcon name="arrow-down" size="xxs" />
+        </div>
+      </div>
+
+      <AppSwapEnterAmount
+        v-model:amount="toAmount"
+        v-model:selected-token="toToken"
+        v-model:error="toError"
+        :network-name="toNetworkName"
+        :external-loading="toLoading"
+        :tokens="toTokens"
+        :show-balance="false"
+        :readonly="true"
+        :is-estimate="true"
+        :is-from-view="false"
+        :is-pristine="isPristine"
+        :networks="showToNetwork ? toNetworks : []"
+        :network="toChain?.name ?? null"
+        @update:network="selectToNetwork"
+      >
+        <template #header>
+          <SelectChainPicker
+            :can-store="false"
+            :passed-chains="toChains"
+            :preselected-chain="toChain"
+            :class="{ hidden: !showToNetwork }"
+            @update:selected-chain="emit('update:toChain', $event)"
+          />
+        </template>
+      </AppSwapEnterAmount>
+    </div>
+
+    <slot />
+
+    <slot name="cta">
+      <AppBaseButton
+        class="w-full"
+        :disabled="ctaDisabled"
+        :is-loading="ctaLoading"
+        data-testid="swap-form-cta"
+        @click="emit('submit')"
+      >
+        {{ ctaLabel }}
+      </AppBaseButton>
+    </slot>
+  </div>
+</template>
+
 <script setup lang="ts">
 /**
  * Swap / Bridge form (Figma: MEW — Side panel actions › Actions › Swap, Bridge).
@@ -97,86 +180,3 @@ const selectToNetwork = (name: string | null) => {
   if (chain) emit('update:toChain', chain)
 }
 </script>
-
-<template>
-  <div class="flex w-full flex-col gap-5" data-testid="swap-form">
-    <div class="flex w-full flex-col">
-      <AppSwapEnterAmount
-        v-model:amount="fromAmount"
-        v-model:selected-token="fromToken"
-        v-model:error="fromError"
-        :network-name="fromNetworkName"
-        :external-loading="fromLoading"
-        :tokens="fromTokens"
-        :show-balance="showBalance"
-        :is-pristine="isPristine"
-      >
-        <template v-if="showFromNetwork" #header>
-          <SelectChainPicker :passed-chains="fromChains" />
-        </template>
-        <template v-if="showQuickActions" #actions>
-          <AppChip
-            v-for="pct in QUICK_ACTIONS"
-            :key="pct"
-            :label="chipLabel(pct)"
-            :disabled="pct === 100 && maxDisabled"
-            class="flex-1 uppercase"
-            @click="emit('percent', pct)"
-          />
-        </template>
-      </AppSwapEnterAmount>
-
-      <!-- The arrow straddles the 8px gap between the two cards -->
-      <div class="relative z-10 flex h-2 items-center justify-center">
-        <div
-          class="absolute flex size-8 items-center justify-center rounded-full bg-background-alternative text-text-brand"
-          aria-hidden="true"
-          data-testid="swap-form-arrow"
-        >
-          <AppIcon name="arrow-down" size="xxs" />
-        </div>
-      </div>
-
-      <AppSwapEnterAmount
-        v-model:amount="toAmount"
-        v-model:selected-token="toToken"
-        v-model:error="toError"
-        :network-name="toNetworkName"
-        :external-loading="toLoading"
-        :tokens="toTokens"
-        :show-balance="false"
-        :readonly="true"
-        :is-estimate="true"
-        :is-from-view="false"
-        :is-pristine="isPristine"
-        :networks="showToNetwork ? toNetworks : []"
-        :network="toChain?.name ?? null"
-        @update:network="selectToNetwork"
-      >
-        <template #header>
-          <SelectChainPicker
-            :can-store="false"
-            :passed-chains="toChains"
-            :preselected-chain="toChain"
-            :class="{ hidden: !showToNetwork }"
-            @update:selected-chain="emit('update:toChain', $event)"
-          />
-        </template>
-      </AppSwapEnterAmount>
-    </div>
-
-    <slot />
-
-    <slot name="cta">
-      <AppBaseButton
-        class="w-full"
-        :disabled="ctaDisabled"
-        :is-loading="ctaLoading"
-        data-testid="swap-form-cta"
-        @click="emit('submit')"
-      >
-        {{ ctaLabel }}
-      </AppBaseButton>
-    </slot>
-  </div>
-</template>

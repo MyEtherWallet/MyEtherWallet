@@ -1,3 +1,50 @@
+<template>
+  <div
+    v-bind="$attrs"
+    data-testid="menu-list"
+    class="flex flex-col rounded-16 bg-background-alternative p-1 shadow-button"
+  >
+    <div
+      v-if="searchable"
+      ref="searchWrapper"
+      class="pb-2"
+      @keydown.down.prevent="focusRow(0)"
+    >
+      <AppSearchbar
+        v-model="search"
+        variant="default"
+        :placeholder="searchPlaceholder"
+      />
+    </div>
+
+    <!-- The native scrollbar is the Figma ScrollBar: 8px pill 4px off the rows.
+         Rows never shrink, so a long list scrolls instead of squeezing them. -->
+    <div
+      ref="list"
+      :id="listId"
+      :role="role"
+      :aria-label="ariaLabel"
+      :aria-labelledby="ariaLabelledby"
+      data-testid="menu-list-rows"
+      class="flex min-w-0 flex-col overflow-y-auto *:shrink-0"
+      :class="[
+        showScrollbar ? 'menu-list-scrollbar pr-1' : 'no-scrollbar',
+        listClass,
+      ]"
+      @keydown="onKeydown"
+      @focusin="onFocusIn"
+    >
+      <template v-if="divided">
+        <template v-for="(row, index) in slotRows()" :key="row.key ?? index">
+          <AppDivider v-if="index" aria-hidden="true" />
+          <component :is="row" />
+        </template>
+      </template>
+      <slot v-else />
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, nextTick, onUpdated, ref, useSlots } from 'vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
@@ -104,53 +151,6 @@ const showScrollbar = computed(
 
 defineExpose({ focusSearch, focusRow })
 </script>
-
-<template>
-  <div
-    v-bind="$attrs"
-    data-testid="menu-list"
-    class="flex flex-col rounded-16 bg-background-alternative p-1 shadow-button"
-  >
-    <div
-      v-if="searchable"
-      ref="searchWrapper"
-      class="pb-2"
-      @keydown.down.prevent="focusRow(0)"
-    >
-      <AppSearchbar
-        v-model="search"
-        variant="default"
-        :placeholder="searchPlaceholder"
-      />
-    </div>
-
-    <!-- The native scrollbar is the Figma ScrollBar: 8px pill 4px off the rows.
-         Rows never shrink, so a long list scrolls instead of squeezing them. -->
-    <div
-      ref="list"
-      :id="listId"
-      :role="role"
-      :aria-label="ariaLabel"
-      :aria-labelledby="ariaLabelledby"
-      data-testid="menu-list-rows"
-      class="flex min-w-0 flex-col overflow-y-auto *:shrink-0"
-      :class="[
-        showScrollbar ? 'menu-list-scrollbar pr-1' : 'no-scrollbar',
-        listClass,
-      ]"
-      @keydown="onKeydown"
-      @focusin="onFocusIn"
-    >
-      <template v-if="divided">
-        <template v-for="(row, index) in slotRows()" :key="row.key ?? index">
-          <AppDivider v-if="index" aria-hidden="true" />
-          <component :is="row" />
-        </template>
-      </template>
-      <slot v-else />
-    </div>
-  </div>
-</template>
 
 <style scoped>
 /* Blink/WebKit take the exact Figma geometry; Firefox only knows thin + colour. */

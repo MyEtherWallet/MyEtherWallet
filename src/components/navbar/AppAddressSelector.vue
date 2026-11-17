@@ -1,88 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
-import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
-import { truncateAddress } from '@/utils/filters'
-
-/**
- * Address selector (design library, Figma 892:2786). The Navbar pill for the
- * active account: account avatar with the network badge, balance, name (or the
- * truncated address) with a connected dot / watch-only eye, and a chevron that
- * flips while `open`. Hover is CSS; the parent owns the popup it opens and the
- * store data (it passes formatted strings).
- *
- * Beyond Figma, to keep today's header behaviour: `loading` swaps the balance
- * for a placeholder bar, and an empty `address` shows the network with a
- * "No address" label. Below 450 the text hides so the navbar fits on mobile;
- * the aria-label still names the balance and account. ("No address" stays
- * when there is no network icon to stand in for it.)
- *
- * @example <AppAddressSelector :address="addr" balance="$130.23" connected :open="menuOpen" @click="toggle" />
- */
-const props = withDefaults(
-  defineProps<{
-    /** Full address; seeds the avatar and is truncated when there is no name. */
-    address?: string
-    name?: string
-    /** Formatted fiat balance. */
-    balance?: string
-    loading?: boolean
-    /** False for a watch-only account (shows the eye). */
-    connected?: boolean
-    networkIcon?: string | null
-    open?: boolean
-  }>(),
-  {
-    address: '',
-    name: undefined,
-    balance: '',
-    loading: false,
-    connected: true,
-    networkIcon: undefined,
-    open: false,
-  },
-)
-
-const { t } = useI18n()
-
-const accountLabel = computed(
-  () => props.name || truncateAddress(props.address, 6, 4),
-)
-
-// Design review: names of 18+ characters show their first 17 and an ellipsis,
-// so the pill doesn't stretch the navbar. Counted by code point (emoji-safe).
-const NAME_TRUNCATE_LENGTH = 18
-const visibleLabel = computed(() => {
-  const characters = Array.from(props.name ?? '')
-  return characters.length >= NAME_TRUNCATE_LENGTH
-    ? `${characters.slice(0, NAME_TRUNCATE_LENGTH - 1).join('')}…`
-    : accountLabel.value
-})
-const isLabelTruncated = computed(
-  () => visibleLabel.value !== accountLabel.value,
-)
-
-const ariaLabel = computed(() =>
-  props.address
-    ? [
-        // The placeholder hides the balance, so don't announce a stale one.
-        props.loading ? t('common.loading') : props.balance,
-        accountLabel.value,
-        t(
-          props.connected
-            ? 'multi_address.connected'
-            : 'multi_address.watch_only',
-        ),
-      ]
-        .filter(Boolean)
-        .join(', ')
-    : t('multi_address.no_address_pill'),
-)
-</script>
-
 <template>
   <button
     type="button"
@@ -178,3 +93,88 @@ const ariaLabel = computed(() =>
     />
   </button>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppAvatarBadge from '@/components/avatar/AppAvatarBadge.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AccountConnectedDot from '@/components/core_layouts/wallet/AccountConnectedDot.vue'
+import { truncateAddress } from '@/utils/filters'
+
+/**
+ * Address selector (design library, Figma 892:2786). The Navbar pill for the
+ * active account: account avatar with the network badge, balance, name (or the
+ * truncated address) with a connected dot / watch-only eye, and a chevron that
+ * flips while `open`. Hover is CSS; the parent owns the popup it opens and the
+ * store data (it passes formatted strings).
+ *
+ * Beyond Figma, to keep today's header behaviour: `loading` swaps the balance
+ * for a placeholder bar, and an empty `address` shows the network with a
+ * "No address" label. Below 450 the text hides so the navbar fits on mobile;
+ * the aria-label still names the balance and account. ("No address" stays
+ * when there is no network icon to stand in for it.)
+ *
+ * @example <AppAddressSelector :address="addr" balance="$130.23" connected :open="menuOpen" @click="toggle" />
+ */
+const props = withDefaults(
+  defineProps<{
+    /** Full address; seeds the avatar and is truncated when there is no name. */
+    address?: string
+    name?: string
+    /** Formatted fiat balance. */
+    balance?: string
+    loading?: boolean
+    /** False for a watch-only account (shows the eye). */
+    connected?: boolean
+    networkIcon?: string | null
+    open?: boolean
+  }>(),
+  {
+    address: '',
+    name: undefined,
+    balance: '',
+    loading: false,
+    connected: true,
+    networkIcon: undefined,
+    open: false,
+  },
+)
+
+const { t } = useI18n()
+
+const accountLabel = computed(
+  () => props.name || truncateAddress(props.address, 6, 4),
+)
+
+// Design review: names of 18+ characters show their first 17 and an ellipsis,
+// so the pill doesn't stretch the navbar. Counted by code point (emoji-safe).
+const NAME_TRUNCATE_LENGTH = 18
+const visibleLabel = computed(() => {
+  const characters = Array.from(props.name ?? '')
+  return characters.length >= NAME_TRUNCATE_LENGTH
+    ? `${characters.slice(0, NAME_TRUNCATE_LENGTH - 1).join('')}…`
+    : accountLabel.value
+})
+const isLabelTruncated = computed(
+  () => visibleLabel.value !== accountLabel.value,
+)
+
+const ariaLabel = computed(() =>
+  props.address
+    ? [
+        // The placeholder hides the balance, so don't announce a stale one.
+        props.loading ? t('common.loading') : props.balance,
+        accountLabel.value,
+        t(
+          props.connected
+            ? 'multi_address.connected'
+            : 'multi_address.watch_only',
+        ),
+      ]
+        .filter(Boolean)
+        .join(', ')
+    : t('multi_address.no_address_pill'),
+)
+</script>

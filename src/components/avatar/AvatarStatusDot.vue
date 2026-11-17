@@ -1,3 +1,7 @@
+<template>
+  <span class="block w-full h-full rounded-full" :class="colorClass" />
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { AvatarStatus } from './types'
@@ -17,7 +21,3 @@ const COLOR: Record<AvatarStatus, string> = {
 
 const colorClass = computed(() => COLOR[props.type])
 </script>
-
-<template>
-  <span class="block w-full h-full rounded-full" :class="colorClass" />
-</template>

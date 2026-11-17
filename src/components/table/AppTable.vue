@@ -1,3 +1,104 @@
+<template>
+  <div ref="root" class="flex w-full flex-col gap-6">
+    <div
+      role="table"
+      :aria-label="ariaLabel"
+      :aria-labelledby="ariaLabel ? undefined : wrapper?.titleId"
+      :aria-busy="loading || undefined"
+      :class="['grid', size === 's' ? 'gap-x-1' : 'gap-x-2']"
+      :style="{ gridTemplateColumns: template }"
+    >
+      <div
+        role="row"
+        :class="[
+          'col-span-full grid grid-cols-subgrid items-center',
+          ROW_PADDING[size],
+        ]"
+      >
+        <div v-if="start" role="columnheader">
+          <span v-if="watchlist" class="sr-only">
+            {{ t('common.watchlist') }}
+          </span>
+        </div>
+        <div
+          v-for="(col, i) in [leading, ...visibleData]"
+          :key="col.key"
+          role="columnheader"
+          :aria-sort="ariaSort(col)"
+          :class="[
+            'flex h-5 min-w-0 items-center',
+            { 'justify-end': size === 's' && i > 0 },
+          ]"
+        >
+          <button
+            v-if="col.sortable"
+            type="button"
+            :class="[
+              'flex min-w-0 items-center gap-1 rounded-8 text-overline transition-colors hover:text-text-default focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus',
+              directionOf(col) ? 'text-text-default' : 'text-text-subtle',
+            ]"
+            @click="onSort(col)"
+          >
+            <span class="truncate">{{ col.label }}</span>
+            <AppIcon
+              v-if="directionOf(col)"
+              :name="directionOf(col) === 'asc' ? 'arrow-up' : 'arrow-down'"
+              size="xxs"
+            />
+          </button>
+          <span v-else class="truncate text-overline text-text-subtle">
+            {{ col.label }}
+          </span>
+        </div>
+        <div v-if="actions" role="columnheader">
+          <span class="sr-only">{{ t('common.actions') }}</span>
+        </div>
+      </div>
+
+      <div
+        ref="body"
+        role="rowgroup"
+        :class="[
+          'col-span-full grid grid-cols-subgrid',
+          maxHeight && ['overflow-y-auto', maxHeight],
+        ]"
+      >
+        <template v-if="loading">
+          <template v-for="n in loadingRows" :key="n">
+            <slot name="loading-row" :size="size">
+              <!-- The description only marks the row as two-line; it isn't shown. -->
+              <AppTableRow loading description="-">
+                <template #avatar />
+              </AppTableRow>
+            </slot>
+          </template>
+        </template>
+        <slot v-else :size="size" :visible-keys="visibleKeys" />
+      </div>
+    </div>
+
+    <div v-if="footer === 'show-more'" class="flex items-center gap-4">
+      <AppDivider class="flex-1" />
+      <AppBaseButton
+        type="tertiary"
+        surface="alternative"
+        size="medium"
+        @click="emit('show-more')"
+      >
+        {{ t('common.show_count_more', { count: remaining }) }}
+      </AppBaseButton>
+      <AppDivider class="flex-1" />
+    </div>
+    <AppPagination
+      v-else-if="footer === 'pagination'"
+      v-model="page"
+      :total-pages="pages"
+      :label="loading ? () => '' : paginationLabel"
+      variant="alternative"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, inject, provide, useTemplateRef, watch } from 'vue'
 import { useElementSize } from '@vueuse/core'
@@ -173,104 +274,3 @@ watch(
   on => option('disabled', !on),
 )
 </script>
-
-<template>
-  <div ref="root" class="flex w-full flex-col gap-6">
-    <div
-      role="table"
-      :aria-label="ariaLabel"
-      :aria-labelledby="ariaLabel ? undefined : wrapper?.titleId"
-      :aria-busy="loading || undefined"
-      :class="['grid', size === 's' ? 'gap-x-1' : 'gap-x-2']"
-      :style="{ gridTemplateColumns: template }"
-    >
-      <div
-        role="row"
-        :class="[
-          'col-span-full grid grid-cols-subgrid items-center',
-          ROW_PADDING[size],
-        ]"
-      >
-        <div v-if="start" role="columnheader">
-          <span v-if="watchlist" class="sr-only">
-            {{ t('common.watchlist') }}
-          </span>
-        </div>
-        <div
-          v-for="(col, i) in [leading, ...visibleData]"
-          :key="col.key"
-          role="columnheader"
-          :aria-sort="ariaSort(col)"
-          :class="[
-            'flex h-5 min-w-0 items-center',
-            { 'justify-end': size === 's' && i > 0 },
-          ]"
-        >
-          <button
-            v-if="col.sortable"
-            type="button"
-            :class="[
-              'flex min-w-0 items-center gap-1 rounded-8 text-overline transition-colors hover:text-text-default focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus',
-              directionOf(col) ? 'text-text-default' : 'text-text-subtle',
-            ]"
-            @click="onSort(col)"
-          >
-            <span class="truncate">{{ col.label }}</span>
-            <AppIcon
-              v-if="directionOf(col)"
-              :name="directionOf(col) === 'asc' ? 'arrow-up' : 'arrow-down'"
-              size="xxs"
-            />
-          </button>
-          <span v-else class="truncate text-overline text-text-subtle">
-            {{ col.label }}
-          </span>
-        </div>
-        <div v-if="actions" role="columnheader">
-          <span class="sr-only">{{ t('common.actions') }}</span>
-        </div>
-      </div>
-
-      <div
-        ref="body"
-        role="rowgroup"
-        :class="[
-          'col-span-full grid grid-cols-subgrid',
-          maxHeight && ['overflow-y-auto', maxHeight],
-        ]"
-      >
-        <template v-if="loading">
-          <template v-for="n in loadingRows" :key="n">
-            <slot name="loading-row" :size="size">
-              <!-- The description only marks the row as two-line; it isn't shown. -->
-              <AppTableRow loading description="-">
-                <template #avatar />
-              </AppTableRow>
-            </slot>
-          </template>
-        </template>
-        <slot v-else :size="size" :visible-keys="visibleKeys" />
-      </div>
-    </div>
-
-    <div v-if="footer === 'show-more'" class="flex items-center gap-4">
-      <AppDivider class="flex-1" />
-      <AppBaseButton
-        type="tertiary"
-        surface="alternative"
-        size="medium"
-        @click="emit('show-more')"
-      >
-        {{ t('common.show_count_more', { count: remaining }) }}
-      </AppBaseButton>
-      <AppDivider class="flex-1" />
-    </div>
-    <AppPagination
-      v-else-if="footer === 'pagination'"
-      v-model="page"
-      :total-pages="pages"
-      :label="loading ? () => '' : paginationLabel"
-      variant="alternative"
-    />
-  </div>
-</template>

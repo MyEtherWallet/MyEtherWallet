@@ -1,23 +1,3 @@
-<script setup lang="ts">
-// Layout shared by the status screens of the login flow (Figma Onboarding
-// 374:3261, 374:3810, 370:2951, 749:9560): a centred icon, title and line of
-// text, optional actions, and the Privy footer pinned to the bottom. The
-// minimum height keeps the modal from jumping between screens.
-import PrivyProtectedBy from './PrivyProtectedBy.vue'
-
-defineProps<{
-  title: string
-  description?: string
-  /**
-   * The modal shows its own title above this screen. Without one the modal
-   * has no header row, so the screen leaves room for the back / close buttons.
-   */
-  underModalTitle?: boolean
-  /** The title names the user (an email): keep it out of session replay. */
-  privateTitle?: boolean
-}>()
-</script>
-
 <template>
   <div
     class="flex min-h-80 flex-col items-center gap-6 text-center"
@@ -45,3 +25,23 @@ defineProps<{
     <PrivyProtectedBy />
   </div>
 </template>
+
+<script setup lang="ts">
+// Layout shared by the status screens of the login flow (Figma Onboarding
+// 374:3261, 374:3810, 370:2951, 749:9560): a centred icon, title and line of
+// text, optional actions, and the Privy footer pinned to the bottom. The
+// minimum height keeps the modal from jumping between screens.
+import PrivyProtectedBy from './PrivyProtectedBy.vue'
+
+defineProps<{
+  title: string
+  description?: string
+  /**
+   * The modal shows its own title above this screen. Without one the modal
+   * has no header row, so the screen leaves room for the back / close buttons.
+   */
+  underModalTitle?: boolean
+  /** The title names the user (an email): keep it out of session replay. */
+  privateTitle?: boolean
+}>()
+</script>

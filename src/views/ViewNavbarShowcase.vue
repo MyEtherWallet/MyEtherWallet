@@ -1,43 +1,3 @@
-<script setup lang="ts">
-// Preview for the Navbar design-library component (MEW-2463) at /dev/navbar.
-// Compare against Figma Navbar 1078:1485. The breakpoint axis is the viewport
-// (sm 768 / xl 1280 / 2xl 1440), not a prop, so resize the window to walk the
-// four Figma columns. The dev sidebar takes width the bar still thinks it has,
-// so each bar scrolls sideways when it doesn't fit.
-import { computed, ref } from 'vue'
-import AppNavbar from '@/components/navbar/AppNavbar.vue'
-import AppNavLink from '@/components/navbar/AppNavLink.vue'
-import AppAddressSelector from '@/components/navbar/AppAddressSelector.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
-import AppSearchbar from '@/components/AppSearchbar.vue'
-import ethIcon from '@/assets/icons/tokens/eth.svg'
-
-const LINKS = ['Home', 'Portfolio', 'Stocks', 'Crypto', 'Perpetuals']
-
-const walletSaved = ref(false)
-const menuOpen = ref(false)
-const scrolled = ref(false)
-const log = ref<string[]>([])
-const record = (event: string) => {
-  log.value = [event, ...log.value].slice(0, 8)
-  if (event === 'toggle-menu') menuOpen.value = !menuOpen.value
-}
-
-const bars = computed(() => [
-  { title: 'Wallet saved? Off', props: { walletSaved: false } },
-  { title: 'Wallet saved? On', props: { walletSaved: true } },
-  {
-    title: 'Live',
-    props: {
-      walletSaved: walletSaved.value,
-      menuOpen: menuOpen.value,
-      scrolled: scrolled.value,
-    },
-  },
-])
-</script>
-
 <template>
   <div class="flex flex-col gap-10 p-8">
     <header class="flex flex-col gap-1">
@@ -124,3 +84,43 @@ const bars = computed(() => [
     </ol>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Navbar design-library component (MEW-2463) at /dev/navbar.
+// Compare against Figma Navbar 1078:1485. The breakpoint axis is the viewport
+// (sm 768 / xl 1280 / 2xl 1440), not a prop, so resize the window to walk the
+// four Figma columns. The dev sidebar takes width the bar still thinks it has,
+// so each bar scrolls sideways when it doesn't fit.
+import { computed, ref } from 'vue'
+import AppNavbar from '@/components/navbar/AppNavbar.vue'
+import AppNavLink from '@/components/navbar/AppNavLink.vue'
+import AppAddressSelector from '@/components/navbar/AppAddressSelector.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
+import ethIcon from '@/assets/icons/tokens/eth.svg'
+
+const LINKS = ['Home', 'Portfolio', 'Stocks', 'Crypto', 'Perpetuals']
+
+const walletSaved = ref(false)
+const menuOpen = ref(false)
+const scrolled = ref(false)
+const log = ref<string[]>([])
+const record = (event: string) => {
+  log.value = [event, ...log.value].slice(0, 8)
+  if (event === 'toggle-menu') menuOpen.value = !menuOpen.value
+}
+
+const bars = computed(() => [
+  { title: 'Wallet saved? Off', props: { walletSaved: false } },
+  { title: 'Wallet saved? On', props: { walletSaved: true } },
+  {
+    title: 'Live',
+    props: {
+      walletSaved: walletSaved.value,
+      menuOpen: menuOpen.value,
+      scrolled: scrolled.value,
+    },
+  },
+])
+</script>

@@ -1,36 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue'
-import { RouterLink, type RouteLocationRaw } from 'vue-router'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-
-import AppIcon from '@/components/icon/AppIcon.vue'
-const props = defineProps<{
-  title: string
-  source?: string
-  /** Pre-formatted date label (e.g. "Yesterday", "Jul 15 2026"). */
-  date?: string
-  description?: string
-  /** Related asset symbol shown as a token badge (e.g. "AAPL"). */
-  ticker?: string
-  /** Resolved icon URL for `ticker`; falls back to initials when absent. */
-  tokenLogo?: string
-  /** In-app route for the ticker badge (e.g. the stock page); when absent the
-   * badge is a plain, non-clickable label. */
-  tokenTo?: RouteLocationRaw
-  href?: string
-  timestamp?: string | number
-}>()
-
-// Fall back to a locale date when no pre-formatted `date` is passed (keeps the
-// component usable from a raw timestamp, e.g. in unit tests).
-const dateLabel = computed(
-  () =>
-    props.date ||
-    (props.timestamp ? new Date(props.timestamp).toLocaleDateString() : ''),
-)
-</script>
-
 <template>
   <!--
     Stretched-link card: the container is the positioned context, the title's
@@ -97,3 +64,36 @@ const dateLabel = computed(
     />
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { RouterLink, type RouteLocationRaw } from 'vue-router'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+
+import AppIcon from '@/components/icon/AppIcon.vue'
+const props = defineProps<{
+  title: string
+  source?: string
+  /** Pre-formatted date label (e.g. "Yesterday", "Jul 15 2026"). */
+  date?: string
+  description?: string
+  /** Related asset symbol shown as a token badge (e.g. "AAPL"). */
+  ticker?: string
+  /** Resolved icon URL for `ticker`; falls back to initials when absent. */
+  tokenLogo?: string
+  /** In-app route for the ticker badge (e.g. the stock page); when absent the
+   * badge is a plain, non-clickable label. */
+  tokenTo?: RouteLocationRaw
+  href?: string
+  timestamp?: string | number
+}>()
+
+// Fall back to a locale date when no pre-formatted `date` is passed (keeps the
+// component usable from a raw timestamp, e.g. in unit tests).
+const dateLabel = computed(
+  () =>
+    props.date ||
+    (props.timestamp ? new Date(props.timestamp).toLocaleDateString() : ''),
+)
+</script>

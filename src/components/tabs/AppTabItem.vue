@@ -1,3 +1,17 @@
+<template>
+  <button
+    type="button"
+    role="tab"
+    :aria-selected="selected"
+    :disabled="disabled"
+    class="flex flex-col items-center justify-center border-b px-2 pb-2 text-left text-label-base break-words focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus"
+    :class="stateClass"
+    data-testid="tab-item"
+  >
+    <slot>{{ label }}</slot>
+  </button>
+</template>
+
 <script setup lang="ts">
 /**
  * TabItem (Figma: MEW Web App — Design Library › TabItem / _base, node 1072:611).
@@ -24,17 +38,3 @@ const stateClass = computed(() => {
   return 'border-transparent text-text-muted hover:border-border-hover hover:text-text-default'
 })
 </script>
-
-<template>
-  <button
-    type="button"
-    role="tab"
-    :aria-selected="selected"
-    :disabled="disabled"
-    class="flex flex-col items-center justify-center border-b px-2 pb-2 text-left text-label-base break-words focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-border-focus"
-    :class="stateClass"
-    data-testid="tab-item"
-  >
-    <slot>{{ label }}</slot>
-  </button>
-</template>

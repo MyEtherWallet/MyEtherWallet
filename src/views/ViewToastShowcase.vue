@@ -1,64 +1,3 @@
-<script setup lang="ts">
-// Preview for the Toast design-library component (MEW-1975) at /dev/toast.
-// Matches Figma component set 2680:45751; the live buttons go through the real
-// toast store, so they show up in the app's toast stack (bottom left).
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppToast from '@/components/toast/AppToast.vue'
-import { TOAST_TYPES, TOAST_TYPES_WITH_BUTTON } from '@/components/toast/types'
-import { useToastStore } from '@/stores/toastStore'
-import { ToastType } from '@/types/notification'
-import ethIcon from '@/assets/icons/tokens/eth.svg'
-
-const ETH_ASSET = { symbol: 'ETH', url: ethIcon }
-const LONG_DESCRIPTION =
-  'Your order was split across several routes, so the received amount can differ slightly from the quote. Check the activity tab for every fill.'
-
-const toastStore = useToastStore()
-
-const STORE_TYPES = [
-  ToastType.Success,
-  ToastType.Error,
-  ToastType.Warning,
-  ToastType.Info,
-]
-
-const fireStoreType = (type: ToastType) =>
-  toastStore.addToastMessage({
-    type,
-    text: `${type} toast`,
-    textSecondary: 'Fired through the toast store',
-  })
-
-const PROCESSING_ID = 'dev-toast-processing'
-
-const fireProcessingThatCompletes = () => {
-  toastStore.addToastMessage({
-    id: PROCESSING_ID,
-    text: 'Processing trade',
-    textSecondary: 'This can take a few seconds',
-    isInfinite: true,
-    tradeStatus: { kind: 'processing' },
-  })
-  setTimeout(() => {
-    toastStore.removeToastById(PROCESSING_ID)
-    toastStore.addToastMessage({
-      text: 'Trade completed',
-      textSecondary: 'You received 0.5 ETH',
-      tradeStatus: { kind: 'completed', toSymbol: 'ETH', toTokenIcon: ethIcon },
-      link: { title: 'View in explorer', url: 'https://etherscan.io' },
-    })
-  }, 2000)
-}
-
-const fireSticky = () =>
-  toastStore.addToastMessage({
-    type: ToastType.Warning,
-    text: 'Sticky warning',
-    textSecondary: 'Stays until you close it',
-    isInfinite: true,
-  })
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -149,3 +88,64 @@ const fireSticky = () =>
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Toast design-library component (MEW-1975) at /dev/toast.
+// Matches Figma component set 2680:45751; the live buttons go through the real
+// toast store, so they show up in the app's toast stack (bottom left).
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppToast from '@/components/toast/AppToast.vue'
+import { TOAST_TYPES, TOAST_TYPES_WITH_BUTTON } from '@/components/toast/types'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
+import ethIcon from '@/assets/icons/tokens/eth.svg'
+
+const ETH_ASSET = { symbol: 'ETH', url: ethIcon }
+const LONG_DESCRIPTION =
+  'Your order was split across several routes, so the received amount can differ slightly from the quote. Check the activity tab for every fill.'
+
+const toastStore = useToastStore()
+
+const STORE_TYPES = [
+  ToastType.Success,
+  ToastType.Error,
+  ToastType.Warning,
+  ToastType.Info,
+]
+
+const fireStoreType = (type: ToastType) =>
+  toastStore.addToastMessage({
+    type,
+    text: `${type} toast`,
+    textSecondary: 'Fired through the toast store',
+  })
+
+const PROCESSING_ID = 'dev-toast-processing'
+
+const fireProcessingThatCompletes = () => {
+  toastStore.addToastMessage({
+    id: PROCESSING_ID,
+    text: 'Processing trade',
+    textSecondary: 'This can take a few seconds',
+    isInfinite: true,
+    tradeStatus: { kind: 'processing' },
+  })
+  setTimeout(() => {
+    toastStore.removeToastById(PROCESSING_ID)
+    toastStore.addToastMessage({
+      text: 'Trade completed',
+      textSecondary: 'You received 0.5 ETH',
+      tradeStatus: { kind: 'completed', toSymbol: 'ETH', toTokenIcon: ethIcon },
+      link: { title: 'View in explorer', url: 'https://etherscan.io' },
+    })
+  }, 2000)
+}
+
+const fireSticky = () =>
+  toastStore.addToastMessage({
+    type: ToastType.Warning,
+    text: 'Sticky warning',
+    textSecondary: 'Stays until you close it',
+    isInfinite: true,
+  })
+</script>

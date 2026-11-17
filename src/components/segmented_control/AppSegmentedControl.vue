@@ -1,3 +1,43 @@
+<template>
+  <div
+    data-testid="segmented-control"
+    class="flex items-center gap-1.5 rounded-3xl bg-background-default p-1"
+    :class="fullWidth ? 'w-full' : 'w-fit'"
+  >
+    <!-- fullWidth scrolls when segments outgrow the track; the -m-1/p-1 pair
+         keeps the focus ring (2px offset + 2px) inside the scroll box. -->
+    <div
+      ref="groupRef"
+      role="radiogroup"
+      :aria-label="label"
+      class="flex"
+      :class="{
+        'no-scrollbar -m-1 min-w-0 flex-1 overflow-x-auto rounded-3xl p-1':
+          fullWidth,
+      }"
+      @keydown="onKeydown"
+    >
+      <AppSegment
+        v-for="item in items"
+        :key="item.value"
+        :size="size"
+        :selected="item.value === model"
+        :trailing-icon="item.trailingIcon"
+        :tone="item.tone"
+        :tabindex="item.value === focusableValue ? 0 : -1"
+        :class="{ 'flex-1': fullWidth }"
+        @click="model = item.value"
+      >
+        <template v-if="$slots.avatar" #avatar="{ size: avatarSize }">
+          <slot name="avatar" :item="item" :size="avatarSize" />
+        </template>
+        <slot name="label" :item="item">{{ item.label }}</slot>
+      </AppSegment>
+    </div>
+    <slot />
+  </div>
+</template>
+
 <script setup lang="ts" generic="TValue extends string">
 /**
  * SegmentedControl (Figma: MEW Web App — Design Library › SegmentedControl,
@@ -63,43 +103,3 @@ const onKeydown = (event: KeyboardEvent) => {
   groupRef.value?.querySelectorAll<HTMLElement>('[role="radio"]')[next]?.focus()
 }
 </script>
-
-<template>
-  <div
-    data-testid="segmented-control"
-    class="flex items-center gap-1.5 rounded-3xl bg-background-default p-1"
-    :class="fullWidth ? 'w-full' : 'w-fit'"
-  >
-    <!-- fullWidth scrolls when segments outgrow the track; the -m-1/p-1 pair
-         keeps the focus ring (2px offset + 2px) inside the scroll box. -->
-    <div
-      ref="groupRef"
-      role="radiogroup"
-      :aria-label="label"
-      class="flex"
-      :class="{
-        'no-scrollbar -m-1 min-w-0 flex-1 overflow-x-auto rounded-3xl p-1':
-          fullWidth,
-      }"
-      @keydown="onKeydown"
-    >
-      <AppSegment
-        v-for="item in items"
-        :key="item.value"
-        :size="size"
-        :selected="item.value === model"
-        :trailing-icon="item.trailingIcon"
-        :tone="item.tone"
-        :tabindex="item.value === focusableValue ? 0 : -1"
-        :class="{ 'flex-1': fullWidth }"
-        @click="model = item.value"
-      >
-        <template v-if="$slots.avatar" #avatar="{ size: avatarSize }">
-          <slot name="avatar" :item="item" :size="avatarSize" />
-        </template>
-        <slot name="label" :item="item">{{ item.label }}</slot>
-      </AppSegment>
-    </div>
-    <slot />
-  </div>
-</template>

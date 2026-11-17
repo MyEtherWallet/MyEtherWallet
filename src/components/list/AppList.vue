@@ -1,62 +1,3 @@
-<script setup lang="ts">
-import { computed, useSlots } from 'vue'
-import { CELL_SURFACE_BG_CLASS } from '@/components/cell/cellSizes'
-import { flattenVNodes } from '@/utils/flattenVNodes'
-import ListHeader from './ListHeader.vue'
-import {
-  LIST_CONTAINER_CLASS,
-  LIST_GRID_DEFAULT_CLASS,
-  LIST_ROWS_CLASS,
-  type ListProps,
-} from './types'
-
-/**
- * List (design library, MEW-2467, Figma 2287:17344). "Vertical stack of rows
- * built from Cell or Card, used to display collections of assets,
- * transactions, or other items." Layout only: the consumer renders the rows
- * (`AppCell`, with `inset` inside the `rows` container) or the cards; the list
- * owns the header, the container and the spacing.
- *
- * Every slotted child is wrapped in a `role="listitem"`, so screen readers
- * announce "list, N items" and still read each row as itself. Attrs land on
- * the `<section>`.
- *
- * @example
- * <AppList title="Assets" header="inside">
- *   <AppCell v-for="a in assets" :key="a.id" inset :title="a.name" />
- * </AppList>
- */
-defineOptions({ inheritAttrs: false })
-
-const props = withDefaults(defineProps<ListProps>(), {
-  layout: 'rows',
-  header: 'none',
-  title: '',
-  description: '',
-  action: undefined,
-  surface: 'default',
-  gridClass: LIST_GRID_DEFAULT_CLASS,
-})
-
-const emit = defineEmits<{ action: [] }>()
-
-const slots = useSlots()
-
-const slotRows = () => flattenVNodes(slots.default?.())
-
-// Figma only draws the header inside the `rows` container.
-const placement = computed(() =>
-  props.header === 'inside' && props.layout !== 'rows'
-    ? 'outside'
-    : props.header,
-)
-
-const rowsClass = computed(() => [
-  LIST_ROWS_CLASS[props.layout],
-  props.layout === 'grid' ? props.gridClass : '',
-])
-</script>
-
 <template>
   <section
     v-bind="$attrs"
@@ -117,3 +58,62 @@ const rowsClass = computed(() => [
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+import { computed, useSlots } from 'vue'
+import { CELL_SURFACE_BG_CLASS } from '@/components/cell/cellSizes'
+import { flattenVNodes } from '@/utils/flattenVNodes'
+import ListHeader from './ListHeader.vue'
+import {
+  LIST_CONTAINER_CLASS,
+  LIST_GRID_DEFAULT_CLASS,
+  LIST_ROWS_CLASS,
+  type ListProps,
+} from './types'
+
+/**
+ * List (design library, MEW-2467, Figma 2287:17344). "Vertical stack of rows
+ * built from Cell or Card, used to display collections of assets,
+ * transactions, or other items." Layout only: the consumer renders the rows
+ * (`AppCell`, with `inset` inside the `rows` container) or the cards; the list
+ * owns the header, the container and the spacing.
+ *
+ * Every slotted child is wrapped in a `role="listitem"`, so screen readers
+ * announce "list, N items" and still read each row as itself. Attrs land on
+ * the `<section>`.
+ *
+ * @example
+ * <AppList title="Assets" header="inside">
+ *   <AppCell v-for="a in assets" :key="a.id" inset :title="a.name" />
+ * </AppList>
+ */
+defineOptions({ inheritAttrs: false })
+
+const props = withDefaults(defineProps<ListProps>(), {
+  layout: 'rows',
+  header: 'none',
+  title: '',
+  description: '',
+  action: undefined,
+  surface: 'default',
+  gridClass: LIST_GRID_DEFAULT_CLASS,
+})
+
+const emit = defineEmits<{ action: [] }>()
+
+const slots = useSlots()
+
+const slotRows = () => flattenVNodes(slots.default?.())
+
+// Figma only draws the header inside the `rows` container.
+const placement = computed(() =>
+  props.header === 'inside' && props.layout !== 'rows'
+    ? 'outside'
+    : props.header,
+)
+
+const rowsClass = computed(() => [
+  LIST_ROWS_CLASS[props.layout],
+  props.layout === 'grid' ? props.gridClass : '',
+])
+</script>

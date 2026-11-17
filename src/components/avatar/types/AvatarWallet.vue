@@ -1,3 +1,15 @@
+<template>
+  <!-- Wallet marks are square; inset so the full logo sits inside the circle
+       (contained) instead of filling it and getting its corners clipped. -->
+  <div class="w-full h-full p-[15%] box-border">
+    <AvatarRemoteImage
+      :url="url"
+      :fallback-text="name"
+      :fallback-text-class="fallbackTextClass"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import AvatarRemoteImage from '../AvatarRemoteImage.vue'
@@ -19,15 +31,3 @@ defineOptions({ inheritAttrs: false })
 
 const fallbackTextClass = computed(() => AVATAR_FALLBACK_TEXT_CLASS[props.size])
 </script>
-
-<template>
-  <!-- Wallet marks are square; inset so the full logo sits inside the circle
-       (contained) instead of filling it and getting its corners clipped. -->
-  <div class="w-full h-full p-[15%] box-border">
-    <AvatarRemoteImage
-      :url="url"
-      :fallback-text="name"
-      :fallback-text-class="fallbackTextClass"
-    />
-  </div>
-</template>

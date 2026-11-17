@@ -1,14 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Tag design-library component (MEW-2401), reachable at
-// /dev/tag via the design-library shell — see routesDefault.ts. Lets us eyeball
-// the Type × Style matrix against Figma (component set 859:624), the icon
-// combinations, Contrast on a dark surface and a leading avatar. Tags are
-// non-interactive: nothing here hovers, focuses or clicks.
-import AppTag from '@/components/tag/AppTag.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import { TAG_TYPES, TAG_VARIANTS } from '@/components/tag/types'
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -104,3 +93,14 @@ import { TAG_TYPES, TAG_VARIANTS } from '@/components/tag/types'
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Tag design-library component (MEW-2401), reachable at
+// /dev/tag via the design-library shell — see routesDefault.ts. Lets us eyeball
+// the Type × Style matrix against Figma (component set 859:624), the icon
+// combinations, Contrast on a dark surface and a leading avatar. Tags are
+// non-interactive: nothing here hovers, focuses or clicks.
+import AppTag from '@/components/tag/AppTag.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import { TAG_TYPES, TAG_VARIANTS } from '@/components/tag/types'
+</script>

@@ -1,3 +1,38 @@
+<template>
+  <div
+    role="group"
+    :aria-label="t('access_wallet.social.wallets_label')"
+    class="flex gap-2"
+  >
+    <SignUpWalletTile
+      v-for="wallet in wallets"
+      :key="wallet.name"
+      :wallet="wallet"
+      @select="select"
+    />
+    <button
+      type="button"
+      data-testid="more-methods"
+      :aria-label="t('access_wallet.social.more_methods')"
+      :title="t('access_wallet.social.more_methods')"
+      :class="SHORTCUT_CLASS"
+      @click="openAdvanced"
+    >
+      <AppIcon name="key" />
+    </button>
+    <button
+      type="button"
+      data-testid="all-wallets"
+      :aria-label="t('access_wallet.social.all_wallets')"
+      :title="t('access_wallet.social.all_wallets')"
+      :class="SHORTCUT_CLASS"
+      @click="openChooser"
+    >
+      <AppIcon name="wallet" />
+    </button>
+  </div>
+</template>
+
 <script setup lang="ts">
 // Wallet row of the sign-up view (Figma Onboarding, Variant A): the first
 // wallets of the chooser's Popular list (recent and installed ones lead it),
@@ -53,38 +88,3 @@ const openAdvanced = async (): Promise<void> => {
 const SHORTCUT_CLASS =
   'flex h-12 grow basis-0 cursor-pointer items-center justify-center rounded-12 bg-background-alternative text-icon-default transition-colors hover:bg-background-alternative-hover'
 </script>
-
-<template>
-  <div
-    role="group"
-    :aria-label="t('access_wallet.social.wallets_label')"
-    class="flex gap-2"
-  >
-    <SignUpWalletTile
-      v-for="wallet in wallets"
-      :key="wallet.name"
-      :wallet="wallet"
-      @select="select"
-    />
-    <button
-      type="button"
-      data-testid="more-methods"
-      :aria-label="t('access_wallet.social.more_methods')"
-      :title="t('access_wallet.social.more_methods')"
-      :class="SHORTCUT_CLASS"
-      @click="openAdvanced"
-    >
-      <AppIcon name="key" />
-    </button>
-    <button
-      type="button"
-      data-testid="all-wallets"
-      :aria-label="t('access_wallet.social.all_wallets')"
-      :title="t('access_wallet.social.all_wallets')"
-      :class="SHORTCUT_CLASS"
-      @click="openChooser"
-    >
-      <AppIcon name="wallet" />
-    </button>
-  </div>
-</template>

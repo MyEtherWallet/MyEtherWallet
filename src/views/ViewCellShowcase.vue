@@ -1,121 +1,3 @@
-<script setup lang="ts">
-// Preview for the Cell design-library component (MEW-2195) at /dev/cell.
-// Figma: MEW Web App — Design Library › Cell — Style × State × Size, each
-// style on the surface it is meant for, plus one row per slot.
-import { computed, ref } from 'vue'
-import AppCell from '@components/cell/AppCell.vue'
-import AppAvatar from '@components/avatar/AppAvatar.vue'
-import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
-import AppBaseButton from '@components/AppBaseButton.vue'
-import AppBtnIcon from '@components/AppBtnIcon.vue'
-import AppCellWatchlistToggle from '@components/cell/AppCellWatchlistToggle.vue'
-import {
-  CELL_SIZES,
-  type CellRightAccessory,
-  type CellSurface,
-} from '@components/cell/cellSizes'
-
-const BALANCE: CellRightAccessory = {
-  kind: 'balance',
-  primary: '$1,230',
-  secondary: '1,230 USDC',
-}
-
-const SURFACES: { surface: CellSurface; label: string; page: string }[] = [
-  {
-    surface: 'default',
-    label: 'Style: Default — white cell on the grey page',
-    page: 'bg-background-default',
-  },
-  {
-    surface: 'alternative',
-    label: 'Style: Alternative — grey cell on a white card',
-    page: 'bg-background-alternative',
-  },
-]
-
-const STATES = [
-  { label: 'Default', props: {} },
-  { label: 'Hover / Pressed (interact)', props: {} },
-  { label: 'Selected', props: { selected: true } },
-  { label: 'Focus (tab into it)', props: {} },
-  { label: 'Disabled', props: { disabled: true } },
-  { label: 'Loading', props: { loading: true } },
-] as const
-
-const clicks = ref(0)
-const slotClicks = ref(0)
-
-// Right accessory (MEW-2445): the nine Figma variants (set 1058:908), then a
-// live block where the sign toggle and fresh points drive the trend colours.
-const randomPoints = () => Array.from({ length: 24 }, () => Math.random() * 100)
-const sign = ref(1)
-const livePoints = ref(randomPoints())
-
-const ACCESSORY_VARIANTS: { label: string; accessory: CellRightAccessory }[] = [
-  { label: 'balance', accessory: BALANCE },
-  {
-    label: 'balance+performance up',
-    accessory: { kind: 'balance-performance', primary: '$1,230', change: 0.1 },
-  },
-  {
-    label: 'balance+performance down',
-    accessory: { kind: 'balance-performance', primary: '$1,230', change: -0.1 },
-  },
-  {
-    label: 'graph positive',
-    accessory: { kind: 'graph', points: [10, 14, 12, 18, 16, 22, 26] },
-  },
-  {
-    label: 'graph negative',
-    accessory: { kind: 'graph', points: [26, 22, 24, 16, 18, 12, 10] },
-  },
-  { label: 'performance up', accessory: { kind: 'performance', change: 0.1 } },
-  {
-    label: 'performance down',
-    accessory: { kind: 'performance', change: -0.1 },
-  },
-  { label: 'check', accessory: { kind: 'icon', icon: 'check-circle' } },
-  { label: 'loading', accessory: { kind: 'loading' } },
-]
-
-const liveAccessories = computed<
-  { label: string; accessory: CellRightAccessory }[]
->(() => [
-  {
-    label: 'balance+performance',
-    accessory: {
-      kind: 'balance-performance',
-      primary: '$1,230',
-      change: 2.45 * sign.value,
-    },
-  },
-  {
-    label: 'performance',
-    accessory: { kind: 'performance', change: 2.45 * sign.value },
-  },
-  {
-    label: 'graph (trend from first vs last point)',
-    accessory: { kind: 'graph', points: livePoints.value },
-  },
-  {
-    label: 'zero change is neutral',
-    accessory: { kind: 'performance', change: 0 },
-  },
-])
-const watched = ref(false)
-
-const SELECT_OPTIONS = ['Ethereum', 'Bitcoin'] as const
-type SelectOption = (typeof SELECT_OPTIONS)[number]
-const checkedOptions = ref<SelectOption[]>(['Ethereum'])
-const toggleChecked = (option: SelectOption) => {
-  checkedOptions.value = checkedOptions.value.includes(option)
-    ? checkedOptions.value.filter(checked => checked !== option)
-    : [...checkedOptions.value, option]
-}
-const pickedOption = ref<SelectOption>('Ethereum')
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -390,3 +272,121 @@ const pickedOption = ref<SelectOption>('Ethereum')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Cell design-library component (MEW-2195) at /dev/cell.
+// Figma: MEW Web App — Design Library › Cell — Style × State × Size, each
+// style on the surface it is meant for, plus one row per slot.
+import { computed, ref } from 'vue'
+import AppCell from '@components/cell/AppCell.vue'
+import AppAvatar from '@components/avatar/AppAvatar.vue'
+import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppCellWatchlistToggle from '@components/cell/AppCellWatchlistToggle.vue'
+import {
+  CELL_SIZES,
+  type CellRightAccessory,
+  type CellSurface,
+} from '@components/cell/cellSizes'
+
+const BALANCE: CellRightAccessory = {
+  kind: 'balance',
+  primary: '$1,230',
+  secondary: '1,230 USDC',
+}
+
+const SURFACES: { surface: CellSurface; label: string; page: string }[] = [
+  {
+    surface: 'default',
+    label: 'Style: Default — white cell on the grey page',
+    page: 'bg-background-default',
+  },
+  {
+    surface: 'alternative',
+    label: 'Style: Alternative — grey cell on a white card',
+    page: 'bg-background-alternative',
+  },
+]
+
+const STATES = [
+  { label: 'Default', props: {} },
+  { label: 'Hover / Pressed (interact)', props: {} },
+  { label: 'Selected', props: { selected: true } },
+  { label: 'Focus (tab into it)', props: {} },
+  { label: 'Disabled', props: { disabled: true } },
+  { label: 'Loading', props: { loading: true } },
+] as const
+
+const clicks = ref(0)
+const slotClicks = ref(0)
+
+// Right accessory (MEW-2445): the nine Figma variants (set 1058:908), then a
+// live block where the sign toggle and fresh points drive the trend colours.
+const randomPoints = () => Array.from({ length: 24 }, () => Math.random() * 100)
+const sign = ref(1)
+const livePoints = ref(randomPoints())
+
+const ACCESSORY_VARIANTS: { label: string; accessory: CellRightAccessory }[] = [
+  { label: 'balance', accessory: BALANCE },
+  {
+    label: 'balance+performance up',
+    accessory: { kind: 'balance-performance', primary: '$1,230', change: 0.1 },
+  },
+  {
+    label: 'balance+performance down',
+    accessory: { kind: 'balance-performance', primary: '$1,230', change: -0.1 },
+  },
+  {
+    label: 'graph positive',
+    accessory: { kind: 'graph', points: [10, 14, 12, 18, 16, 22, 26] },
+  },
+  {
+    label: 'graph negative',
+    accessory: { kind: 'graph', points: [26, 22, 24, 16, 18, 12, 10] },
+  },
+  { label: 'performance up', accessory: { kind: 'performance', change: 0.1 } },
+  {
+    label: 'performance down',
+    accessory: { kind: 'performance', change: -0.1 },
+  },
+  { label: 'check', accessory: { kind: 'icon', icon: 'check-circle' } },
+  { label: 'loading', accessory: { kind: 'loading' } },
+]
+
+const liveAccessories = computed<
+  { label: string; accessory: CellRightAccessory }[]
+>(() => [
+  {
+    label: 'balance+performance',
+    accessory: {
+      kind: 'balance-performance',
+      primary: '$1,230',
+      change: 2.45 * sign.value,
+    },
+  },
+  {
+    label: 'performance',
+    accessory: { kind: 'performance', change: 2.45 * sign.value },
+  },
+  {
+    label: 'graph (trend from first vs last point)',
+    accessory: { kind: 'graph', points: livePoints.value },
+  },
+  {
+    label: 'zero change is neutral',
+    accessory: { kind: 'performance', change: 0 },
+  },
+])
+const watched = ref(false)
+
+const SELECT_OPTIONS = ['Ethereum', 'Bitcoin'] as const
+type SelectOption = (typeof SELECT_OPTIONS)[number]
+const checkedOptions = ref<SelectOption[]>(['Ethereum'])
+const toggleChecked = (option: SelectOption) => {
+  checkedOptions.value = checkedOptions.value.includes(option)
+    ? checkedOptions.value.filter(checked => checked !== option)
+    : [...checkedOptions.value, option]
+}
+const pickedOption = ref<SelectOption>('Ethereum')
+</script>

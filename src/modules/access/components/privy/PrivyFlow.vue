@@ -1,95 +1,3 @@
-<script setup lang="ts">
-// The Google / email login flow inside the connect modal's sign-up view
-// (MEW-2289). One screen per state of usePrivyOnboarding; the entry screen is
-// the existing AccessSignUp.
-import { computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppIconContainer from '@/components/icon_container/AppIconContainer.vue'
-import AppSpinner from '@/components/spinner/AppSpinner.vue'
-import GoogleLogo from '@/assets/images/access/google.svg'
-import { useWalletFlowRoute } from '@/composables/useWalletFlowRoute'
-import type { OnboardingError } from '@/modules/access/common/privyOnboarding'
-import { usePrivyOnboarding } from '@/modules/access/composables/usePrivyOnboarding'
-import { useAccessStore } from '@/stores/accessStore'
-import AccessSignUp, { type SignUpPayload } from '../AccessSignUp.vue'
-import PrivyEmailCode from './PrivyEmailCode.vue'
-import PrivyScreen from './PrivyScreen.vue'
-
-const { t } = useI18n()
-const route = useRoute()
-const router = useRouter()
-const accessStore = useAccessStore()
-const { hostRouteName } = useWalletFlowRoute()
-const {
-  state,
-  email,
-  existingEmail,
-  errorKind,
-  emailError,
-  resendIn,
-  codeLocked,
-  busy,
-  enter,
-  continueAsExisting,
-  useDifferentAccount,
-  chooseGoogle,
-  chooseEmail,
-  submitCode,
-  resendCode,
-  chooseOptIn,
-  retry,
-  cancel,
-} = usePrivyOnboarding()
-
-onMounted(() => void enter())
-
-/**
- * The page under the modal, without the modal's own query keys: where the
- * browser comes back to after the Google redirect.
- */
-const returnTo = (): string => {
-  const query = { ...route.query }
-  delete query.type
-  delete query.walletTab
-  delete query.walletNetwork
-  return router.resolve({
-    name: hostRouteName.value,
-    params: route.params,
-    query,
-  }).fullPath
-}
-
-const onSignUp = (payload: SignUpPayload): void => {
-  if (payload.method === 'google') void chooseGoogle(returnTo())
-  else void chooseEmail(payload.email)
-}
-
-const CODE_STATUS = {
-  'email.code': 'default',
-  'email.code.error': 'error',
-  'email.code.success': 'success',
-} as const
-const codeStatus = computed(
-  () => CODE_STATUS[state.value as keyof typeof CODE_STATUS],
-)
-
-const ERROR_TITLE: Record<OnboardingError, string> = {
-  google: 'access_wallet.social.error.google_title',
-  timeout: 'access_wallet.social.error.timeout_title',
-  wallet: 'access_wallet.social.error.wallet_title',
-  storage: 'access_wallet.social.error.storage_title',
-  generic: 'access_wallet.social.error.generic_title',
-}
-
-/** "Continue with a wallet": leave the flow for the wallet chooser. */
-const useWallet = (): void => {
-  void cancel()
-  accessStore.setCurrentView('default')
-}
-</script>
-
 <template>
   <AccessSignUp
     v-if="state === 'entry'"
@@ -230,3 +138,95 @@ const useWallet = (): void => {
     </div>
   </PrivyScreen>
 </template>
+
+<script setup lang="ts">
+// The Google / email login flow inside the connect modal's sign-up view
+// (MEW-2289). One screen per state of usePrivyOnboarding; the entry screen is
+// the existing AccessSignUp.
+import { computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppIconContainer from '@/components/icon_container/AppIconContainer.vue'
+import AppSpinner from '@/components/spinner/AppSpinner.vue'
+import GoogleLogo from '@/assets/images/access/google.svg'
+import { useWalletFlowRoute } from '@/composables/useWalletFlowRoute'
+import type { OnboardingError } from '@/modules/access/common/privyOnboarding'
+import { usePrivyOnboarding } from '@/modules/access/composables/usePrivyOnboarding'
+import { useAccessStore } from '@/stores/accessStore'
+import AccessSignUp, { type SignUpPayload } from '../AccessSignUp.vue'
+import PrivyEmailCode from './PrivyEmailCode.vue'
+import PrivyScreen from './PrivyScreen.vue'
+
+const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
+const accessStore = useAccessStore()
+const { hostRouteName } = useWalletFlowRoute()
+const {
+  state,
+  email,
+  existingEmail,
+  errorKind,
+  emailError,
+  resendIn,
+  codeLocked,
+  busy,
+  enter,
+  continueAsExisting,
+  useDifferentAccount,
+  chooseGoogle,
+  chooseEmail,
+  submitCode,
+  resendCode,
+  chooseOptIn,
+  retry,
+  cancel,
+} = usePrivyOnboarding()
+
+onMounted(() => void enter())
+
+/**
+ * The page under the modal, without the modal's own query keys: where the
+ * browser comes back to after the Google redirect.
+ */
+const returnTo = (): string => {
+  const query = { ...route.query }
+  delete query.type
+  delete query.walletTab
+  delete query.walletNetwork
+  return router.resolve({
+    name: hostRouteName.value,
+    params: route.params,
+    query,
+  }).fullPath
+}
+
+const onSignUp = (payload: SignUpPayload): void => {
+  if (payload.method === 'google') void chooseGoogle(returnTo())
+  else void chooseEmail(payload.email)
+}
+
+const CODE_STATUS = {
+  'email.code': 'default',
+  'email.code.error': 'error',
+  'email.code.success': 'success',
+} as const
+const codeStatus = computed(
+  () => CODE_STATUS[state.value as keyof typeof CODE_STATUS],
+)
+
+const ERROR_TITLE: Record<OnboardingError, string> = {
+  google: 'access_wallet.social.error.google_title',
+  timeout: 'access_wallet.social.error.timeout_title',
+  wallet: 'access_wallet.social.error.wallet_title',
+  storage: 'access_wallet.social.error.storage_title',
+  generic: 'access_wallet.social.error.generic_title',
+}
+
+/** "Continue with a wallet": leave the flow for the wallet chooser. */
+const useWallet = (): void => {
+  void cancel()
+  accessStore.setCurrentView('default')
+}
+</script>

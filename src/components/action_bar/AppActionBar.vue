@@ -1,3 +1,23 @@
+<template>
+  <nav
+    :aria-label="t('common.wallet_actions')"
+    class="flex w-15 flex-col items-center border-l border-border-default bg-background-alternative p-0.5 pt-6 sm:w-20 sm:p-1 sm:pt-6"
+  >
+    <ul>
+      <li v-for="item in items" :key="item.id">
+        <AppActionBarButton
+          :icon="item.icon"
+          :label="item.label"
+          :disabled="item.disabled"
+          :active="item.id === activeId"
+          :data-action-id="item.id"
+          @click="emit('select', item.id)"
+        />
+      </li>
+    </ul>
+  </nav>
+</template>
+
 <script setup lang="ts" generic="TId extends string">
 import { useI18n } from 'vue-i18n'
 import AppActionBarButton from './AppActionBarButton.vue'
@@ -25,23 +45,3 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 </script>
-
-<template>
-  <nav
-    :aria-label="t('common.wallet_actions')"
-    class="flex w-15 flex-col items-center border-l border-border-default bg-background-alternative p-0.5 pt-6 sm:w-20 sm:p-1 sm:pt-6"
-  >
-    <ul>
-      <li v-for="item in items" :key="item.id">
-        <AppActionBarButton
-          :icon="item.icon"
-          :label="item.label"
-          :disabled="item.disabled"
-          :active="item.id === activeId"
-          :data-action-id="item.id"
-          @click="emit('select', item.id)"
-        />
-      </li>
-    </ul>
-  </nav>
-</template>

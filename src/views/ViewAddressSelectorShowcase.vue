@@ -1,30 +1,3 @@
-<script setup lang="ts">
-// Preview for the Address selector design-library component (MEW-2462) at
-// /dev/address-selector. Matches Figma component set 892:2786
-// (Connected × Name × Status), on the white surface the Navbar sits on.
-import { ref } from 'vue'
-import AppAddressSelector from '@/components/navbar/AppAddressSelector.vue'
-import ethIcon from '@/assets/icons/tokens/eth.svg'
-
-const ADDRESS = '0x32Be343B94f860124dC4fEe278FDCBD38C102D88'
-const BALANCE = '$130.23'
-
-const COMBINATIONS = [
-  { label: 'Connected · Name', connected: true, name: 'Savings account' },
-  { label: 'Connected · No name', connected: true, name: undefined },
-  { label: 'Watch only · Name', connected: false, name: 'Savings account' },
-  { label: 'Watch only · No name', connected: false, name: undefined },
-]
-
-const STATUSES = [
-  { label: 'Default', open: false },
-  { label: 'Hover (point at it)', open: false },
-  { label: 'Open', open: true },
-]
-
-const isOpen = ref(false)
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -100,3 +73,30 @@ const isOpen = ref(false)
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Address selector design-library component (MEW-2462) at
+// /dev/address-selector. Matches Figma component set 892:2786
+// (Connected × Name × Status), on the white surface the Navbar sits on.
+import { ref } from 'vue'
+import AppAddressSelector from '@/components/navbar/AppAddressSelector.vue'
+import ethIcon from '@/assets/icons/tokens/eth.svg'
+
+const ADDRESS = '0x32Be343B94f860124dC4fEe278FDCBD38C102D88'
+const BALANCE = '$130.23'
+
+const COMBINATIONS = [
+  { label: 'Connected · Name', connected: true, name: 'Savings account' },
+  { label: 'Connected · No name', connected: true, name: undefined },
+  { label: 'Watch only · Name', connected: false, name: 'Savings account' },
+  { label: 'Watch only · No name', connected: false, name: undefined },
+]
+
+const STATUSES = [
+  { label: 'Default', open: false },
+  { label: 'Hover (point at it)', open: false },
+  { label: 'Open', open: true },
+]
+
+const isOpen = ref(false)
+</script>

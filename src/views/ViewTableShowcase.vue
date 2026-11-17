@@ -1,163 +1,3 @@
-<script setup lang="ts">
-// Preview for the Table design-library module (MEW-2469) at /dev/table.
-// Figma: TableWrapper 2913:98036, TableRow 2126:16555, _Table 2128:5354,
-// .TableHeader 2129:5690, _TableHeaderTitle 1255:4142, _TableCell 2801:35945,
-// _TableFooter 2928:161002. Hover and focus are native: hover a row, or Tab.
-import { computed, ref, watch } from 'vue'
-import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
-import AppTable from '@/components/table/AppTable.vue'
-import AppTableRow from '@/components/table/AppTableRow.vue'
-import AppTableCell from '@/components/table/AppTableCell.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
-import type {
-  TableColumn,
-  TableSize,
-  TableSort,
-} from '@/components/table/types'
-
-interface Asset {
-  id: number
-  name: string
-  symbol: string
-  price: number
-  change: number
-  cap: number
-  volume: number
-  series: number[]
-}
-
-const NAMES = [
-  'Bitcoin',
-  'Ethereum',
-  'Tether',
-  'USD Coin',
-  'Solana',
-  'Ripple',
-  'Cardano',
-  'Dogecoin',
-  'Polygon',
-  'Chainlink',
-  'Litecoin',
-  'Avalanche',
-  'Uniswap',
-  'Stellar',
-  'Monero',
-  'Cosmos',
-  'Aave',
-  'Maker',
-  'Arbitrum',
-  'Optimism',
-  'Near',
-  'Aptos',
-  'Sui',
-  'Pepe',
-  'Tron',
-]
-
-// Deterministic sample data: no Math.random, so the preview is stable.
-const ASSETS: Asset[] = NAMES.map((name, i) => ({
-  id: i,
-  name,
-  symbol: name.slice(0, 3).toUpperCase(),
-  price: Math.round(((i * 7919) % 50000) + 1) / 7,
-  change: i % 5 === 0 ? 0 : (((i * 37) % 17) - 8) / 2.3,
-  cap: ((i * 104729) % 900) * 1e7,
-  volume: ((i * 1299709) % 500) * 1e6,
-  series: Array.from(
-    { length: 24 },
-    (_, j) => Math.sin(j / 3 + i) * 10 + j * ((i % 3) - 1),
-  ),
-}))
-
-const usd = (n: number) =>
-  n.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 2,
-  })
-const compact = (n: number) =>
-  n.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    notation: 'compact',
-  })
-
-const COLUMNS: TableColumn[] = [
-  { key: 'name', label: 'Token', sortable: true },
-  { key: 'price', label: 'Price', sortable: true, primary: true },
-  { key: 'change', label: '24h change' },
-  { key: 'cap', label: 'Market cap', sortable: true },
-  { key: 'volume', label: 'Volume', sortable: true },
-]
-
-// Live table: search, sort, pagination, watchlist, all in the parent.
-const width = ref(1296)
-const search = ref('')
-const loading = ref(false)
-const sort = ref<TableSort | null>({ key: 'cap', direction: 'desc' })
-const page = ref(1)
-// A narrower search can leave fewer pages than the current one.
-watch(search, () => (page.value = 1))
-const watched = ref(new Set<number>([1]))
-const PER_PAGE = 6
-
-const filtered = computed(() => {
-  const q = search.value.toLowerCase()
-  const list = ASSETS.filter(a => a.name.toLowerCase().includes(q))
-  const s = sort.value
-  if (!s) return list
-  const key = s.key as keyof Asset
-  const dir = s.direction === 'asc' ? 1 : -1
-  return [...list].sort((a, b) =>
-    a[key] > b[key] ? dir : a[key] < b[key] ? -dir : 0,
-  )
-})
-const pages = computed(() =>
-  Math.max(1, Math.ceil(filtered.value.length / PER_PAGE)),
-)
-const pageRows = computed(() =>
-  filtered.value.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE),
-)
-const toggle = (id: number, on: boolean) => {
-  const next = new Set(watched.value)
-  if (on) next.add(id)
-  else next.delete(id)
-  watched.value = next
-}
-
-// Rows at a fixed size, one and two actions.
-const SIZES: TableSize[] = ['l', 'm', 's']
-const SAMPLE = ASSETS.slice(0, 2)
-
-// Cells.
-const CELLS = [
-  { label: 'Number + trend up', props: { value: '$256.72', change: 2.87 } },
-  { label: 'Number + trend down', props: { value: '$256.72', change: -2.87 } },
-  { label: 'Number + neutral', props: { value: '$256.72', change: 0 } },
-  { label: 'Trend up', props: { change: 2.87, series: ASSETS[3].series } },
-  { label: 'Trend down', props: { change: -2.87, series: ASSETS[4].series } },
-  { label: 'Trend neutral', props: { change: 0, series: [1, 1] } },
-]
-
-// Show more.
-const shown = ref(4)
-
-// Reorder.
-const order = ref(ASSETS.slice(0, 5))
-const reorder = ({ from, to }: { from: number; to: number }) => {
-  const next = [...order.value]
-  const [moved] = next.splice(from, 1)
-  next.splice(to, 0, moved)
-  order.value = next
-}
-
-// Clickable rows.
-const lastClicked = ref('')
-</script>
-
 <template>
   <div class="mx-auto flex max-w-340 flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -454,3 +294,163 @@ const lastClicked = ref('')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Table design-library module (MEW-2469) at /dev/table.
+// Figma: TableWrapper 2913:98036, TableRow 2126:16555, _Table 2128:5354,
+// .TableHeader 2129:5690, _TableHeaderTitle 1255:4142, _TableCell 2801:35945,
+// _TableFooter 2928:161002. Hover and focus are native: hover a row, or Tab.
+import { computed, ref, watch } from 'vue'
+import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
+import AppTable from '@/components/table/AppTable.vue'
+import AppTableRow from '@/components/table/AppTableRow.vue'
+import AppTableCell from '@/components/table/AppTableCell.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import type {
+  TableColumn,
+  TableSize,
+  TableSort,
+} from '@/components/table/types'
+
+interface Asset {
+  id: number
+  name: string
+  symbol: string
+  price: number
+  change: number
+  cap: number
+  volume: number
+  series: number[]
+}
+
+const NAMES = [
+  'Bitcoin',
+  'Ethereum',
+  'Tether',
+  'USD Coin',
+  'Solana',
+  'Ripple',
+  'Cardano',
+  'Dogecoin',
+  'Polygon',
+  'Chainlink',
+  'Litecoin',
+  'Avalanche',
+  'Uniswap',
+  'Stellar',
+  'Monero',
+  'Cosmos',
+  'Aave',
+  'Maker',
+  'Arbitrum',
+  'Optimism',
+  'Near',
+  'Aptos',
+  'Sui',
+  'Pepe',
+  'Tron',
+]
+
+// Deterministic sample data: no Math.random, so the preview is stable.
+const ASSETS: Asset[] = NAMES.map((name, i) => ({
+  id: i,
+  name,
+  symbol: name.slice(0, 3).toUpperCase(),
+  price: Math.round(((i * 7919) % 50000) + 1) / 7,
+  change: i % 5 === 0 ? 0 : (((i * 37) % 17) - 8) / 2.3,
+  cap: ((i * 104729) % 900) * 1e7,
+  volume: ((i * 1299709) % 500) * 1e6,
+  series: Array.from(
+    { length: 24 },
+    (_, j) => Math.sin(j / 3 + i) * 10 + j * ((i % 3) - 1),
+  ),
+}))
+
+const usd = (n: number) =>
+  n.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 2,
+  })
+const compact = (n: number) =>
+  n.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    notation: 'compact',
+  })
+
+const COLUMNS: TableColumn[] = [
+  { key: 'name', label: 'Token', sortable: true },
+  { key: 'price', label: 'Price', sortable: true, primary: true },
+  { key: 'change', label: '24h change' },
+  { key: 'cap', label: 'Market cap', sortable: true },
+  { key: 'volume', label: 'Volume', sortable: true },
+]
+
+// Live table: search, sort, pagination, watchlist, all in the parent.
+const width = ref(1296)
+const search = ref('')
+const loading = ref(false)
+const sort = ref<TableSort | null>({ key: 'cap', direction: 'desc' })
+const page = ref(1)
+// A narrower search can leave fewer pages than the current one.
+watch(search, () => (page.value = 1))
+const watched = ref(new Set<number>([1]))
+const PER_PAGE = 6
+
+const filtered = computed(() => {
+  const q = search.value.toLowerCase()
+  const list = ASSETS.filter(a => a.name.toLowerCase().includes(q))
+  const s = sort.value
+  if (!s) return list
+  const key = s.key as keyof Asset
+  const dir = s.direction === 'asc' ? 1 : -1
+  return [...list].sort((a, b) =>
+    a[key] > b[key] ? dir : a[key] < b[key] ? -dir : 0,
+  )
+})
+const pages = computed(() =>
+  Math.max(1, Math.ceil(filtered.value.length / PER_PAGE)),
+)
+const pageRows = computed(() =>
+  filtered.value.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE),
+)
+const toggle = (id: number, on: boolean) => {
+  const next = new Set(watched.value)
+  if (on) next.add(id)
+  else next.delete(id)
+  watched.value = next
+}
+
+// Rows at a fixed size, one and two actions.
+const SIZES: TableSize[] = ['l', 'm', 's']
+const SAMPLE = ASSETS.slice(0, 2)
+
+// Cells.
+const CELLS = [
+  { label: 'Number + trend up', props: { value: '$256.72', change: 2.87 } },
+  { label: 'Number + trend down', props: { value: '$256.72', change: -2.87 } },
+  { label: 'Number + neutral', props: { value: '$256.72', change: 0 } },
+  { label: 'Trend up', props: { change: 2.87, series: ASSETS[3].series } },
+  { label: 'Trend down', props: { change: -2.87, series: ASSETS[4].series } },
+  { label: 'Trend neutral', props: { change: 0, series: [1, 1] } },
+]
+
+// Show more.
+const shown = ref(4)
+
+// Reorder.
+const order = ref(ASSETS.slice(0, 5))
+const reorder = ({ from, to }: { from: number; to: number }) => {
+  const next = [...order.value]
+  const [moved] = next.splice(from, 1)
+  next.splice(to, 0, moved)
+  order.value = next
+}
+
+// Clickable rows.
+const lastClicked = ref('')
+</script>

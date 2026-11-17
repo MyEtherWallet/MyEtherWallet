@@ -1,22 +1,3 @@
-<script setup lang="ts">
-// Icon-only wallet button for the sign-up view's wallet row (Figma Onboarding,
-// Variant A). The wallet's name is its accessible label.
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import type { WalletConfig } from '@/modules/access/common/walletConfigs'
-import { useWalletIconUrl } from '@/modules/access/composables/useWalletIconUrl'
-
-const props = defineProps<{ wallet: WalletConfig }>()
-const emit = defineEmits<{ select: [wallet: WalletConfig] }>()
-const { t } = useI18n()
-
-const displayName = computed(() =>
-  props.wallet.nameKey ? t(props.wallet.nameKey) : props.wallet.name,
-)
-const iconUrl = useWalletIconUrl(() => props.wallet)
-</script>
-
 <template>
   <button
     type="button"
@@ -43,3 +24,22 @@ const iconUrl = useWalletIconUrl(() => props.wallet)
     />
   </button>
 </template>
+
+<script setup lang="ts">
+// Icon-only wallet button for the sign-up view's wallet row (Figma Onboarding,
+// Variant A). The wallet's name is its accessible label.
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import type { WalletConfig } from '@/modules/access/common/walletConfigs'
+import { useWalletIconUrl } from '@/modules/access/composables/useWalletIconUrl'
+
+const props = defineProps<{ wallet: WalletConfig }>()
+const emit = defineEmits<{ select: [wallet: WalletConfig] }>()
+const { t } = useI18n()
+
+const displayName = computed(() =>
+  props.wallet.nameKey ? t(props.wallet.nameKey) : props.wallet.name,
+)
+const iconUrl = useWalletIconUrl(() => props.wallet)
+</script>

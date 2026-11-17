@@ -1,19 +1,3 @@
-<script setup lang="ts">
-// Preview for the library AppFooter (MEW-2443) at /dev/footer, fed by the app's
-// real props. Figma component set 1189:2949; each frame is one Figma size
-// (the footer switches by its own width).
-import { AppFooter } from '@myetherwallet/vue-common-components'
-import { useFooterProps } from '@/composables/useFooterProps'
-
-const footerProps = useFooterProps()
-
-const SIZES = [
-  { name: 'Small — 320', box: 'w-[320px]' },
-  { name: 'Medium — 688', box: 'w-[688px]' },
-  { name: 'Large — 1360', box: 'w-[1360px]' },
-]
-</script>
-
 <template>
   <div class="flex flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -34,3 +18,19 @@ const SIZES = [
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the library AppFooter (MEW-2443) at /dev/footer, fed by the app's
+// real props. Figma component set 1189:2949; each frame is one Figma size
+// (the footer switches by its own width).
+import { AppFooter } from '@myetherwallet/vue-common-components'
+import { useFooterProps } from '@/composables/useFooterProps'
+
+const footerProps = useFooterProps()
+
+const SIZES = [
+  { name: 'Small — 320', box: 'w-[320px]' },
+  { name: 'Medium — 688', box: 'w-[688px]' },
+  { name: 'Large — 1360', box: 'w-[1360px]' },
+]
+</script>

@@ -1,44 +1,3 @@
-<script setup lang="ts">
-// Preview for AppInputNaked (MEW-2404) at /dev/input-naked — Figma component
-// set 2822:1751. Focus / Typing are real states: click a field to see them.
-import { computed, reactive, ref } from 'vue'
-import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
-import AppToggle from '@components/AppToggle.vue'
-
-type Row = {
-  state: string
-  value: string
-  props?: Record<string, unknown>
-  hasError: boolean
-}
-
-const ROWS: Row[] = [
-  { state: 'Default', value: '', hasError: true },
-  { state: 'Focus — click the field', value: '', hasError: false },
-  { state: 'Typing / Filled', value: '24', hasError: true },
-  { state: 'Disabled', value: '', props: { disabled: true }, hasError: false },
-  { state: 'Loading', value: '24', props: { loading: true }, hasError: false },
-]
-
-const models = reactive<Record<string, string>>({})
-for (const row of ROWS) {
-  models[`${row.state}-false`] = row.value
-  models[`${row.state}-true`] = row.value
-}
-
-// Playground
-const amount = ref('')
-const isError = ref(false)
-const isLoading = ref(false)
-const isDisabled = ref(false)
-const conversion = computed(() =>
-  amount.value ? `≈ ${(Number(amount.value) / 2500).toFixed(4)} ETH` : '',
-)
-
-const tokenAmount = ref('0.5')
-const longAmount = ref('123456789.12')
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -150,3 +109,44 @@ const longAmount = ref('123456789.12')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for AppInputNaked (MEW-2404) at /dev/input-naked — Figma component
+// set 2822:1751. Focus / Typing are real states: click a field to see them.
+import { computed, reactive, ref } from 'vue'
+import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
+import AppToggle from '@components/AppToggle.vue'
+
+type Row = {
+  state: string
+  value: string
+  props?: Record<string, unknown>
+  hasError: boolean
+}
+
+const ROWS: Row[] = [
+  { state: 'Default', value: '', hasError: true },
+  { state: 'Focus — click the field', value: '', hasError: false },
+  { state: 'Typing / Filled', value: '24', hasError: true },
+  { state: 'Disabled', value: '', props: { disabled: true }, hasError: false },
+  { state: 'Loading', value: '24', props: { loading: true }, hasError: false },
+]
+
+const models = reactive<Record<string, string>>({})
+for (const row of ROWS) {
+  models[`${row.state}-false`] = row.value
+  models[`${row.state}-true`] = row.value
+}
+
+// Playground
+const amount = ref('')
+const isError = ref(false)
+const isLoading = ref(false)
+const isDisabled = ref(false)
+const conversion = computed(() =>
+  amount.value ? `≈ ${(Number(amount.value) / 2500).toFixed(4)} ETH` : '',
+)
+
+const tokenAmount = ref('0.5')
+const longAmount = ref('123456789.12')
+</script>
