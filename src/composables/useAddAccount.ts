@@ -13,6 +13,8 @@ import {
 } from '@/modules/access/common/walletConfigs'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
+import { WalletType } from '@/providers/types'
+import configs from '@/configs'
 
 export function useAddAccount() {
   const accessStore = useAccessStore()
@@ -48,6 +50,18 @@ export function useAddAccount() {
    * to a static config (e.g. MetaMask and other dynamic injected connectors).
    */
   const connectSaved = async (account: SavedAccount): Promise<void> => {
+    // A Privy address is reconnected by logging in again, so go straight to
+    // the sign-up view. No intended address: a login to another Privy account
+    // is simply added as a new wallet and this entry stays watch-only.
+    if (
+      configs.SHOW_SOCIAL_LOGIN &&
+      account.providerType === WalletType.PRIVY
+    ) {
+      accessStore.setExpectNewAddress(false)
+      accessStore.setIntendedAddress(null)
+      accessStore.openSignUpDialog()
+      return
+    }
     // 1) Static config (Enkrypt, Unisat, Ledger, Trezor, keystore, mnemonic,
     //    privateKey, MEW) resolved from the saved connectorId.
     // 2) Otherwise a dynamic injected wallet (MetaMask, Rabby, …) matched by

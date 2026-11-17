@@ -32,12 +32,15 @@ vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => chainsStore }))
 vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => accessStore }))
 vi.mock('@/stores/globalStore', () => ({ useGlobalStore: () => globalStore }))
 vi.mock('@/stores/toastStore', () => ({ useToastStore: () => toastStore }))
+const authStore = { endLoginFor: vi.fn(async () => undefined) }
+vi.mock('@/stores/authStore', () => ({ useAuthStore: () => authStore }))
 vi.mock('@/modules/access/common/walletConfigs', () => ({ walletConfigs: {} }))
 vi.mock('@/providers/common/watchOnlyWallet', () => ({
   default: class { constructor(public a: string) {} },
 }))
 
 import { useAccountSwitch } from '@/composables/useAccountSwitch'
+import configs from '@/configs'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 
 const acc = (over: Partial<SavedAccount> = {}): SavedAccount => ({
@@ -88,6 +91,42 @@ describe('useAccountSwitch', () => {
     await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xactive', address: '0xactive' }))
     expect(watchOnly.removeWallet).toHaveBeenCalledWith('0xactive', expect.objectContaining({ type: 'EVM' }))
     expect(walletStore.setWallet).toHaveBeenCalledTimes(1)
+  })
+
+  it('deleteAccount ends the Privy login of a deleted Privy address before removing it', async () => {
+    configs.SHOW_SOCIAL_LOGIN = true
+    const order: string[] = []
+    authStore.endLoginFor.mockImplementationOnce(async () => {
+      order.push('end-login')
+    })
+    watchOnly.removeWallet.mockImplementationOnce(() => order.push('remove'))
+
+    await useAccountSwitch().deleteAccount({
+      ...acc({ id: 'EVM:0xprivy', address: '0xprivy' }),
+      providerType: 'PRIVY',
+    } as SavedAccount)
+
+    expect(authStore.endLoginFor).toHaveBeenCalledWith('0xprivy')
+    expect(order).toEqual(['end-login', 'remove'])
+  })
+
+  it('deleteAccount leaves Privy alone when another kind of address is deleted', async () => {
+    configs.SHOW_SOCIAL_LOGIN = true
+
+    await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xother', address: '0xother' }))
+
+    expect(authStore.endLoginFor).not.toHaveBeenCalled()
+  })
+
+  it('deleteAccount leaves Privy alone while social login is off', async () => {
+    configs.SHOW_SOCIAL_LOGIN = false
+
+    await useAccountSwitch().deleteAccount({
+      ...acc({ id: 'EVM:0xprivy', address: '0xprivy' }),
+      providerType: 'PRIVY',
+    } as SavedAccount)
+
+    expect(authStore.endLoginFor).not.toHaveBeenCalled()
   })
 
   it('deleteAccount disconnects when nothing remains', async () => {

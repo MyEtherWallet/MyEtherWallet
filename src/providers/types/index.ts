@@ -54,6 +54,8 @@ export enum WalletType {
   INJECTED = 'INJECTED',
   TREZOR = 'TREZOR',
   LEDGER = 'LEDGER',
+  /** Embedded wallet from a Privy login (Google / email). */
+  PRIVY = 'PRIVY',
 }
 
 export interface BalanceResponse {

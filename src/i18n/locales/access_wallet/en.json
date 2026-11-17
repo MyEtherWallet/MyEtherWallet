@@ -110,6 +110,63 @@
     "help_footer": {
       "need_help": "Need help?",
       "go_to_help_center": "Go to Help Center"
+    },
+    "social": {
+      "title": "Log in/Sign Up",
+      "terms": "By logging in I agree to the {terms} & {privacy}",
+      "terms_link": "Terms",
+      "privacy_link": "Privacy Policy",
+      "wallets_label": "Connect with a wallet",
+      "more_methods": "More ways to connect",
+      "all_wallets": "All wallets",
+      "google": {
+        "verifying_title": "Verifying connection to Google",
+        "verifying_description": "Just a few moments more…",
+        "connected_title": "Connected to Google",
+        "connected_description": "You're good to go!"
+      },
+      "code": {
+        "title": "Enter confirmation code",
+        "description": "Please check {email} for a code from Privy",
+        "incorrect": "Incorrect code. Please try again.",
+        "too_many": "Too many attempts, request a new code",
+        "no_email": "Didn't get an email?",
+        "resend": "Resend code",
+        "resend_in": "Resend code in {seconds}s",
+        "success": "Success!"
+      },
+      "wallet_setup": {
+        "title": "Setting up your wallet…",
+        "description": "Your wallet is being set up. It's a secure place for the assets you trade on MEW."
+      },
+      "account_ready": {
+        "title": "Your account is ready",
+        "description": "Choose how you'd like to finish. Get updates on new features, product news, and promotions.",
+        "create_only": "Create account only",
+        "get_updates": "Get updates"
+      },
+      "existing": {
+        "title": "Continue as {email}?",
+        "title_no_email": "Continue with your account?",
+        "description": "You're still signed in on this tab.",
+        "continue": "Continue",
+        "different": "Use a different account"
+      },
+      "error": {
+        "google_title": "Couldn't connect to Google",
+        "timeout_title": "Taking longer than expected",
+        "wallet_title": "We couldn't set up your wallet",
+        "storage_title": "Enable cookies/storage to sign in",
+        "generic_title": "Something went wrong",
+        "description": "Please try again, or continue with a wallet instead.",
+        "try_again": "Try again",
+        "use_wallet": "Continue with a wallet",
+        "send_code": "We couldn't send a code to this address",
+        "rate_limited": "Too many attempts, try again in a minute"
+      },
+      "toast": {
+        "logged_in": "You're logged in"
+      }
     }
   },
   "access_wallet_keystore": {

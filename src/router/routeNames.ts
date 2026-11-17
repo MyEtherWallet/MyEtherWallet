@@ -104,8 +104,18 @@ const ROUTES_SEND: RouteNameCollection = {
   SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
 }
 
+/**
+ * Where Privy sends the browser back after a Google login. An absolute path of
+ * its own (not a wallet-flow overlay): the page arrives here from outside the
+ * app, with the OAuth code in the query string.
+ */
+const ROUTES_AUTH = {
+  CALLBACK: { NAME: 'AuthCallback', PATH: '/auth/callback' },
+}
+
 export {
   ROUTES_MAIN,
+  ROUTES_AUTH,
   ROUTES_CREATE_WALLET,
   ROUTES_SEND,
   ROUTES_ACCESS,

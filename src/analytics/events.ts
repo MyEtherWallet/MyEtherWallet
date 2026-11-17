@@ -957,3 +957,34 @@ export type SellEventError =
 export type SellErrorPayload = SellPayloadShared & {
   errorMsg: string
 }
+
+// =============================================================================
+// ONBOARDING (Privy Google / email login)
+// =============================================================================
+
+export const OnboardingEvent = {
+  ENTRY_VIEWED: 'Onboarding_Entry_Viewed',
+  METHOD_SELECTED: 'Onboarding_Method_Selected',
+  GOOGLE_STARTED: 'Onboarding_Google_Started',
+  GOOGLE_SUCCEEDED: 'Onboarding_Google_Succeeded',
+  GOOGLE_FAILED: 'Onboarding_Google_Failed',
+  EMAIL_CODE_SENT: 'Onboarding_Email_Code_Sent',
+  EMAIL_CODE_RESENT: 'Onboarding_Email_Code_Resent',
+  EMAIL_CODE_FAILED: 'Onboarding_Email_Code_Failed',
+  LOGIN_SUCCEEDED: 'Onboarding_Login_Succeeded',
+  WALLET_PROVISIONED: 'Onboarding_Wallet_Provisioned',
+  OPT_IN: 'Onboarding_Opt_In',
+  ABANDONED: 'Onboarding_Abandoned',
+} as const
+export type OnboardingEvent =
+  (typeof OnboardingEvent)[keyof typeof OnboardingEvent]
+
+/** Never an email, address or Privy id: none of those may reach analytics. */
+export type OnboardingPayload = {
+  method?: 'google' | 'email' | 'wallet'
+  reason?: string
+  attempt?: number
+  isNew?: boolean
+  value?: boolean
+  state?: string
+}

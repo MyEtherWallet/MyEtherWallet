@@ -220,7 +220,11 @@
     "chart_3m": "3月",
     "chart_1y": "1年",
     "chart_all": "全部",
-    "chart_range": "图表时间范围"
+    "chart_range": "图表时间范围",
+    "code_input": {
+      "label": "确认码",
+      "digit_label": "第 {index} 位，共 {total} 位"
+    }
   },
   "deposit": "充值",
   "learn": "学习",

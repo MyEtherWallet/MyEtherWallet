@@ -27,6 +27,7 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
       { name: 'Cell', to: '/dev/cell' },
       { name: 'Checkbox', to: '/dev/checkbox' },
       { name: 'Chip', to: '/dev/chip' },
+      { name: 'Code Input', to: '/dev/code-input' },
       { name: 'Content Group', to: '/dev/content-group' },
       { name: 'Divider', to: '/dev/divider' },
       { name: 'Dropdown', to: '/dev/dropdown' },

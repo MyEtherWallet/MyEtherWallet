@@ -99,6 +99,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletFlowRoute } from '@/composables/useWalletFlowRoute'
+import configs from '@/configs'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
@@ -182,6 +183,15 @@ const createWallet = (): void => {
   analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
     source: 'Header_Create',
   })
+  // With Google / email login on, creating a wallet starts with Log in /
+  // Sign Up: the connect overlay, opened on its sign-up view.
+  if (configs.SHOW_SOCIAL_LOGIN) {
+    void router.push({
+      ...accessRoute.value,
+      query: { ...accessRoute.value.query, type: 'sign_up' },
+    })
+    return
+  }
   void router.push(createRoute.value)
 }
 const connectWallet = (): void => {

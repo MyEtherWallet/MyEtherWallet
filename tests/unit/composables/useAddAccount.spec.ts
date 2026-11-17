@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ToastType } from '@/types/notification'
 
-const accessStore = { isOpenAccessDialog: false, openAccessDialog: vi.fn(() => { accessStore.isOpenAccessDialog = true }), setExpectNewAddress: vi.fn(), setIntendedAddress: vi.fn() }
+const accessStore = { isOpenAccessDialog: false, openAccessDialog: vi.fn(() => { accessStore.isOpenAccessDialog = true }), openSignUpDialog: vi.fn(), setExpectNewAddress: vi.fn(), setIntendedAddress: vi.fn() }
 const watchOnly = { isAtCap: false }
 const toastStore = { addToastMessage: vi.fn() }
 
@@ -13,6 +13,7 @@ vi.mock('@/modules/access/composables/useConnectWallet', () => ({ useConnectWall
 vi.mock('@/composables/useWalletList', () => ({ useWalletList: () => ({ newWalletList: { value: [] } }) }))
 
 import { useAddAccount } from '@/composables/useAddAccount'
+import configs from '@/configs'
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -33,5 +34,33 @@ describe('useAddAccount', () => {
       expect.objectContaining({ text: 'Address limit reached', type: ToastType.Error }),
     )
     expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
+  })
+
+  it('falls back to the wallet chooser for a saved Privy address while social login is off', async () => {
+    configs.SHOW_SOCIAL_LOGIN = false
+
+    await useAddAccount().connectSaved({
+      address: '0x1111111111111111111111111111111111111111',
+      providerType: 'PRIVY',
+      walletName: 'Privy',
+    } as never)
+
+    expect(accessStore.openSignUpDialog).not.toHaveBeenCalled()
+    expect(accessStore.openAccessDialog).toHaveBeenCalledTimes(1)
+  })
+
+  it('reconnects a saved Privy address through the sign-up view, without tying it to that address', async () => {
+    configs.SHOW_SOCIAL_LOGIN = true
+    await useAddAccount().connectSaved({
+      address: '0x1111111111111111111111111111111111111111',
+      providerType: 'PRIVY',
+      walletName: 'Privy',
+    } as never)
+
+    expect(accessStore.openSignUpDialog).toHaveBeenCalledTimes(1)
+    expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
+    // A login to another Privy account is added as a new wallet, so no
+    // "select this address" prompt may be armed.
+    expect(accessStore.setIntendedAddress).toHaveBeenCalledWith(null)
   })
 })

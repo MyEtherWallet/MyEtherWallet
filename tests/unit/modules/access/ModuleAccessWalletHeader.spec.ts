@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { reactive, ref } from 'vue'
+import { nextTick, reactive, ref } from 'vue'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
@@ -10,6 +10,9 @@ vi.mock('@/modules/access/components/NetworkChips.vue', () =>
 vi.mock('@/modules/access/components/WalletTabs.vue', () => stub('WalletTabs'))
 vi.mock('@/modules/access/components/AccessSignUp.vue', () =>
   stub('AccessSignUp'),
+)
+vi.mock('@/modules/access/components/privy/PrivyFlow.vue', () =>
+  stub('PrivyFlow'),
 )
 vi.mock('@/modules/access/components/AccessDownloadMobile.vue', () =>
   stub('AccessDownloadMobile'),
@@ -30,7 +33,7 @@ vi.mock('@/components/AppNeedHelp.vue', () => stub('AppNeedHelp'))
 vi.mock('@/components/modal/AppModal.vue', () => ({
   default: {
     name: 'AppModal',
-    props: ['modelValue', 'title', 'showBackButton'],
+    props: ['modelValue', 'title', 'showBackButton', 'persistent', 'ariaLabel'],
     emits: ['update:modelValue', 'back', 'close'],
     template: `<div>
       <button v-if="showBackButton" aria-label="common.back" @click="$emit('back')" />
@@ -48,6 +51,17 @@ vi.mock('pinia', async orig => ({
   storeToRefs: (store: unknown) => store,
 }))
 
+// The login flow's shared state, driven directly by these tests.
+const flow = {
+  state: ref('entry'),
+  backTarget: ref<'chooser' | 'entry' | null>('chooser'),
+  isPersistent: ref(false),
+  back: vi.fn(),
+  cancel: vi.fn(),
+}
+vi.mock('@/modules/access/composables/usePrivyOnboarding', () => ({
+  usePrivyOnboarding: () => flow,
+}))
 const currentView = ref('default')
 const isOpenAccessDialog = ref(true)
 const accessStep = ref(1)
@@ -123,6 +137,11 @@ const mountAt = (view: string, step = 1) => {
 }
 beforeEach(() => {
   configs.SHOW_SOCIAL_LOGIN = true
+  flow.state.value = 'entry'
+  flow.backTarget.value = 'chooser'
+  flow.isPersistent.value = false
+  flow.back.mockClear()
+  flow.cancel.mockClear()
 })
 afterEach(() => wrapper?.unmount())
 
@@ -164,9 +183,87 @@ describe('ModuleAccessWallet header', () => {
 
   it('goes back from sign-up to the chooser', async () => {
     const w = mountAt('sign_up')
-    expect(title(w)).toBe('connect_wallet')
     await back(w).trigger('click')
     expect(setCurrentView).toHaveBeenCalledWith('default')
+  })
+
+  it('titles the sign-up view "Log in/Sign Up" on its entry screen', () => {
+    const w = mountAt('sign_up')
+
+    expect(title(w)).toBe('access_wallet.social.title')
+    expect(w.findComponent({ name: 'PrivyFlow' }).exists()).toBe(true)
+  })
+
+  it('shows no title on the later login screens', () => {
+    flow.state.value = 'google.verifying'
+
+    expect(title(mountAt('sign_up'))).toBe('')
+  })
+
+  it('returns from the code screen to the entry screen with the back arrow', async () => {
+    flow.state.value = 'email.code'
+    flow.backTarget.value = 'entry'
+    const w = mountAt('sign_up')
+
+    await back(w).trigger('click')
+
+    expect(flow.back).toHaveBeenCalledTimes(1)
+    expect(setCurrentView).not.toHaveBeenCalled()
+  })
+
+  it('hides the back arrow on login screens that have nowhere to go back to', () => {
+    flow.state.value = 'google.verifying'
+    flow.backTarget.value = null
+
+    expect(back(mountAt('sign_up')).exists()).toBe(false)
+  })
+
+  it('cannot be closed while the wallet is being set up', () => {
+    flow.state.value = 'wallet.setup'
+    flow.isPersistent.value = true
+
+    const w = mountAt('sign_up')
+
+    expect(w.findComponent({ name: 'AppModal' }).props('persistent')).toBe(true)
+  })
+
+  it('cancels the login flow when the sign-up view is closed', async () => {
+    const w = mountAt('sign_up')
+
+    await w.get('button[aria-label="common.close"]').trigger('click')
+
+    expect(flow.cancel).toHaveBeenCalledTimes(1)
+  })
+
+  it('cancels the login flow when the dialog is closed from outside the modal', async () => {
+    flow.state.value = 'email.code'
+    mountAt('sign_up')
+
+    // Browser Back or a link elsewhere closes it through the store.
+    isOpenAccessDialog.value = false
+    await nextTick()
+
+    expect(flow.cancel).toHaveBeenCalledTimes(1)
+  })
+
+  it('names the dialog for screen readers on login screens that have no title', () => {
+    flow.state.value = 'google.verifying'
+
+    const w = mountAt('sign_up')
+
+    expect(w.findComponent({ name: 'AppModal' }).props('ariaLabel')).toBe(
+      'access_wallet.social.title',
+    )
+  })
+
+  it('shows the plain sign-up view, not the login flow, while social login is off', () => {
+    configs.SHOW_SOCIAL_LOGIN = false
+
+    const w = mountAt('sign_up')
+
+    expect(w.findComponent({ name: 'AccessSignUp' }).exists()).toBe(true)
+    expect(w.findComponent({ name: 'PrivyFlow' }).exists()).toBe(false)
+    expect(title(w)).toBe('connect_wallet')
   })
 
   it('goes back from the download screen to sign-up', async () => {

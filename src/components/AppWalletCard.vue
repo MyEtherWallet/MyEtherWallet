@@ -177,6 +177,7 @@ import { useImageContrastTextColor } from '@/composables/useImageContrastTextCol
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
+import { useAuthStore } from '@/stores/authStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
@@ -313,7 +314,15 @@ const openAccess = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
     source: 'WalletCard_Connect',
   })
-  openAccessDialog()
+  // A Privy address is reconnected by logging in again, not from the chooser.
+  if (
+    configs.SHOW_SOCIAL_LOGIN &&
+    wallet.value?.getWalletType() === WalletType.PRIVY
+  ) {
+    accessStore.openSignUpDialog()
+  } else {
+    openAccessDialog()
+  }
   emit('close')
 }
 
@@ -323,6 +332,17 @@ const disconnectWallet = () => {
 }
 
 const deleteWallet = async () => {
+  // Deleting a Privy address also ends its login, as disconnecting it does.
+  // Best effort: the address is deleted even if Privy cannot be reached.
+  if (
+    configs.SHOW_SOCIAL_LOGIN &&
+    walletAddress.value &&
+    wallet.value?.getWalletType() === WalletType.PRIVY
+  ) {
+    await useAuthStore()
+      .endLoginFor(walletAddress.value)
+      .catch(() => undefined)
+  }
   const recentAddressStore = useWatchOnlyStore()
   recentAddressStore.removeWallet(
     walletAddress.value as string,
@@ -343,7 +363,9 @@ const canSwitchAddress = computed(() => {
     !!type &&
     type !== WalletType.PRIVATE_KEY &&
     type !== WalletType.INJECTED &&
-    type !== WalletType.WAGMI
+    type !== WalletType.WAGMI &&
+    // A Privy login has one embedded wallet: nothing to switch to.
+    type !== WalletType.PRIVY
   )
 })
 

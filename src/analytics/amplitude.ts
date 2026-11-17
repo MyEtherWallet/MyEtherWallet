@@ -107,6 +107,8 @@ import type {
   SellErrorPayload,
   MarketingAbTestEvent,
   MarketingAbTestEventPayload,
+  OnboardingEvent,
+  OnboardingPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -1086,6 +1088,20 @@ export class Analytics {
   readonly trackSellEventError = (
     event: SellEventError,
     payload: SellErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  /**
+   * Send an Onboarding (Google / email login) analytics event to Amplitude
+   *
+   * @param event     Type of Onboarding event
+   * @param payload   Event properties; never an email, address or Privy id
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackOnboardingEvent = (
+    event: OnboardingEvent,
+    payload?: OnboardingPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

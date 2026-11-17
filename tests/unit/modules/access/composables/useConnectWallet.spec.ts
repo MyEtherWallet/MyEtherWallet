@@ -129,9 +129,8 @@ vi.mock('@/stores/toastStore', () => ({
 }))
 
 // Import after mocks are registered.
-const { useConnectWallet } = await import(
-  '@/modules/access/composables/useConnectWallet'
-)
+const { useConnectWallet } =
+  await import('@/modules/access/composables/useConnectWallet')
 
 const flushPromises = () => new Promise(resolve => setTimeout(resolve, 0))
 

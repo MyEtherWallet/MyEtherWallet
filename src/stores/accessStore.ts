@@ -45,6 +45,11 @@ export const useAccessStore = defineStore('accessStore', () => {
     if (isOpenAccessDialog.value) return
     openAccessDialog()
   }
+  /** Open the dialog straight on its Log in / Sign Up view (Google / email). */
+  const openSignUpDialog = () => {
+    openAccessDialog()
+    currentView.value = 'sign_up'
+  }
   const closeAccessDialog = () => {
     isOpenAccessDialog.value = false
     currentView.value = 'default'
@@ -174,6 +179,7 @@ export const useAccessStore = defineStore('accessStore', () => {
     accessStep,
     openAccessDialog,
     ensureAccessDialogOpen,
+    openSignUpDialog,
     closeAccessDialog,
     currentView,
     setCurrentView,

@@ -2,7 +2,9 @@
   <app-modal
     v-model="bigDialogOpen"
     :title="getTitle"
-    :show-back-button="currentView !== 'default'"
+    :show-back-button="showBack"
+    :persistent="inLoginFlow && isPersistent"
+    :aria-label="inLoginFlow ? t('access_wallet.social.title') : undefined"
     :class="[
       'w-full',
       dialogWidth,
@@ -85,6 +87,7 @@
               <AccessDownloadWallets v-else />
             </div>
           </div>
+          <PrivyFlow v-else-if="inLoginFlow" />
           <AccessSignUp v-else-if="currentView === 'sign_up'" />
           <AccessDownloadMobile v-else-if="currentView === 'download_mobile'" />
           <module-access-keystore v-else-if="currentView === 'keystore'" />
@@ -114,6 +117,8 @@ import NetworkChips from '@/modules/access/components/NetworkChips.vue'
 import WalletTabs from '@/modules/access/components/WalletTabs.vue'
 import AccessCell from '@/modules/access/components/AccessCell.vue'
 import AccessSignUp from '@/modules/access/components/AccessSignUp.vue'
+import PrivyFlow from '@/modules/access/components/privy/PrivyFlow.vue'
+import { usePrivyOnboarding } from '@/modules/access/composables/usePrivyOnboarding'
 import AccessDownloadMobile from '@/modules/access/components/AccessDownloadMobile.vue'
 import AccessDownloadWallets from '@/modules/access/components/AccessDownloadWallets.vue'
 import configs from '@/configs'
@@ -169,11 +174,43 @@ const bigDialogOpen = computed<boolean>({
   },
 })
 
+/**-------------------------------
+ * Google / email login (the sign-up view)
+ * The flow owns its own screens, so it decides the title, where Back leads
+ * and whether the modal may be closed.
+ -------------------------------*/
+const {
+  state: loginState,
+  backTarget,
+  isPersistent,
+  back: loginBack,
+  cancel: cancelLogin,
+} = usePrivyOnboarding()
+const inLoginFlow = computed(
+  () => showSocialLogin && currentView.value === 'sign_up',
+)
+const showBack = computed(
+  () =>
+    currentView.value !== 'default' &&
+    (!inLoginFlow.value || backTarget.value !== null),
+)
+
+// However the dialog closes (its own buttons, browser Back, a link elsewhere)
+// the login flow is told, so nothing carries on behind a closed modal and the
+// next open starts clean.
+watch(isOpenAccessDialog, open => {
+  if (!open && showSocialLogin) void cancelLogin()
+})
+
 const closeAccess = () => {
   accessStore.setCurrentView('default')
 }
 
 const goBack = () => {
+  if (inLoginFlow.value && backTarget.value === 'entry') {
+    loginBack()
+    return
+  }
   if (accessStep.value > 1) {
     accessStep.value -= 1
     return
@@ -286,6 +323,13 @@ const ADVANCED_TITLES: Partial<Record<WalletView, string[]>> = {
 }
 
 const getTitle = computed(() => {
+  // Only the first login screens carry a title; the later ones name
+  // themselves in their content.
+  if (inLoginFlow.value) {
+    return loginState.value === 'entry' || loginState.value === 'existing_login'
+      ? t('access_wallet.social.title')
+      : ''
+  }
   if (currentView.value === 'default' || currentView.value === 'sign_up') {
     return t('connect_wallet')
   }

@@ -220,7 +220,11 @@
     "chart_3m": "3m",
     "chart_1y": "1a",
     "chart_all": "todo",
-    "chart_range": "Rango del gráfico"
+    "chart_range": "Rango del gráfico",
+    "code_input": {
+      "label": "Código de confirmación",
+      "digit_label": "Dígito {index} de {total}"
+    }
   },
   "deposit": "Depositar",
   "learn": "Aprender",

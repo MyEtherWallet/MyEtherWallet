@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useIntervalFn, useClipboard } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
+import configs from '@/configs'
 import { useRouter } from 'vue-router'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import { useWalletStore } from '@/stores/walletStore'
@@ -41,8 +42,11 @@ const { selectedChain } = storeToRefs(useChainsStore())
 const globalStore = useGlobalStore()
 const { hideBalances } = storeToRefs(globalStore)
 const { toggleHideBalances } = globalStore
-const { openAccessDialog } = useAccessStore()
+const { openAccessDialog, openSignUpDialog } = useAccessStore()
 const { openCreateDialog } = useCreateStore()
+// With Google / email login on, "Create wallet" starts with Log in / Sign Up.
+const createWallet = (): void =>
+  configs.SHOW_SOCIAL_LOGIN ? openSignUpDialog() : openCreateDialog()
 const { openPanel } = useWalletMenuStore()
 const { lastTwentyFourHours } = usePortfolio24hChange()
 const { refreshBalances } = useRefreshBalances()
@@ -143,7 +147,7 @@ const goToPortfolio = () => router.push({ name: ROUTES_MAIN.PORTFOLIO.NAME })
           type="button"
           data-test="hero-create"
           class="hoverNoBG h-12 w-full rounded-3xl px-6 text-s-16 font-semibold tracking-[-0.32px] text-white min-[768px]:w-auto"
-          @click="openCreateDialog"
+          @click="createWallet"
         >
           {{ t('homePage.hero.createWallet') }}
         </button>

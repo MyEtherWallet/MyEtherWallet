@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
+import { reactive } from 'vue'
 
 vi.mock('@/modules/access/common/walletConfigs', () => ({
   walletConfigs: {
@@ -8,8 +9,16 @@ vi.mock('@/modules/access/common/walletConfigs', () => ({
   },
 }))
 const setCurrentView = vi.fn()
+const access = reactive({ isBitcoinChain: false, setCurrentView })
 vi.mock('@/stores/accessStore', () => ({
-  useAccessStore: () => ({ setCurrentView }),
+  useAccessStore: () => access,
+}))
+// The wallet row has its own spec; here it only needs to be present.
+vi.mock('@/modules/access/components/SignUpWalletRow.vue', () => ({
+  default: {
+    name: 'SignUpWalletRow',
+    template: '<div data-testid="wallet-row" />',
+  },
 }))
 
 const { default: configs } = await import('@/configs')
@@ -20,19 +29,27 @@ const i18n = createI18n({
   locale: 'en',
   missingWarn: false,
   fallbackWarn: false,
-  messages: { en: {} },
+  messages: {
+    en: {
+      access_wallet: {
+        social: { terms: 'By logging in I agree to the {terms} & {privacy}' },
+      },
+    },
+  },
 })
 
 let wrapper: VueWrapper | undefined
-const mountSignUp = () => {
+const mountSignUp = (props: Record<string, unknown> = {}) => {
   wrapper = mount(AccessSignUp, {
     attachTo: document.body,
+    props,
     global: { plugins: [i18n], stubs: { AppAvatar: true } },
   })
   return wrapper
 }
 beforeEach(() => {
   configs.SHOW_SOCIAL_LOGIN = true
+  access.isBitcoinChain = false
 })
 afterEach(() => wrapper?.unmount())
 
@@ -71,6 +88,41 @@ describe('AccessSignUp', () => {
     expect(w.find('[data-testid="google"]').exists()).toBe(false)
     expect(w.find('input[type="email"]').exists()).toBe(false)
     expect(w.find('[data-testid="download-mew-mobile"]').exists()).toBe(true)
+  })
+
+  it('links the Terms and the Privacy Policy under the email field', () => {
+    const w = mountSignUp()
+
+    expect(w.get('[data-testid="terms-link"]').attributes()).toMatchObject({
+      href: configs.TERMS_OF_SERVICE_URL,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    })
+    expect(w.get('[data-testid="privacy-link"]').attributes('href')).toBe(
+      'https://www.myetherwallet.com/privacy-policy',
+    )
+  })
+
+  it('shows why a code could not be sent under the email field', () => {
+    const w = mountSignUp({ emailError: 'We could not send a code' })
+
+    expect(w.text()).toContain('We could not send a code')
+  })
+
+  it('offers the wallet row next to the Google/email login', () => {
+    const w = mountSignUp()
+
+    expect(w.find('[data-testid="wallet-row"]').exists()).toBe(true)
+  })
+
+  it('keeps only the wallet row when Bitcoin is selected', () => {
+    access.isBitcoinChain = true
+
+    const w = mountSignUp()
+
+    expect(w.find('[data-testid="google"]').exists()).toBe(false)
+    expect(w.find('input[type="email"]').exists()).toBe(false)
+    expect(w.find('[data-testid="wallet-row"]').exists()).toBe(true)
   })
 
   it('opens the MEW Mobile download view and links Enkrypt externally', async () => {

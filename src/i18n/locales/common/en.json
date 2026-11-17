@@ -220,7 +220,11 @@
     "chart_3m": "3m",
     "chart_1y": "1y",
     "chart_all": "all",
-    "chart_range": "Chart range"
+    "chart_range": "Chart range",
+    "code_input": {
+      "label": "Confirmation code",
+      "digit_label": "Digit {index} of {total}"
+    }
   },
   "deposit": "Deposit",
   "learn": "Learn",

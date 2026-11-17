@@ -46,11 +46,7 @@
               wallet: info?.walletName,
             })
           }}
-          <AppIcon
-            name="arrow-top-right-on-square"
-            variant="filled"
-            size="s"
-          />
+          <AppIcon name="arrow-top-right-on-square" variant="filled" size="s" />
         </button>
         <button
           data-test="address-saved-retry"
