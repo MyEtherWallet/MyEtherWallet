@@ -647,8 +647,14 @@ export function usePerpsTradeForm() {
   }
 
   async function handleClosePosition() {
+    if (!activePosition.value || isClosing.value) return
     const closeSide = positionCloseSide.value
-    if (!activePosition.value || !closeSide || isClosing.value) return
+    // The direction can vanish while the confirmation is open; report it so the
+    // modal stays open instead of closing as if the order went through.
+    if (!closeSide) {
+      closeError.value = t('perps.errors.close-position-failed')
+      return
+    }
     isClosing.value = true
     closeError.value = ''
     const closePct = closeSliderValue.value

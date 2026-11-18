@@ -702,9 +702,13 @@ describe('usePerpsTradeForm — close with an unknown direction (MEW-2684)', () 
       form.closeSliderValue.value = 100
 
       expect(form.closeDisabled.value).toBe(true)
+      // Confirm from an already-open modal: no order, and the modal stays open
+      // with an error instead of closing as if the close succeeded.
+      form.showCloseConfirmModal.value = true
       await form.confirmAndClosePosition()
       expect(form.isClosing.value).toBe(false)
-      expect(form.closeError.value).toBe('')
+      expect(form.closeError.value).toBe('perps.errors.close-position-failed')
+      expect(form.showCloseConfirmModal.value).toBe(true)
     },
   )
 
