@@ -191,6 +191,15 @@ describe('PerpsPositionsTable positions (MEW-2469)', () => {
     expect(w.text()).not.toContain('NaN')
   })
 
+  // APP-MEW-WEB-1SD: a row without a direction made $t(undefined) throw
+  // vue-i18n's INVALID_ARGUMENT (SyntaxError 17) and took the table down.
+  it('renders a position with no direction instead of throwing', async () => {
+    positions.value = [{ ...position, direction: undefined as never }]
+    const w = await mountTable()
+    expect(w.get('[data-testid="cg-title"]').text()).toContain('AAA')
+    expect(w.find('[data-testid="cg-description"]').exists()).toBe(false)
+  })
+
   it('shows skeleton rows until positions load', async () => {
     hasLoaded.value = false
     const w = await mountTable()
