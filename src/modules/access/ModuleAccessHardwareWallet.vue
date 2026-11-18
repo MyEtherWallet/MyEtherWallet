@@ -736,6 +736,19 @@ const deviceMark = computed(() => {
 const deviceChains = computed(() =>
   chains.value.filter(chain => walletConfig.value?.canSupport?.(chain) ?? true),
 )
+// Opening this step from the URL (browser Back, a refresh, a deep link to
+// ?type=ledger) skips the wallet chooser, which only offers the device on chains
+// it supports. The access chain is then the app's chain, which the device may not
+// sign on, and connecting threw "ledger: no provider for network: ARBNova"
+// (APP-MEW-WEB-1GR). Move it to the first chain the network dropdown offers.
+watch(
+  [selectedChain, deviceChains],
+  ([chain, supported]) => {
+    if (!chain || supported.some(c => c.name === chain.name)) return
+    if (supported.length) updateChain(supported[0])
+  },
+  { immediate: true },
+)
 const { closeAccessDialog } = useAccessStore()
 
 // Set once a wallet from this flow was handed to the store: its Ledger
