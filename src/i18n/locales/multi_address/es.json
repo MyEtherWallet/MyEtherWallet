@@ -1,5 +1,11 @@
 {
   "multi_address": {
+    "fund": {
+      "buy_title": "Comprar cripto",
+      "buy_description": "Tarjeta de débito o cuenta bancaria",
+      "deposit_title": "Depositar desde una billetera",
+      "deposit_description": "Mueve fondos desde otra billetera."
+    },
     "title": "Gestionar cuentas",
     "active": "Activa",
     "saved": "Direcciones guardadas",

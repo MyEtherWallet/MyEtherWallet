@@ -55,6 +55,10 @@ vi.mock('@/components/core_layouts/MarketingTooltip.vue', () => ({
   default: { props: ['anchor'], render: () => null },
 }))
 vi.mock('@/modules/rwa_rewards/RwaRewardModal.vue', stub)
+// The real card reads the auth store, which Vitest cannot load.
+vi.mock('@/modules/home/components/PasskeyAddedCard.vue', () => ({
+  default: { name: 'PasskeyAddedCard', render: () => null },
+}))
 vi.mock('@/components/core_layouts/wallet/TheDepositDialog.vue', () => ({
   default: {
     name: 'TheDepositDialog',
@@ -91,6 +95,12 @@ describe('LayoutWallet action bar wiring', () => {
     route.query = {}
     route.matched = []
     pageName.value = 'home'
+  })
+
+  it('carries the "Passkey added" confirmation, so it can show on any wallet page', () => {
+    const w = factory()
+
+    expect(w.findComponent({ name: 'PasskeyAddedCard' }).exists()).toBe(true)
   })
 
   it('closes the panel on an info page below XL', async () => {

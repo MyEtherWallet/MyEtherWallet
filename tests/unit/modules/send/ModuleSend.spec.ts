@@ -6,6 +6,11 @@ import { mount, flushPromises } from '@vue/test-utils'
 const h = vi.hoisted(() => ({
   wallet: null as unknown as { value: unknown },
   walletAddress: null as unknown as { value: string | null },
+  isMaxSelected: null as unknown as { value: boolean },
+  applyMaxAmount: vi.fn(),
+  /** Moves the form's amount the way the MAX composable does. */
+  setAmount: (() => undefined) as (value: string) => void,
+  addToastMessage: vi.fn(),
 }))
 
 const SIGNER = '0x1111111111111111111111111111111111111111'
@@ -71,7 +76,7 @@ vi.mock('@/stores/addressBook', () => ({
   }),
 }))
 vi.mock('@/stores/toastStore', () => ({
-  useToastStore: () => ({ addToastMessage: vi.fn() }),
+  useToastStore: () => ({ addToastMessage: h.addToastMessage }),
 }))
 vi.mock('@/stores/accessStore', () => ({
   useAccessStore: () => ({ openAccessDialog: vi.fn() }),
@@ -95,14 +100,18 @@ vi.mock('@/composables/useAddressInput', async () => {
 })
 vi.mock('@/composables/useMaxAmount', async () => {
   const { ref } = await import('vue')
+  h.isMaxSelected = ref(false)
   return {
-    useMaxAmount: () => ({
-      setMaxAmount: vi.fn(),
-      resetMaxState: vi.fn(),
-      applyMaxAmount: vi.fn(),
-      canUseMax: () => true,
-      isMaxSelected: ref(false),
-    }),
+    useMaxAmount: (options: { onAmountChange: (value: string) => void }) => {
+      h.setAmount = options.onAmountChange
+      return {
+        setMaxAmount: vi.fn(),
+        resetMaxState: vi.fn(),
+        applyMaxAmount: h.applyMaxAmount,
+        canUseMax: () => true,
+        isMaxSelected: h.isMaxSelected,
+      }
+    },
   }
 })
 vi.mock('@/analytics', () => ({
@@ -141,6 +150,11 @@ const AppBaseButton = {
   template:
     '<button :disabled="disabled" @click="$emit(\'click\')"><slot /></button>',
 }
+const EvmTransactionConfirmation = {
+  name: 'EvmTransactionConfirmation',
+  props: ['signedTx', 'modelValue'],
+  template: '<div />',
+}
 const stubs = {
   AppBaseButton,
   AppEnterAmount,
@@ -148,7 +162,7 @@ const stubs = {
   AppSelectTxFee,
   AppNoChainBalance: { template: '<div />' },
   AppNeedHelp: { template: '<div />' },
-  EvmTransactionConfirmation: { template: '<div />' },
+  EvmTransactionConfirmation,
   SendInitiatedModal: { template: '<div />' },
 }
 
@@ -221,5 +235,227 @@ describe('ModuleSend quote request', () => {
     await flushPromises()
 
     expect(fee.props('txRequestBody')).toMatchObject({ address: OTHER })
+  })
+})
+
+describe('ModuleSend review', () => {
+  beforeEach(() => {
+    h.wallet.value = null
+    h.walletAddress.value = null
+    h.isMaxSelected.value = false
+    h.applyMaxAmount.mockReset()
+    h.addToastMessage.mockReset()
+  })
+
+  /** Fill the form with `wallet` connected and press "Review send". */
+  const reviewWith = async (wallet: ReturnType<typeof makeWallet>) => {
+    const w = mount(ModuleSend, {
+      global: { stubs, mocks: { $t: (k: string) => k } },
+    })
+    await flushPromises()
+    h.wallet.value = wallet
+    h.walletAddress.value = SIGNER
+    w.findComponent(AppEnterAmount).vm.$emit('update:amount', '0.1')
+    w.findComponent(AppSelectTxFee).vm.$emit('fee-is-loading', false)
+    await flushPromises()
+    await clickSend(w)
+    return w
+  }
+
+  it('has a private key wallet sign while the review is built', async () => {
+    const SignTransaction = vi.fn(() => Promise.resolve({ signed: '0xsigned' }))
+    const wallet = {
+      ...makeWallet(),
+      getWalletType: () => 'PRIVATE_KEY',
+      SignTransaction,
+    }
+
+    const w = await reviewWith(wallet)
+
+    expect(SignTransaction).toHaveBeenCalledTimes(1)
+    expect(SignTransaction).toHaveBeenCalledWith('0x02')
+    expect(w.findComponent(EvmTransactionConfirmation).props('signedTx')).toBe(
+      '0xsigned',
+    )
+  })
+
+  it('leaves a Privy wallet to sign on confirm, so nothing is signed before the user has seen the review', async () => {
+    const SignTransaction = vi.fn(() => Promise.resolve({ signed: '0xsigned' }))
+    const wallet = {
+      ...makeWallet(),
+      getWalletType: () => 'PRIVY',
+      SignTransaction,
+    }
+
+    const w = await reviewWith(wallet)
+
+    expect(SignTransaction).not.toHaveBeenCalled()
+    const review = w.findComponent(EvmTransactionConfirmation)
+    expect(review.props('modelValue')).toBe(true)
+    expect(review.props('signedTx')).toBe('0x02')
+  })
+
+  it('leaves a wallet the user approves on elsewhere to sign on confirm', async () => {
+    const SignTransaction = vi.fn(() => Promise.resolve({ signed: '0xsigned' }))
+    const wallet = {
+      ...makeWallet(),
+      getWalletType: () => 'LEDGER',
+      SignTransaction,
+    }
+
+    const w = await reviewWith(wallet)
+
+    expect(SignTransaction).not.toHaveBeenCalled()
+    expect(w.findComponent(EvmTransactionConfirmation).props('signedTx')).toBe(
+      '0x02',
+    )
+  })
+
+  describe('while the wallet is still signing for the review', () => {
+    /** A wallet that signs for the review; its signature arrives when the test says so. */
+    const slowWallet = () => {
+      let answer: (value: { signed: string }) => void = () => undefined
+      const SignTransaction = vi.fn(
+        () =>
+          new Promise<{ signed: string }>(resolve => {
+            answer = resolve
+          }),
+      )
+      const wallet = {
+        ...makeWallet(),
+        getWalletType: () => 'PRIVATE_KEY',
+        SignTransaction,
+      }
+      return {
+        wallet,
+        SignTransaction,
+        sign: () => answer({ signed: '0xold' }),
+      }
+    }
+
+    it('does not open the review over a transaction built for an amount changed since', async () => {
+      const { wallet, SignTransaction, sign } = slowWallet()
+      const w = await reviewWith(wallet)
+      expect(SignTransaction).toHaveBeenCalledTimes(1)
+
+      w.findComponent(AppEnterAmount).vm.$emit('update:amount', '5')
+      await flushPromises()
+      sign()
+      await flushPromises()
+
+      expect(
+        w.findComponent(EvmTransactionConfirmation).props('modelValue'),
+      ).toBe(false)
+    })
+
+    it('opens the review once the signature is in when nothing was changed', async () => {
+      const { wallet, sign } = slowWallet()
+      const w = await reviewWith(wallet)
+
+      sign()
+      await flushPromises()
+
+      const review = w.findComponent(EvmTransactionConfirmation)
+      expect(review.props('modelValue')).toBe(true)
+      expect(review.props('signedTx')).toBe('0xold')
+    })
+
+    it('shows the send button as busy', async () => {
+      const { wallet } = slowWallet()
+      const w = await reviewWith(wallet)
+
+      const sendButton = w
+        .findAllComponents(AppBaseButton)
+        .find(button => button.text().trim() === 'send.review-send')
+      expect(sendButton?.props('isLoading')).toBe(true)
+    })
+  })
+
+  // MAX of the native token is the balance minus the fee, and the fee comes
+  // from the quote taken at submit: that quote can move the amount by itself.
+  describe('sending the maximum of the native token', () => {
+    const quotedWallet = () => {
+      let quotes = 0
+      return {
+        ...makeWallet(),
+        getGasFee: vi.fn(() =>
+          Promise.resolve({
+            quoteId: `q${++quotes}`,
+            fees: { ECONOMY: { nativeValue: '0x1' } },
+          }),
+        ),
+      }
+    }
+    const reviewOf = (w: ReturnType<typeof mount>) =>
+      w.findComponent(EvmTransactionConfirmation)
+
+    it('quotes again for the amount the new fee leaves, and reviews that amount', async () => {
+      h.isMaxSelected.value = true
+      // The first quote's fee is lower than the estimate the amount was
+      // worked out with; after that the amount holds.
+      h.applyMaxAmount.mockImplementationOnce(async () => h.setAmount('0.2'))
+      const wallet = quotedWallet()
+
+      const w = await reviewWith(wallet)
+
+      expect(wallet.getGasFee).toHaveBeenCalledTimes(2)
+      expect(wallet.getSignableTransaction.mock.calls).toEqual([
+        [expect.objectContaining({ quoteId: 'q2' })],
+      ])
+      expect(reviewOf(w).props('modelValue')).toBe(true)
+    })
+
+    it('builds again, instead of ending in silence, when the amount moves while the transaction is built', async () => {
+      h.isMaxSelected.value = true
+      let answer: (value: { signed: string }) => void = () => undefined
+      const SignTransaction = vi
+        .fn<() => Promise<{ signed: string }>>()
+        .mockImplementationOnce(
+          () => new Promise(resolve => (answer = resolve)),
+        )
+        .mockResolvedValue({ signed: '0xnew' })
+      const wallet = {
+        ...quotedWallet(),
+        getWalletType: () => 'PRIVATE_KEY',
+        SignTransaction,
+      }
+      const w = await reviewWith(wallet)
+
+      h.setAmount('0.2')
+      await flushPromises()
+      answer({ signed: '0xold' })
+      await flushPromises()
+
+      expect(reviewOf(w).props('modelValue')).toBe(true)
+      expect(reviewOf(w).props('signedTx')).toBe('0xnew')
+    })
+
+    it('says so when the amount will not settle, and opens no review', async () => {
+      h.isMaxSelected.value = true
+      let amount = 0.2
+      h.applyMaxAmount.mockImplementation(async () =>
+        h.setAmount(String((amount += 0.01))),
+      )
+      const wallet = quotedWallet()
+
+      const w = await reviewWith(wallet)
+
+      expect(reviewOf(w).props('modelValue')).toBe(false)
+      expect(h.addToastMessage).toHaveBeenCalledWith(
+        expect.objectContaining({ text: 'send.toast.max_amount_changed' }),
+      )
+      expect(wallet.getGasFee).toHaveBeenCalledTimes(3)
+      expect(wallet.getSignableTransaction).not.toHaveBeenCalled()
+    })
+
+    it('leaves the amount alone when the maximum is not what is being sent', async () => {
+      const wallet = quotedWallet()
+
+      const w = await reviewWith(wallet)
+
+      expect(h.applyMaxAmount).not.toHaveBeenCalled()
+      expect(wallet.getGasFee).toHaveBeenCalledTimes(1)
+      expect(reviewOf(w).props('modelValue')).toBe(true)
+    })
   })
 })

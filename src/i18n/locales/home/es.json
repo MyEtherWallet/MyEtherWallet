@@ -1,5 +1,15 @@
 {
   "homePage": {
+    "passkeyPrompt": {
+      "title": "Añade una llave de acceso para proteger tu cuenta",
+      "benefit": "Sin contraseña que perder o filtrar",
+      "add": "Añadir una llave de acceso",
+      "error": "Algo salió mal. Inténtalo de nuevo."
+    },
+    "passkeyAdded": {
+      "title": "Llave de acceso añadida",
+      "body": "Tu billetera está protegida con tu rostro o tu huella."
+    },
     "hero": {
       "welcomeTitle": "Bienvenido a MEW",
       "welcomeSubtitle": "Conecta tu wallet para empezar a operar acciones y cripto",

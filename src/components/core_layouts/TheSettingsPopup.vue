@@ -30,7 +30,8 @@
           v-if="isSettingsOpen"
           ref="popupRef"
           :style="popupStyle"
-          class="fixed z-[2101] w-[344px] bg-white rounded-20 border border-border-default shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
+          data-test="settings-popup"
+          class="fixed z-[2101] w-96 max-w-[calc(100vw-32px)] bg-white rounded-20 border border-border-default shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
         >
           <!-- Height-animated track container -->
           <div
@@ -43,6 +44,7 @@
             <!-- Main settings panel -->
             <div
               ref="mainPanelRef"
+              data-test="settings-main"
               :inert="view !== 'main'"
               class="absolute top-0 left-0 w-full flex flex-col gap-6 p-6"
               :style="{
@@ -55,224 +57,279 @@
                   'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
               }"
             >
-              <!-- Title -->
-              <h3 class="self-stretch text-heading-base text-black">
+              <h3 class="text-center text-heading-base text-black">
                 {{ $t('settings.title') }}
               </h3>
 
-              <!-- Divider -->
-              <div
-                class="self-stretch w-full h-px bg-background-default-hover"
-              />
-
-              <!-- PREFERENCES section -->
-              <div class="flex flex-col gap-6 w-full">
-                <p
-                  class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-text-subtle"
-                >
+              <!-- Preferences -->
+              <section class="flex flex-col gap-2">
+                <p class="text-label-sm text-text-subtle">
                   {{ $t('settings.preferences') }}
                 </p>
-                <!-- Network (mobile only — relocated here from the header below
-                     xs). The trigger lives here; the dialog is owned by the
-                     headless SelectChainForApp mounted outside the popup. -->
-                <div
-                  v-if="isXS"
-                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
-                  @click="openNetwork"
-                >
-                  <div
-                    class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-                  />
-                  <div class="relative flex items-center gap-2.5">
-                    <AppIcon
-                      name="globe-alt"
-                      variant="filled"
-                      size="s"
-                      class="text-text-brand flex-shrink-0"
-                    />
-                    <span class="text-text-base text-black capitalize">{{
-                      $t('common.network')
-                    }}</span>
-                  </div>
-                  <div class="relative flex items-center gap-2 min-w-0">
-                    <img
-                      v-if="selectedChain?.icon"
-                      :src="selectedChain.icon"
-                      alt=""
-                      class="w-5 h-5 rounded-full object-contain flex-shrink-0"
-                      height="20"
-                      width="20"
-                    />
-                    <span
-                      class="text-text-sm text-text-subtle truncate max-w-[120px]"
-                      >{{ selectedChain?.nameLong }}</span
-                    >
-                    <AppIcon
-                      name="chevron-right"
-                      variant="filled"
-                      size="xxs"
-                      class="text-text-subtle flex-shrink-0"
-                    />
-                  </div>
-                </div>
-                <!-- Currency -->
-                <div
-                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
-                  @click="view = 'currency'"
-                >
-                  <div
-                    class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-                  />
-                  <div class="relative flex items-center gap-2.5">
-                    <AppIcon
-                      name="banknotes"
-                      variant="filled"
-                      size="s"
-                      class="text-text-brand flex-shrink-0"
-                    />
-                    <span class="text-text-base text-black">{{
-                      $t('settings.currency')
-                    }}</span>
-                  </div>
-                  <div class="relative flex items-center gap-2">
-                    <app-token-logo
-                      :url="getFiatIcon(selectedCurrency)"
-                      :symbol="selectedCurrency"
-                      cover
-                      width="w-5"
-                      height="h-5"
-                      class="flex-shrink-0"
-                    />
-                    <span class="text-text-sm text-text-subtle">{{
-                      selectedCurrency
-                    }}</span>
-                    <AppIcon
-                      name="chevron-right"
-                      variant="filled"
-                      size="xxs"
-                      class="text-text-subtle flex-shrink-0"
-                    />
-                  </div>
-                </div>
-                <!-- Language -->
-                <div
-                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
-                  @click="view = 'language'"
-                >
-                  <div
-                    class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-                  />
-                  <div class="relative flex items-center gap-2.5">
-                    <AppIcon
-                      name="language"
-                      variant="filled"
-                      size="s"
-                      class="text-text-brand flex-shrink-0"
-                    />
-                    <span class="text-text-base text-black">{{
-                      $t('settings.language')
-                    }}</span>
-                  </div>
-                  <div class="relative flex items-center gap-2">
-                    <span class="text-text-sm text-text-subtle">{{
-                      selectedLanguageAbbr
-                    }}</span>
-                    <AppIcon
-                      name="chevron-right"
-                      variant="filled"
-                      size="xxs"
-                      class="text-text-subtle flex-shrink-0"
-                    />
-                  </div>
-                </div>
-                <!-- Default fee -->
-                <div
-                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
-                  @click="view = 'fee'"
-                >
-                  <div
-                    class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-background-default opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-                  />
-                  <div class="relative flex items-center gap-2.5">
-                    <AppIcon
-                      name="currency-dollar"
-                      variant="filled"
-                      size="s"
-                      class="text-text-brand flex-shrink-0"
-                    />
-                    <span class="text-text-base text-black">{{
-                      $t('settings.default_fee')
-                    }}</span>
-                  </div>
-                  <div class="relative flex items-center gap-2">
-                    <span class="text-text-sm text-text-subtle">{{
-                      selectedFeeLabel
-                    }}</span>
-                    <AppIcon
-                      name="chevron-right"
-                      variant="filled"
-                      size="xxs"
-                      class="text-text-subtle flex-shrink-0"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Divider between sections -->
-              <div
-                class="self-stretch w-full h-px bg-background-default-hover"
-              />
-
-              <!-- SECURITY section -->
-              <div class="flex flex-col gap-6 w-full">
-                <p
-                  class="self-stretch text-s-11 font-bold leading-[15px] tracking-[0.6px] uppercase text-text-subtle"
-                >
-                  {{ $t('settings.security') }}
-                </p>
-                <!-- Usage analytics -->
-                <div class="flex w-full h-6 justify-between items-center">
-                  <div class="flex items-center gap-2.5">
-                    <AppIcon
-                      name="circle-stack"
-                      variant="filled"
-                      size="s"
-                      class="text-text-brand flex-shrink-0"
-                    />
-                    <div class="flex items-center gap-1">
-                      <span class="text-text-base text-black">{{
-                        $t('settings.usage_analytics')
-                      }}</span>
-                      <app-tooltip
-                        :text="$t('settings.usage_analytics_tooltip')"
-                      >
-                        <AppIcon
-                          name="question-mark-circle"
-                          variant="filled"
-                          size="xxs"
-                          class="text-text-placeholder flex-shrink-0 cursor-pointer"
-                        />
-                      </app-tooltip>
-                    </div>
-                  </div>
-                  <!-- Toggle -->
-                  <button
-                    class="flex h-6 w-[45px] items-center rounded-full p-[3px] flex-shrink-0 transition-colors duration-200"
-                    :class="
-                      analyticsEnabled
-                        ? 'bg-background-brand justify-end'
-                        : 'bg-background-default-pressed justify-start'
-                    "
-                    @click="
-                      analyticsStore.setTrackingConsent(!analyticsEnabled)
-                    "
+                <div class="flex flex-col">
+                  <!-- Network (mobile only — relocated here from the header
+                       below xs). The trigger lives here; the dialog is owned by
+                       the headless SelectChainForApp mounted outside the popup. -->
+                  <app-cell
+                    v-if="isXS"
+                    size="small"
+                    inset
+                    class="capitalize"
+                    :title="$t('common.network')"
+                    @click="openNetwork"
                   >
-                    <div
-                      class="h-[18px] w-[18px] rounded-full bg-white flex-shrink-0"
-                    />
-                  </button>
+                    <template #avatar>
+                      <span class="flex size-7 items-center justify-center">
+                        <AppIcon name="globe-alt" size="s" />
+                      </span>
+                    </template>
+                    <template #accessory>
+                      <span
+                        class="flex min-w-0 items-center gap-2 text-text-sm text-text-subtle"
+                      >
+                        <img
+                          v-if="selectedChain?.icon"
+                          :src="selectedChain.icon"
+                          alt=""
+                          class="w-5 h-5 rounded-full object-contain flex-shrink-0"
+                          height="20"
+                          width="20"
+                        />
+                        <span class="truncate max-w-[120px] normal-case">{{
+                          selectedChain?.nameLong
+                        }}</span>
+                        <AppIcon name="chevron-right" size="xxs" />
+                      </span>
+                    </template>
+                  </app-cell>
+                  <!-- Currency -->
+                  <app-cell
+                    size="small"
+                    inset
+                    :title="$t('settings.currency')"
+                    @click="view = 'currency'"
+                  >
+                    <template #avatar>
+                      <span class="flex size-7 items-center justify-center">
+                        <AppIcon name="banknotes" size="s" />
+                      </span>
+                    </template>
+                    <template #accessory>
+                      <span
+                        class="flex items-center gap-2 text-text-sm text-text-subtle"
+                      >
+                        {{ selectedCurrency }}
+                        <AppIcon name="chevron-right" size="xxs" />
+                      </span>
+                    </template>
+                  </app-cell>
+                  <!-- Language -->
+                  <app-cell
+                    size="small"
+                    inset
+                    :title="$t('settings.language')"
+                    @click="view = 'language'"
+                  >
+                    <template #avatar>
+                      <span class="flex size-7 items-center justify-center">
+                        <AppIcon name="language" size="s" />
+                      </span>
+                    </template>
+                    <template #accessory>
+                      <span
+                        class="flex items-center gap-2 text-text-sm text-text-subtle"
+                      >
+                        {{ selectedLanguageOption?.native }}
+                        <AppIcon name="chevron-right" size="xxs" />
+                      </span>
+                    </template>
+                  </app-cell>
+                  <!-- Default fee -->
+                  <app-cell
+                    size="small"
+                    inset
+                    :title="$t('settings.default_fee')"
+                    @click="view = 'fee'"
+                  >
+                    <template #avatar>
+                      <span class="flex size-7 items-center justify-center">
+                        <AppIcon name="adjustments-horizontal" size="s" />
+                      </span>
+                    </template>
+                    <template #accessory>
+                      <span
+                        class="flex items-center gap-2 text-text-sm text-text-subtle"
+                      >
+                        {{ selectedFeeLabel }}
+                        <AppIcon name="chevron-right" size="xxs" />
+                      </span>
+                    </template>
+                  </app-cell>
+                  <!-- Usage analytics -->
+                  <app-cell size="small" inset :interactive="false">
+                    <template #avatar>
+                      <span class="flex size-7 items-center justify-center">
+                        <AppIcon name="chart-bar" size="s" />
+                      </span>
+                    </template>
+                    <template #title>
+                      <span class="flex items-center gap-1">
+                        {{ $t('settings.usage_analytics') }}
+                        <app-tooltip
+                          :text="$t('settings.usage_analytics_tooltip')"
+                        >
+                          <AppIcon
+                            name="question-mark-circle"
+                            variant="filled"
+                            size="xxs"
+                            class="text-text-placeholder flex-shrink-0 cursor-pointer"
+                          />
+                        </app-tooltip>
+                      </span>
+                    </template>
+                    <template #action>
+                      <app-toggle
+                        :model-value="analyticsEnabled"
+                        :aria-label="$t('settings.usage_analytics')"
+                        @update:model-value="
+                          analyticsStore.setTrackingConsent($event)
+                        "
+                      />
+                    </template>
+                  </app-cell>
                 </div>
-              </div>
+              </section>
+
+              <!-- Connected wallet: the Privy account's own settings -->
+              <section
+                v-if="isPrivyConnected"
+                data-test="settings-connected-wallet"
+                class="flex flex-col gap-2"
+              >
+                <p class="text-label-sm text-text-subtle">
+                  {{ $t('settings.connected_wallet') }}
+                </p>
+                <div class="flex flex-col">
+                  <app-cell
+                    size="small"
+                    inset
+                    :title="$t('settings.login_methods')"
+                    @click="view = 'login-methods'"
+                  >
+                    <template #avatar>
+                      <span class="flex size-7 items-center justify-center">
+                        <AppIcon name="shield-check" size="s" />
+                      </span>
+                    </template>
+                    <template #accessory>
+                      <span class="flex items-center text-text-subtle">
+                        <AppIcon name="chevron-right" size="xxs" />
+                      </span>
+                    </template>
+                  </app-cell>
+                  <app-cell
+                    size="small"
+                    inset
+                    :title="$t('settings.recovery_phrase')"
+                    @click="openPhrase"
+                  >
+                    <template #avatar>
+                      <span class="flex size-7 items-center justify-center">
+                        <AppIcon name="bars-3" size="s" />
+                      </span>
+                    </template>
+                    <template #accessory>
+                      <span class="flex items-center text-text-subtle">
+                        <AppIcon name="chevron-right" size="xxs" />
+                      </span>
+                    </template>
+                  </app-cell>
+                </div>
+              </section>
+
+              <!-- Log out: disconnects whichever wallet is connected -->
+              <app-base-button
+                v-if="isWalletUnlocked"
+                type="link"
+                tone="danger"
+                class="self-center"
+                @click="logOut"
+              >
+                <span class="flex items-center gap-2">
+                  <AppIcon name="arrow-right-on-rectangle" size="s" />
+                  {{ $t('settings.log_out') }}
+                </span>
+              </app-base-button>
+            </div>
+
+            <!-- Login methods panel (Privy account) -->
+            <div
+              ref="loginMethodsPanelRef"
+              data-test="settings-login-methods"
+              :inert="view !== 'login-methods'"
+              class="absolute top-0 left-0 w-full p-6"
+              :style="{
+                transform:
+                  view === 'login-methods'
+                    ? 'translateX(0)'
+                    : `translateX(calc(100% + ${GAP}px))`,
+                opacity: view === 'login-methods' ? 1 : 0,
+                transition:
+                  'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              }"
+            >
+              <settings-login-methods
+                :method="loginMethod"
+                :email="email"
+                @back="view = 'main'"
+              />
+            </div>
+
+            <!-- Recovery phrase: "Before you continue" (Privy account) -->
+            <div
+              ref="phraseAckPanelRef"
+              data-test="settings-phrase-ack"
+              :inert="view !== 'phrase-ack'"
+              class="absolute top-0 left-0 w-full p-6"
+              :style="{
+                transform:
+                  view === 'phrase-ack'
+                    ? 'translateX(0)'
+                    : `translateX(calc(100% + ${GAP}px))`,
+                opacity: view === 'phrase-ack' ? 1 : 0,
+                transition:
+                  'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              }"
+            >
+              <settings-phrase-acknowledge
+                :loading="phrase.status === 'loading'"
+                :failed="phrase.status === 'error'"
+                @back="closePhrase"
+                @view="loadPhrase"
+              />
+            </div>
+
+            <!-- Recovery phrase: the words. Rendered only while they are held. -->
+            <div
+              ref="phrasePanelRef"
+              data-test="settings-phrase"
+              :inert="view !== 'phrase'"
+              class="absolute top-0 left-0 w-full p-6"
+              :style="{
+                transform:
+                  view === 'phrase'
+                    ? 'translateX(0)'
+                    : `translateX(calc(100% + ${GAP}px))`,
+                opacity: view === 'phrase' ? 1 : 0,
+                transition:
+                  'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              }"
+            >
+              <settings-recovery-phrase
+                v-if="phrase.status === 'ready'"
+                :words="phrase.words"
+                @back="closePhrase"
+              />
             </div>
 
             <!-- Fee selector panel -->
@@ -353,6 +410,7 @@
             <!-- Currency selector panel -->
             <div
               ref="currencyPanelRef"
+              data-test="settings-currency"
               :inert="view !== 'currency'"
               class="absolute top-0 left-0 w-full flex flex-col gap-6 p-6"
               :style="{
@@ -528,7 +586,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside, useResizeObserver } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
@@ -536,12 +594,23 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useCurrencyStore, SUPPORTED_CURRENCIES } from '@/stores/currencyStore'
+import { useWalletStore } from '@/stores/walletStore'
+import { usePrivyAccount } from '@/composables/usePrivyAccount'
+import { useRecoveryPhrase } from '@/composables/useRecoveryPhrase'
+import { analytics } from '@/analytics'
+import { AccountSecurityEvent } from '@/analytics/events'
 import { getFiatIcon } from '@/utils/fiatIcons'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppCell from '@/components/cell/AppCell.vue'
+import AppToggle from '@/components/AppToggle.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 import AppSearchbar from '@/components/AppSearchbar.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
+import SettingsLoginMethods from '@/components/core_layouts/settings/SettingsLoginMethods.vue'
+import SettingsPhraseAcknowledge from '@/components/core_layouts/settings/SettingsPhraseAcknowledge.vue'
+import SettingsRecoveryPhrase from '@/components/core_layouts/settings/SettingsRecoveryPhrase.vue'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
 const GAP = 24
@@ -578,11 +647,6 @@ const LANGUAGE_OPTIONS = [
 ]
 
 const selectedLanguage = computed(() => storedLocale.value)
-const selectedLanguageAbbr = computed(
-  () =>
-    LANGUAGE_OPTIONS.find(language => language.code === selectedLanguage.value)
-      ?.abbr,
-)
 const selectedLanguageOption = computed(() =>
   LANGUAGE_OPTIONS.find(language => language.code === selectedLanguage.value),
 )
@@ -638,7 +702,54 @@ const FEE_MAP_REVERSE: Record<string, string> = {
   FASTEST: 'highest',
 }
 
-const view = ref<'main' | 'fee' | 'currency' | 'language'>('main')
+type SettingsView =
+  | 'main'
+  | 'fee'
+  | 'currency'
+  | 'language'
+  | 'login-methods'
+  | 'phrase-ack'
+  | 'phrase'
+const view = ref<SettingsView>('main')
+
+// The connected wallet. Its own section is for a Privy account; Log out is
+// for any wallet that is connected, and is the same as disconnecting it.
+const walletStore = useWalletStore()
+const { isWalletUnlocked, walletAddress } = storeToRefs(walletStore)
+const { isPrivyConnected, email, loginMethod } = usePrivyAccount()
+
+const logOut = () => {
+  walletStore.disconnectWallet()
+  isSettingsOpen.value = false
+  view.value = 'main'
+}
+
+// The recovery phrase of the connected Privy wallet. The words are held by
+// this popup only while its phrase screen shows them: they are dropped on
+// back, when Settings closes, on log out, and when the connected wallet stops
+// being this Privy account.
+const {
+  state: phrase,
+  load: loadPhrase,
+  clear: clearPhrase,
+} = useRecoveryPhrase()
+
+const openPhrase = () => {
+  view.value = 'phrase-ack'
+  void analytics.trackAccountSecurityEvent(
+    AccountSecurityEvent.RECOVERY_PHRASE_OPENED,
+  )
+}
+const closePhrase = () => {
+  clearPhrase()
+  view.value = 'main'
+}
+// The words arrive while "Before you continue" is showing: move on to them.
+watch(phrase, state => {
+  if (state.status === 'ready' && view.value === 'phrase-ack') {
+    view.value = 'phrase'
+  }
+})
 const selectedFee = computed({
   get: () => FEE_MAP_REVERSE[defaultGasPriceType.value] ?? 'recommended',
   set: (val: string) => {
@@ -684,6 +795,9 @@ const feePanelRef = ref<HTMLElement | null>(null)
 const currencyPanelRef = ref<HTMLElement | null>(null)
 const currencyListRef = ref<HTMLElement | null>(null)
 const languagePanelRef = ref<HTMLElement | null>(null)
+const loginMethodsPanelRef = ref<HTMLElement | null>(null)
+const phraseAckPanelRef = ref<HTMLElement | null>(null)
+const phrasePanelRef = ref<HTMLElement | null>(null)
 const containerHeight = ref(0)
 
 const measureHeight = () => {
@@ -692,6 +806,9 @@ const measureHeight = () => {
     fee: feePanelRef.value,
     currency: currencyPanelRef.value,
     language: languagePanelRef.value,
+    'login-methods': loginMethodsPanelRef.value,
+    'phrase-ack': phraseAckPanelRef.value,
+    phrase: phrasePanelRef.value,
   }
   const activeRef = panelByView[view.value]
   if (activeRef) containerHeight.value = activeRef.scrollHeight
@@ -701,6 +818,9 @@ watch(isSettingsOpen, val => {
   if (val) {
     currencyStore.ensureRates()
     nextTick(measureHeight)
+  } else {
+    // However Settings was closed, the phrase does not outlive it.
+    closePhrase()
   }
 })
 watch(view, val => {
@@ -713,6 +833,22 @@ watch(view, val => {
   })
 })
 watch(filteredLanguages, () => nextTick(measureHeight))
+// Login methods grows and shrinks on its own: passkeys are added and removed,
+// and its confirmations and errors come and go.
+useResizeObserver(loginMethodsPanelRef, () => measureHeight())
+useResizeObserver(phraseAckPanelRef, () => measureHeight())
+// The main panel gains and loses rows as the connected wallet changes, and a
+// screen that belongs to the Privy account closes when that account is gone.
+watch([isPrivyConnected, isWalletUnlocked, walletAddress], () => {
+  // Whatever changed, a phrase on screen may no longer be this wallet's, and
+  // the account's own screens close once the account is not the connected one.
+  clearPhrase()
+  const onPhrase = view.value === 'phrase-ack' || view.value === 'phrase'
+  const onStaleAccountScreen =
+    view.value === 'login-methods' && !isPrivyConnected.value
+  if (onPhrase || onStaleAccountScreen) view.value = 'main'
+  nextTick(measureHeight)
+})
 
 const popupStyle = computed(() => {
   const buttonEl = containerRef.value

@@ -72,6 +72,23 @@ export const primaryEmail = (user: PrivyUser): string | undefined => {
 }
 
 /**
+ * How this user logged in last: by email or with Google, whichever account
+ * was verified most recently. For a login the tab kept from before a reload,
+ * where no login step ran to say it.
+ */
+export const loginMethodOf = (user: PrivyUser): 'email' | 'google' | null => {
+  let latest: { method: 'email' | 'google'; at: number } | null = null
+  for (const account of user.linked_accounts) {
+    if (account.type !== 'email' && account.type !== 'google_oauth') continue
+    const at = account.latest_verified_at ?? 0
+    if (!latest || at > latest.at) {
+      latest = { method: account.type === 'email' ? 'email' : 'google', at }
+    }
+  }
+  return latest?.method ?? null
+}
+
+/**
  * Whether this login created the user. Analytics only: the flow itself
  * branches on whether the user has a wallet. `created_at` is in seconds.
  */

@@ -1,9 +1,14 @@
 import { defineStore } from 'pinia'
-import { ref, shallowRef } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 import { analytics } from '@/analytics'
-import { OnboardingEvent } from '@/analytics/events'
+import {
+  AccountSecurityEvent,
+  OnboardingEvent,
+  type PasskeySource,
+} from '@/analytics/events'
 import { WalletConfigType } from '@/modules/access/common/walletConfigs'
 import PrivyWallet from '@/providers/ethereum/privyWallet'
+import { passkeysOf } from '@/providers/privy/passkeyList'
 import { tabHoldsPrivyData } from '@/providers/privy/tabStorage'
 import type { PrivySession, PrivyUser } from '@/providers/privy/user'
 import type { HexPrefixedString } from '@/providers/types'
@@ -16,6 +21,8 @@ export type LoginMethod = 'google' | 'email'
 
 /** Shown in the saved-address list and sent to analytics as the wallet name. */
 const WALLET_NAME = 'Privy'
+/** The longest a logout waits for the wallet iframe to forget a passkey check. */
+const FORGET_CHECK_TIMEOUT_MS = 2000
 /** The app creates the wallet itself in the wallet-setup step, never at login. */
 const NO_WALLET_AT_LOGIN = {
   embedded: { ethereum: { createOnLogin: 'off' } },
@@ -26,12 +33,21 @@ const NO_WALLET_AT_LOGIN = {
  * out of the startup bundle, and initialized before it is handed out.
  */
 const importPrivy = async () => {
-  const [client, users, iframe] = await Promise.all([
+  const [client, users, iframe, passkey, mfa] = await Promise.all([
     import('@/providers/privy/client'),
     import('@/providers/privy/user'),
     import('@/providers/privy/walletIframe'),
+    import('@/providers/privy/passkey'),
+    import('@/providers/privy/mfaChallenge'),
   ])
-  return { privy: client.privy, ready: client.privyReady, ...users, ...iframe }
+  return {
+    privy: client.privy,
+    ready: client.privyReady,
+    ...users,
+    ...iframe,
+    ...passkey,
+    ...mfa,
+  }
 }
 type PrivyModules = Awaited<ReturnType<typeof importPrivy>>
 /** The modules once loaded, for the parts that must not wait on a network call. */
@@ -40,6 +56,16 @@ let loadedModules: PrivyModules | undefined
 const loadPrivy = async (): Promise<PrivyModules> => {
   loadedModules = await importPrivy()
   await loadedModules.ready()
+  // From here on Privy may hold a wallet request until the user proves a
+  // passkey; without an answer that request waits out a five minute timeout.
+  loadedModules.answerPasskeyChecks(outcome => {
+    const event = {
+      passed: AccountSecurityEvent.PASSKEY_CHECK_PASSED,
+      failed: AccountSecurityEvent.PASSKEY_CHECK_FAILED,
+      cancelled: AccountSecurityEvent.PASSKEY_CHECK_CANCELLED,
+    }[outcome]
+    void analytics.trackAccountSecurityEvent(event)
+  })
   return loadedModules
 }
 
@@ -74,6 +100,13 @@ export const useAuthStore = defineStore('authStore', () => {
   /** Privy error code of the last failed step, for the screens to map. */
   const error = ref<string | null>(null)
   /**
+   * The account's passkeys. A passkey is the second check Privy asks for
+   * before the wallet signs or is exported; it does not log the user in.
+   */
+  const passkeys = computed(() => passkeysOf(user.value))
+  /** A passkey was just added and the user has not been told yet. */
+  const passkeyAdded = ref(false)
+  /**
    * Identifies the current login. Work that awaits compares it afterwards, so
    * nothing is applied to the store for a login that has ended meanwhile.
    */
@@ -90,6 +123,7 @@ export const useAuthStore = defineStore('authStore', () => {
     loginMethod.value = null
     emailOptIn.value = null
     error.value = null
+    passkeyAdded.value = false
   }
 
   /** Run a Privy step, recording its error code before rethrowing. */
@@ -120,17 +154,42 @@ export const useAuthStore = defineStore('authStore', () => {
   }
 
   /**
+   * Have the wallet iframe forget a passkey check this user has passed. Privy
+   * keeps a passed check for a while on the device; left there, the next
+   * login to the account from this browser could use the wallet without the
+   * passkey. Best-effort and short: a logout neither fails nor hangs on it.
+   */
+  const forgetPasskeyCheck = (userId: string): Promise<void> =>
+    new Promise(resolve => {
+      const timer = setTimeout(resolve, FORGET_CHECK_TIMEOUT_MS)
+      const done = (): void => {
+        clearTimeout(timer)
+        resolve()
+      }
+      if (!loadedModules) return done()
+      void loadedModules.privy.mfa.clearMfa({ userId }).then(done, done)
+    })
+
+  /**
    * End the Privy login. This is the Privy wallet's `disconnect()`.
    *
-   * The store forgets the login and the wallet iframe goes at once; only then
-   * is Privy told. A logout that answers late therefore cannot wipe a login
-   * made in the meantime. The SDK clears the local tokens before it contacts
-   * Privy, so the login is gone even offline. No user id is passed: with one
-   * the SDK also waits on the wallet iframe to clear MFA state, which this
-   * app does not use.
+   * The store forgets the login and the wallet iframe goes before Privy is
+   * told. A logout that answers late therefore cannot wipe a login made in
+   * the meantime. The SDK clears the local tokens before it contacts Privy,
+   * so the login is gone even offline. No user id is passed to the SDK's
+   * logout: with one it waits on the wallet iframe, up to fifteen seconds,
+   * to clear the passkey check. For a user who has that check the iframe is
+   * asked here instead, briefly, while it is still there.
    */
   const endLogin = async (): Promise<void> => {
+    const checkedUser =
+      user.value &&
+      (user.value.mfa_methods.length > 0 ||
+        passkeys.value.some(passkey => passkey.active))
+        ? user.value.id
+        : null
     reset()
+    if (checkedUser) await forgetPasskeyCheck(checkedUser)
     loadedModules?.teardownWalletIframe()
     const { privy } = await loadPrivy()
     await privy.auth.logout()
@@ -146,6 +205,24 @@ export const useAuthStore = defineStore('authStore', () => {
         walletStore.setWatchOnlyIfExist()
       }
     }
+  }
+
+  /**
+   * A request of the Privy wallet failed: say whether its login is gone, and
+   * if so drop it, which leaves the wallet's address watch-only. An answer
+   * Privy cannot give (offline) counts as "still there": a signing wallet is
+   * not taken away on a guess.
+   */
+  const dropLoginIfLost = async (): Promise<boolean> => {
+    try {
+      const { privy } = await loadPrivy()
+      if (await privy.getAccessToken()) return false
+    } catch {
+      return false
+    }
+    // The wallet is watch-only even when Privy could not be told.
+    await dropLogin().catch(() => undefined)
+    return true
   }
 
   /** A new login never starts on top of an old one. */
@@ -270,6 +347,7 @@ export const useAuthStore = defineStore('authStore', () => {
         address: input.wallet.address as HexPrefixedString,
         chainId: String(walletChainId),
         logout: endLogin,
+        loginLost: dropLoginIfLost,
       })
       const walletStore = useWalletStore()
       await walletStore.setWallet(
@@ -303,6 +381,7 @@ export const useAuthStore = defineStore('authStore', () => {
       if (!login?.user) throw new Error('No Privy login to continue with')
       applyUser(login.user, login.loaded)
       isNew.value = false
+      loginMethod.value = login.loaded.loginMethodOf(login.user)
     })
 
   /** Drop the login still valid in this tab so another account can log in. */
@@ -323,6 +402,123 @@ export const useAuthStore = defineStore('authStore', () => {
     await dropLogin()
   }
 
+  /** Take the user as Privy has them now, after a change to their passkeys. */
+  const refreshUser = async (loaded: PrivyModules): Promise<void> => {
+    const epoch = loginEpoch
+    const { user: latest } = await loaded.privy.user.get()
+    if (epoch === loginEpoch) applyUser(latest, loaded)
+  }
+
+  /**
+   * Make every passkey of the account the check. Privy takes the whole list
+   * at once, so the ones already in use are named again with a new one.
+   */
+  const enrollLinkedPasskeys = async (loaded: PrivyModules): Promise<void> => {
+    await loaded.enrollPasskeys(
+      passkeys.value.map(passkey => passkey.credentialId),
+    )
+    await refreshUser(loaded)
+  }
+
+  /**
+   * Add a passkey: the user makes one on this device, and it joins the
+   * account's passkeys as the check. Resolves `'cancelled'` when the user
+   * dismisses the browser's prompt, which changes nothing.
+   *
+   * When the passkey is made but cannot be made the check, this rejects and
+   * the passkey stays listed as not active; `activatePasskeys()` tries the
+   * second half again.
+   */
+  const addPasskey = (source: PasskeySource): Promise<'added' | 'cancelled'> =>
+    attempt(async () => {
+      void analytics.trackAccountSecurityEvent(
+        AccountSecurityEvent.PASSKEY_ADD_STARTED,
+        { source },
+      )
+      try {
+        const epoch = loginEpoch
+        const loaded = await loadPrivy()
+        if (!user.value) throw new Error('No Privy login to add a passkey to')
+        let withPasskey: PrivyUser
+        try {
+          withPasskey = await loaded.linkPasskey()
+        } catch (e) {
+          if (e instanceof loaded.PasskeyCancelledError) return 'cancelled'
+          throw e
+        }
+        if (epoch !== loginEpoch) throw new Error('The Privy login ended')
+        applyUser(withPasskey, loaded)
+        await enrollLinkedPasskeys(loaded)
+        passkeyAdded.value = true
+        void analytics.trackAccountSecurityEvent(
+          AccountSecurityEvent.PASSKEY_ADD_SUCCEEDED,
+          { source },
+        )
+        return 'added'
+      } catch (e) {
+        void analytics.trackAccountSecurityEvent(
+          AccountSecurityEvent.PASSKEY_ADD_FAILED,
+          { source, reason: errorCode(e) },
+        )
+        throw e
+      }
+    })
+
+  /**
+   * Make the linked passkeys the check, after an add that stopped half way.
+   * This is what completes that add, so it ends the way an add does.
+   */
+  const activatePasskeys = (source: PasskeySource): Promise<void> =>
+    attempt(async () => {
+      await enrollLinkedPasskeys(await loadPrivy())
+      passkeyAdded.value = true
+      void analytics.trackAccountSecurityEvent(
+        AccountSecurityEvent.PASSKEY_ADD_SUCCEEDED,
+        { source },
+      )
+    })
+
+  /**
+   * Remove a passkey from the account. Privy asks for a passkey first.
+   * Removing the last one turns the check off.
+   */
+  const removePasskey = (credentialId: string): Promise<void> =>
+    attempt(async () => {
+      const loaded = await loadPrivy()
+      await loaded.unlinkPasskey(credentialId)
+      await refreshUser(loaded)
+      void analytics.trackAccountSecurityEvent(
+        AccountSecurityEvent.PASSKEY_REMOVED,
+      )
+    })
+
+  /**
+   * The recovery phrase of the connected Privy wallet, one word per entry.
+   *
+   * Only for a live login whose wallet is the connected, signing one. The
+   * words go to the caller and nowhere else: this store keeps no copy. The
+   * module that asks Privy is loaded here, on first use, so the decryption
+   * library reaches the users who export and no one else. For a user with a
+   * passkey, Privy asks for it before it answers.
+   */
+  const exportRecoveryPhrase = (): Promise<string[]> =>
+    attempt(async () => {
+      const loaded = await loadPrivy()
+      const walletStore = useWalletStore()
+      const wallet = user.value && loaded.embeddedWallet(user.value)
+      const isConnected =
+        walletStore.wallet instanceof PrivyWallet && !walletStore.isWatchOnly
+      if (!wallet || !isConnected || !(await loaded.privy.getAccessToken())) {
+        throw new Error('No connected Privy wallet to show a phrase for')
+      }
+      const exporter = await import('@/providers/privy/exportWallet')
+      return exporter.exportRecoveryPhrase(wallet)
+    })
+
+  const acknowledgePasskeyAdded = (): void => {
+    passkeyAdded.value = false
+  }
+
   const setOptIn = (value: boolean): void => {
     emailOptIn.value = value
     void analytics.trackOnboardingEvent(OnboardingEvent.OPT_IN, { value })
@@ -338,6 +534,13 @@ export const useAuthStore = defineStore('authStore', () => {
     loginMethod,
     emailOptIn,
     error,
+    passkeys,
+    passkeyAdded,
+    addPasskey,
+    activatePasskeys,
+    removePasskey,
+    acknowledgePasskeyAdded,
+    exportRecoveryPhrase,
     startGoogleLogin,
     completeOAuth,
     sendEmailCode,

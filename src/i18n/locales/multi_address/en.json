@@ -1,5 +1,11 @@
 {
   "multi_address": {
+    "fund": {
+      "buy_title": "Buy crypto",
+      "buy_description": "Debit card or bank account",
+      "deposit_title": "Deposit from wallet",
+      "deposit_description": "Move funds from another wallet."
+    },
     "title": "Manage accounts",
     "active": "Active",
     "saved": "Saved addresses",

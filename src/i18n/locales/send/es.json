@@ -12,6 +12,7 @@
       "tx-send-success": "Transacción enviada correctamente",
       "tx-send-failed": "Error al enviar la transacción",
       "failed_to_fetch_gas_fees": "Error al obtener las comisiones de Gas",
+      "max_amount_changed": "El importe máximo cambió con la comisión de red. Inténtalo de nuevo.",
       "frozen_token": "Error al enviar. Es posible que el token esté congelado, contáctanos"
     },
     "initiated": {
