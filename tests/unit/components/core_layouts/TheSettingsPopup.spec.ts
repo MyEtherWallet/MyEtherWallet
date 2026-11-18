@@ -17,10 +17,14 @@ const h = await vi.hoisted(async () => {
     analytics: { consent: true, setTrackingConsent: vi.fn() },
     walletAddress: ref<string | null>(null),
     exportRecoveryPhrase: vi.fn(),
+    phraseExportSupported: vi.fn(),
     track: vi.fn(),
   }
 })
 
+vi.mock('@/providers/privy/phraseExportSupport', () => ({
+  phraseExportSupported: h.phraseExportSupported,
+}))
 vi.mock('@/analytics', () => ({
   analytics: { trackAccountSecurityEvent: h.track },
 }))
@@ -164,6 +168,8 @@ describe('TheSettingsPopup', () => {
     h.analytics.consent = true
     h.walletAddress.value = null
     h.exportRecoveryPhrase.mockResolvedValue(WORDS)
+    // As things stand: Privy gives a page no way to export the phrase.
+    h.phraseExportSupported.mockReturnValue(false)
   })
 
   describe('for every user', () => {
@@ -232,18 +238,36 @@ describe('TheSettingsPopup', () => {
       expect(main(w).text()).not.toContain('settings.connected_wallet')
     })
 
-    it('gives a connected Privy wallet the Connected wallet section, with Login methods and Recovery Phrase as its rows, and Log out', () => {
+    it('gives a connected Privy wallet the Connected wallet section, with Login methods as its row, and Log out', () => {
       connectPrivy()
       const w = open()
 
       const section = w.find('[data-test="settings-connected-wallet"]')
       expect(section.text()).toContain('settings.connected_wallet')
       const rows = section.findAll('[data-testid="cell"]')
+      expect(rows.map(cell => cell.text())).toEqual(['settings.login_methods'])
+      expect(logOut(w)).toBeDefined()
+    })
+
+    it('offers no Recovery Phrase while the page has no way to get the phrase from Privy', () => {
+      connectPrivy()
+      const w = open()
+
+      expect(row(w, 'settings.recovery_phrase')).toBeUndefined()
+    })
+
+    it('lists Recovery Phrase under Login methods once the page can get it', () => {
+      h.phraseExportSupported.mockReturnValue(true)
+      connectPrivy()
+      const w = open()
+
+      const rows = w
+        .find('[data-test="settings-connected-wallet"]')
+        .findAll('[data-testid="cell"]')
       expect(rows.map(cell => cell.text())).toEqual([
         'settings.login_methods',
         'settings.recovery_phrase',
       ])
-      expect(logOut(w)).toBeDefined()
     })
 
     it('opens Login methods with the method and email of the login, and comes back', async () => {
@@ -287,7 +311,13 @@ describe('TheSettingsPopup', () => {
     })
   })
 
-  describe('the recovery phrase', () => {
+  // Parked: these screens are unreachable until Privy supports an export the
+  // page can make. They are kept working for that day.
+  describe('the recovery phrase, once the page can get it from Privy', () => {
+    beforeEach(() => {
+      h.phraseExportSupported.mockReturnValue(true)
+    })
+
     const acknowledge = (w: Popup) =>
       w.find('[data-test="settings-phrase-ack"]')
     const phrase = (w: Popup) => w.find('[data-test="settings-phrase"]')

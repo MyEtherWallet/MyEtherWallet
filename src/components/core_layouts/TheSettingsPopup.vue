@@ -228,6 +228,7 @@
                     </template>
                   </app-cell>
                   <app-cell
+                    v-if="canExportPhrase"
                     size="small"
                     inset
                     :title="$t('settings.recovery_phrase')"
@@ -597,6 +598,7 @@ import { useCurrencyStore, SUPPORTED_CURRENCIES } from '@/stores/currencyStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { usePrivyAccount } from '@/composables/usePrivyAccount'
 import { useRecoveryPhrase } from '@/composables/useRecoveryPhrase'
+import { phraseExportSupported } from '@/providers/privy/phraseExportSupport'
 import { analytics } from '@/analytics'
 import { AccountSecurityEvent } from '@/analytics/events'
 import { getFiatIcon } from '@/utils/fiatIcons'
@@ -717,6 +719,8 @@ const view = ref<SettingsView>('main')
 const walletStore = useWalletStore()
 const { isWalletUnlocked, walletAddress } = storeToRefs(walletStore)
 const { isPrivyConnected, email, loginMethod } = usePrivyAccount()
+/** The Recovery Phrase row shows only when the page has a way to get the phrase. */
+const canExportPhrase = phraseExportSupported()
 
 const logOut = () => {
   walletStore.disconnectWallet()
