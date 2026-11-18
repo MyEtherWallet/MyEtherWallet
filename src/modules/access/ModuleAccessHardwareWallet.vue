@@ -740,11 +740,12 @@ const deviceChains = computed(() =>
 // ?type=ledger) skips the wallet chooser, which only offers the device on chains
 // it supports. The access chain is then the app's chain, which the device may not
 // sign on, and connecting threw "ledger: no provider for network: ARBNova"
-// (APP-MEW-WEB-1GR). Move it to the first chain the network dropdown offers.
+// (APP-MEW-WEB-1GR). Move it to the first chain the network dropdown offers; also
+// when no chain resolved at all, which would hand the device `undefined`.
 watch(
   [selectedChain, deviceChains],
   ([chain, supported]) => {
-    if (!chain || supported.some(c => c.name === chain.name)) return
+    if (chain && supported.some(c => c.name === chain.name)) return
     if (supported.length) updateChain(supported[0])
   },
   { immediate: true },

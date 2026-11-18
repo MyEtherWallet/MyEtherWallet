@@ -166,7 +166,13 @@ afterEach(() => {
 })
 
 describe('ModuleAccessHardwareWallet – Ledger opened on a chain it does not support (APP-MEW-WEB-1GR)', () => {
-  it('connects on a Ledger-supported chain instead of throwing "no provider for network"', async () => {
+  // `null`: the dialog resolved no chain (a refresh without ?walletNetwork= whose
+  // saved network is gone), so connect would ask LedgerManager for `undefined`.
+  it.each([
+    ['an unsupported chain', ARBITRUM_NOVA],
+    ['no chain', null],
+  ])('connects on a Ledger-supported chain when opened on %s', async (_, chain) => {
+    useAccessStore().setSelectedChain(chain)
     const wrapper = mount(ModuleAccessHardwareWallet, {
       global: { stubs, mocks: { $t: (k: string) => k } },
     })
