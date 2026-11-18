@@ -557,8 +557,19 @@ export function usePerpsTradeForm() {
   }
 
   // ── Close-position helpers ─────────────────────────────────
+  // The order side that closes the active position. A missing or 'neutral'
+  // direction has no safe side, so closing is blocked instead of defaulting
+  // to a buy order.
+  const positionCloseSide = computed<'buy' | 'sell' | null>(() => {
+    const direction = activePosition.value?.direction
+    if (direction === 'long') return 'sell'
+    if (direction === 'short') return 'buy'
+    return null
+  })
+
   const closeDisabled = computed(() => {
     if (closeSliderValue.value <= 0 || isClosing.value) return true
+    if (!positionCloseSide.value) return true
     const amt = parseFloat(closeAmount.value) || 0
     if (amt > 0 && amt < minOrderAmount.value) return true
     if (maxCloseSizeUsd.value !== null && amt > maxCloseSizeUsd.value)
@@ -636,13 +647,12 @@ export function usePerpsTradeForm() {
   }
 
   async function handleClosePosition() {
-    if (!activePosition.value || isClosing.value) return
+    const closeSide = positionCloseSide.value
+    if (!activePosition.value || !closeSide || isClosing.value) return
     isClosing.value = true
     closeError.value = ''
     const closePct = closeSliderValue.value
     const isLimit = orderType.value === 'limit'
-    const closeSide: 'buy' | 'sell' =
-      activePosition.value.direction === 'long' ? 'sell' : 'buy'
     let placedSize: string = activePosition.value.netQuantity
     if (!(closePct >= 100)) {
       const closeUsd = parseFloat(closeAmount.value) || 0
@@ -1489,11 +1499,10 @@ export function usePerpsTradeForm() {
     if (closeDisabled.value) return
     closeError.value = ''
     showCloseConfirmModal.value = true
-    if (activePosition.value) {
+    const closeSide = positionCloseSide.value
+    if (activePosition.value && closeSide) {
       const closePct = closeSliderValue.value
       const isLimit = orderType.value === 'limit'
-      const closeSide: 'buy' | 'sell' =
-        activePosition.value.direction === 'long' ? 'sell' : 'buy'
       let placedSize: string = activePosition.value.netQuantity
       if (!(closePct >= 100)) {
         const closeUsd = parseFloat(closeAmount.value) || 0
