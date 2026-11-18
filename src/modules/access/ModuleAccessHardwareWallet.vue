@@ -20,7 +20,7 @@
         data-testid="hw-connect"
         class="w-full"
         :is-loading="connectingWallet"
-        :disabled="connectingWallet"
+        :disabled="connectingWallet || !selectedChain"
         @click="currentView === 'ledger' ? connectViaUSB() : unlockWallet()"
       >
         {{
@@ -34,7 +34,7 @@
         type="button"
         data-testid="hw-connect-bluetooth"
         class="mx-auto text-sm font-semibold text-text-brand cursor-pointer disabled:cursor-default disabled:opacity-50"
-        :disabled="connectingWallet"
+        :disabled="connectingWallet || !selectedChain"
         @click="connectViaBluetooth"
       >
         {{ t('access_wallet_ledger.connect_bluetooth') }}

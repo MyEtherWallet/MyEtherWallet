@@ -141,6 +141,7 @@ vi.mock('@/providers/bitcoin/btcHardwareWallet', () => ({ default: class {} }))
 
 import ModuleAccessHardwareWallet from '@/modules/access/ModuleAccessHardwareWallet.vue'
 import { useAccessStore } from '@/stores/accessStore'
+import { useChainsStore } from '@/stores/chainsStore'
 
 const stubs = {
   AppBaseButton: {
@@ -187,6 +188,26 @@ describe('ModuleAccessHardwareWallet – Ledger opened on a chain it does not su
     expect(h.addToastMessage).not.toHaveBeenCalled()
     expect(useAccessStore().selectedChain.value).toEqual(ETHEREUM)
     expect(h.deviceIsConnected).toHaveBeenCalledWith('ETH')
+    wrapper.unmount()
+  })
+
+  // On a refresh the chain list can arrive after the step mounts. Until then no
+  // chain resolves, and connecting would hand the device an undefined network.
+  it('keeps Connect disabled until a network is selected', async () => {
+    const { chains } = useChainsStore()
+    const loaded = chains.value
+    chains.value = []
+    useAccessStore().setSelectedChain(null)
+    const wrapper = mount(ModuleAccessHardwareWallet, {
+      global: { stubs, mocks: { $t: (k: string) => k } },
+    })
+    await flushPromises()
+    expect(wrapper.find('button').attributes('disabled')).toBeDefined()
+
+    chains.value = loaded
+    await flushPromises()
+    expect(useAccessStore().selectedChain.value).toEqual(ETHEREUM)
+    expect(wrapper.find('button').attributes('disabled')).toBeUndefined()
     wrapper.unmount()
   })
 })
