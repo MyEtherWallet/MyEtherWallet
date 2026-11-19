@@ -180,7 +180,7 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
-import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import { addressStepFor } from '@/modules/access/common/accessViews'
 import { ToastType } from '@/types/notification'
 import {
   analytics,
@@ -308,18 +308,13 @@ const getExplorerLink = computed(() => {
  -------------------------------*/
 
 const accessStore = useAccessStore()
-const { setCurrentView, openAccessDialog } = accessStore
+const { openAccessDialog } = accessStore
 
 const openAccess = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
     source: 'WalletCard_Connect',
   })
-  // A Privy address is reconnected by logging in again, not from the chooser.
-  if (wallet.value?.getWalletType() === WalletType.PRIVY) {
-    accessStore.openSignUpDialog()
-  } else {
-    openAccessDialog()
-  }
+  openAccessDialog()
   emit('close')
 }
 
@@ -367,27 +362,14 @@ const canSwitchAddress = computed(() => {
 
 const switchAddress = () => {
   analytics.trackSelectNewAddressEvent(SelectNewAddressEvent)
-
-  // Map wallet types to their corresponding WALLET_VIEWS index
-  const currentWalletType = wallet.value?.getWalletType()
-  const viewIndexByType: Partial<Record<WalletType, number>> = {
-    [WalletType.LEDGER]: 1,
-    [WalletType.TREZOR]: 2,
-    [WalletType.MNEMONIC]: 4,
-  }
-
-  const index =
-    currentWalletType !== undefined &&
-    viewIndexByType[currentWalletType] !== undefined
-      ? (viewIndexByType[currentWalletType] as number)
-      : 0
-
-  setCurrentView(ACCESS_WALLET_VIEWS[index])
   emit('close')
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
     source: 'WalletCard_SwitchAddress',
   })
-  openAccessDialog()
+  // Straight to the wallet's own step, where its addresses are listed.
+  const step = addressStepFor(wallet.value?.getWalletType())
+  if (step) accessStore.openAccessDialogOn(step)
+  else openAccessDialog()
 }
 </script>
 <style scoped>

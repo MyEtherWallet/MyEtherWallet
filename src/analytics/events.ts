@@ -732,6 +732,8 @@ export const MultiAddressEvent = {
   DELETED: 'multi_address_deleted',
   RENAMED: 'multi_address_renamed',
   DETECTED_SAVED: 'multi_address_detected_saved',
+  FUND_BUY: 'multi_address_fund_buy_clicked',
+  FUND_DEPOSIT: 'multi_address_fund_deposit_clicked',
 } as const
 export type MultiAddressEvent =
   (typeof MultiAddressEvent)[keyof typeof MultiAddressEvent]
@@ -978,6 +980,39 @@ export const OnboardingEvent = {
 } as const
 export type OnboardingEvent =
   (typeof OnboardingEvent)[keyof typeof OnboardingEvent]
+
+// =============================================================================
+// ACCOUNT SECURITY (Privy account: passkeys, recovery phrase)
+// =============================================================================
+
+export const AccountSecurityEvent = {
+  PASSKEY_PROMPT_VIEWED: 'Passkey_Prompt_Viewed',
+  PASSKEY_PROMPT_DISMISSED: 'Passkey_Prompt_Dismissed',
+  PASSKEY_ADD_STARTED: 'Passkey_Add_Started',
+  PASSKEY_ADD_SUCCEEDED: 'Passkey_Add_Succeeded',
+  PASSKEY_ADD_FAILED: 'Passkey_Add_Failed',
+  PASSKEY_REMOVED: 'Passkey_Removed',
+  PASSKEY_CHECK_PASSED: 'Passkey_Check_Passed',
+  PASSKEY_CHECK_FAILED: 'Passkey_Check_Failed',
+  PASSKEY_CHECK_CANCELLED: 'Passkey_Check_Cancelled',
+  RECOVERY_PHRASE_OPENED: 'Recovery_Phrase_Opened',
+  /** The user left Settings for the wallet export page. What happens there is not tracked. */
+  RECOVERY_PHRASE_EXPORT_OPENED: 'Recovery_Phrase_Export_Opened',
+} as const
+export type AccountSecurityEvent =
+  (typeof AccountSecurityEvent)[keyof typeof AccountSecurityEvent]
+
+/** Where the user started adding a passkey. */
+export type PasskeySource = 'settings' | 'home_prompt'
+
+/**
+ * Never an email, address, Privy id, credential id or any part of a recovery
+ * phrase (not even its length): none of those may reach analytics.
+ */
+export type AccountSecurityPayload = {
+  source?: PasskeySource
+  reason?: string
+}
 
 /** Never an email, address or Privy id: none of those may reach analytics. */
 export type OnboardingPayload = {

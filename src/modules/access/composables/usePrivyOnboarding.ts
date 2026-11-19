@@ -447,13 +447,13 @@ export const usePrivyOnboarding = () => {
   const busy = computed(() => inFlight.value !== null)
   /** The modal's own close button is taken away while the wallet is set up. */
   const isPersistent = computed(() => state.value === 'wallet.setup')
-  /** Where the back arrow leads: the wallet chooser, the entry screen, or nowhere. */
-  const backTarget = computed<'chooser' | 'entry' | null>(() => {
-    if (state.value === 'entry' || state.value === 'existing_login') {
-      return 'chooser'
-    }
-    return CODE_ENTRY_STATES.includes(state.value) ? 'entry' : null
-  })
+  /**
+   * Where the back arrow leads: the entry screen from the code screens,
+   * nowhere otherwise. The entry screen is the dialog's first, so it has none.
+   */
+  const backTarget = computed<'entry' | null>(() =>
+    CODE_ENTRY_STATES.includes(state.value) ? 'entry' : null,
+  )
 
   return {
     state,

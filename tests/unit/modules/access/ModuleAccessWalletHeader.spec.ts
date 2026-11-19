@@ -54,7 +54,7 @@ vi.mock('pinia', async orig => ({
 // The login flow's shared state, driven directly by these tests.
 const flow = {
   state: ref('entry'),
-  backTarget: ref<'chooser' | 'entry' | null>('chooser'),
+  backTarget: ref<'entry' | null>(null),
   isPersistent: ref(false),
   back: vi.fn(),
   cancel: vi.fn(),
@@ -136,7 +136,7 @@ const mountAt = (view: string, step = 1) => {
 }
 beforeEach(() => {
   flow.state.value = 'entry'
-  flow.backTarget.value = 'chooser'
+  flow.backTarget.value = null
   flow.isPersistent.value = false
   flow.back.mockClear()
   flow.cancel.mockClear()
@@ -147,10 +147,13 @@ const back = (w: VueWrapper) => w.find('button[aria-label="common.back"]')
 const title = (w: VueWrapper) => w.get('h1').text()
 
 describe('ModuleAccessWallet header', () => {
-  it('hides back on the wallet chooser and titles it "Log in/Sign Up"', () => {
+  it('goes back from the wallet chooser to Log in/Sign Up, whose title it shares', async () => {
     const w = mountAt('default')
-    expect(back(w).exists()).toBe(false)
     expect(title(w)).toBe('access_wallet.social.title')
+
+    await back(w).trigger('click')
+
+    expect(setCurrentView).toHaveBeenCalledWith('sign_up')
   })
 
   it('caps the chooser under the title so only the wallet grid scrolls', () => {
@@ -179,10 +182,8 @@ describe('ModuleAccessWallet header', () => {
     ).toBe(false)
   })
 
-  it('goes back from sign-up to the chooser', async () => {
-    const w = mountAt('sign_up')
-    await back(w).trigger('click')
-    expect(setCurrentView).toHaveBeenCalledWith('default')
+  it('has no back arrow on Log in/Sign Up: it is the first screen', () => {
+    expect(back(mountAt('sign_up')).exists()).toBe(false)
   })
 
   it('titles the sign-up view "Log in/Sign Up" on its entry screen', () => {
@@ -342,12 +343,27 @@ describe('ModuleAccessWallet header', () => {
   })
 
   it('goes back to step 1 inside an advanced flow before leaving it', async () => {
-    const w = mountAt('keystore', 2)
+    const w = mountAt('default')
+    currentView.value = 'keystore'
+    accessStep.value = 2
+    await nextTick()
+
     await back(w).trigger('click')
     expect(accessStep.value).toBe(1)
     expect(setCurrentView).not.toHaveBeenCalled()
     await back(w).trigger('click')
+    // It was opened from the chooser, so that is where Back leads.
     expect(setCurrentView).toHaveBeenCalledWith('default')
+  })
+
+  it('goes back from a step to Log in/Sign Up when its wallet row opened it', async () => {
+    const w = mountAt('sign_up')
+    currentView.value = 'private_key'
+    await nextTick()
+
+    await back(w).trigger('click')
+
+    expect(setCurrentView).toHaveBeenLastCalledWith('sign_up')
   })
 
   it('remembers the picked network in the URL', async () => {

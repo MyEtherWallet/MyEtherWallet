@@ -70,9 +70,8 @@ const openAccessDialog = vi.fn()
 const openCreateDialog = vi.fn()
 const openPanel = vi.fn()
 const refreshBalances = vi.fn()
-const openSignUpDialog = vi.fn()
 vi.mock('@/stores/accessStore', () => ({
-  useAccessStore: () => ({ openAccessDialog, openSignUpDialog }),
+  useAccessStore: () => ({ openAccessDialog }),
 }))
 vi.mock('@/stores/createStore', () => ({
   useCreateStore: () => ({ openCreateDialog }),
@@ -128,7 +127,6 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     setActivePinia(createPinia())
     openAccessDialog.mockClear()
     openCreateDialog.mockClear()
-    openSignUpDialog.mockClear()
     openPanel.mockClear()
     refreshBalances.mockClear()
     copySpy.mockClear()
@@ -139,17 +137,20 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     }
   })
 
-  it('renders the not-connected state with create/connect CTAs', async () => {
+  it('gives a visitor one button, Log in/Sign Up, which opens the login popup', async () => {
     const w = mountCard()
     expect(w.find('[data-test="hero-portfolio-notconnected"]').exists()).toBe(
       true,
     )
-    // "Create wallet" starts with Log in / Sign Up.
-    await w.get('[data-test="hero-create"]').trigger('click')
-    expect(openSignUpDialog).toHaveBeenCalledTimes(1)
+
+    const buttons = w.get('[data-test="hero-portfolio-card"]').findAll('button')
+    expect(buttons).toHaveLength(1)
+    // The header's button says the same.
+    expect(buttons[0].text()).toBe('access_wallet.social.title')
+
+    await w.get('[data-test="hero-log-in"]').trigger('click')
+    expect(openAccessDialog).toHaveBeenCalledTimes(1)
     expect(openCreateDialog).not.toHaveBeenCalled()
-    await w.get('[data-test="hero-connect"]').trigger('click')
-    expect(openAccessDialog).toHaveBeenCalled()
   })
 
   it('renders skeletons while balances are loading', () => {

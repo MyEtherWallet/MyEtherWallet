@@ -8,7 +8,7 @@ vi.mock('@/modules/access/common/walletConfigs', () => ({
 }))
 
 import { Analytics } from '@/analytics/amplitude'
-import { OnboardingEvent } from '@/analytics/events'
+import { AccountSecurityEvent, OnboardingEvent } from '@/analytics/events'
 
 describe('onboarding analytics', () => {
   it('sends an onboarding event with its payload to Amplitude', async () => {
@@ -29,5 +29,33 @@ describe('onboarding analytics', () => {
     await analytics.trackOnboardingEvent(OnboardingEvent.ENTRY_VIEWED)
 
     expect(track).toHaveBeenCalledWith('Onboarding_Entry_Viewed', {})
+  })
+})
+
+describe('account security analytics', () => {
+  it('sends a passkey event with where it happened', async () => {
+    const track = vi.fn(() => ({ promise: Promise.resolve() }))
+    const analytics = new Analytics({ amplitude: { track } as never })
+
+    await analytics.trackAccountSecurityEvent(
+      AccountSecurityEvent.PASSKEY_ADD_FAILED,
+      { source: 'home_prompt', reason: 'unknown' },
+    )
+
+    expect(track).toHaveBeenCalledWith('Passkey_Add_Failed', {
+      source: 'home_prompt',
+      reason: 'unknown',
+    })
+  })
+
+  it('sends a recovery phrase event that has no payload', async () => {
+    const track = vi.fn(() => ({ promise: Promise.resolve() }))
+    const analytics = new Analytics({ amplitude: { track } as never })
+
+    await analytics.trackAccountSecurityEvent(
+      AccountSecurityEvent.RECOVERY_PHRASE_OPENED,
+    )
+
+    expect(track).toHaveBeenCalledWith('Recovery_Phrase_Opened', {})
   })
 })

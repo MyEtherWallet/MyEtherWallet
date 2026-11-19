@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
+import BigNumber from 'bignumber.js'
 
 const switchTo = vi.fn()
 const deleteAccount = vi.fn()
@@ -39,7 +40,14 @@ vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => ({ connectAddress
 vi.mock('@/components/core_layouts/wallet/ManageAccountsConnectAddressView.vue', () => ({ default: { name: 'ManageAccountsConnectAddressView', template: '<div />' } }))
 vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => ({ selectedChain: { name: 'ETH', type: 'EVM', blockExplorerAddr: 'https://e/[[address]]' } }) }))
 vi.mock('@/analytics', () => ({ analytics: { trackMultiAddressEvent: vi.fn() } }))
-vi.mock('@/analytics/events', () => ({ MultiAddressEvent: { OPENED: 'o', SWITCHED: 's', ADD_STARTED: 'a', DELETED: 'd', RENAMED: 'r', DETECTED_SAVED: 'ds' } }))
+vi.mock('@/analytics/events', () => ({ MultiAddressEvent: { OPENED: 'o', SWITCHED: 's', ADD_STARTED: 'a', DELETED: 'd', RENAMED: 'r', DETECTED_SAVED: 'ds', FUND_BUY: 'fb', FUND_DEPOSIT: 'fd' } }))
+// Whether the connected, signing wallet is the Privy one (the rule has its own spec).
+const isPrivyConnected = ref(false)
+vi.mock('@/composables/usePrivyAccount', () => ({ usePrivyAccount: () => ({ isPrivyConnected }) }))
+const offer = { fundActions: true }
+vi.mock('@/providers/privy/accountOffer', () => ({ fundActionsOffered: () => offer.fundActions }))
+const openPanel = vi.fn()
+vi.mock('@/stores/walletMenuStore', () => ({ useWalletMenuStore: () => ({ openPanel }) }))
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (k: string) => k }) }))
 
 import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccounts.vue'
@@ -48,6 +56,8 @@ const stubs = {
   Teleport: true,
   AddressTriggerPill: { name: 'AddressTriggerPill', template: '<button />' },
   TheCurrentNetwork: true, ThePaperWallet: true,
+  TheDepositDialog: { name: 'TheDepositDialog', props: ['openDialog'], template: '<div data-test="deposit-dialog" :data-open="openDialog" />' },
+  ManageAccountsFundActions: { name: 'ManageAccountsFundActions', emits: ['buy', 'deposit'], template: '<div data-test="fund-actions" />' },
   ManageAccountsNetworkView: { name: 'ManageAccountsNetworkView', template: '<div />' },
   ManageAccountsConnectAddressView: { name: 'ManageAccountsConnectAddressView', template: '<div />' },
   ManageAccountsRenameModal: {
@@ -74,7 +84,7 @@ const stubs = {
 const factory = () =>
   mount(TheManageAccounts, { props: { openDialog: true, anchor: document.body }, global: { stubs, mocks: { $t: (k: string) => k } } })
 
-beforeEach(() => { vi.clearAllMocks(); walletStore.detectedAddress.value = null })
+beforeEach(() => { vi.clearAllMocks(); walletStore.detectedAddress.value = null; isPrivyConnected.value = false })
 
 describe('TheManageAccounts', () => {
   it('shows the no-address empty state (no card) when there is no active account', () => {
@@ -398,3 +408,92 @@ describe('TheManageAccounts', () => {
     expect(cloneStyle()).toContain(`right: ${window.innerWidth - 1000}px`)
   })
 })
+
+describe('TheManageAccounts fund actions', () => {
+  const oneAccount = [store.allAccounts[0]]
+  const twoAccounts = store.allAccounts
+  const fundActions = (w: ReturnType<typeof factory>) => w.findComponent({ name: 'ManageAccountsFundActions' })
+
+  /** A connected Privy wallet with no funds and a single saved account. */
+  const emptyPrivyWallet = () => {
+    isPrivyConnected.value = true
+    store.allAccounts = oneAccount
+    walletStore.totalFiatPortfolioValueBN.value = new BigNumber(0) as never
+    walletStore.isLoadingBalances.value = false
+  }
+
+  beforeEach(() => {
+    store.allAccounts = twoAccounts
+    walletStore.totalFiatPortfolioValueBN.value = new BigNumber(130.23) as never
+    walletStore.isLoadingBalances.value = false
+    offer.fundActions = true
+  })
+
+  it('shows no cards while the account menu is not offering them, even to an empty Privy wallet', () => {
+    emptyPrivyWallet()
+    offer.fundActions = false
+
+    expect(fundActions(factory()).exists()).toBe(false)
+  })
+
+  it('offers to buy or deposit to a connected Privy wallet with no funds and one saved account, under the saved address', () => {
+    emptyPrivyWallet()
+    const w = factory()
+
+    expect(fundActions(w).exists()).toBe(true)
+    expect(w.findAll('.row')).toHaveLength(1)
+  })
+
+  it('never offers them to a wallet that is not the connected Privy one, whatever its balance', () => {
+    emptyPrivyWallet()
+    isPrivyConnected.value = false
+
+    expect(fundActions(factory()).exists()).toBe(false)
+  })
+
+  it('stops offering them once the wallet holds anything', () => {
+    emptyPrivyWallet()
+    walletStore.totalFiatPortfolioValueBN.value = new BigNumber('0.01') as never
+
+    expect(fundActions(factory()).exists()).toBe(false)
+  })
+
+  it('stops offering them once there is a second saved account', () => {
+    emptyPrivyWallet()
+    store.allAccounts = twoAccounts
+
+    expect(fundActions(factory()).exists()).toBe(false)
+  })
+
+  it('waits for the balances, so the cards do not flash on a funded wallet', () => {
+    emptyPrivyWallet()
+    walletStore.isLoadingBalances.value = true
+
+    expect(fundActions(factory()).exists()).toBe(false)
+  })
+
+  it('closes the menu and opens the Buy panel on "Buy crypto"', async () => {
+    emptyPrivyWallet()
+    const w = factory()
+
+    fundActions(w).vm.$emit('buy')
+    await w.vm.$nextTick()
+
+    expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
+    expect(openPanel).toHaveBeenCalledWith('purchase')
+  })
+
+  it('closes the menu and opens the deposit dialog on "Deposit from wallet"', async () => {
+    emptyPrivyWallet()
+    const w = factory()
+    expect(w.get('[data-test="deposit-dialog"]').attributes('data-open')).toBe('false')
+
+    fundActions(w).vm.$emit('deposit')
+    await w.vm.$nextTick()
+
+    expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
+    expect(w.get('[data-test="deposit-dialog"]').attributes('data-open')).toBe('true')
+    expect(openPanel).not.toHaveBeenCalled()
+  })
+})
+

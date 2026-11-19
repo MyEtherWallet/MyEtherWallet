@@ -62,4 +62,23 @@ describe('ModuleCreateMnemonic', () => {
     await next!.trigger('click')
     expect(wrapper.findAll('[data-quiz]')).toHaveLength(3)
   })
+
+  // The answers offered are nine words of the phrase, and each question names
+  // a position: a recording of this step used to hold most of the phrase.
+  it('keeps the verify step out of session replay, questions and answers alike', async () => {
+    const wrapper = factory()
+    await nextTick()
+    const next = wrapper.findAll('button').find(b => b.text() === 'common.next')
+    await next!.trigger('click')
+
+    const answers = wrapper.findAll('[data-quiz]')
+    const questions = wrapper
+      .findAll('p')
+      .filter(p => p.text().includes('create_wallet.mnemonic.select_word'))
+    expect(answers).toHaveLength(3)
+    expect(questions).toHaveLength(3)
+    for (const part of [...answers, ...questions]) {
+      expect(part.element.closest('[data-private]')).not.toBeNull()
+    }
+  })
 })

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ToastType } from '@/types/notification'
 
-const accessStore = { isOpenAccessDialog: false, openAccessDialog: vi.fn(() => { accessStore.isOpenAccessDialog = true }), openSignUpDialog: vi.fn(), setExpectNewAddress: vi.fn(), setIntendedAddress: vi.fn() }
+const accessStore = { isOpenAccessDialog: false, openAccessDialog: vi.fn(() => { accessStore.isOpenAccessDialog = true }), setExpectNewAddress: vi.fn(), setIntendedAddress: vi.fn() }
 const watchOnly = { isAtCap: false }
 const toastStore = { addToastMessage: vi.fn() }
 
@@ -35,15 +35,14 @@ describe('useAddAccount', () => {
     expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
   })
 
-  it('reconnects a saved Privy address through the sign-up view, without tying it to that address', async () => {
+  it('reconnects a saved Privy address through the login popup, without tying it to that address', async () => {
     await useAddAccount().connectSaved({
       address: '0x1111111111111111111111111111111111111111',
       providerType: 'PRIVY',
       walletName: 'Privy',
     } as never)
 
-    expect(accessStore.openSignUpDialog).toHaveBeenCalledTimes(1)
-    expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
+    expect(accessStore.openAccessDialog).toHaveBeenCalledTimes(1)
     // A login to another Privy account is added as a new wallet, so no
     // "select this address" prompt may be armed.
     expect(accessStore.setIntendedAddress).toHaveBeenCalledWith(null)

@@ -3,17 +3,16 @@ import { mount, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
 const wallet = (name: string) => ({ id: name, name, icon: '', type: [] })
-const popular = ['Rainbow', 'MEW Mobile', 'Enkrypt', 'MetaMask', 'Phantom'].map(
-  name => ({ wallet: wallet(name) }),
-)
+// What the wallet list picks for the row: its rules are tested with it.
+const picked = ['MetaMask', 'MEW Mobile', 'Enkrypt', 'Private Key'].map(wallet)
 
 const connect = vi.fn()
 const setCurrentView = vi.fn()
 const replace = vi.fn(async () => undefined)
-const walletsForTab = vi.fn(() => popular)
+const signUpRowWallets = vi.fn(() => picked)
 
 vi.mock('@/composables/useWalletList', () => ({
-  useWalletList: () => ({ walletsForTab }),
+  useWalletList: () => ({ signUpRowWallets }),
 }))
 vi.mock('@/modules/access/composables/useConnectWallet', () => ({
   useConnectWallet: () => ({ connect }),
@@ -59,15 +58,14 @@ describe('SignUpWalletRow', () => {
   beforeEach(() => vi.clearAllMocks())
   afterEach(() => wrapper?.unmount())
 
-  it('offers the first three popular wallets by name', () => {
+  it('offers the wallets picked for the row, by name, in their order', () => {
     const w = mountRow()
 
-    expect(walletsForTab).toHaveBeenCalledWith('popular')
     expect(
       w
         .findAll('[data-testid="wallet-tile"]')
         .map(b => b.attributes('aria-label')),
-    ).toEqual(['Rainbow', 'MEW Mobile', 'Enkrypt'])
+    ).toEqual(['MetaMask', 'MEW Mobile', 'Enkrypt', 'Private Key'])
   })
 
   it('connects the wallet whose tile is clicked', async () => {
@@ -75,25 +73,24 @@ describe('SignUpWalletRow', () => {
 
     await w.findAll('[data-testid="wallet-tile"]')[1].trigger('click')
 
-    expect(connect).toHaveBeenCalledWith(popular[1].wallet)
+    expect(connect).toHaveBeenCalledWith(picked[1])
   })
 
-  it('opens the wallet chooser from the all-wallets tile', async () => {
+  it('ends with one tile for every other wallet method, which opens the chooser', async () => {
     const w = mountRow()
+    const tiles = w.findAll('button')
+    const last = tiles[tiles.length - 1]
 
-    await w.get('[data-testid="all-wallets"]').trigger('click')
+    expect(tiles).toHaveLength(5)
+    expect(last.attributes('aria-label')).toBe(
+      'access_wallet.social.other_methods',
+    )
+    await last.trigger('click')
 
     expect(setCurrentView).toHaveBeenCalledWith('default')
   })
 
-  it('opens the wallet chooser on its Advanced tab from the key tile', async () => {
-    const w = mountRow()
-
-    await w.get('[data-testid="more-methods"]').trigger('click')
-
-    expect(replace).toHaveBeenCalledWith({
-      query: { type: 'default', walletTab: 'advanced' },
-    })
-    expect(setCurrentView).toHaveBeenCalledWith('default')
+  it('has no separate key shortcut: Private Key and Keystore are tiles of their own', () => {
+    expect(mountRow().find('[data-testid="more-methods"]').exists()).toBe(false)
   })
 })

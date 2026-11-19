@@ -18,8 +18,7 @@ import AppAddressSelector from '@/components/navbar/AppAddressSelector.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useChainsStore } from '@/stores/chainsStore'
-import { useAuthStore } from '@/stores/authStore'
-import { WalletType } from '@/providers/types'
+import { usePrivyAccount } from '@/composables/usePrivyAccount'
 
 // Header account trigger: feeds the active account from the stores into the
 // design-library Address selector. `open` flips its chevron while the
@@ -28,7 +27,6 @@ withDefaults(defineProps<{ open?: boolean }>(), { open: false })
 
 const walletStore = useWalletStore()
 const {
-  wallet,
   walletAddress,
   isWatchOnly,
   isLoadingBalances,
@@ -39,12 +37,7 @@ const watchOnlyStore = useWatchOnlyStore()
 const chainsStore = useChainsStore()
 
 // A Google / email account is known by its email, but only while its wallet
-// is the connected one: the login outlives a switch to another saved account,
-// and after a reload the account is watch-only like any other.
-const { email } = storeToRefs(useAuthStore())
-const loginEmail = computed(() =>
-  wallet.value?.getWalletType() === WalletType.PRIVY
-    ? (email.value ?? undefined)
-    : undefined,
-)
+// is the connected one (the rule lives in usePrivyAccount).
+const { email } = usePrivyAccount()
+const loginEmail = computed(() => email.value ?? undefined)
 </script>

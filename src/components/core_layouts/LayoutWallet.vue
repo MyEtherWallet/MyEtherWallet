@@ -14,6 +14,8 @@
       @select="onSelect"
     />
     <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
+    <!-- Here, not on Home: a passkey added from Settings can finish anywhere. -->
+    <passkey-added-card />
     <!-- Modules -->
     <transition
       enter-from-class="opacity-0 translate-x-full"
@@ -95,6 +97,7 @@ import {
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 import MarketingTooltip from '@/components/core_layouts/MarketingTooltip.vue'
 import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
+import PasskeyAddedCard from '@/modules/home/components/PasskeyAddedCard.vue'
 import { useRoute } from 'vue-router'
 import { pageRouteName } from '@/router/routeHierarchy'
 import { useI18n } from 'vue-i18n'

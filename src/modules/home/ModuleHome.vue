@@ -8,6 +8,7 @@
     >
       <component :is="s.component" />
     </AppHomeSection>
+    <PasskeyPromptCard />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useWalletStore } from '@/stores/walletStore'
 import AppHomeSection from '@/components/AppHomeSection.vue'
+import PasskeyPromptCard from './components/PasskeyPromptCard.vue'
 import { homeSections } from './homeSections'
 
 const { t } = useI18n()

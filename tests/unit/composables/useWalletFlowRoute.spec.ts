@@ -88,6 +88,12 @@ describe('useWalletFlowRoute', () => {
     expect(createRoute.value.name).toBe('Stocks-create')
   })
 
+  it('targets Log in / Sign Up for the connect overlay, and the first step for create', async () => {
+    const { accessRoute, createRoute } = await setup('/stocks')
+    expect(accessRoute.value.query?.type).toBe('sign_up')
+    expect(createRoute.value.query?.type).toBe('default')
+  })
+
   it('targets the canonical standalone routes from Home', async () => {
     const { accessRoute, createRoute } = await setup('/')
     expect(accessRoute.value.name).toBe('Access')

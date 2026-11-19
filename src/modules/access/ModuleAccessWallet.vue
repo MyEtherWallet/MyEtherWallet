@@ -98,7 +98,11 @@ import { usePrivyOnboarding } from '@/modules/access/composables/usePrivyOnboard
 import AccessDownloadMobile from '@/modules/access/components/AccessDownloadMobile.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
-import { parentView } from '@/modules/access/common/accessViews'
+import {
+  FIRST_ACCESS_VIEW,
+  isAccessHubView,
+  type AccessHubView,
+} from '@/modules/access/common/accessViews'
 import type { WalletView } from '@/modules/access/common/walletConfigs'
 import AppModal from '@/components/modal/AppModal.vue'
 import { type Chain } from '@/mew_api/types'
@@ -158,25 +162,39 @@ const {
   back: loginBack,
   cancel: cancelLogin,
 } = usePrivyOnboarding()
-const inLoginFlow = computed(() => currentView.value === 'sign_up')
-const showBack = computed(
-  () =>
-    currentView.value !== 'default' &&
-    (!inLoginFlow.value || backTarget.value !== null),
+const inLoginFlow = computed(() => currentView.value === FIRST_ACCESS_VIEW)
+// Log in / Sign Up is the first screen: it has a Back only on its own later
+// screens. Every other view leads back to where it was opened from.
+const showBack = computed(() =>
+  inLoginFlow.value ? backTarget.value !== null : true,
+)
+
+/**-------------------------------
+ * Where Back leads from a step
+ * A step is opened from Log in / Sign Up (its wallet row) or from the wallet
+ * chooser, and Back returns there. A step reached any other way (a link, a
+ * reload, a saved wallet being reconnected) goes back to the first screen.
+ -------------------------------*/
+const openedFrom = ref<AccessHubView>(FIRST_ACCESS_VIEW)
+// Both are watched so the opening itself can be told apart: a caller that
+// opens the dialog and names a step in the same breath did not come from the
+// chooser, whatever view the closed dialog was left on.
+watch(
+  [isOpenAccessDialog, currentView],
+  ([open, view], [wasOpen, previous]) => {
+    if (!open || !wasOpen) return
+    if (!isAccessHubView(view) && isAccessHubView(previous)) {
+      openedFrom.value = previous
+    }
+  },
 )
 
 /**-------------------------------
  * "Don't have a wallet?" (under the chooser)
  * Its list of wallets to create stays open across a trip to the MEW Mobile
- * download step, whose Back then returns here instead of to the login view.
+ * download step, whose Back returns here.
  -------------------------------*/
 const isCreateWalletOpen = ref(false)
-const downloadOpenedFromChooser = ref(false)
-watch(currentView, (view, previous) => {
-  if (view === 'download_mobile') {
-    downloadOpenedFromChooser.value = previous === 'default'
-  }
-})
 
 // However the dialog closes (its own buttons, browser Back, a link elsewhere)
 // the login flow is told, so nothing carries on behind a closed modal and the
@@ -185,6 +203,7 @@ watch(isOpenAccessDialog, open => {
   if (open) return
   void cancelLogin()
   isCreateWalletOpen.value = false
+  openedFrom.value = FIRST_ACCESS_VIEW
 })
 
 const closeAccess = () => {
@@ -192,7 +211,7 @@ const closeAccess = () => {
 }
 
 const goBack = () => {
-  if (inLoginFlow.value && backTarget.value === 'entry') {
+  if (inLoginFlow.value) {
     loginBack()
     return
   }
@@ -201,9 +220,7 @@ const goBack = () => {
     return
   }
   accessStore.setCurrentView(
-    currentView.value === 'download_mobile' && downloadOpenedFromChooser.value
-      ? 'default'
-      : parentView(currentView.value),
+    currentView.value === 'default' ? FIRST_ACCESS_VIEW : openedFrom.value,
   )
 }
 

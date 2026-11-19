@@ -7,6 +7,10 @@ import {
 import { type Chain } from '@/mew_api/types'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent } from '@/analytics/events'
+import {
+  FIRST_ACCESS_VIEW,
+  isAccessHubView,
+} from '@/modules/access/common/accessViews'
 /**
  * Store to manage the state of the access dialog.
  * It provides methods to open and close the dialog. Also manages
@@ -22,15 +26,26 @@ interface WC_Wallet {
 export const useAccessStore = defineStore('accessStore', () => {
   const isOpenAccessDialog = ref(false)
 
+  /** Open the dialog. It always starts on Log in / Sign Up (FIRST_ACCESS_VIEW). */
   const openAccessDialog = () => {
-    // Reset any leftover state from a previous session so the chooser always
+    // Reset any leftover state from a previous session so the dialog always
     // opens clean — otherwise a stale connecting/view state can show through.
-    currentView.value = 'default'
+    currentView.value = FIRST_ACCESS_VIEW
     clickedWeb3Wallet.value = undefined
     clickedWalletConnect.value = undefined
     web3ConnectionError.value = null
     isOpenAccessDialog.value = true
     analytics.trackConnectWalletEvent(ConnectWalletEvent.SHOWN)
+  }
+
+  /**
+   * Open the dialog straight on a wallet's own step (a hardware wallet's
+   * address list, say), past its first screen. One call, so the step cannot
+   * be set too early and lost to the reset above.
+   */
+  const openAccessDialogOn = (step: WalletView) => {
+    openAccessDialog()
+    currentView.value = step
   }
 
   /**
@@ -44,11 +59,6 @@ export const useAccessStore = defineStore('accessStore', () => {
   const ensureAccessDialogOpen = () => {
     if (isOpenAccessDialog.value) return
     openAccessDialog()
-  }
-  /** Open the dialog straight on its Log in / Sign Up view (Google / email). */
-  const openSignUpDialog = () => {
-    openAccessDialog()
-    currentView.value = 'sign_up'
   }
   const closeAccessDialog = () => {
     isOpenAccessDialog.value = false
@@ -102,7 +112,9 @@ export const useAccessStore = defineStore('accessStore', () => {
 
   watch(currentView, newView => {
     accessStep.value = 1
-    if (newView === 'default') {
+    // Back on either screen wallets are picked from, nothing is left of the
+    // wallet tried before: not its name, not its error.
+    if (isAccessHubView(newView)) {
       setClickedWalletConnect(undefined)
       setClickedWeb3Wallet(undefined)
       clearWeb3ConnectionError()
@@ -178,8 +190,8 @@ export const useAccessStore = defineStore('accessStore', () => {
     isOpenAccessDialog,
     accessStep,
     openAccessDialog,
+    openAccessDialogOn,
     ensureAccessDialogOpen,
-    openSignUpDialog,
     closeAccessDialog,
     currentView,
     setCurrentView,

@@ -37,6 +37,11 @@ vi.mock('@/modules/home/homeSections', () => {
   }
 })
 
+// The real card reads the auth store, which Vitest cannot load.
+vi.mock('@/modules/home/components/PasskeyPromptCard.vue', () => ({
+  default: { name: 'PasskeyPromptCard', render: () => null },
+}))
+
 import ModuleHome from '@/modules/home/ModuleHome.vue'
 const mountIt = () => mount(ModuleHome, { global: { plugins: [i18n] } })
 
@@ -53,5 +58,9 @@ describe('ModuleHome', () => {
     const w = mountIt()
     expect(w.find('[data-test="sec-b"]').exists()).toBe(true)
     expect(w.find('[data-test="sec-c"]').exists()).toBe(false)
+  })
+  it('carries the passkey prompt, which decides for itself when to show', () => {
+    const w = mountIt()
+    expect(w.findComponent({ name: 'PasskeyPromptCard' }).exists()).toBe(true)
   })
 })

@@ -99,6 +99,19 @@ describe('AddressTriggerPill', () => {
     authStore.email = null
   })
 
+  it('keeps the address for a saved Google / email account that is only being viewed', () => {
+    // Viewing a saved account makes a watch-only wallet that keeps the saved
+    // type, and the login made for ANOTHER account can still be in the tab.
+    walletStore.wallet = { getWalletType: () => 'PRIVY' }
+    walletStore.isWatchOnly = true
+    authStore.email = 'someone.else@example.com'
+    const selector = factory().findComponent({ name: 'AppAddressSelector' })
+    expect(selector.props('email')).toBeUndefined()
+    walletStore.wallet = null
+    walletStore.isWatchOnly = false
+    authStore.email = null
+  })
+
   it('passes the loading and open states through', () => {
     walletStore.isLoadingBalances = true
     const selector = factory({ open: true }).findComponent({

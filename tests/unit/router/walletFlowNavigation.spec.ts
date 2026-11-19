@@ -3,7 +3,7 @@ import { createRouter, createMemoryHistory } from 'vue-router'
 import type { Router, RouteRecordRaw } from 'vue-router'
 
 vi.mock('@/modules/access/common/walletConfigs', () => ({
-  ACCESS_WALLET_VIEWS: ['default', 'ledger'],
+  ACCESS_WALLET_VIEWS: ['default', 'sign_up', 'ledger'],
   CREATE_WALLET_VIEWS: ['default'],
 }))
 // router.push awaits the lazy component factories, so stub both overlay views —
@@ -54,8 +54,9 @@ beforeEach(() => {
 describe('connect/create overlay navigation', () => {
   it('opens over the current page instead of /portfolio', async () => {
     await router.push({ name: 'Stocks-access' })
+    // The connect overlay always starts on Log in / Sign Up.
     expect(router.currentRoute.value.fullPath).toBe(
-      '/stocks/access?type=default',
+      '/stocks/access?type=sign_up',
     )
   })
 
@@ -67,7 +68,7 @@ describe('connect/create overlay navigation', () => {
     const route = router.currentRoute.value
     expect(route.name).toBe('token-info-crypto-access')
     expect(route.params.tokenId).toBe('peaq-2')
-    expect(route.fullPath).toBe('/crypto/token/peaq-2/access?type=default')
+    expect(route.fullPath).toBe('/crypto/token/peaq-2/access?type=sign_up')
   })
 
   it('keeps a valid deep-linked step untouched', async () => {
@@ -79,12 +80,12 @@ describe('connect/create overlay navigation', () => {
     await router.push('/crypto/access?category=defi&type=bogus')
     const { query } = router.currentRoute.value
     expect(query.category).toBe('defi')
-    expect(query.type).toBe('default')
+    expect(query.type).toBe('sign_up')
   })
 
   it('still serves the canonical standalone routes by name', async () => {
     await router.push({ name: 'Access' })
-    expect(router.currentRoute.value.fullPath).toBe('/access?type=default')
+    expect(router.currentRoute.value.fullPath).toBe('/access?type=sign_up')
     await router.push({ name: 'CreateWallet' })
     expect(router.currentRoute.value.fullPath).toBe('/create?type=default')
   })
@@ -93,7 +94,7 @@ describe('connect/create overlay navigation', () => {
     await router.push('/crypto/token/peaq-2')
     await router.push({ name: 'token-info-crypto-access' })
     expect(router.currentRoute.value.fullPath).toBe(
-      '/crypto/token/peaq-2/access?type=default',
+      '/crypto/token/peaq-2/access?type=sign_up',
     )
   })
 

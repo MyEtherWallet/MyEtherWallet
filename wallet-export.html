@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>Recovery Phrase | MEW Portfolio</title>
+    <!-- The stored theme, before first paint. Mirrors index.html. -->
+    <script>
+      ;(function () {
+        var dark = false
+        try {
+          dark = localStorage.getItem('mew-theme') === 'dark'
+        } catch (e) {
+          // Storage can throw in strict privacy modes: stay light.
+        }
+        document.documentElement.setAttribute(
+          'data-theme',
+          dark ? 'dark' : 'light',
+        )
+      })()
+    </script>
+  </head>
+
+  <body>
+    <!-- The wallet export page: Privy's React SDK, apart from the Vue app. Its code is in /export_wallet. -->
+    <div id="wallet-export"></div>
+    <script type="module" src="/export_wallet/main.tsx"></script>
+  </body>
+</html>

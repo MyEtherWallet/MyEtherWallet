@@ -60,6 +60,7 @@ describe('walletStore with a Privy wallet', () => {
         address: ADDRESS,
         chainId: '1',
         logout,
+        loginLost: async () => false,
       }),
       'Privy',
       'software' as never,

@@ -143,6 +143,18 @@ describe('PrivyFlow', () => {
     expect(flow.useDifferentAccount).toHaveBeenCalledTimes(1)
   })
 
+  it('leads to the other wallet methods from that screen without ending the login', async () => {
+    flow.existingEmail = ref('ada@example.com')
+    const w = mountFlow('existing_login')
+
+    await w.get('[data-testid="existing-other-methods"]').trigger('click')
+
+    // Someone logged in with Google who wants to add a Ledger keeps the login.
+    expect(setCurrentView).toHaveBeenCalledWith('default')
+    expect(flow.useDifferentAccount).not.toHaveBeenCalled()
+    expect(flow.cancel).not.toHaveBeenCalled()
+  })
+
   it('keeps the email of the existing login out of session replay', () => {
     flow.existingEmail = ref('ada@example.com')
 

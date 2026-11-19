@@ -38,7 +38,7 @@ const configs = {
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
     'https://3779ba7db0670350a396d35fbeb766c0@o382951.ingest.us.sentry.io/4511061868347392',
-  VINTAGE: 'https://www.myetherwallet.com/wallet/access',
+  VINTAGE: 'https://v6.myetherwallet.com/',
   APP_VERSION: import.meta.env.VITE_APP_VERSION || '0.0.0',
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
   TRADING_RESTRICTION: import.meta.env.VITE_TRADING_RESTRICTION || 'off',
@@ -50,6 +50,9 @@ const configs = {
   PRIVY_APP_ID: import.meta.env.VITE_PRIVY_APP_ID || '',
   PRIVY_CLIENT_ID: import.meta.env.VITE_PRIVY_CLIENT_ID || '',
   BUILD_MODE: import.meta.env.VITE_BUILD_MODE || 'dev',
+  // The wallet export page (`wallet-export.html`, built from `export_wallet/`):
+  // a page of its own that Settings opens for a Privy account's recovery phrase.
+  WALLET_EXPORT_PAGE: `${import.meta.env.BASE_URL}wallet-export.html`,
 }
 
 export default configs

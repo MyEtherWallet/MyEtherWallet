@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
+import { reactive } from 'vue'
 
 const fake = vi.hoisted(() => ({
   privy: {
@@ -11,6 +12,7 @@ const fake = vi.hoisted(() => ({
       oauth: { generateURL: vi.fn(), loginWithCode: vi.fn() },
     },
     embeddedWallet: { create: vi.fn(), getEthereumProvider: vi.fn() },
+    mfa: { clearMfa: vi.fn() },
   },
   privyReady: vi.fn(),
   mountWalletIframe: vi.fn(),
@@ -25,7 +27,14 @@ const fake = vi.hoisted(() => ({
     wallet: undefined as unknown,
   },
   trackOnboardingEvent: vi.fn(),
+  trackAccountSecurityEvent: vi.fn(),
+  linkPasskey: vi.fn(),
+  enrollPasskeys: vi.fn(),
+  unlinkPasskey: vi.fn(),
+  answerPasskeyChecks: vi.fn(),
 }))
+/** The error the passkey module raises for a dismissed browser prompt. */
+class PasskeyCancelledError extends Error {}
 
 vi.mock('@/providers/privy/client', () => ({
   privy: fake.privy,
@@ -41,8 +50,20 @@ vi.mock('@/stores/walletStore', () => ({
 vi.mock('@/stores/chainsStore', () => ({
   useChainsStore: () => fake.chain,
 }))
+vi.mock('@/providers/privy/passkey', () => ({
+  linkPasskey: fake.linkPasskey,
+  enrollPasskeys: fake.enrollPasskeys,
+  unlinkPasskey: fake.unlinkPasskey,
+  PasskeyCancelledError,
+}))
+vi.mock('@/providers/privy/mfaChallenge', () => ({
+  answerPasskeyChecks: fake.answerPasskeyChecks,
+}))
 vi.mock('@/analytics', () => ({
-  analytics: { trackOnboardingEvent: fake.trackOnboardingEvent },
+  analytics: {
+    trackOnboardingEvent: fake.trackOnboardingEvent,
+    trackAccountSecurityEvent: fake.trackAccountSecurityEvent,
+  },
 }))
 // The wallet configs reach the hardware-wallet SDK — unavailable under jsdom.
 vi.mock('@/modules/access/common/walletConfigs', () => ({
@@ -77,6 +98,16 @@ const userWith = (accounts: unknown[]) => ({
   linked_accounts: accounts,
   mfa_methods: [],
 })
+const passkeyAccount = (credentialId: string, enrolled: boolean) => ({
+  type: 'passkey',
+  credential_id: credentialId,
+  enrolled_in_mfa: enrolled,
+  authenticator_name: 'iCloud Keychain',
+  created_with_device: 'Macintosh',
+  first_verified_at: 1_794_000_000,
+  latest_verified_at: 1_794_000_000,
+  verified_at: 1_794_000_000,
+})
 const newUser = userWith([emailAccount])
 const userWithWallet = userWith([emailAccount, walletAccount])
 
@@ -110,6 +141,7 @@ describe('authStore', () => {
       }),
     )
     fake.privy.auth.logout.mockResolvedValue(undefined)
+    fake.privy.mfa.clearMfa.mockResolvedValue({})
     fake.privy.auth.email.sendCode.mockResolvedValue({ success: true })
     fake.privy.auth.oauth.generateURL.mockResolvedValue({
       url: 'https://accounts.google.com/o/oauth2/v2/auth?x=1',
@@ -344,7 +376,8 @@ describe('authStore', () => {
         (wallet: unknown) =>
           new Promise<void>(resolve => {
             finishConnect = () => {
-              fake.walletStore.wallet = wallet
+              // As the real store holds it: behind a reactive proxy.
+              fake.walletStore.wallet = reactive(wallet as object)
               resolve()
             }
           }),
@@ -361,6 +394,57 @@ describe('authStore', () => {
       expect(fake.walletStore.setWatchOnlyIfExist).toHaveBeenCalled()
       expect(store.walletAddress).toBeNull()
       expect(store.hasWallet).toBe(false)
+    })
+
+    describe('for a user whose wallet has a passkey check', () => {
+      const protectedUser = userWith([
+        emailAccount,
+        walletAccount,
+        passkeyAccount('cred-a', true),
+      ])
+
+      it('starts every connection with no passed check, before the wallet can be used', async () => {
+        // A check passed earlier in this browser (a closed tab, a reload,
+        // another login) must not carry over to whoever logs in now.
+        const store = await loggedInStore(protectedUser)
+        fake.privy.user.get.mockResolvedValue({ user: protectedUser })
+
+        await store.provisionWallet()
+
+        expect(fake.privy.mfa.clearMfa.mock.calls).toEqual([
+          [{ userId: 'did:privy:1' }],
+        ])
+        expect(
+          fake.privy.mfa.clearMfa.mock.invocationCallOrder[0],
+        ).toBeLessThan(
+          fake.privy.embeddedWallet.getEthereumProvider.mock
+            .invocationCallOrder[0],
+        )
+      })
+
+      it('still connects when the wallet does not answer the clearing', async () => {
+        const store = await loggedInStore(protectedUser)
+        fake.privy.user.get.mockResolvedValue({ user: protectedUser })
+        fake.privy.mfa.clearMfa.mockReturnValue(new Promise(() => undefined))
+        vi.useFakeTimers()
+        try {
+          const connecting = store.provisionWallet()
+          await vi.advanceTimersByTimeAsync(10_000)
+          await connecting
+        } finally {
+          vi.useRealTimers()
+        }
+
+        expect(fake.walletStore.setWallet).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    it('clears nothing when connecting a user with no passkey check', async () => {
+      const store = await loggedInStore(userWithWallet)
+
+      await store.provisionWallet()
+
+      expect(fake.privy.mfa.clearMfa).not.toHaveBeenCalled()
     })
 
     it('refuses to connect when there is no chain to connect on', async () => {
@@ -414,6 +498,75 @@ describe('authStore', () => {
       expect(fake.walletStore.setWatchOnlyIfExist).toHaveBeenCalledTimes(1)
     })
 
+    describe('for a user whose wallet has a passkey check', () => {
+      const protectedUser = userWith([
+        emailAccount,
+        walletAccount,
+        passkeyAccount('cred-a', true),
+      ])
+      const connect = async () => {
+        const store = await loggedInStore(protectedUser)
+        fake.privy.user.get.mockResolvedValue({ user: protectedUser })
+        await store.provisionWallet()
+        // Connecting clears a passed check too; these tests are about logout.
+        fake.privy.mfa.clearMfa.mockClear()
+        return fake.walletStore.setWallet.mock.calls[0][0] as PrivyWallet
+      }
+
+      it('has the wallet forget a check it has passed, so the next login on this device is asked again', async () => {
+        const connected = await connect()
+
+        await connected.disconnect()
+
+        expect(fake.privy.mfa.clearMfa.mock.calls).toEqual([
+          [{ userId: 'did:privy:1' }],
+        ])
+        // It is the wallet iframe that forgets: it must still be there.
+        expect(
+          fake.privy.mfa.clearMfa.mock.invocationCallOrder[0],
+        ).toBeLessThan(fake.teardownWalletIframe.mock.invocationCallOrder[0])
+        expect(fake.privy.auth.logout).toHaveBeenCalledTimes(1)
+      })
+
+      it('logs out all the same when the wallet cannot forget it', async () => {
+        const connected = await connect()
+        fake.privy.mfa.clearMfa.mockRejectedValue(new Error('not loaded'))
+
+        await connected.disconnect()
+
+        expect(fake.teardownWalletIframe).toHaveBeenCalledTimes(1)
+        expect(fake.privy.auth.logout).toHaveBeenCalledTimes(1)
+      })
+
+      it('does not wait long on a wallet that does not answer', async () => {
+        const connected = await connect()
+        fake.privy.mfa.clearMfa.mockReturnValue(new Promise(() => undefined))
+        vi.useFakeTimers()
+        try {
+          const disconnecting = connected.disconnect()
+          await vi.advanceTimersByTimeAsync(2000)
+          await disconnecting
+        } finally {
+          vi.useRealTimers()
+        }
+
+        expect(fake.privy.auth.logout).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    it('asks nothing of the wallet when the user has no passkey check', async () => {
+      const store = await loggedInStore(userWithWallet)
+      fake.privy.user.get.mockResolvedValue({ user: userWithWallet })
+      await store.provisionWallet()
+      const connected = fake.walletStore.setWallet.mock
+        .calls[0][0] as PrivyWallet
+
+      await connected.disconnect()
+
+      expect(fake.privy.mfa.clearMfa).not.toHaveBeenCalled()
+      expect(fake.privy.auth.logout).toHaveBeenCalledTimes(1)
+    })
+
     it('leaves another wallet alone when a login that is not active is dropped', async () => {
       holdLogin(userWithWallet)
       fake.walletStore.wallet = { getWalletType: () => 'INJECTED' }
@@ -421,6 +574,220 @@ describe('authStore', () => {
       await useAuthStore().useDifferentAccount()
 
       expect(fake.walletStore.setWatchOnlyIfExist).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('a login lost while its wallet is connected', () => {
+    /** A connected Privy wallet whose every request Privy fails with `error`. */
+    const connectedWalletFailingWith = async (error: Error) => {
+      fake.privy.embeddedWallet.getEthereumProvider.mockResolvedValue({
+        request: vi.fn().mockRejectedValue(error),
+      })
+      const store = await loggedInStore(userWithWallet)
+      await store.provisionWallet()
+      const wallet = fake.walletStore.setWallet.mock.calls[0][0] as PrivyWallet
+      fake.walletStore.wallet = wallet
+      return { store, wallet }
+    }
+
+    it('leaves the wallet watch-only and reports the expired login when signing fails without a login', async () => {
+      const { store, wallet } = await connectedWalletFailingWith(
+        new Error('Missing privy token. User must be logged in'),
+      )
+      fake.privy.getAccessToken.mockResolvedValue(null)
+
+      await expect(wallet.SignMessage({ message: 'hello' })).rejects.toThrow(
+        'Your login has expired. Log in again to continue.',
+      )
+
+      expect(fake.walletStore.setWatchOnlyIfExist).toHaveBeenCalledTimes(1)
+      expect(fake.privy.auth.logout).toHaveBeenCalledTimes(1)
+      expect(store.status).toBe('anonymous')
+    })
+
+    it('keeps the wallet connected when signing fails for another reason', async () => {
+      const { store, wallet } = await connectedWalletFailingWith(
+        new Error('rate limited'),
+      )
+      fake.privy.getAccessToken.mockResolvedValue('tok')
+
+      await expect(wallet.SignMessage({ message: 'hello' })).rejects.toThrow(
+        'rate limited',
+      )
+
+      expect(fake.walletStore.setWatchOnlyIfExist).not.toHaveBeenCalled()
+      expect(fake.privy.auth.logout).not.toHaveBeenCalled()
+      expect(store.status).toBe('authenticated')
+    })
+
+    it('still leaves the wallet watch-only when Privy cannot be told the login ended', async () => {
+      const { wallet } = await connectedWalletFailingWith(
+        new Error('Missing privy token. User must be logged in'),
+      )
+      fake.privy.getAccessToken.mockResolvedValue(null)
+      fake.privy.auth.logout.mockRejectedValue(new Error('offline'))
+
+      await expect(wallet.SignMessage({ message: 'hello' })).rejects.toThrow(
+        'Your login has expired. Log in again to continue.',
+      )
+
+      expect(fake.walletStore.setWatchOnlyIfExist).toHaveBeenCalledTimes(1)
+    })
+
+    it('treats the login as still there when Privy cannot say either way', async () => {
+      const { wallet } = await connectedWalletFailingWith(new Error('offline'))
+      fake.privy.getAccessToken.mockRejectedValue(new Error('offline'))
+
+      await expect(wallet.SignMessage({ message: 'hello' })).rejects.toThrow(
+        'offline',
+      )
+
+      expect(fake.walletStore.setWatchOnlyIfExist).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('passkeys', () => {
+    it("starts answering Privy's passkey checks as soon as the SDK is loaded", async () => {
+      await loggedInStore(userWithWallet)
+
+      expect(fake.answerPasskeyChecks).toHaveBeenCalled()
+    })
+
+    it("lists the account's passkeys, and whether each one is in use as the check", async () => {
+      const store = await loggedInStore(
+        userWith([
+          emailAccount,
+          walletAccount,
+          passkeyAccount('cred-a', true),
+          passkeyAccount('cred-b', false),
+        ]),
+      )
+
+      expect(store.passkeys).toEqual([
+        {
+          credentialId: 'cred-a',
+          name: 'iCloud Keychain',
+          addedAt: 1_794_000_000,
+          active: true,
+        },
+        {
+          credentialId: 'cred-b',
+          name: 'iCloud Keychain',
+          addedAt: 1_794_000_000,
+          active: false,
+        },
+      ])
+    })
+
+    it('adds a passkey: links the new one, then makes every passkey of the account the check', async () => {
+      const store = await loggedInStore(
+        userWith([emailAccount, walletAccount, passkeyAccount('cred-a', true)]),
+      )
+      fake.linkPasskey.mockResolvedValue(
+        userWith([
+          emailAccount,
+          walletAccount,
+          passkeyAccount('cred-a', true),
+          passkeyAccount('cred-new', false),
+        ]),
+      )
+      fake.enrollPasskeys.mockResolvedValue(undefined)
+      fake.privy.user.get.mockResolvedValue({
+        user: userWith([
+          emailAccount,
+          walletAccount,
+          passkeyAccount('cred-a', true),
+          passkeyAccount('cred-new', true),
+        ]),
+      })
+
+      expect(await store.addPasskey('settings')).toBe('added')
+
+      expect(fake.enrollPasskeys).toHaveBeenCalledWith(['cred-a', 'cred-new'])
+      expect(store.passkeys.map(passkey => passkey.active)).toEqual([
+        true,
+        true,
+      ])
+      expect(store.passkeyAdded).toBe(true)
+    })
+
+    it('changes nothing when the user dismisses the browser prompt', async () => {
+      const store = await loggedInStore(userWithWallet)
+      fake.linkPasskey.mockRejectedValue(new PasskeyCancelledError())
+
+      expect(await store.addPasskey('settings')).toBe('cancelled')
+
+      expect(fake.enrollPasskeys).not.toHaveBeenCalled()
+      expect(store.passkeys).toEqual([])
+      expect(store.passkeyAdded).toBe(false)
+      expect(store.error).toBeNull()
+    })
+
+    it('keeps a passkey that was linked but could not be made the check, so that can be tried again', async () => {
+      const store = await loggedInStore(userWithWallet)
+      fake.linkPasskey.mockResolvedValue(
+        userWith([
+          emailAccount,
+          walletAccount,
+          passkeyAccount('cred-new', false),
+        ]),
+      )
+      fake.enrollPasskeys.mockRejectedValueOnce(new Error('offline'))
+
+      await expect(store.addPasskey('settings')).rejects.toThrow('offline')
+      expect(store.passkeys).toEqual([
+        expect.objectContaining({ credentialId: 'cred-new', active: false }),
+      ])
+
+      fake.enrollPasskeys.mockResolvedValue(undefined)
+      fake.privy.user.get.mockResolvedValue({
+        user: userWith([
+          emailAccount,
+          walletAccount,
+          passkeyAccount('cred-new', true),
+        ]),
+      })
+      expect(store.passkeyAdded).toBe(false)
+      await store.activatePasskeys('settings')
+
+      expect(fake.enrollPasskeys).toHaveBeenLastCalledWith(['cred-new'])
+      expect(store.passkeys[0].active).toBe(true)
+      // The add is complete only now, and the user is told so.
+      expect(store.passkeyAdded).toBe(true)
+      expect(fake.trackAccountSecurityEvent).toHaveBeenLastCalledWith(
+        'Passkey_Add_Succeeded',
+        { source: 'settings' },
+      )
+    })
+
+    it('removes a passkey and shows the account without it', async () => {
+      const store = await loggedInStore(
+        userWith([emailAccount, walletAccount, passkeyAccount('cred-a', true)]),
+      )
+      fake.unlinkPasskey.mockResolvedValue(undefined)
+      fake.privy.user.get.mockResolvedValue({ user: userWithWallet })
+
+      await store.removePasskey('cred-a')
+
+      expect(fake.unlinkPasskey).toHaveBeenCalledWith('cred-a')
+      expect(store.passkeys).toEqual([])
+    })
+
+    it('reports adding a passkey to analytics with where it started and never with a credential', async () => {
+      const store = await loggedInStore(userWithWallet)
+      fake.linkPasskey.mockRejectedValue(
+        Object.assign(new Error('nope'), { code: 'failed_to_create_passkey' }),
+      )
+
+      await expect(store.addPasskey('home_prompt')).rejects.toThrow('nope')
+
+      expect(fake.trackAccountSecurityEvent.mock.calls).toEqual([
+        ['Passkey_Add_Started', { source: 'home_prompt' }],
+        [
+          'Passkey_Add_Failed',
+          { source: 'home_prompt', reason: 'failed_to_create_passkey' },
+        ],
+      ])
     })
   })
 
@@ -453,6 +820,49 @@ describe('authStore', () => {
       expect(store.status).toBe('authenticated')
       expect(store.hasWallet).toBe(true)
       expect(fake.privy.auth.logout).not.toHaveBeenCalled()
+    })
+
+    it('knows how the user logged in, though no login step ran this time', async () => {
+      holdLogin(userWithWallet)
+      const store = useAuthStore()
+
+      await store.continueWithExistingLogin()
+
+      expect(store.loginMethod).toBe('email')
+    })
+
+    it('tells a Google login from an email one when it continues with it', async () => {
+      holdLogin(
+        userWith([
+          { type: 'google_oauth', email: 'ada@example.com', subject: 'g-1' },
+          walletAccount,
+        ]),
+      )
+      const store = useAuthStore()
+
+      await store.continueWithExistingLogin()
+
+      expect(store.loginMethod).toBe('google')
+    })
+
+    it('names the way the user logged in last when the account has both', async () => {
+      holdLogin(
+        userWith([
+          { ...emailAccount, latest_verified_at: 1_794_000_000 },
+          {
+            type: 'google_oauth',
+            email: 'ada@example.com',
+            subject: 'g-1',
+            latest_verified_at: 1_794_000_500,
+          },
+          walletAccount,
+        ]),
+      )
+      const store = useAuthStore()
+
+      await store.continueWithExistingLogin()
+
+      expect(store.loginMethod).toBe('google')
     })
 
     it('logs out when the user picks a different account', async () => {
