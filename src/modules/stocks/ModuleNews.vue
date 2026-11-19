@@ -28,7 +28,7 @@
           rel="noopener noreferrer"
           v-for="(article, index) in paginatedArray"
           :key="`news-article-${index}-${article.title}`"
-          class="flex gap-4 overflow-hidden hover:underline"
+          class="group flex gap-4 overflow-hidden"
         >
           <img
             :src="article.thumbnailUrl"
@@ -36,7 +36,7 @@
             class="flex-none w-16 h-16 object-cover rounded-12"
           />
           <div class="flex flex-col gap-1 w-full h-full justify-between">
-            <p class="text-s-14 line-clamp-2">
+            <p class="text-s-14 line-clamp-2 group-hover:underline">
               {{ article.title }}
             </p>
             <div class="flex items-center gap-2 flex-wrap">
@@ -47,10 +47,13 @@
                     : ''
                 }}
               </p>
+              <!-- Max 4 tags, so an article with many tickers doesn't make
+                   this card taller than Newly Added / Trending next to it. -->
               <AppTag
-                v-for="ticker in article.tickers || []"
+                v-for="ticker in article.tickers?.slice(0, 4) ?? []"
                 :key="ticker"
                 variant="subtle"
+                class="text-[10px]/[12px]!"
                 :label="ticker"
               />
             </div>
