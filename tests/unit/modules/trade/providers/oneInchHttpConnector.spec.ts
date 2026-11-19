@@ -1,6 +1,9 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import axios from 'axios'
 import { IsolatedAxiosConnector } from '@/modules/trade/providers/oneinch_fusion/oneInchHttpConnector'
+import configs from '@/configs'
+
+const FUSION_URL = `${configs.MEW_WALLET_API}/v5/swap/oneinch/proxy/fusion`
 
 const registerLedgerLikeInterceptor = () =>
   axios.interceptors.response.use(
@@ -59,9 +62,7 @@ describe('IsolatedAxiosConnector', () => {
         }),
       )
 
-    await expect(
-      connector.get('https://api.1inch.com/quote'),
-    ).rejects.toEqual(
+    await expect(connector.get(`${FUSION_URL}/quote`)).rejects.toEqual(
       expect.objectContaining({
         message: 'Request failed with status code 400',
         response: expect.objectContaining({
@@ -85,9 +86,9 @@ describe('IsolatedAxiosConnector', () => {
       config,
     })
 
-    await expect(
-      connector.get('https://api.1inch.com/quote'),
-    ).resolves.toEqual({ quoteId: 'abc' })
+    await expect(connector.get(`${FUSION_URL}/quote`)).resolves.toEqual({
+      quoteId: 'abc',
+    })
   })
 
   it('captures the raw quoter body so callers can read fields the SDK drops', async () => {
@@ -106,9 +107,7 @@ describe('IsolatedAxiosConnector', () => {
     })
 
     expect(connector.lastQuoteResponse).toBeNull()
-    await connector.get(
-      'https://api.1inch.com/quoter/v2.0/1/quote/receive/?x=1',
-    )
+    await connector.get(`${FUSION_URL}/quoter/v2.0/1/quote/receive/?x=1`)
     expect(connector.lastQuoteResponse).toEqual(body)
   })
 
@@ -122,9 +121,7 @@ describe('IsolatedAxiosConnector', () => {
       config,
     })
 
-    await connector.get(
-      'https://api.1inch.com/orders/v2.0/1/order/status/0xabc',
-    )
+    await connector.get(`${FUSION_URL}/orders/v2.0/1/order/status/0xabc`)
     expect(connector.lastQuoteResponse).toBeNull()
   })
 })

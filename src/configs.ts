@@ -14,6 +14,7 @@ const configs = {
   MEW_PURCHASE_API: `${mewWalletUrl}/v5/purchase/info`,
   MEW_EXCHANGE_RATES_API: `${mewWalletUrl}/v2/prices/exchange-rates`,
   MEW_EMAIL: `${mewWalletUrl}/email-web`,
+  MEW_WALLET_API: mewWalletUrl,
   IS_DEV_MODE: false,
   MEW_DONATION_ADDRESS: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   POPULAR_CHAINS: [
