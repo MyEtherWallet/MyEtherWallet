@@ -1,0 +1,48 @@
+// TypeScript config for the wallet export page: a small React page that lives
+// apart from the Vue app in `src/` (see ExportWalletPage.tsx). The checks are
+// the ones tsconfig.app.json makes; the JSX settings are React's. Vite and
+// Vitest read the JSX settings from here for every file in this folder.
+{
+  "include": ["./**/*", "../env.d.ts"],
+  "compilerOptions": {
+    // Language & Environment
+    "target": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleDetection": "force",
+    "useDefineForClassFields": true,
+
+    // Module
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noUncheckedSideEffectImports": true,
+    "resolveJsonModule": true,
+    "baseUrl": "..",
+    "paths": {
+      // The page reads the app's constants, locale files and styles.
+      "@/*": ["./src/*"],
+      "@assets/*": ["./src/assets/*"]
+    },
+
+    // Emit: none, Vite runs the files directly
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+
+    // Type checking
+    "noImplicitThis": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "useUnknownInCatchVariables": true,
+
+    // Interop constraints
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+
+    // Completeness
+    "skipLibCheck": true
+  }
+}

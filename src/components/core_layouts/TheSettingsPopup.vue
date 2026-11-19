@@ -228,7 +228,6 @@
                     </template>
                   </app-cell>
                   <app-cell
-                    v-if="canExportPhrase"
                     size="small"
                     inset
                     :title="$t('settings.recovery_phrase')"
@@ -303,33 +302,8 @@
               }"
             >
               <settings-phrase-acknowledge
-                :loading="phrase.status === 'loading'"
-                :failed="phrase.status === 'error'"
-                @back="closePhrase"
-                @view="loadPhrase"
-              />
-            </div>
-
-            <!-- Recovery phrase: the words. Rendered only while they are held. -->
-            <div
-              ref="phrasePanelRef"
-              data-test="settings-phrase"
-              :inert="view !== 'phrase'"
-              class="absolute top-0 left-0 w-full p-6"
-              :style="{
-                transform:
-                  view === 'phrase'
-                    ? 'translateX(0)'
-                    : `translateX(calc(100% + ${GAP}px))`,
-                opacity: view === 'phrase' ? 1 : 0,
-                transition:
-                  'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
-              }"
-            >
-              <settings-recovery-phrase
-                v-if="phrase.status === 'ready'"
-                :words="phrase.words"
-                @back="closePhrase"
+                @back="view = 'main'"
+                @view="openExportPage"
               />
             </div>
 
@@ -597,8 +571,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useCurrencyStore, SUPPORTED_CURRENCIES } from '@/stores/currencyStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { usePrivyAccount } from '@/composables/usePrivyAccount'
-import { useRecoveryPhrase } from '@/composables/useRecoveryPhrase'
-import { phraseExportSupported } from '@/providers/privy/phraseExportSupport'
+import configs from '@/configs'
 import { analytics } from '@/analytics'
 import { AccountSecurityEvent } from '@/analytics/events'
 import { getFiatIcon } from '@/utils/fiatIcons'
@@ -612,7 +585,6 @@ import AppSearchbar from '@/components/AppSearchbar.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import SettingsLoginMethods from '@/components/core_layouts/settings/SettingsLoginMethods.vue'
 import SettingsPhraseAcknowledge from '@/components/core_layouts/settings/SettingsPhraseAcknowledge.vue'
-import SettingsRecoveryPhrase from '@/components/core_layouts/settings/SettingsRecoveryPhrase.vue'
 
 import AppIcon from '@/components/icon/AppIcon.vue'
 const GAP = 24
@@ -705,13 +677,7 @@ const FEE_MAP_REVERSE: Record<string, string> = {
 }
 
 type SettingsView =
-  | 'main'
-  | 'fee'
-  | 'currency'
-  | 'language'
-  | 'login-methods'
-  | 'phrase-ack'
-  | 'phrase'
+  'main' | 'fee' | 'currency' | 'language' | 'login-methods' | 'phrase-ack'
 const view = ref<SettingsView>('main')
 
 // The connected wallet. Its own section is for a Privy account; Log out is
@@ -719,8 +685,6 @@ const view = ref<SettingsView>('main')
 const walletStore = useWalletStore()
 const { isWalletUnlocked, walletAddress } = storeToRefs(walletStore)
 const { isPrivyConnected, email, loginMethod } = usePrivyAccount()
-/** The Recovery Phrase row shows only when the page has a way to get the phrase. */
-const canExportPhrase = phraseExportSupported()
 
 const logOut = () => {
   walletStore.disconnectWallet()
@@ -728,32 +692,24 @@ const logOut = () => {
   view.value = 'main'
 }
 
-// The recovery phrase of the connected Privy wallet. The words are held by
-// this popup only while its phrase screen shows them: they are dropped on
-// back, when Settings closes, on log out, and when the connected wallet stops
-// being this Privy account.
-const {
-  state: phrase,
-  load: loadPhrase,
-  clear: clearPhrase,
-} = useRecoveryPhrase()
-
+// The recovery phrase of the connected Privy wallet. Settings never holds it:
+// Privy shows it, on the wallet export page, after the user has logged in
+// again there. Settings says what to know first and opens that page.
 const openPhrase = () => {
   view.value = 'phrase-ack'
   void analytics.trackAccountSecurityEvent(
     AccountSecurityEvent.RECOVERY_PHRASE_OPENED,
   )
 }
-const closePhrase = () => {
-  clearPhrase()
+const openExportPage = () => {
+  // Its own tab, with no opener: the page gets nothing of this one, and this
+  // tab's wallet stays connected behind it.
+  window.open(configs.WALLET_EXPORT_PAGE, '_blank', 'noopener')
+  void analytics.trackAccountSecurityEvent(
+    AccountSecurityEvent.RECOVERY_PHRASE_EXPORT_OPENED,
+  )
   view.value = 'main'
 }
-// The words arrive while "Before you continue" is showing: move on to them.
-watch(phrase, state => {
-  if (state.status === 'ready' && view.value === 'phrase-ack') {
-    view.value = 'phrase'
-  }
-})
 const selectedFee = computed({
   get: () => FEE_MAP_REVERSE[defaultGasPriceType.value] ?? 'recommended',
   set: (val: string) => {
@@ -801,7 +757,6 @@ const currencyListRef = ref<HTMLElement | null>(null)
 const languagePanelRef = ref<HTMLElement | null>(null)
 const loginMethodsPanelRef = ref<HTMLElement | null>(null)
 const phraseAckPanelRef = ref<HTMLElement | null>(null)
-const phrasePanelRef = ref<HTMLElement | null>(null)
 const containerHeight = ref(0)
 
 const measureHeight = () => {
@@ -812,7 +767,6 @@ const measureHeight = () => {
     language: languagePanelRef.value,
     'login-methods': loginMethodsPanelRef.value,
     'phrase-ack': phraseAckPanelRef.value,
-    phrase: phrasePanelRef.value,
   }
   const activeRef = panelByView[view.value]
   if (activeRef) containerHeight.value = activeRef.scrollHeight
@@ -822,9 +776,6 @@ watch(isSettingsOpen, val => {
   if (val) {
     currencyStore.ensureRates()
     nextTick(measureHeight)
-  } else {
-    // However Settings was closed, the phrase does not outlive it.
-    closePhrase()
   }
 })
 watch(view, val => {
@@ -844,13 +795,11 @@ useResizeObserver(phraseAckPanelRef, () => measureHeight())
 // The main panel gains and loses rows as the connected wallet changes, and a
 // screen that belongs to the Privy account closes when that account is gone.
 watch([isPrivyConnected, isWalletUnlocked, walletAddress], () => {
-  // Whatever changed, a phrase on screen may no longer be this wallet's, and
-  // the account's own screens close once the account is not the connected one.
-  clearPhrase()
-  const onPhrase = view.value === 'phrase-ack' || view.value === 'phrase'
+  // The account's own screens close once the account is not the connected one.
   const onStaleAccountScreen =
-    view.value === 'login-methods' && !isPrivyConnected.value
-  if (onPhrase || onStaleAccountScreen) view.value = 'main'
+    (view.value === 'login-methods' || view.value === 'phrase-ack') &&
+    !isPrivyConnected.value
+  if (onStaleAccountScreen) view.value = 'main'
   nextTick(measureHeight)
 })
 

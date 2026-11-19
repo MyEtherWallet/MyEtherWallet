@@ -13,8 +13,6 @@
     "hero": {
       "welcomeTitle": "Bienvenido a MEW",
       "welcomeSubtitle": "Conecta tu wallet para empezar a operar acciones y cripto",
-      "createWallet": "Crear wallet",
-      "connectWallet": "Conectar wallet",
       "ownTotal": "Tienes un total de",
       "today": "hoy",
       "goToPortfolio": "Ir al portafolio",

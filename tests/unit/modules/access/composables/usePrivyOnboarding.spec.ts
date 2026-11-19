@@ -100,6 +100,18 @@ describe('usePrivyOnboarding', () => {
       expect(events()).toContain('Onboarding_Entry_Viewed')
     })
 
+    it('has nowhere to go back to from the entry screen: it is the first one', async () => {
+      await flow.enter()
+
+      expect(flow.backTarget.value).toBeNull()
+    })
+
+    it('goes back from the code screen to the entry screen', async () => {
+      await flow.chooseEmail('ada@example.com')
+
+      expect(flow.backTarget.value).toBe('entry')
+    })
+
     it('asks whether to continue when a login is still valid in the tab', async () => {
       ;(
         fake.auth.findExistingLogin as ReturnType<typeof vi.fn>

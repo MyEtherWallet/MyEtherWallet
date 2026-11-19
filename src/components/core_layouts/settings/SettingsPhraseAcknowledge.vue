@@ -30,17 +30,11 @@
       </li>
     </ul>
 
-    <p
-      v-if="failed"
-      role="alert"
-      data-test="phrase-error"
-      class="text-text-sm text-text-error"
-    >
-      {{ $t('settings.phrase.error') }}
+    <p class="text-text-sm text-text-subtle">
+      {{ $t('settings.phrase.next_step') }}
     </p>
 
-    <!-- Nothing is asked of Privy until this is pressed. -->
-    <app-base-button class="w-full" :is-loading="loading" @click="emit('view')">
+    <app-base-button class="w-full" @click="emit('view')">
       {{ $t('settings.phrase.view') }}
     </app-base-button>
   </div>
@@ -56,16 +50,9 @@ import AppIconContainer from '@/components/icon_container/AppIconContainer.vue'
 
 /**
  * Settings › Recovery Phrase › "Before you continue": what the user is told
- * before the phrase is fetched and shown. Pressing the button is what asks
- * Privy for the phrase; a user with a passkey is asked for it then.
+ * before they go to see the phrase. The phrase itself is shown by Privy on
+ * the wallet export page, which the button opens.
  */
-defineProps<{
-  /** The phrase has been asked for and has not arrived yet. */
-  loading: boolean
-  /** The last request for the phrase failed. */
-  failed: boolean
-}>()
-
 const emit = defineEmits<{
   back: []
   view: []

@@ -13,6 +13,7 @@ const h = await vi.hoisted(async () => {
   return {
     passkeys: ref<Passkey[]>([]),
     supported: true,
+    offered: true,
     addPasskey: vi.fn(),
     removePasskey: vi.fn(),
     activatePasskeys: vi.fn(),
@@ -29,6 +30,9 @@ vi.mock('@/stores/authStore', () => ({
 }))
 vi.mock('@/providers/privy/passkeySupport', () => ({
   passkeySupported: () => h.supported,
+}))
+vi.mock('@/providers/privy/accountOffer', () => ({
+  passkeysOffered: () => h.offered,
 }))
 vi.mock('vue-i18n', async importOriginal => {
   const actual = await importOriginal<typeof import('vue-i18n')>()
@@ -72,6 +76,7 @@ describe('SettingsPasskeys', () => {
     vi.clearAllMocks()
     h.passkeys.value = []
     h.supported = true
+    h.offered = true
     h.addPasskey.mockResolvedValue('added')
     h.removePasskey.mockResolvedValue(undefined)
     h.activatePasskeys.mockResolvedValue(undefined)
@@ -110,6 +115,24 @@ describe('SettingsPasskeys', () => {
     const w = render()
 
     expect(w.html()).not.toContain('cred-secret-a')
+  })
+
+  it('is absent, with no way to add a passkey, while passkeys are not offered', () => {
+    h.offered = false
+    const w = render()
+
+    expect(w.find('section').exists()).toBe(false)
+    expect(button(w, 'settings.add_passkey')).toBeUndefined()
+  })
+
+  it('still lets an account that has passkeys see and remove them while adding is not offered', () => {
+    h.offered = false
+    h.passkeys.value = [passkey('cred-a')]
+    const w = render()
+
+    expect(w.text()).toContain('iCloud Keychain')
+    expect(removeButtons(w)).toHaveLength(1)
+    expect(button(w, 'settings.add_passkey')).toBeUndefined()
   })
 
   it('is absent on a browser without passkeys when there are none to show', () => {

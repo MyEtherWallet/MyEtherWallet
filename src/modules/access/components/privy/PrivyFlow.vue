@@ -37,6 +37,16 @@
       >
         {{ t('access_wallet.social.existing.different') }}
       </AppBaseButton>
+      <!-- This screen stands in for the entry screen and its wallet row, so
+           it leads to the wallets too. The login is left as it is: someone
+           logged in with Google can add a Ledger beside it. -->
+      <AppBaseButton
+        data-testid="existing-other-methods"
+        type="link"
+        @click="accessStore.setCurrentView('default')"
+      >
+        {{ t('access_wallet.social.other_methods') }}
+      </AppBaseButton>
     </div>
   </PrivyScreen>
 

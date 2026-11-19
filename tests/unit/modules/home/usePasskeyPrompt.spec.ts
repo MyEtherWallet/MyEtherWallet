@@ -16,6 +16,7 @@ const state = vi.hoisted(() => ({
   totalFiat: '50',
   passkeys: [] as unknown[],
   supported: true,
+  offered: true,
 }))
 vi.mock('@/stores/walletStore', () => ({
   useWalletStore: defineStore('walletStore', () => ({
@@ -40,6 +41,9 @@ vi.mock('@/stores/authStore', () => ({
 vi.mock('@/providers/privy/passkeySupport', () => ({
   passkeySupported: () => state.supported,
 }))
+vi.mock('@/providers/privy/accountOffer', () => ({
+  passkeysOffered: () => state.offered,
+}))
 
 const { usePasskeyPrompt } =
   await import('@/modules/home/composables/usePasskeyPrompt')
@@ -54,6 +58,7 @@ const prompt = (overrides: Partial<typeof state> = {}) => {
     totalFiat: '50',
     passkeys: [],
     supported: true,
+    offered: true,
     ...overrides,
   })
   setActivePinia(createPinia())
@@ -98,6 +103,10 @@ describe('usePasskeyPrompt', () => {
   it('does not show for a wallet that is not Privy, or a Privy address that is only being viewed', () => {
     expect(prompt({ walletType: 'INJECTED' }).isVisible.value).toBe(false)
     expect(prompt({ isWatchOnly: true }).isVisible.value).toBe(false)
+  })
+
+  it('does not show while adding a passkey is not offered', () => {
+    expect(prompt({ offered: false }).isVisible.value).toBe(false)
   })
 
   it('does not show on a browser that cannot make a passkey', () => {

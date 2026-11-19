@@ -91,6 +91,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppCell from '@/components/cell/AppCell.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import type { PasskeyEntry } from '@/providers/privy/passkeyList'
+import { passkeysOffered } from '@/providers/privy/accountOffer'
 import { passkeySupported } from '@/providers/privy/passkeySupport'
 import { useAuthStore } from '@/stores/authStore'
 import { isUserRejectionError } from '@/utils/walletUtils'
@@ -107,7 +108,7 @@ const authStore = useAuthStore()
 const { passkeys } = storeToRefs(authStore)
 const { t, locale } = useI18n()
 
-const canAdd = passkeySupported()
+const canAdd = passkeysOffered() && passkeySupported()
 
 const busy = ref(false)
 const adding = ref(false)

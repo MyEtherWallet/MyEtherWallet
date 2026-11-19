@@ -996,9 +996,8 @@ export const AccountSecurityEvent = {
   PASSKEY_CHECK_FAILED: 'Passkey_Check_Failed',
   PASSKEY_CHECK_CANCELLED: 'Passkey_Check_Cancelled',
   RECOVERY_PHRASE_OPENED: 'Recovery_Phrase_Opened',
-  RECOVERY_PHRASE_REVEALED: 'Recovery_Phrase_Revealed',
-  RECOVERY_PHRASE_COPIED: 'Recovery_Phrase_Copied',
-  RECOVERY_PHRASE_FAILED: 'Recovery_Phrase_Failed',
+  /** The user left Settings for the wallet export page. What happens there is not tracked. */
+  RECOVERY_PHRASE_EXPORT_OPENED: 'Recovery_Phrase_Export_Opened',
 } as const
 export type AccountSecurityEvent =
   (typeof AccountSecurityEvent)[keyof typeof AccountSecurityEvent]

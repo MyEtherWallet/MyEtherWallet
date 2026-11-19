@@ -14,7 +14,9 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useProviderStore } from '@/stores/providerStore'
 import {
+  selectSignUpRowWallets,
   selectTabWallets,
+  walletNames,
   type TabWallet,
   type WalletTab,
 } from '@/modules/access/common/walletTabs'
@@ -198,19 +200,34 @@ export const useWalletList = () => {
     })
   })
 
+  /** Most recent first: the store appends. */
+  const recentNames = (): string[] =>
+    walletNames([...recentWallets.value].reverse().map(w => w?.name))
+  const detectedNames = (): string[] =>
+    walletNames(providers.value.map(p => p?.info?.name))
+
   /** Call inside a computed so recent / detected / chain changes re-run it. */
   const walletsForTab = (tab: WalletTab, search = ''): TabWallet[] =>
     selectTabWallets({
       wallets: allWallets.value,
       tab,
       search,
-      recentNames: [...recentWallets.value].reverse().map(w => w.name),
-      detectedNames: providers.value.map(p => p.info.name),
+      recentNames: recentNames(),
+      detectedNames: detectedNames(),
+    })
+
+  /** The wallet tiles of the Log in / Sign Up view. Call inside a computed, too. */
+  const signUpRowWallets = (): WalletConfig[] =>
+    selectSignUpRowWallets({
+      wallets: allWallets.value,
+      recentNames: recentNames(),
+      detectedNames: detectedNames(),
     })
 
   return {
     defaultWallets,
     newWalletList,
     walletsForTab,
+    signUpRowWallets,
   }
 }

@@ -11,8 +11,13 @@ vi.mock('@/modules/access/common/walletConfigs', () => ({
   },
 }))
 
-const { selectTabWallets, walletKey, WALLET_TABS } =
-  await import('@/modules/access/common/walletTabs')
+const {
+  selectSignUpRowWallets,
+  selectTabWallets,
+  walletKey,
+  walletNames,
+  WALLET_TABS,
+} = await import('@/modules/access/common/walletTabs')
 
 type W = Parameters<typeof walletKey>[0]
 const cfg = (id: string, name: string, type: string[], extra = {}): W =>
@@ -222,5 +227,95 @@ describe('selectTabWallets', () => {
         'Zerion',
       ])
     }
+  })
+})
+
+// The wallet row of the Log in / Sign Up view, as design set it on 2026-11-19.
+describe('selectSignUpRowWallets', () => {
+  const row = (input: Partial<typeof base> = {}) =>
+    selectSignUpRowWallets({ ...base, ...input }).map(w => w.name)
+
+  it('leads with the detected wallet and the most recent one, then MEW Mobile and Enkrypt', () => {
+    expect(
+      row({
+        detectedNames: ['MetaMask'],
+        recentNames: ['Rabby Wallet', 'Zerion'],
+      }),
+    ).toEqual(['MetaMask', 'Rabby Wallet', 'MEW Mobile', 'Enkrypt'])
+  })
+
+  it('adds Private Key when there is a detected wallet and no recent one', () => {
+    expect(row({ detectedNames: ['MetaMask'] })).toEqual([
+      'MetaMask',
+      'MEW Mobile',
+      'Enkrypt',
+      'Private Key',
+    ])
+  })
+
+  it('offers MEW Mobile, Enkrypt, Private Key and Keystore when nothing is detected or recent', () => {
+    expect(row()).toEqual(['MEW Mobile', 'Enkrypt', 'Private Key', 'Keystore'])
+  })
+
+  it('leads with the most recent wallet when none is detected', () => {
+    expect(row({ recentNames: ['Rainbow'] })).toEqual([
+      'Rainbow',
+      'MEW Mobile',
+      'Enkrypt',
+      'Private Key',
+    ])
+  })
+
+  it('shows a wallet once when it is both detected and the most recent', () => {
+    expect(
+      row({ detectedNames: ['metamask'], recentNames: ['MetaMask'] }),
+    ).toEqual(['MetaMask', 'MEW Mobile', 'Enkrypt', 'Private Key'])
+  })
+
+  it('shows Enkrypt once when it is the detected wallet', () => {
+    expect(row({ detectedNames: ['Enkrypt'] })).toEqual([
+      'Enkrypt',
+      'MEW Mobile',
+      'Private Key',
+      'Keystore',
+    ])
+  })
+
+  it('takes the first detected wallet only; the others stay under the other methods', () => {
+    expect(row({ detectedNames: ['Rabby Wallet', 'MetaMask'] })).toEqual([
+      'Rabby Wallet',
+      'MEW Mobile',
+      'Enkrypt',
+      'Private Key',
+    ])
+  })
+
+  it('skips a detected or recent name that is no wallet of the selected chain', () => {
+    expect(
+      row({ detectedNames: ['Unknown Wallet'], recentNames: ['Gone'] }),
+    ).toEqual(['MEW Mobile', 'Enkrypt', 'Private Key', 'Keystore'])
+  })
+
+  it('fills the row from the Popular list where the chain has fewer of these (Bitcoin)', () => {
+    const bitcoin = [
+      cfg('enkrypt', 'Enkrypt', ['extension'], {
+        isOfficial: true,
+        isDefault: true,
+      }),
+      cfg('unisat', 'UniSat', ['extension'], { isDefault: true }),
+      cfg('ledger', 'Ledger', ['hardware']),
+    ]
+
+    expect(row({ wallets: bitcoin })).toEqual(['Enkrypt', 'UniSat'])
+  })
+})
+
+// Names come from outside the app: browser extensions announce them and
+// localStorage hands back whatever was put there.
+describe('walletNames', () => {
+  it('keeps the names and drops what is not one', () => {
+    expect(walletNames(['MetaMask', undefined, 7, { name: 'x' }, ''])).toEqual([
+      'MetaMask',
+    ])
   })
 })

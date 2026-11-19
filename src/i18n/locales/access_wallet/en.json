@@ -119,8 +119,7 @@
       "terms_link": "Terms",
       "privacy_link": "Privacy Policy",
       "wallets_label": "Connect with a wallet",
-      "more_methods": "More ways to connect",
-      "all_wallets": "All wallets",
+      "other_methods": "Other wallet methods",
       "google": {
         "verifying_title": "Verifying connection to Google",
         "verifying_description": "Just a few moments more…",

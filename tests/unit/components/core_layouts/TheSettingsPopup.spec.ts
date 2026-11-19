@@ -16,15 +16,10 @@ const h = await vi.hoisted(async () => {
     disconnectWallet: vi.fn(),
     analytics: { consent: true, setTrackingConsent: vi.fn() },
     walletAddress: ref<string | null>(null),
-    exportRecoveryPhrase: vi.fn(),
-    phraseExportSupported: vi.fn(),
     track: vi.fn(),
   }
 })
 
-vi.mock('@/providers/privy/phraseExportSupport', () => ({
-  phraseExportSupported: h.phraseExportSupported,
-}))
 vi.mock('@/analytics', () => ({
   analytics: { trackAccountSecurityEvent: h.track },
 }))
@@ -50,7 +45,6 @@ vi.mock('@/stores/authStore', () => ({
   useAuthStore: () => ({
     email: h.email,
     loginMethod: h.loginMethod,
-    exportRecoveryPhrase: h.exportRecoveryPhrase,
   }),
 }))
 vi.mock('@/stores/analyticsStore', () => ({
@@ -99,7 +93,6 @@ vi.mock('pinia', async importOriginal => {
 import TheSettingsPopup from '@/components/core_layouts/TheSettingsPopup.vue'
 import SettingsLoginMethods from '@/components/core_layouts/settings/SettingsLoginMethods.vue'
 import SettingsPhraseAcknowledge from '@/components/core_layouts/settings/SettingsPhraseAcknowledge.vue'
-import SettingsRecoveryPhrase from '@/components/core_layouts/settings/SettingsRecoveryPhrase.vue'
 
 // The mocked stores are shared refs: a component left mounted by one test
 // would react to the next test's changes.
@@ -128,7 +121,6 @@ const connect = (walletType: string, watchOnly = false) => {
   h.isWatchOnly.value = watchOnly
 }
 const ADDRESS = '0x1111111111111111111111111111111111111111'
-const WORDS = ['worth', 'weird', 'dress', 'seat']
 const connectPrivy = () => {
   connect('PRIVY')
   h.walletAddress.value = ADDRESS
@@ -167,9 +159,6 @@ describe('TheSettingsPopup', () => {
     h.loginMethod.value = null
     h.analytics.consent = true
     h.walletAddress.value = null
-    h.exportRecoveryPhrase.mockResolvedValue(WORDS)
-    // As things stand: Privy gives a page no way to export the phrase.
-    h.phraseExportSupported.mockReturnValue(false)
   })
 
   describe('for every user', () => {
@@ -238,36 +227,18 @@ describe('TheSettingsPopup', () => {
       expect(main(w).text()).not.toContain('settings.connected_wallet')
     })
 
-    it('gives a connected Privy wallet the Connected wallet section, with Login methods as its row, and Log out', () => {
+    it('gives a connected Privy wallet the Connected wallet section, with Login methods and Recovery Phrase as its rows, and Log out', () => {
       connectPrivy()
       const w = open()
 
       const section = w.find('[data-test="settings-connected-wallet"]')
       expect(section.text()).toContain('settings.connected_wallet')
       const rows = section.findAll('[data-testid="cell"]')
-      expect(rows.map(cell => cell.text())).toEqual(['settings.login_methods'])
-      expect(logOut(w)).toBeDefined()
-    })
-
-    it('offers no Recovery Phrase while the page has no way to get the phrase from Privy', () => {
-      connectPrivy()
-      const w = open()
-
-      expect(row(w, 'settings.recovery_phrase')).toBeUndefined()
-    })
-
-    it('lists Recovery Phrase under Login methods once the page can get it', () => {
-      h.phraseExportSupported.mockReturnValue(true)
-      connectPrivy()
-      const w = open()
-
-      const rows = w
-        .find('[data-test="settings-connected-wallet"]')
-        .findAll('[data-testid="cell"]')
       expect(rows.map(cell => cell.text())).toEqual([
         'settings.login_methods',
         'settings.recovery_phrase',
       ])
+      expect(logOut(w)).toBeDefined()
     })
 
     it('opens Login methods with the method and email of the login, and comes back', async () => {
@@ -311,16 +282,17 @@ describe('TheSettingsPopup', () => {
     })
   })
 
-  // Parked: these screens are unreachable until Privy supports an export the
-  // page can make. They are kept working for that day.
-  describe('the recovery phrase, once the page can get it from Privy', () => {
-    beforeEach(() => {
-      h.phraseExportSupported.mockReturnValue(true)
-    })
-
+  // The phrase itself is shown by Privy, on the wallet export page: Settings
+  // only says what to know first and sends the user there.
+  describe('the recovery phrase', () => {
     const acknowledge = (w: Popup) =>
       w.find('[data-test="settings-phrase-ack"]')
-    const phrase = (w: Popup) => w.find('[data-test="settings-phrase"]')
+    let openWindow: ReturnType<typeof vi.spyOn>
+    beforeEach(() => {
+      openWindow = vi.spyOn(window, 'open').mockReturnValue(null)
+    })
+    afterEach(() => openWindow.mockRestore())
+
     /** Settings on "Before you continue", for a connected Privy wallet. */
     const openAcknowledgement = async () => {
       connectPrivy()
@@ -328,83 +300,47 @@ describe('TheSettingsPopup', () => {
       await row(w, 'settings.recovery_phrase')!.trigger('click')
       return w
     }
-    /** Settings showing the phrase. */
-    const openPhrase = async () => {
-      const w = await openAcknowledgement()
-      w.findComponent(SettingsPhraseAcknowledge).vm.$emit('view')
-      await flushPromises()
-      return w
-    }
 
-    it('opens on "Before you continue" and asks Privy for nothing yet', async () => {
+    it('opens on "Before you continue" and opens nothing else yet', async () => {
       const w = await openAcknowledgement()
 
       expect(isInert(acknowledge(w))).toBe(false)
       expect(isInert(main(w))).toBe(true)
-      expect(h.exportRecoveryPhrase).not.toHaveBeenCalled()
+      expect(openWindow).not.toHaveBeenCalled()
       expect(h.track).toHaveBeenCalledWith('Recovery_Phrase_Opened')
     })
 
-    it('fetches the phrase when the user asks to view it, then shows it', async () => {
-      const w = await openPhrase()
+    it('opens the wallet export page in its own tab when the user asks to view the phrase', async () => {
+      const w = await openAcknowledgement()
 
-      expect(h.exportRecoveryPhrase).toHaveBeenCalledTimes(1)
-      expect(isInert(phrase(w))).toBe(false)
-      expect(w.findComponent(SettingsRecoveryPhrase).props('words')).toEqual(
-        WORDS,
-      )
-    })
-
-    it('stays on "Before you continue" with an error when the phrase cannot be loaded', async () => {
-      h.exportRecoveryPhrase.mockRejectedValue(new Error('Forbidden'))
-      const w = await openPhrase()
-
-      expect(isInert(acknowledge(w))).toBe(false)
-      expect(w.findComponent(SettingsPhraseAcknowledge).props('failed')).toBe(
-        true,
-      )
-      expect(w.findComponent(SettingsRecoveryPhrase).exists()).toBe(false)
-    })
-
-    it('drops the words when the user goes back', async () => {
-      const w = await openPhrase()
-
-      w.findComponent(SettingsRecoveryPhrase).vm.$emit('back')
+      w.findComponent(SettingsPhraseAcknowledge).vm.$emit('view')
       await flushPromises()
 
-      expect(w.findComponent(SettingsRecoveryPhrase).exists()).toBe(false)
+      // No opener: the page gets nothing of this tab, not even its storage.
+      expect(openWindow.mock.calls).toEqual([
+        ['/wallet-export.html', '_blank', 'noopener'],
+      ])
+      expect(h.track).toHaveBeenCalledWith('Recovery_Phrase_Export_Opened')
       expect(isInert(main(w))).toBe(false)
     })
 
-    it('drops the words when Settings closes', async () => {
-      const w = await openPhrase()
+    it('goes back to Settings from "Before you continue"', async () => {
+      const w = await openAcknowledgement()
 
-      h.isSettingsOpen.value = false
-      await flushPromises()
-      h.isSettingsOpen.value = true
+      w.findComponent(SettingsPhraseAcknowledge).vm.$emit('back')
       await flushPromises()
 
-      expect(w.findComponent(SettingsRecoveryPhrase).exists()).toBe(false)
       expect(isInert(main(w))).toBe(false)
+      expect(openWindow).not.toHaveBeenCalled()
     })
 
-    it('drops the words when the Privy wallet stops being the connected one', async () => {
-      const w = await openPhrase()
+    it('leaves "Before you continue" when the Privy wallet stops being the connected one', async () => {
+      const w = await openAcknowledgement()
 
       h.isWatchOnly.value = true
       await flushPromises()
 
-      expect(w.findComponent(SettingsRecoveryPhrase).exists()).toBe(false)
       expect(isInert(main(w))).toBe(false)
-    })
-
-    it('drops the words when another account becomes the connected one', async () => {
-      const w = await openPhrase()
-
-      h.walletAddress.value = '0x2222222222222222222222222222222222222222'
-      await flushPromises()
-
-      expect(w.findComponent(SettingsRecoveryPhrase).exists()).toBe(false)
     })
 
     it('has no Recovery Phrase row for a wallet that is not Privy', () => {

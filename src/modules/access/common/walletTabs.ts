@@ -56,6 +56,16 @@ const isAppWallet = (wallet: WalletConfig): boolean =>
       type === WalletConfigType.HARDWARE || type === WalletConfigType.SOFTWARE,
   )
 
+/**
+ * The names among values that come from outside the app: wallets announced
+ * by browser extensions, and what localStorage hands back. Anything that is
+ * not a name is dropped here, so the lists built from them cannot break on it.
+ */
+export const walletNames = (values: unknown[]): string[] =>
+  values.filter(
+    (value): value is string => typeof value === 'string' && value !== '',
+  )
+
 /** RainbowKit connectors keep their wallet id in `rkDetails`; static configs use `id`. */
 export const walletKey = (wallet: WalletConfig): string =>
   (wallet as WalletConfig & { rkDetails?: { id?: string } }).rkDetails?.id ??
@@ -148,4 +158,62 @@ export const selectTabWallets = ({
       return true
     })
     .map(withStatus)
+}
+
+/**
+ * The wallets that follow the detected and the most recent wallet in the
+ * Log in / Sign Up view's row: MEW's own two, then the two key methods
+ * (design, 2026-11-19). `walletConfigs` keys.
+ */
+const SIGN_UP_ROW_IDS = ['mew', 'enkrypt', 'privateKey', 'keystore']
+/** Wallet tiles in that row; one more tile leads to every other method. */
+export const SIGN_UP_ROW_SIZE = 4
+
+/**
+ * The wallet tiles of the Log in / Sign Up view, in order: the installed
+ * wallet the browser reports, the wallet used most recently, MEW Mobile,
+ * Enkrypt, Private Key, Keystore — each once, as far as the row goes.
+ *
+ * That one rule gives design's three cases: with a detected and a recent
+ * wallet the row ends at Enkrypt; with only a detected one it reaches
+ * Private Key; with neither it reaches Keystore. On a chain that has fewer of
+ * them (Bitcoin) the row is filled from the Popular list.
+ */
+export const selectSignUpRowWallets = ({
+  wallets,
+  recentNames,
+  detectedNames,
+}: Omit<SelectInput, 'tab' | 'search'>): WalletConfig[] => {
+  const lower = (s: string) => s.toLowerCase()
+  const byName = new Map<string, WalletConfig>()
+  const byKey = new Map<string, WalletConfig>()
+  // First entry wins, as in the tabs: static configs come first.
+  wallets.forEach(w => {
+    if (!byName.has(lower(w.name))) byName.set(lower(w.name), w)
+    if (!byKey.has(walletKey(w))) byKey.set(walletKey(w), w)
+  })
+  /** The first of these names that is a wallet of the selected chain. */
+  const firstNamed = (names: string[]): WalletConfig | undefined =>
+    names.map(name => byName.get(lower(name))).find(w => w !== undefined)
+
+  const popular = selectTabWallets({
+    wallets,
+    tab: 'popular',
+    recentNames,
+    detectedNames,
+  }).map(entry => entry.wallet)
+
+  const seen = new Set<string>()
+  return [
+    firstNamed(detectedNames),
+    firstNamed(recentNames),
+    ...SIGN_UP_ROW_IDS.map(id => byKey.get(id)),
+    ...popular,
+  ]
+    .filter((w): w is WalletConfig => {
+      if (!w || seen.has(lower(w.name))) return false
+      seen.add(lower(w.name))
+      return true
+    })
+    .slice(0, SIGN_UP_ROW_SIZE)
 }

@@ -1,6 +1,6 @@
 import { Hardfork, Common } from '@ethereumjs/common'
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
-import { hexToBytes } from '@ethereumjs/util'
+import { bytesToHex, hexToBytes } from '@ethereumjs/util'
 import type { HexPrefixedString } from '../types'
 
 export const commonGenerator = (
@@ -45,5 +45,44 @@ export const parseSerializedTx = (
         common: commonGenerator(BigInt(chainId), Hardfork.Berlin),
       }),
     }
+  }
+}
+
+/** A transfer as the user reviewed it: what was sent to MEW's API for the quote. */
+export interface ReviewedTransfer {
+  /** The recipient, or the token contract for a token transfer. */
+  to: string
+  /** The native amount, as a hex quantity. */
+  value: string
+  /** The call data: `0x` for a plain transfer, the token's `transfer` call otherwise. */
+  data: string
+}
+
+/**
+ * Whether a transaction built elsewhere is the transfer the user reviewed:
+ * the same destination, the same amount and the same call, on this chain.
+ *
+ * MEW's API builds the transaction a wallet signs. A wallet that signs inside
+ * the app has no screen of its own, so without this a wrong or tampered
+ * answer would be signed under a review that shows the right recipient.
+ * Nonce, gas and fees are the API's to choose and are not compared.
+ */
+export const matchesReviewedTransfer = (
+  serializedTx: HexPrefixedString,
+  chainId: string,
+  reviewed: ReviewedTransfer,
+): boolean => {
+  try {
+    const { tx } = parseSerializedTx(serializedTx, chainId)
+    return (
+      tx.to?.toString().toLowerCase() === reviewed.to.toLowerCase() &&
+      tx.value === BigInt(reviewed.value) &&
+      bytesToHex(tx.data).toLowerCase() ===
+        (reviewed.data || '0x').toLowerCase()
+    )
+  } catch {
+    // Bytes that are no transaction of this chain, or a form that is no
+    // transfer: neither is what the user reviewed.
+    return false
   }
 }

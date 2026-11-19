@@ -366,6 +366,7 @@ import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 import ManageAccountsFundActions from '@/components/core_layouts/wallet/ManageAccountsFundActions.vue'
 import { usePrivyAccount } from '@/composables/usePrivyAccount'
+import { fundActionsOffered } from '@/providers/privy/accountOffer'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import ManageAccountsRenameModal from '@/components/core_layouts/wallet/ManageAccountsRenameModal.vue'
 import ManageAccountsDeleteModal from '@/components/core_layouts/wallet/ManageAccountsDeleteModal.vue'
@@ -845,6 +846,7 @@ const isRenameNameTaken = (name: string): boolean =>
 const { isPrivyConnected } = usePrivyAccount()
 const showFundActions = computed(
   () =>
+    fundActionsOffered() &&
     isPrivyConnected.value &&
     allAccounts.value.length === 1 &&
     !isLoadingBalances.value &&

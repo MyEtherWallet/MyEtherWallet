@@ -119,8 +119,7 @@
       "terms_link": "条款",
       "privacy_link": "隐私政策",
       "wallets_label": "使用钱包连接",
-      "more_methods": "更多连接方式",
-      "all_wallets": "所有钱包",
+      "other_methods": "其他钱包方式",
       "google": {
         "verifying_title": "正在验证与 Google 的连接",
         "verifying_description": "请稍候片刻…",

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, ref, shallowRef } from 'vue'
+import { computed, ref, shallowRef, toRaw } from 'vue'
 import { analytics } from '@/analytics'
 import {
   AccountSecurityEvent,
@@ -23,6 +23,11 @@ export type LoginMethod = 'google' | 'email'
 const WALLET_NAME = 'Privy'
 /** The longest a logout waits for the wallet iframe to forget a passkey check. */
 const FORGET_CHECK_TIMEOUT_MS = 2000
+/**
+ * The same when a wallet is being connected. Longer: the iframe has only just
+ * been mounted, and the wallet waits on it in any case.
+ */
+const FORGET_CHECK_AT_LOGIN_TIMEOUT_MS = 10_000
 /** The app creates the wallet itself in the wallet-setup step, never at login. */
 const NO_WALLET_AT_LOGIN = {
   embedded: { ethereum: { createOnLogin: 'off' } },
@@ -153,15 +158,23 @@ export const useAuthStore = defineStore('authStore', () => {
     return { loaded, user: current }
   }
 
+  /** Whether Privy asks this user for a second check before the wallet is used. */
+  const hasWalletCheck = (account: PrivyUser): boolean =>
+    account.mfa_methods.length > 0 ||
+    passkeysOf(account).some(passkey => passkey.active)
+
   /**
    * Have the wallet iframe forget a passkey check this user has passed. Privy
    * keeps a passed check for a while on the device; left there, the next
    * login to the account from this browser could use the wallet without the
    * passkey. Best-effort and short: a logout neither fails nor hangs on it.
    */
-  const forgetPasskeyCheck = (userId: string): Promise<void> =>
+  const forgetPasskeyCheck = (
+    userId: string,
+    timeoutMs: number = FORGET_CHECK_TIMEOUT_MS,
+  ): Promise<void> =>
     new Promise(resolve => {
-      const timer = setTimeout(resolve, FORGET_CHECK_TIMEOUT_MS)
+      const timer = setTimeout(resolve, timeoutMs)
       const done = (): void => {
         clearTimeout(timer)
         resolve()
@@ -183,11 +196,7 @@ export const useAuthStore = defineStore('authStore', () => {
    */
   const endLogin = async (): Promise<void> => {
     const checkedUser =
-      user.value &&
-      (user.value.mfa_methods.length > 0 ||
-        passkeys.value.some(passkey => passkey.active))
-        ? user.value.id
-        : null
+      user.value && hasWalletCheck(user.value) ? user.value.id : null
     reset()
     if (checkedUser) await forgetPasskeyCheck(checkedUser)
     loadedModules?.teardownWalletIframe()
@@ -338,6 +347,13 @@ export const useAuthStore = defineStore('authStore', () => {
       }
       const input = loaded.walletProviderInput(account)
       if (!input) throw new Error('The embedded wallet was not created')
+      // Every connection starts with no passed check. A logout clears it too,
+      // but a tab can be closed, or reloaded, without one: whoever logs in
+      // next in this browser is asked for the passkey themselves.
+      if (hasWalletCheck(account)) {
+        await forgetPasskeyCheck(account.id, FORGET_CHECK_AT_LOGIN_TIMEOUT_MS)
+        if (loginEnded()) throw ended()
+      }
       const provider =
         await loaded.privy.embeddedWallet.getEthereumProvider(input)
       if (loginEnded()) throw ended()
@@ -358,7 +374,11 @@ export const useAuthStore = defineStore('authStore', () => {
       if (loginEnded()) {
         // The login was dropped while the wallet store was connecting: a
         // signing wallet must not outlive it.
-        if (walletStore.wallet === wallet) walletStore.setWatchOnlyIfExist()
+        // The store holds its wallet behind a reactive proxy: compare the
+        // wallet itself.
+        if (toRaw(walletStore.wallet) === wallet) {
+          walletStore.setWatchOnlyIfExist()
+        }
         throw ended()
       }
       walletAddress.value = input.wallet.address
@@ -492,29 +512,6 @@ export const useAuthStore = defineStore('authStore', () => {
       )
     })
 
-  /**
-   * The recovery phrase of the connected Privy wallet, one word per entry.
-   *
-   * Only for a live login whose wallet is the connected, signing one. The
-   * words go to the caller and nowhere else: this store keeps no copy. The
-   * module that asks Privy is loaded here, on first use, so the decryption
-   * library reaches the users who export and no one else. For a user with a
-   * passkey, Privy asks for it before it answers.
-   */
-  const exportRecoveryPhrase = (): Promise<string[]> =>
-    attempt(async () => {
-      const loaded = await loadPrivy()
-      const walletStore = useWalletStore()
-      const wallet = user.value && loaded.embeddedWallet(user.value)
-      const isConnected =
-        walletStore.wallet instanceof PrivyWallet && !walletStore.isWatchOnly
-      if (!wallet || !isConnected || !(await loaded.privy.getAccessToken())) {
-        throw new Error('No connected Privy wallet to show a phrase for')
-      }
-      const exporter = await import('@/providers/privy/exportWallet')
-      return exporter.exportRecoveryPhrase(wallet)
-    })
-
   const acknowledgePasskeyAdded = (): void => {
     passkeyAdded.value = false
   }
@@ -540,7 +537,6 @@ export const useAuthStore = defineStore('authStore', () => {
     activatePasskeys,
     removePasskey,
     acknowledgePasskeyAdded,
-    exportRecoveryPhrase,
     startGoogleLogin,
     completeOAuth,
     sendEmailCode,

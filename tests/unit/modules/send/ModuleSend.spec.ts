@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
+import { Hardfork } from '@ethereumjs/common'
+import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
+import { bytesToHex } from '@ethereumjs/util'
+import { commonGenerator } from '@/providers/ethereum/utils'
 
 // Plain ref holders so the mocked stores stay reactive; storeToRefs is stubbed
 // to a passthrough below.
@@ -115,7 +119,11 @@ vi.mock('@/composables/useMaxAmount', async () => {
   }
 })
 vi.mock('@/analytics', () => ({
-  analytics: { trackSendEvent: vi.fn(), trackConnectWalletEvent: vi.fn() },
+  analytics: {
+    trackSendEvent: vi.fn(),
+    trackSendErrorEvent: vi.fn(),
+    trackConnectWalletEvent: vi.fn(),
+  },
   ConnectWalletEvent: {},
   SendEvent: {},
   SendEventError: {},
@@ -166,17 +174,53 @@ const stubs = {
   SendInitiatedModal: { template: '<div />' },
 }
 
-const makeWallet = () => ({
-  getAddress: vi.fn(() => Promise.resolve(SIGNER)),
-  getWalletType: () => 'KEYSTORE',
-  getGasFee: vi.fn(() =>
-    Promise.resolve({
+type QuoteBody = { to: string; value: string; data: string }
+/** The transaction MEW's API builds for a quoted request, as real bytes. */
+const unsignedFor = (body: QuoteBody): string =>
+  bytesToHex(
+    FeeMarketEIP1559Transaction.fromTxData(
+      {
+        chainId: 1n,
+        nonce: 7,
+        to: body.to,
+        value: BigInt(body.value),
+        data: body.data,
+        gasLimit: 21000,
+        maxFeePerGas: 30_000_000_000n,
+        maxPriorityFeePerGas: 2_000_000_000n,
+      },
+      { common: commonGenerator(1n, Hardfork.London) },
+    ).serialize(),
+  )
+/** 0.1 ETH to TO: what `reviewWith` fills in. */
+const REVIEWED_TX = unsignedFor({
+  to: TO,
+  value: '0x16345785d8a0000',
+  data: '0x',
+})
+
+/**
+ * A wallet backed by an API that behaves: the transaction it hands out is
+ * built from the request it last quoted.
+ */
+const makeWallet = () => {
+  let quoted: QuoteBody | undefined
+  const getGasFee = vi.fn((body: QuoteBody) => {
+    quoted = body
+    return Promise.resolve({
       quoteId: 'q1',
       fees: { ECONOMY: { nativeValue: '0x1' } },
-    }),
-  ),
-  getSignableTransaction: vi.fn(() => Promise.resolve({ serialized: '0x02' })),
-})
+    })
+  })
+  return {
+    getAddress: vi.fn(() => Promise.resolve(SIGNER)),
+    getWalletType: () => 'KEYSTORE',
+    getGasFee,
+    getSignableTransaction: vi.fn(() =>
+      Promise.resolve({ serialized: quoted ? unsignedFor(quoted) : '0x02' }),
+    ),
+  }
+}
 
 const clickSend = async (w: ReturnType<typeof mount>) => {
   // The CTA reads "Review send" once an amount is entered.
@@ -273,7 +317,7 @@ describe('ModuleSend review', () => {
     const w = await reviewWith(wallet)
 
     expect(SignTransaction).toHaveBeenCalledTimes(1)
-    expect(SignTransaction).toHaveBeenCalledWith('0x02')
+    expect(SignTransaction).toHaveBeenCalledWith(REVIEWED_TX)
     expect(w.findComponent(EvmTransactionConfirmation).props('signedTx')).toBe(
       '0xsigned',
     )
@@ -292,7 +336,7 @@ describe('ModuleSend review', () => {
     expect(SignTransaction).not.toHaveBeenCalled()
     const review = w.findComponent(EvmTransactionConfirmation)
     expect(review.props('modelValue')).toBe(true)
-    expect(review.props('signedTx')).toBe('0x02')
+    expect(review.props('signedTx')).toBe(REVIEWED_TX)
   })
 
   it('leaves a wallet the user approves on elsewhere to sign on confirm', async () => {
@@ -307,7 +351,7 @@ describe('ModuleSend review', () => {
 
     expect(SignTransaction).not.toHaveBeenCalled()
     expect(w.findComponent(EvmTransactionConfirmation).props('signedTx')).toBe(
-      '0x02',
+      REVIEWED_TX,
     )
   })
 
@@ -371,20 +415,99 @@ describe('ModuleSend review', () => {
     })
   })
 
+  // MEW's API builds the transaction; the user reviews the form. A wallet
+  // that signs inside the app has no screen of its own to catch a difference.
+  describe('a transaction that is not the one the form describes', () => {
+    /** The API hands out a transaction paying someone else, or another sum. */
+    const tampered = (
+      walletType: string,
+      body: QuoteBody = { to: OTHER, value: '0x16345785d8a0000', data: '0x' },
+    ) => {
+      const SignTransaction = vi.fn(() => Promise.resolve({ signed: '0xsig' }))
+      const wallet = {
+        ...makeWallet(),
+        getWalletType: () => walletType,
+        getSignableTransaction: vi.fn(() =>
+          Promise.resolve({ serialized: unsignedFor(body) }),
+        ),
+        SignTransaction,
+      }
+      return { wallet, SignTransaction }
+    }
+    const review = (w: ReturnType<typeof mount>) =>
+      w.findComponent(EvmTransactionConfirmation)
+
+    it('is never signed by a private key wallet, and no review opens over it', async () => {
+      const { wallet, SignTransaction } = tampered('PRIVATE_KEY')
+
+      const w = await reviewWith(wallet)
+
+      expect(SignTransaction).not.toHaveBeenCalled()
+      expect(review(w).props('modelValue')).toBe(false)
+      expect(review(w).props('signedTx')).toBe('')
+      expect(h.addToastMessage).toHaveBeenCalledWith(
+        expect.objectContaining({ text: 'send.toast.tx_mismatch' }),
+      )
+    })
+
+    it('is refused for a recovery phrase wallet and for a Privy wallet alike', async () => {
+      for (const type of ['MNEMONIC', 'PRIVY']) {
+        const { wallet, SignTransaction } = tampered(type)
+
+        const w = await reviewWith(wallet)
+
+        expect(SignTransaction).not.toHaveBeenCalled()
+        expect(review(w).props('modelValue')).toBe(false)
+        w.unmount()
+      }
+    })
+
+    it('is refused when only the amount differs', async () => {
+      const { wallet } = tampered('PRIVATE_KEY', {
+        to: TO,
+        value: '0x16345785d8a0001',
+        data: '0x',
+      })
+
+      const w = await reviewWith(wallet)
+
+      expect(review(w).props('modelValue')).toBe(false)
+    })
+
+    it('is refused when it carries a call the form does not', async () => {
+      const { wallet } = tampered('PRIVY', {
+        to: TO,
+        value: '0x16345785d8a0000',
+        data: '0xdeadbeef',
+      })
+
+      const w = await reviewWith(wallet)
+
+      expect(review(w).props('modelValue')).toBe(false)
+    })
+
+    it('is left to the wallet’s own screen when the wallet has one', async () => {
+      // A hardware wallet or an extension shows what it is asked to sign.
+      const { wallet } = tampered('LEDGER')
+
+      const w = await reviewWith(wallet)
+
+      expect(review(w).props('modelValue')).toBe(true)
+    })
+  })
+
   // MAX of the native token is the balance minus the fee, and the fee comes
   // from the quote taken at submit: that quote can move the amount by itself.
   describe('sending the maximum of the native token', () => {
     const quotedWallet = () => {
       let quotes = 0
-      return {
-        ...makeWallet(),
-        getGasFee: vi.fn(() =>
-          Promise.resolve({
-            quoteId: `q${++quotes}`,
-            fees: { ECONOMY: { nativeValue: '0x1' } },
-          }),
-        ),
-      }
+      const wallet = makeWallet()
+      const quote = wallet.getGasFee.getMockImplementation()!
+      wallet.getGasFee.mockImplementation(async (body: QuoteBody) => ({
+        ...(await quote(body)),
+        quoteId: `q${++quotes}`,
+      }))
+      return wallet
     }
     const reviewOf = (w: ReturnType<typeof mount>) =>
       w.findComponent(EvmTransactionConfirmation)

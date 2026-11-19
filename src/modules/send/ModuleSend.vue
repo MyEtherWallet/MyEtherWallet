@@ -133,7 +133,12 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
-import { getLocalizedWalletError, holdsKeyInApp } from '@/utils/walletUtils'
+import {
+  getLocalizedWalletError,
+  holdsKeyInApp,
+  isInAppSigner,
+} from '@/utils/walletUtils'
+import { matchesReviewedTransfer } from '@/providers/ethereum/utils'
 import { formatUnits } from 'viem'
 import { safeParseUnits } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
@@ -680,6 +685,33 @@ const buildSignedTx = async (quoteId: string): Promise<boolean | null> => {
       throw e
     }
     let serialized = signableTx.serialized as string
+    // A wallet that signs inside the app shows no screen of its own: before
+    // it signs, here or on confirm, the transaction the API built must be
+    // the transfer this form describes.
+    if (isEvmChain.value && isInAppSigner(wallet.value)) {
+      const reviewed = gasFeeTxEstimate.value
+      const isReviewedTransfer =
+        reviewed !== undefined &&
+        'to' in reviewed &&
+        reviewed.to !== null &&
+        matchesReviewedTransfer(
+          serialized as HexPrefixedString,
+          String(selectedChain.value?.chainID ?? ''),
+          { to: reviewed.to, value: reviewed.value, data: reviewed.data },
+        )
+      if (!isReviewedTransfer) {
+        if (isStale()) return null
+        analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
+          token: tokenSelected.value?.symbol,
+          errorMsg: 'Transaction does not match the reviewed transfer',
+        })
+        toastStore.addToastMessage({
+          type: ToastType.Error,
+          text: t('send.toast.tx_mismatch'),
+        })
+        return false
+      }
+    }
     if (holdsKeyInApp(wallet.value)) {
       if (!wallet.value.SignTransaction) {
         console.error('SignTransaction not implemented')

@@ -13,6 +13,7 @@
       "tx-send-failed": "Transaction failed to send",
       "failed_to_fetch_gas_fees": "Failed to fetch gas fees",
       "max_amount_changed": "The maximum amount changed with the network fee. Please try again.",
+      "tx_mismatch": "This transaction does not match what you entered, so nothing was signed. Please try again.",
       "frozen_token": "Sending failed. Token may be frozen, please contact us"
     },
     "initiated": {

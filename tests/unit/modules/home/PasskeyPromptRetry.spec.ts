@@ -44,6 +44,9 @@ vi.mock('@/stores/authStore', () => ({
 vi.mock('@/providers/privy/passkeySupport', () => ({
   passkeySupported: () => true,
 }))
+vi.mock('@/providers/privy/accountOffer', () => ({
+  passkeysOffered: () => true,
+}))
 vi.mock('@/analytics', () => ({
   analytics: { trackAccountSecurityEvent: vi.fn() },
 }))

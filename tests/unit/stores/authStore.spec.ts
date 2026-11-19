@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
+import { reactive } from 'vue'
 
 const fake = vi.hoisted(() => ({
   privy: {
@@ -31,7 +32,6 @@ const fake = vi.hoisted(() => ({
   enrollPasskeys: vi.fn(),
   unlinkPasskey: vi.fn(),
   answerPasskeyChecks: vi.fn(),
-  exportRecoveryPhrase: vi.fn(),
 }))
 /** The error the passkey module raises for a dismissed browser prompt. */
 class PasskeyCancelledError extends Error {}
@@ -55,9 +55,6 @@ vi.mock('@/providers/privy/passkey', () => ({
   enrollPasskeys: fake.enrollPasskeys,
   unlinkPasskey: fake.unlinkPasskey,
   PasskeyCancelledError,
-}))
-vi.mock('@/providers/privy/exportWallet', () => ({
-  exportRecoveryPhrase: fake.exportRecoveryPhrase,
 }))
 vi.mock('@/providers/privy/mfaChallenge', () => ({
   answerPasskeyChecks: fake.answerPasskeyChecks,
@@ -379,7 +376,8 @@ describe('authStore', () => {
         (wallet: unknown) =>
           new Promise<void>(resolve => {
             finishConnect = () => {
-              fake.walletStore.wallet = wallet
+              // As the real store holds it: behind a reactive proxy.
+              fake.walletStore.wallet = reactive(wallet as object)
               resolve()
             }
           }),
@@ -396,6 +394,57 @@ describe('authStore', () => {
       expect(fake.walletStore.setWatchOnlyIfExist).toHaveBeenCalled()
       expect(store.walletAddress).toBeNull()
       expect(store.hasWallet).toBe(false)
+    })
+
+    describe('for a user whose wallet has a passkey check', () => {
+      const protectedUser = userWith([
+        emailAccount,
+        walletAccount,
+        passkeyAccount('cred-a', true),
+      ])
+
+      it('starts every connection with no passed check, before the wallet can be used', async () => {
+        // A check passed earlier in this browser (a closed tab, a reload,
+        // another login) must not carry over to whoever logs in now.
+        const store = await loggedInStore(protectedUser)
+        fake.privy.user.get.mockResolvedValue({ user: protectedUser })
+
+        await store.provisionWallet()
+
+        expect(fake.privy.mfa.clearMfa.mock.calls).toEqual([
+          [{ userId: 'did:privy:1' }],
+        ])
+        expect(
+          fake.privy.mfa.clearMfa.mock.invocationCallOrder[0],
+        ).toBeLessThan(
+          fake.privy.embeddedWallet.getEthereumProvider.mock
+            .invocationCallOrder[0],
+        )
+      })
+
+      it('still connects when the wallet does not answer the clearing', async () => {
+        const store = await loggedInStore(protectedUser)
+        fake.privy.user.get.mockResolvedValue({ user: protectedUser })
+        fake.privy.mfa.clearMfa.mockReturnValue(new Promise(() => undefined))
+        vi.useFakeTimers()
+        try {
+          const connecting = store.provisionWallet()
+          await vi.advanceTimersByTimeAsync(10_000)
+          await connecting
+        } finally {
+          vi.useRealTimers()
+        }
+
+        expect(fake.walletStore.setWallet).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    it('clears nothing when connecting a user with no passkey check', async () => {
+      const store = await loggedInStore(userWithWallet)
+
+      await store.provisionWallet()
+
+      expect(fake.privy.mfa.clearMfa).not.toHaveBeenCalled()
     })
 
     it('refuses to connect when there is no chain to connect on', async () => {
@@ -459,6 +508,8 @@ describe('authStore', () => {
         const store = await loggedInStore(protectedUser)
         fake.privy.user.get.mockResolvedValue({ user: protectedUser })
         await store.provisionWallet()
+        // Connecting clears a passed check too; these tests are about logout.
+        fake.privy.mfa.clearMfa.mockClear()
         return fake.walletStore.setWallet.mock.calls[0][0] as PrivyWallet
       }
 
@@ -737,57 +788,6 @@ describe('authStore', () => {
           { source: 'home_prompt', reason: 'failed_to_create_passkey' },
         ],
       ])
-    })
-  })
-
-  describe('the recovery phrase', () => {
-    const WORDS =
-      'legal winner thank year wave sausage worth useful legal winner thank yellow'.split(
-        ' ',
-      )
-
-    /** A store whose Privy wallet is connected and is the active one. */
-    const connectedStore = async () => {
-      const store = await loggedInStore(userWithWallet)
-      await store.provisionWallet()
-      fake.walletStore.wallet = fake.walletStore.setWallet.mock.calls[0][0]
-      fake.privy.getAccessToken.mockResolvedValue('tok')
-      fake.exportRecoveryPhrase.mockResolvedValue(WORDS)
-      return store
-    }
-
-    it('asks Privy for the phrase of the connected wallet and hands the words on', async () => {
-      const store = await connectedStore()
-
-      expect(await store.exportRecoveryPhrase()).toEqual(WORDS)
-      expect(fake.exportRecoveryPhrase).toHaveBeenCalledWith(
-        expect.objectContaining({ address: ADDRESS }),
-      )
-    })
-
-    it('keeps no copy of the words', async () => {
-      const store = await connectedStore()
-
-      await store.exportRecoveryPhrase()
-
-      const kept = JSON.stringify(store.$state)
-      for (const word of new Set(WORDS)) expect(kept).not.toContain(word)
-    })
-
-    it('refuses when the connected wallet is not the Privy one', async () => {
-      const store = await connectedStore()
-      fake.walletStore.wallet = { getWalletType: () => 'INJECTED' }
-
-      await expect(store.exportRecoveryPhrase()).rejects.toThrow()
-      expect(fake.exportRecoveryPhrase).not.toHaveBeenCalled()
-    })
-
-    it('refuses when the login is no longer live', async () => {
-      const store = await connectedStore()
-      fake.privy.getAccessToken.mockResolvedValue(null)
-
-      await expect(store.exportRecoveryPhrase()).rejects.toThrow()
-      expect(fake.exportRecoveryPhrase).not.toHaveBeenCalled()
     })
   })
 

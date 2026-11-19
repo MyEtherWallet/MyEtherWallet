@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePrivyAccount } from '@/composables/usePrivyAccount'
+import { passkeysOffered } from '@/providers/privy/accountOffer'
 import { passkeySupported } from '@/providers/privy/passkeySupport'
 import { useAuthStore } from '@/stores/authStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -48,6 +49,7 @@ export const usePasskeyPrompt = () => {
 
   const isVisible = computed(
     () =>
+      passkeysOffered() &&
       isPrivyConnected.value &&
       !isLoadingBalances.value &&
       totalFiatPortfolioValueBN.value.isGreaterThan(0) &&

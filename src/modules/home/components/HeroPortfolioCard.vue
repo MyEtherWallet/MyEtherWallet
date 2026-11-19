@@ -24,21 +24,15 @@
       <div
         class="mt-16 flex w-full flex-col gap-2 min-[768px]:mt-0 min-[768px]:flex-row min-[768px]:items-center min-[768px]:justify-end min-[768px]:gap-4"
       >
+        <!-- One button, worded like the header's: the login popup it opens
+             leads to every wallet. -->
         <button
           type="button"
-          data-test="hero-create"
-          class="hoverNoBG h-12 w-full rounded-3xl px-6 text-s-16 font-semibold tracking-[-0.32px] text-white min-[768px]:w-auto"
-          @click="openSignUpDialog"
-        >
-          {{ t('homePage.hero.createWallet') }}
-        </button>
-        <button
-          type="button"
-          data-test="hero-connect"
+          data-test="hero-log-in"
           class="h-12 w-full rounded-3xl bg-white px-6 text-s-16 font-semibold tracking-[-0.32px] text-text-brand min-[768px]:w-auto"
           @click="openAccessDialog"
         >
-          {{ t('homePage.hero.connectWallet') }}
+          {{ t('access_wallet.social.title') }}
         </button>
       </div>
     </template>
@@ -301,8 +295,7 @@ const { selectedChain } = storeToRefs(useChainsStore())
 const globalStore = useGlobalStore()
 const { hideBalances } = storeToRefs(globalStore)
 const { toggleHideBalances } = globalStore
-// "Create wallet" starts with Log in / Sign Up.
-const { openAccessDialog, openSignUpDialog } = useAccessStore()
+const { openAccessDialog } = useAccessStore()
 const { openPanel } = useWalletMenuStore()
 const { lastTwentyFourHours } = usePortfolio24hChange()
 const { refreshBalances } = useRefreshBalances()

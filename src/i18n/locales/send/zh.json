@@ -13,6 +13,7 @@
       "tx-send-failed": "交易发送失败",
       "failed_to_fetch_gas_fees": "获取 Gas 费用失败",
       "max_amount_changed": "最大金额随网络费用发生了变化。请重试。",
+      "tx_mismatch": "此交易与您输入的内容不符，因此未进行任何签名。请重试。",
       "frozen_token": "发送失败。该代币可能已被冻结，请联系我们"
     },
     "initiated": {

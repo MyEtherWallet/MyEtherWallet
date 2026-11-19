@@ -44,6 +44,8 @@ vi.mock('@/analytics/events', () => ({ MultiAddressEvent: { OPENED: 'o', SWITCHE
 // Whether the connected, signing wallet is the Privy one (the rule has its own spec).
 const isPrivyConnected = ref(false)
 vi.mock('@/composables/usePrivyAccount', () => ({ usePrivyAccount: () => ({ isPrivyConnected }) }))
+const offer = { fundActions: true }
+vi.mock('@/providers/privy/accountOffer', () => ({ fundActionsOffered: () => offer.fundActions }))
 const openPanel = vi.fn()
 vi.mock('@/stores/walletMenuStore', () => ({ useWalletMenuStore: () => ({ openPanel }) }))
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (k: string) => k }) }))
@@ -424,6 +426,14 @@ describe('TheManageAccounts fund actions', () => {
     store.allAccounts = twoAccounts
     walletStore.totalFiatPortfolioValueBN.value = new BigNumber(130.23) as never
     walletStore.isLoadingBalances.value = false
+    offer.fundActions = true
+  })
+
+  it('shows no cards while the account menu is not offering them, even to an empty Privy wallet', () => {
+    emptyPrivyWallet()
+    offer.fundActions = false
+
+    expect(fundActions(factory()).exists()).toBe(false)
   })
 
   it('offers to buy or deposit to a connected Privy wallet with no funds and one saved account, under the saved address', () => {
