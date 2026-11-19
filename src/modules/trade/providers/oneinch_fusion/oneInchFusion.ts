@@ -182,7 +182,7 @@ class OneInchFusion {
     this.httpConnector = new IsolatedAxiosConnector()
     this.sdk = new FusionSDK({
       network: chainId === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE,
-      url: 'https://fusion.1inch.io',
+      url: 'https://api.1inch.com',
       blockchainProvider: this.web3Provider,
       httpProvider: this.httpConnector,
     })

@@ -60,7 +60,7 @@ describe('IsolatedAxiosConnector', () => {
       )
 
     await expect(
-      connector.get('https://fusion.1inch.io/quote'),
+      connector.get('https://api.1inch.com/quote'),
     ).rejects.toEqual(
       expect.objectContaining({
         message: 'Request failed with status code 400',
@@ -86,7 +86,7 @@ describe('IsolatedAxiosConnector', () => {
     })
 
     await expect(
-      connector.get('https://fusion.1inch.io/quote'),
+      connector.get('https://api.1inch.com/quote'),
     ).resolves.toEqual({ quoteId: 'abc' })
   })
 
@@ -107,7 +107,7 @@ describe('IsolatedAxiosConnector', () => {
 
     expect(connector.lastQuoteResponse).toBeNull()
     await connector.get(
-      'https://fusion.1inch.io/quoter/v2.0/1/quote/receive/?x=1',
+      'https://api.1inch.com/quoter/v2.0/1/quote/receive/?x=1',
     )
     expect(connector.lastQuoteResponse).toEqual(body)
   })
@@ -123,7 +123,7 @@ describe('IsolatedAxiosConnector', () => {
     })
 
     await connector.get(
-      'https://fusion.1inch.io/orders/v2.0/1/order/status/0xabc',
+      'https://api.1inch.com/orders/v2.0/1/order/status/0xabc',
     )
     expect(connector.lastQuoteResponse).toBeNull()
   })
