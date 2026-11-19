@@ -62,3 +62,5 @@ chrome-extension
 
 *.tsbuildinfo
 node_modules
+
+/local-cli

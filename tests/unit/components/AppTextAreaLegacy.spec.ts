@@ -27,8 +27,8 @@ describe('AppTextAreaLegacy — design-library surface (MEW-1971)', () => {
   })
 })
 
-describe('AppTextAreaLegacy — typing state (MEW-1971)', () => {
-  it('drops the focus ring while typing (Figma Active)', async () => {
+describe('AppTextAreaLegacy — typing state', () => {
+  it('keeps the focus ring while typing', async () => {
     const w = mount(AppTextAreaLegacy, {
       props: { placeholder: 'Message' },
       global: { plugins: [i18n] },
@@ -37,7 +37,7 @@ describe('AppTextAreaLegacy — typing state (MEW-1971)', () => {
     await textarea.trigger('focus')
     expect(textarea.classes()).toContain('inset-ring-border-brand')
     await textarea.trigger('input')
-    expect(textarea.classes()).not.toContain('inset-ring-border-brand')
+    expect(textarea.classes()).toContain('inset-ring-border-brand')
   })
 })
 

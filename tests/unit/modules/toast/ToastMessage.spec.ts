@@ -107,4 +107,15 @@ describe('ToastMessage — store toast through AppToast', () => {
     expect(store.messages).toHaveLength(0)
     open.mockRestore()
   })
+
+  it('restarts the timer when a toast is replaced by id', async () => {
+    const wrapper = showToast({ id: 'again', text: 'First', duration: 3000 })
+    vi.advanceTimersByTime(2000)
+    store.addToastMessage({ id: 'again', text: 'Second', duration: 3000 })
+    await wrapper.setProps({ toast: store.messages[0] })
+    vi.advanceTimersByTime(2999)
+    expect(store.messages).toHaveLength(1)
+    vi.advanceTimersByTime(1)
+    expect(store.messages).toHaveLength(0)
+  })
 })

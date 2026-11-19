@@ -17,7 +17,6 @@
       autocomplete="off"
       @focus="setInFocusInput()"
       @blur="startOutOfFocusTimeout()"
-      @pointerdown="setActive()"
       @input="onInput"
     />
     <div class="flex items-center min-h-6 pr-4 mt-1">
@@ -99,13 +98,8 @@ const model = defineModel<string>()
 const baseInput = ref<HTMLElement | null>(null)
 const feedbackId = useId()
 
-const {
-  inFocusInput,
-  isActive,
-  setActive,
-  setInFocusInput,
-  startOutOfFocusTimeout,
-} = useInFocusInput(baseInput)
+const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
+  useInFocusInput(baseInput)
 
 const hasValue = computed(() => model.value != null && model.value !== '')
 
@@ -131,7 +125,6 @@ watch(inFocusInput, value => {
 })
 
 const onInput = () => {
-  setActive()
   if (hasRequiredError.value) {
     hasRequiredError.value = false
   }
@@ -144,13 +137,11 @@ const surfaceClass = computed(() =>
   inputSurfaceClass({
     surface: props.surface,
     focused: inFocusInput.value,
-    active: isActive.value,
     error: hasError.value,
   }),
 )
 
 const clearInputValue = () => {
-  setActive()
   setInFocusInput()
   nextTick(() => {
     model.value = ''

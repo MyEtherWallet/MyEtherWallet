@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
+  fusionErrorDetails,
   isExpectedTradeError,
   isBelowMinimumError,
   isExpectedClientError,
@@ -146,5 +147,25 @@ describe('isTransientNetworkError', () => {
     expect(isTransientNetworkError({})).toBe(false)
     expect(isTransientNetworkError(null)).toBe(false)
     expect(isTransientNetworkError(undefined)).toBe(false)
+  })
+})
+
+describe('fusionErrorDetails', () => {
+  it('reads the raw 1inch details the provider attaches', () => {
+    const error = Object.assign(new Error('localized copy'), {
+      fusionStatus: 429,
+      fusionCode: 'RATE_LIMIT',
+      fusionDescription: 'ondo client rps budget exhausted',
+    })
+    expect(fusionErrorDetails(error)).toEqual({
+      fusionStatus: 429,
+      fusionCode: 'RATE_LIMIT',
+      fusionDescription: 'ondo client rps budget exhausted',
+    })
+  })
+
+  it('survives thrown values that are not objects', () => {
+    expect(fusionErrorDetails(null)).toEqual({})
+    expect(fusionErrorDetails('boom')).toEqual({})
   })
 })

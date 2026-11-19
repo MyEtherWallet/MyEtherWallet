@@ -38,10 +38,18 @@ describe('isTransientSwapInitError', () => {
     ).toBe(true)
   })
 
-  it('is false for a DOMException that is not a SyntaxError', () => {
+  it('is true for an AbortError DOMException (browser cancelled the in-flight fetch)', () => {
     expect(
       isTransientSwapInitError(
-        new DOMException('The operation was aborted.', 'AbortError'),
+        new DOMException('The operation was aborted. ', 'AbortError'),
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for a DOMException that is neither a SyntaxError nor an AbortError', () => {
+    expect(
+      isTransientSwapInitError(
+        new DOMException('The operation is insecure.', 'SecurityError'),
       ),
     ).toBe(false)
   })
@@ -52,6 +60,11 @@ describe('isTransientSwapInitError', () => {
       true,
     )
     expect(isTransientSwapInitError(new Error('fetch failed'))).toBe(true)
+    expect(
+      isTransientSwapInitError(
+        new TypeError('NetworkError when attempting to fetch resource.'),
+      ),
+    ).toBe(true)
     expect(isTransientSwapInitError(new Error('Request timeout'))).toBe(true)
     expect(isTransientSwapInitError(new Error('Load failed'))).toBe(true)
   })

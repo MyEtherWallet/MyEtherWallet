@@ -17,6 +17,7 @@ import {
 } from '@/analytics'
 import { isTransientRpcError } from '@/modules/trade/common/transientRpcError'
 import {
+  fusionErrorDetails,
   isBelowMinimumError,
   isExpectedClientError,
   isPairUnavailableError,
@@ -263,7 +264,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
           isTransientRpcError(e) ||
           isExpectedClientError(e) ||
           isTransientNetworkError(e),
-        extra: { errorMessage: generalError.value },
+        extra: { errorMessage: generalError.value, ...fusionErrorDetails(e) },
       })
     }
   }

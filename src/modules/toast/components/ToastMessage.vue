@@ -62,6 +62,18 @@ watch([isHovered, hasFocus], ([hovered, focused]) => {
   else startTimer()
 })
 
+// A same-id replace patches this toast in place, so give the new message its
+// full duration instead of what was left of the old one.
+watch(
+  () => props.toast,
+  toast => {
+    clearTimeout(timer)
+    timer = undefined
+    remainingMs = toastDurationOf(toast)
+    if (!isHovered.value && !hasFocus.value) startTimer()
+  },
+)
+
 onMounted(startTimer)
 onBeforeUnmount(() => clearTimeout(timer))
 </script>

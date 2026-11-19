@@ -49,6 +49,8 @@ const hasEye = (wrapper: ReturnType<typeof mountSelector>) =>
 const button = (wrapper: ReturnType<typeof mountSelector>) =>
   wrapper.get('[data-testid="address-selector"]')
 
+const HIDDEN_BELOW_450 = '.max-\\[450px\\]\\:hidden'
+
 describe('AppAddressSelector — design-library Address selector (MEW-2462)', () => {
   it('is a button with the Figma pill box', () => {
     const el = button(mountSelector())
@@ -169,6 +171,36 @@ describe('AppAddressSelector — design-library Address selector (MEW-2462)', ()
       wrapper.get('[data-test="address-selector-no-address"]').text(),
     ).toBe('No address')
     expect(button(wrapper).attributes('aria-label')).toBe('No address')
+  })
+
+  it('below 450 keeps only the avatar, network and chevron; the name stays announced', () => {
+    const wrapper = mountSelector({ balance: '$0.99' })
+    expect(
+      wrapper.get('[data-test="address-selector-text"]').classes(),
+    ).toContain('max-[450px]:hidden')
+    // Neither the kept parts nor anything around them hides at that width.
+    const chevron = wrapper
+      .findAllComponents(AppIcon)
+      .find(icon => icon.props('name') === 'chevron-down')!
+    for (const kept of [
+      wrapper.getComponent(AppAvatar),
+      wrapper.get('img[src="eth.svg"]'),
+      chevron,
+    ])
+      expect(kept.element.closest(HIDDEN_BELOW_450)).toBeNull()
+    expect(button(wrapper).attributes('aria-label')).toContain('$0.99')
+  })
+
+  it('below 450 swaps "No address" for the network icon, keeping it when there is none', () => {
+    const label = (props: Record<string, unknown> = {}) =>
+      mountSelector({ address: '', ...props }).get(
+        '[data-test="address-selector-no-address"]',
+      )
+    expect(label().classes()).toContain('max-[450px]:hidden')
+    // Without the icon the label is all the pill has besides the chevron.
+    expect(
+      label({ networkIcon: undefined }).element.closest(HIDDEN_BELOW_450),
+    ).toBeNull()
   })
 
   it('passes clicks through', async () => {

@@ -187,6 +187,10 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     () => fromAmountErrorDetail.value.code === 'balance',
   )
 
+  const isDecimalsError = computed(
+    () => fromAmountErrorDetail.value.code === 'decimals',
+  )
+
   // Check if trade button should be disabled
   const isTradeDisabled = computed(
     () =>
@@ -217,6 +221,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     hasPreQuoteError,
     fromAmountError,
     isInsufficientBalanceError,
+    isDecimalsError,
     isTradeDisabled,
     isSameTokenSelected,
   }

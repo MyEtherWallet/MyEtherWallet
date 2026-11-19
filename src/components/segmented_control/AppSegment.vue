@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import AppIcon from '@components/icon/AppIcon.vue'
 import type { IconName } from '@components/icon/icons'
-import { SEGMENT_SIZE, type SegmentSize } from './types'
+import {
+  SEGMENT_SIZE,
+  SEGMENT_TONE_CLASS,
+  type SegmentSize,
+  type SegmentTone,
+} from './types'
 
 /**
  * Segment (Figma: MEW Web App — Design Library › Segment / _Base, 274:2783).
@@ -15,12 +20,14 @@ withDefaults(
     selected?: boolean
     size?: SegmentSize
     trailingIcon?: IconName
+    tone?: SegmentTone
   }>(),
   {
     label: undefined,
     selected: false,
     size: 'default',
     trailingIcon: undefined,
+    tone: undefined,
   },
 )
 </script>
@@ -31,10 +38,17 @@ withDefaults(
     role="radio"
     :aria-checked="selected"
     data-testid="segment"
-    class="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-3xl text-label-sm text-text-default transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus"
+    class="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-3xl text-label-sm transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus"
     :class="[
       SEGMENT_SIZE[size].box,
-      selected ? 'bg-background-alternative' : SEGMENT_SIZE[size].hover,
+      // Text colour sits here too: a tone's inverted text can't share a
+      // static text-text-default (Tailwind order would pick the winner).
+      selected && tone
+        ? SEGMENT_TONE_CLASS[tone]
+        : [
+            'text-text-default',
+            selected ? 'bg-background-alternative' : SEGMENT_SIZE[size].hover,
+          ],
     ]"
   >
     <slot name="avatar" :size="SEGMENT_SIZE[size].avatar" />

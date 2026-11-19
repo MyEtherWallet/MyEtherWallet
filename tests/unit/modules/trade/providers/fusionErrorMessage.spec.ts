@@ -37,6 +37,21 @@ describe('fusionErrorMessage', () => {
     expect(message).toBe('The market is closed right now.')
   })
 
+  it('hides the provider rate limit behind the generic provider copy', () => {
+    const rateLimited = Object.assign(
+      new Error('Request failed with status code 429'),
+      {
+        response: {
+          status: 429,
+          data: { description: 'ondo client rps budget exhausted' },
+        },
+      },
+    )
+    expect(fusionErrorMessage(rateLimited)).toBe(
+      'Something went wrong with our trade provider, please try again later.',
+    )
+  })
+
   it('falls back to the API description for unknown codes', () => {
     const message = fusionErrorMessage(
       axios400({

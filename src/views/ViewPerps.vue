@@ -34,7 +34,6 @@
       <perps-positions-table
         @open-position="handleOpenPosition"
         @open-side-menu="handleOpenSideWithType"
-        @view-market="handleViewMarket"
       />
     </template>
     <perps-market-list

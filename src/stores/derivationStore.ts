@@ -3,12 +3,7 @@ import type { DerivationPath } from './../modules/access/common/configs/configPa
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 
-import { useToastStore } from '@/stores/toastStore'
-import { ToastType } from '@/types/notification/index'
-import i18n from '@/i18n'
-
 import { ethereum } from '@/modules/access/common/configs/configPaths'
-import { checkCustomPath } from '@/utils/customPathHelpers'
 
 // TODO: export type from enkrypt package
 export interface PathType {
@@ -64,38 +59,17 @@ export const useDerivationStore = defineStore('derivationStore', () => {
     return store.value.ledgerSelectedDerivation
   })
 
+  const customDerivations = computed(() => {
+    return store.value.customDerivations
+  })
+
+  // Validated by the Add form (AccessDerivationPath) before it gets here.
   const addCustomDerivation = (derivationPath: DerivationPath) => {
-    const toastStore = useToastStore()
-    const { addToastMessage } = toastStore
-    const existingDerivation = store.value.customDerivations.find(
-      derivation => derivation.label === derivationPath.label,
-    )
-
-    if (existingDerivation) {
-      addToastMessage({
-        text: i18n.global.t('derivation_path.label_exists'),
-        type: ToastType.Error,
-        duration: 5000,
-      })
-    }
-
-    if (checkCustomPath(derivationPath.path)) {
-      store.value.customDerivations.push(derivationPath)
-      addToastMessage({
-        text: i18n.global.t('derivation_path.added_successfully'),
-        type: ToastType.Success,
-        duration: 5000,
-      })
-    } else {
-      addToastMessage({
-        text: i18n.global.t('derivation_path.invalid_path'),
-        type: ToastType.Error,
-        duration: 5000,
-      })
-    }
+    store.value.customDerivations.push(derivationPath)
   }
   return {
     selectedDerivation,
+    customDerivations,
     ledgerSelectedDerivation,
     trezorSelectedDerivation,
     setSelectedDerivation,

@@ -30,7 +30,7 @@
       :class="[
         isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-20',
         backgroundClass,
-        'flex w-full mr-20',
+        'flex w-full mr-15 sm:mr-20',
         // The dev playground owns its own scroll (ViewDevLayout is a fixed-height
         // shell whose <main> scrolls internally), so the app-level scroll must be
         // off for it — otherwise the page double-scrolls and the sidebar drifts.
@@ -194,6 +194,21 @@ const { isOverflowHidden } = storeToRefs(appLayoutStore)
 const scrollContainer = ref<HTMLElement | null>(null)
 // Drives the navbar's bottom border: only once the page leaves the top.
 const { y: scrollTop } = useScroll(scrollContainer)
+
+// The app scrolls this wrapper, not the window, so vue-router's scrollBehavior
+// can't reach it: bring a newly opened page to the top here. Drawers and the
+// connect/create overlays are child routes of the page they cover, so the
+// top-level record stays the same and the page underneath keeps its place.
+// Hash links (/stocks#oip) scroll to their own section. 'post' so a drawer open
+// on the old page has unmounted and released isOverflowHidden first.
+watch(
+  () => route.matched[0],
+  () => {
+    if (route.hash) return
+    scrollContainer.value?.scrollTo({ top: 0, behavior: 'instant' })
+  },
+  { flush: 'post' },
+)
 
 const onHeaderWheel = (e: WheelEvent) => {
   if (isOverflowHidden.value || !scrollContainer.value) return

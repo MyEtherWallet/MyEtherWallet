@@ -47,7 +47,10 @@ export function isLedgerInterfaceBusyError(e: unknown): boolean {
   return (
     name === 'LedgerInterfaceBusyError' ||
     name === 'TransportInterfaceNotAvailable' ||
-    /unable to claim interface|claimInterface/i.test(msg)
+    /unable to claim interface|claimInterface/i.test(msg) ||
+    // Same condition one step earlier: `USBDevice.open()` fails with
+    // "Access denied" when another app holds the device (APP-MEW-WEB-HT).
+    /usbdevice.*access denied/i.test(msg)
   )
 }
 
@@ -139,19 +142,21 @@ const BLE_PICKER_TIMEOUT_MS = 60_000
 async function createWebBLE(): Promise<Transport | null> {
   if (!(await TransportWebBLE.isSupported())) return null
 
-  const timeout = new Promise<null>(r => setTimeout(() => r(null), BLE_PICKER_TIMEOUT_MS))
+  const timeout = new Promise<null>(r =>
+    setTimeout(() => r(null), BLE_PICKER_TIMEOUT_MS),
+  )
   let transient = false
   try {
     // Some browsers dismiss the BLE picker silently (no throw) — timeout so USB fallback isn't blocked.
     const result = await Promise.race([createWebBLEOnce(), timeout])
     if (result !== null) return result
   } catch (e) {
-    if (isBleCancelError(e)) return null  // cancelled — skip retry, fall through to USB
+    if (isBleCancelError(e)) return null // cancelled — skip retry, fall through to USB
     if (!isTransientBleError(e)) throw e
     transient = true
   }
 
-  if (!transient) return null  // timed out — skip retry, fall through to USB
+  if (!transient) return null // timed out — skip retry, fall through to USB
 
   // Transient BLE failures (GATT drops on first handshake) are common — retry once.
   await sleep(BLE_RETRY_DELAY_MS)

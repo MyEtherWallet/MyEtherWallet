@@ -78,7 +78,7 @@ describe('perps strings are actually translated (not English copies)', () => {
   const cases = [
     'errors.tp-above-mark',
     'errors.invalid-price',
-    'confirm.title',
+    'confirm.review-long',
     'deposit.title',
     'market-list.title',
     'balance.title',

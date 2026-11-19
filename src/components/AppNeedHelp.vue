@@ -1,6 +1,15 @@
 <template>
   <div v-if="isDevMode">
     <a
+      v-if="variant === 'link'"
+      :href="helpLink"
+      target="_blank"
+      class="flex h-10 items-center rounded-3xl px-4 text-label-sm text-text-brand transition-colors hover:bg-background-default-hover"
+    >
+      {{ title }}
+    </a>
+    <a
+      v-else
       :href="helpLink"
       target="_blank"
       class="block text-text-subtle text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
@@ -17,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import { type PropType } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import configs from '@/configs'
 
@@ -54,6 +64,15 @@ defineProps({
   helpLink: {
     type: String,
     required: true,
+  },
+  /**
+   * @variant: `icon` (default) is the subtle underlined link with a help icon;
+   * `link` is the design-library Button / Link (brand label, no icon) used in
+   * the side-panel footers.
+   */
+  variant: {
+    type: String as PropType<'icon' | 'link'>,
+    default: 'icon',
   },
 })
 </script>

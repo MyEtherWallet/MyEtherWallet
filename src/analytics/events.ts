@@ -555,21 +555,25 @@ export const ClickTokenTradeEvent = {
   SWAP: 'Clicked_Token_Swap',
 } as const
 
-export type ClickTokenTradePayload = {
-  location:
-    | 'balance_table'
-    | 'token_details_page'
-    | 'stocks_table'
-    | 'crypto_table'
-    | 'trade_module'
-    | 'trade'
-    | 'swap'
-    | 'bridge'
-    | 'send'
-    | 'portfolio_no_balance'
-    | 'select_fee'
-    | 'hold_rewards_banner'
+export const ClickTokenTradeLocation = {
+  BALANCE_TABLE: 'balance_table',
+  TOKEN_DETAILS_PAGE: 'token_details_page',
+  STOCKS_TABLE: 'stocks_table',
+  CRYPTO_TABLE: 'crypto_table',
+  TRADE_MODULE: 'trade_module',
+  TRADE: 'trade',
+  SWAP: 'swap',
+  BRIDGE: 'bridge',
+  SEND: 'send',
+  PORTFOLIO_NO_BALANCE: 'portfolio_no_balance',
+  SELECT_FEE: 'select_fee',
+  HOLD_REWARDS_BANNER: 'hold_rewards_banner',
+} as const
+export type ClickTokenTradeLocation =
+  (typeof ClickTokenTradeLocation)[keyof typeof ClickTokenTradeLocation]
 
+export type ClickTokenTradePayload = {
+  location: ClickTokenTradeLocation
   token?: string
   isMobile?: boolean
   stock?: string
@@ -611,8 +615,16 @@ export type StockMarketSearchPayload = {
   searchValue: string
 }
 
+export const StockMarketLocation = {
+  TOKEN_ROW: 'token_row',
+  TRADE_BUTTON: 'trade_button',
+  SPACEX_ANNOUNCEMENT_BANNER: 'spacex_annoucement_banner',
+} as const
+export type StockMarketLocation =
+  (typeof StockMarketLocation)[keyof typeof StockMarketLocation]
+
 export type StockMarketClickStockPayload = {
-  location: 'token_row' | 'trade_button' | 'spacex_annoucement_banner'
+  location: StockMarketLocation
   stockName: string
   stockSymbol: string
 }
@@ -643,8 +655,17 @@ export type CryptoMarketSearchPayload = {
   searchValue: string
 }
 
+export const CryptoMarketLocation = {
+  TOKEN_ROW: 'token_row',
+  BUY_BUTTON: 'buy_button',
+  SWAP_BUTTON: 'swap_button',
+  BRIDGE_BUTTON: 'bridge_button',
+} as const
+export type CryptoMarketLocation =
+  (typeof CryptoMarketLocation)[keyof typeof CryptoMarketLocation]
+
 export type CryptoMarketClickTokenPayload = {
-  location: 'token_row' | 'buy_button' | 'swap_button' | 'bridge_button'
+  location: CryptoMarketLocation
   tokenName: string
   tokenSymbol: string
 }

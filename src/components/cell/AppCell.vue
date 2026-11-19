@@ -1,14 +1,20 @@
 <template>
   <div
     :class="[
-      'box-border flex w-full items-center gap-3 rounded-12 px-4 outline-none transition-colors',
+      'box-border flex w-full items-center gap-3 rounded-12 outline-none transition-colors',
+      inset ? 'px-3' : 'px-4',
       sizeSpec.cell,
       surfaceClass,
       // Figma Focus: 2px border/brand drawn inside, so the content doesn't move.
       isInteractive
         ? 'cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-brand'
         : '',
-      disabled ? 'pointer-events-none opacity-30' : '',
+      disabled ? 'pointer-events-none' : '',
+      // The suffix (a status tag) stays at full opacity on a dimmed row.
+      disabled &&
+        ($slots.suffix
+          ? '[&>:not([data-test=cell-suffix])]:opacity-30'
+          : 'opacity-30'),
     ]"
     :role="isInteractive ? 'button' : undefined"
     :tabindex="isInteractive ? 0 : undefined"
@@ -102,6 +108,7 @@
 
       <div
         v-if="$slots.suffix"
+        data-test="cell-suffix"
         class="flex h-11 shrink-0 items-center justify-center"
         @click.stop
       >
@@ -117,6 +124,16 @@
         <slot name="extra" />
       </div>
     </template>
+
+    <!-- Decorative state glyph (the Accordion chevron): not an action, so it
+         stays while loading and clicks on it toggle the cell. -->
+    <div
+      v-if="$slots.indicator"
+      class="flex h-11 shrink-0 items-center justify-center"
+      aria-hidden="true"
+    >
+      <slot name="indicator" />
+    </div>
 
     <span v-if="radio" class="flex shrink-0" data-test="cell-radio" inert>
       <AppRadio :model-value="selected" :value="true" :name="radioName" />
@@ -208,6 +225,14 @@ const props = defineProps({
     default: false,
   },
   radio: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * 12px side padding instead of 16, for rows inside a padded container
+   * (Figma MenuList and List rows), so content keeps the 16px edge alignment.
+   */
+  inset: {
     type: Boolean,
     default: false,
   },

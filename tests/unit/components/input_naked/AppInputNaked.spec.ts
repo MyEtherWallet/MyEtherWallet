@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import AppInputNaked from '@/components/input_naked/AppInputNaked.vue'
 import AppSpinner from '@/components/spinner/AppSpinner.vue'
@@ -98,6 +98,158 @@ describe('AppInputNaked', () => {
     await field.setValue('$1,234.567')
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['1234.56'])
     expect((field.element as HTMLInputElement).value).toBe('1234.56')
+  })
+
+  describe('separators', () => {
+    // The field is controlled: its parent feeds every emitted value back in.
+    const mountControlled = (modelValue: string) => {
+      const wrapper = mount(AppInputNaked, {
+        props: {
+          modelValue,
+          label: 'Amount',
+          'onUpdate:modelValue': (value: string) =>
+            wrapper.setProps({ modelValue: value }),
+        },
+        global: { stubs: { AppSpinner: true } },
+      })
+      return wrapper
+    }
+
+    /** Leave the field as the browser does after an edit, then fire its event. */
+    const edit = async (
+      wrapper: ReturnType<typeof mountControlled>,
+      value: string,
+      event: { inputType: string; data?: string; caret?: number },
+    ) => {
+      const el = wrapper.get(input()).element as HTMLInputElement
+      el.value = value
+      const caret = event.caret ?? value.length
+      el.setSelectionRange(caret, caret)
+      el.dispatchEvent(
+        new InputEvent('input', {
+          inputType: event.inputType,
+          data: event.data ?? null,
+          bubbles: true,
+        }),
+      )
+      await nextTick()
+      return el
+    }
+    const type = (
+      wrapper: ReturnType<typeof mountControlled>,
+      value: string,
+      data: string,
+      caret?: number,
+    ) => edit(wrapper, value, { inputType: 'insertText', data, caret })
+    const paste = (
+      wrapper: ReturnType<typeof mountControlled>,
+      value: string,
+    ) => edit(wrapper, value, { inputType: 'insertFromPaste' })
+
+    it('ignores a separator typed after the decimal point', async () => {
+      const wrapper = mountControlled('12.34')
+      expect((await type(wrapper, '12.34,', ',')).value).toBe('12.34')
+      expect(wrapper.props('modelValue')).toBe('12.34')
+    })
+
+    it('takes a typed comma as the decimal point', async () => {
+      const wrapper = mountControlled('1234')
+      expect((await type(wrapper, '1,234', ',', 2)).value).toBe('1.234')
+      expect(wrapper.props('modelValue')).toBe('1.234')
+    })
+
+    it('takes a comma typed over the decimal point as the decimal point', async () => {
+      const wrapper = mountControlled('1.234')
+      expect((await type(wrapper, '1,234', ',', 2)).value).toBe('1.234')
+      expect(wrapper.props('modelValue')).toBe('1.234')
+    })
+
+    it('keeps the caret in place when it ignores a separator typed mid-value', async () => {
+      const wrapper = mountControlled('12.34')
+      const el = await type(wrapper, '1.2.34', '.', 2)
+      expect(el.value).toBe('12.34')
+      expect(el.selectionStart).toBe(1)
+    })
+
+    it('keeps the caret after a digit typed mid-value when the decimal cap trims the end', async () => {
+      const wrapper = mountControlled('1.123456')
+      await wrapper.setProps({ maxDecimals: 6 })
+      const el = await type(wrapper, '1.1923456', '9', 4)
+      expect(el.value).toBe('1.192345')
+      expect(el.selectionStart).toBe(4)
+    })
+
+    it('never reads the comma of a composing keyboard as a thousands mark', async () => {
+      const wrapper = mountControlled('1.50')
+      const el = await edit(wrapper, '1,500', {
+        inputType: 'insertCompositionText',
+        data: '1,500',
+      })
+      expect(el.value).toBe('1.500')
+    })
+
+    it('keeps the caret before the decimal point when a stray one is typed in front of it', async () => {
+      const wrapper = mountControlled('1.5')
+      const el = await type(wrapper, '1..5', '.', 2)
+      expect(el.value).toBe('1.5')
+      expect(el.selectionStart).toBe(1)
+    })
+
+    it('puts the caret after a typed decimal point when the decimal cap trims the end', async () => {
+      const wrapper = mountControlled('12345678')
+      await wrapper.setProps({ maxDecimals: 6 })
+      const el = await type(wrapper, '1,2345678', ',', 2)
+      expect(el.value).toBe('1.234567')
+      expect(el.selectionStart).toBe(2)
+    })
+
+    it('finds a typed separator by the caret when the keyboard reports its whole composing text', async () => {
+      const wrapper = mountControlled('12.34')
+      const el = await edit(wrapper, '1,2.34', {
+        inputType: 'insertCompositionText',
+        data: '1,',
+        caret: 2,
+      })
+      expect(el.value).toBe('12.34')
+      expect(el.selectionStart).toBe(1)
+    })
+
+    it('reads a pasted separator as a paste, however short', async () => {
+      const wrapper = mountControlled('1234')
+      const el = await edit(wrapper, '1,234', {
+        inputType: 'insertFromPaste',
+        data: ',',
+        caret: 2,
+      })
+      expect(el.value).toBe('1234')
+    })
+
+    it('reads a pasted grouped number as a whole amount', async () => {
+      const wrapper = mountControlled('')
+      expect((await paste(wrapper, '1,234')).value).toBe('1234')
+      expect(wrapper.props('modelValue')).toBe('1234')
+    })
+
+    it('does not take a paste over the same digits for a typed separator', async () => {
+      const wrapper = mountControlled('1234')
+      expect((await paste(wrapper, '1,234')).value).toBe('1234')
+      expect(wrapper.props('modelValue')).toBe('1234')
+    })
+
+    it('reads several characters inserted at once as a paste', async () => {
+      const wrapper = mountControlled('')
+      const el = await edit(wrapper, '1,234', {
+        inputType: 'insertText',
+        data: '1,234',
+      })
+      expect(el.value).toBe('1234')
+    })
+
+    it('ignores a pasted exponent and keeps the amount already entered', async () => {
+      const wrapper = mountControlled('25')
+      expect((await paste(wrapper, '251e-7')).value).toBe('25')
+      expect(wrapper.props('modelValue')).toBe('25')
+    })
   })
 
   it('sends class to the root and other attrs to the input', () => {

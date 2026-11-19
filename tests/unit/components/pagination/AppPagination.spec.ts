@@ -98,6 +98,12 @@ describe('AppPagination', () => {
     expect(w.emitted('update:modelValue')).toEqual([[3]])
   })
 
+  it('never emits page 0 when there are no pages', async () => {
+    const w = factory({ modelValue: 2, totalPages: 0 })
+    await prev(w).trigger('click')
+    expect(w.emitted('update:modelValue')).toEqual([[1]])
+  })
+
   it('uses a custom label when provided', () => {
     const w = factory({
       modelValue: 2,

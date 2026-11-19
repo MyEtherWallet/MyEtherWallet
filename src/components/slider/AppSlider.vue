@@ -9,7 +9,7 @@
  */
 import { computed } from 'vue'
 import { SIZE } from '@/components/sizeScale'
-import type { AppSliderProps } from './types'
+import { SLIDER_TONE_CLASS, type AppSliderProps } from './types'
 
 defineOptions({ inheritAttrs: false })
 
@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<AppSliderProps>(), {
   max: 100,
   step: 1,
   disabled: false,
+  tone: 'brand',
   ariaValueText: undefined,
 })
 
@@ -45,12 +46,14 @@ const trackClass = computed(() =>
   props.disabled ? 'bg-background-disabled' : 'bg-background-alternative',
 )
 const fillClass = computed(() =>
-  props.disabled ? 'bg-background-brand-disabled' : 'bg-background-brand',
+  props.disabled
+    ? 'bg-background-brand-disabled'
+    : SLIDER_TONE_CLASS[props.tone].fill,
 )
 const thumbClass = computed(() =>
   props.disabled
     ? 'border-border-disabled bg-background-disabled'
-    : 'border-border-brand bg-background-alternative',
+    : `${SLIDER_TONE_CLASS[props.tone].thumb} bg-background-alternative`,
 )
 
 const onInput = (event: Event) => {

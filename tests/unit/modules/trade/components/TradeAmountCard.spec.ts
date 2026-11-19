@@ -29,17 +29,13 @@ const mountCard = (props: Record<string, unknown> = {}) =>
 
 describe('TradeAmountCard', () => {
   it('renders an editable input on the sell side', () => {
-    const card = mountCard()
-    expect(card.text()).toContain('Sell')
-    expect(card.find('input').exists()).toBe(true)
+    const input = mountCard().find('input')
+    expect(input.attributes('aria-label')).toBe('Sell')
+    expect(input.attributes('readonly')).toBeUndefined()
   })
 
-  it('scopes the hover highlight to the amount value, not the whole card', () => {
-    const card = mountCard()
-    expect(card.classes()).toContain(
-      'has-[.amount-value:hover]:border-border-hover',
-    )
-    expect(card.find('.amount-value input').exists()).toBe(true)
+  it('hints "Enter amount" while the sell input is empty', () => {
+    expect(mountCard().text()).toContain('Enter amount')
   })
 
   it('swaps the fiat value for a spinner while the quote loads', () => {
@@ -54,24 +50,25 @@ describe('TradeAmountCard', () => {
     // The buy amount arrives raw (the quote's formatUnits output) and the card
     // formats it for display — grouping included.
     const card = mountCard({ side: 'buy', amount: '2.4574' })
-    expect(card.text()).toContain('Buy')
-    expect(card.find('input').exists()).toBe(false)
-    expect(card.text()).toContain('2.45')
+    const input = card.find('input')
+    expect(input.attributes('aria-label')).toBe('Buy')
+    expect(input.attributes('readonly')).toBeDefined()
+    expect(input.element.value).toContain('2.45')
 
     const grouped = mountCard({ side: 'buy', amount: '1234.5' })
-    expect(grouped.text()).toContain('1,234.5')
+    expect(grouped.find('input').element.value).toBe('1,234.5')
   })
 
   it('shows the percent row only on the sell side', () => {
-    expect(mountCard().text()).toContain('Max')
-    expect(mountCard({ side: 'buy' }).text()).not.toContain('Max')
+    expect(mountCard().text()).toContain('MAX')
+    expect(mountCard({ side: 'buy' }).text()).not.toContain('MAX')
   })
 
   it('emits the selected percentage', async () => {
     const card = mountCard()
     const buttons = card
       .findAll('button')
-      .filter(button => ['25%', '50%', '75%', 'Max'].includes(button.text()))
+      .filter(button => ['25%', '50%', '75%', 'MAX'].includes(button.text()))
     expect(buttons).toHaveLength(4)
 
     await buttons[0].trigger('click')
@@ -83,7 +80,7 @@ describe('TradeAmountCard', () => {
     const card = mountCard({ maxDisabled: true })
     const maxButton = card
       .findAll('button')
-      .filter(button => button.text() === 'Max')[0]
+      .filter(button => button.text() === 'MAX')[0]
     expect(maxButton.attributes('disabled')).toBeDefined()
 
     await maxButton.trigger('click')
@@ -101,7 +98,7 @@ describe('TradeAmountCard', () => {
     vi.useFakeTimers()
     try {
       const balanceRow = (card: ReturnType<typeof mountCard>) =>
-        card.findAll('p').find(row => row.text().startsWith('Balance'))!
+        card.get('[data-testid="transaction-input-card-balance"]')
 
       const outOfBalance = mountCard({ balanceError: true })
       await outOfBalance.setProps({
@@ -122,7 +119,7 @@ describe('TradeAmountCard', () => {
     }
   })
 
-  it('turns the balance red together with the message, not before the quote finishes', async () => {
+  it('turns the balance red together with the error, not before the quote finishes', async () => {
     vi.useFakeTimers()
     try {
       const card = mountCard({ balanceError: true, fiatLoading: true })
@@ -131,13 +128,13 @@ describe('TradeAmountCard', () => {
       await nextTick()
 
       const balanceRow = () =>
-        card.findAll('p').find(row => row.text().startsWith('Balance'))!
+        card.get('[data-testid="transaction-input-card-balance"]')
+      const info = () => card.get('[data-testid="transaction-input-card-info"]')
       expect(card.find('svg.animate-spin').exists()).toBe(true)
-      expect(card.text()).not.toContain('Not enough balance')
       expect(balanceRow().classes()).toContain('text-text-subtle')
 
       await card.setProps({ fiatLoading: false })
-      expect(card.text()).toContain('Not enough balance')
+      expect(info().classes()).toContain('text-text-error')
       expect(balanceRow().classes()).toContain('text-text-error')
     } finally {
       vi.useRealTimers()
@@ -158,7 +155,35 @@ describe('TradeAmountCard', () => {
       vi.advanceTimersByTime(500)
       await nextTick()
       expect(card.find('svg.animate-spin').exists()).toBe(false)
-      expect(card.text()).toContain('Enter +1 USDC')
+      expect(card.text()).toContain('≈ $')
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('shows the red conversion on error, and the message only when inline', async () => {
+    vi.useFakeTimers()
+    try {
+      const info = (card: ReturnType<typeof mountCard>) =>
+        card.get('[data-testid="transaction-input-card-info"]')
+
+      const minimum = mountCard()
+      await minimum.setProps({ amount: '0.5', error: 'Minimum not reached' })
+      vi.advanceTimersByTime(1000)
+      await nextTick()
+      expect(info(minimum).text()).toMatch(/^≈ /)
+      expect(info(minimum).classes()).toContain('text-text-error')
+      expect(minimum.text()).not.toContain('Minimum not reached')
+
+      const decimals = mountCard({ inlineError: true })
+      await decimals.setProps({
+        amount: '1.1234567',
+        error: 'Remove 1 decimal',
+      })
+      vi.advanceTimersByTime(1000)
+      await nextTick()
+      expect(info(decimals).text()).toBe('Remove 1 decimal')
+      expect(info(decimals).classes()).toContain('text-text-error')
     } finally {
       vi.useRealTimers()
     }
@@ -170,6 +195,22 @@ describe('TradeAmountCard', () => {
       const card = mountCard({ amount: '5' })
       await card.setProps({ amount: '' })
       expect(card.find('svg.animate-spin').exists()).toBe(false)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('reports its spinner and visible error so the CTA can follow them', async () => {
+    vi.useFakeTimers()
+    try {
+      const card = mountCard()
+      await card.setProps({ amount: '0.5', error: 'Minimum not reached' })
+      expect(card.emitted('update:busy')!.at(-1)).toEqual([true])
+
+      vi.advanceTimersByTime(1000)
+      await nextTick()
+      expect(card.emitted('update:busy')!.at(-1)).toEqual([false])
+      expect(card.emitted('update:errorVisible')!.at(-1)).toEqual([true])
     } finally {
       vi.useRealTimers()
     }

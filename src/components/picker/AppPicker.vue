@@ -96,7 +96,11 @@ const rootClass = computed(() => [
       size="m"
       no-wrap
       :class="[isPill ? 'shrink-0' : 'flex-1', PICKER_TEXT_PAD_CLASS[size]]"
-    />
+    >
+      <template v-if="$slots.description" #description>
+        <slot name="description" />
+      </template>
+    </AppContentGroup>
 
     <span
       class="flex size-4 shrink-0 items-center justify-center text-icon-subtle"

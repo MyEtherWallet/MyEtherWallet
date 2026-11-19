@@ -5,15 +5,16 @@ import type { IconName } from '@/components/icon/icons'
 
 /**
  * ActionBarButton (design library, Figma component set 776:214). A 72px square
- * in the right-side ActionBar: brand icon over an overline label. Hover is CSS;
- * Active (the drawer this button owns is open) is the `active` prop, announced
- * through aria-pressed. Without a label it is the bar's icon-only top action,
- * which is not a toggle and needs `ariaLabel` for its accessible name.
+ * (56px wide below sm, where the bar is 60px) in the right-side ActionBar:
+ * brand icon over an overline label. Hover is CSS; Active (the drawer this
+ * button owns is open) is the `active` prop, announced through aria-pressed.
+ * Without a label it is icon-only, not a toggle, and needs `ariaLabel` for its
+ * accessible name.
  */
 const props = withDefaults(
   defineProps<{
     icon: IconName
-    /** Omit for the icon-only top action. */
+    /** Omit for an icon-only button. */
     label?: string
     active?: boolean
     /** Not in Figma; for feature-gated actions. */
@@ -40,7 +41,7 @@ if (!props.label && !props.ariaLabel) {
     :disabled="disabled"
     :aria-label="ariaLabel ?? label"
     :aria-pressed="label ? active : undefined"
-    class="flex size-18 flex-col items-center justify-center gap-2 rounded-16 transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-border-brand disabled:pointer-events-none disabled:opacity-40"
+    class="flex h-18 w-14 sm:w-18 flex-col items-center justify-center gap-2 rounded-16 transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-border-brand disabled:pointer-events-none disabled:opacity-40"
     :class="
       active ? 'bg-background-brand-subtle' : 'hover:bg-background-default'
     "

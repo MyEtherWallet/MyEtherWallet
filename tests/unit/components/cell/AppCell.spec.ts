@@ -41,6 +41,16 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(cls).toContain(CELL_SIZE_SPEC.medium.cell.split(' ')[0])
   })
 
+  it('uses 16px side padding, or 12px with inset for rows inside a padded container', () => {
+    const regular = mountCell().classes()
+    expect(regular).toContain('px-4')
+    expect(regular).not.toContain('px-3')
+
+    const inset = mountCell({ inset: true }).classes()
+    expect(inset).toContain('px-3')
+    expect(inset).not.toContain('px-4')
+  })
+
   it('renders surface="alternative" on the grey background/default with its own hover pair', () => {
     const cls = mountCell({ surface: 'alternative' }).classes()
     expect(cls).toContain('bg-background-default')
@@ -145,6 +155,20 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     expect(w.attributes('aria-disabled')).toBe('true')
   })
 
+  it('dims everything but the suffix on a disabled row', () => {
+    const w = mountCell(
+      { disabled: true },
+      { ...avatarSlot, suffix: '<span data-test="tag">Paused</span>' },
+    )
+    expect(w.classes()).not.toContain('opacity-30')
+    expect(w.classes()).toContain(
+      '[&>:not([data-test=cell-suffix])]:opacity-30',
+    )
+    expect(w.get('[data-test="tag"]').element.parentElement?.dataset.test).toBe(
+      'cell-suffix',
+    )
+  })
+
   it('opts out of hover, cursor and button role when interactive=false', async () => {
     const w = mountCell({ interactive: false })
     expect(w.classes()).not.toContain('hover:bg-background-alternative-hover')
@@ -247,6 +271,26 @@ describe('AppCell — design-library Cell (MEW-2195)', () => {
     await w.get('[data-test="prefix"]').trigger('click')
     await w.get('[data-test="suffix"]').trigger('click')
     expect(w.emitted('click')).toBeUndefined()
+  })
+
+  it('renders the indicator slot as a decorative glyph that lets clicks reach the cell', async () => {
+    const w = mountCell({}, { indicator: '<i data-test="indicator">v</i>' })
+    const wrapper = w.get('[data-test="indicator"]').element.parentElement!
+    expect(wrapper.getAttribute('aria-hidden')).toBe('true')
+    await w.get('[data-test="indicator"]').trigger('click')
+    expect(w.emitted('click')).toHaveLength(1)
+  })
+
+  it('keeps the indicator while loading, unlike the action slots', () => {
+    const w = mountCell(
+      { loading: true },
+      {
+        suffix: '<button data-test="suffix">…</button>',
+        indicator: '<i data-test="indicator">v</i>',
+      },
+    )
+    expect(w.find('[data-test="suffix"]').exists()).toBe(false)
+    expect(w.find('[data-test="indicator"]').exists()).toBe(true)
   })
 
   it('renders the watchlist toggle in the prefix action position', async () => {

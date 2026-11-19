@@ -45,7 +45,7 @@
           :placeholder="placeholder"
           :aria-label="label"
           :aria-invalid="error || undefined"
-          :aria-describedby="hasInfoRow ? infoId : undefined"
+          :aria-describedby="hasInfoRow ? infoId : externalDescribedBy"
           type="text"
           inputmode="decimal"
           autocomplete="off"
@@ -86,7 +86,7 @@ import { computed, ref, useAttrs, useId } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import { measureTextWidth } from '@/utils/measureText'
-import { sanitizeAmount } from './sanitizeAmount'
+import { sanitizeAmount, type AmountEdit } from './sanitizeAmount'
 import {
   INPUT_NAKED_SCALE,
   type AppInputNakedProps,
@@ -117,6 +117,12 @@ const attrs = useAttrs()
 const attrsClass = computed(() => attrs.class)
 const inputAttrs = computed(() =>
   Object.fromEntries(Object.entries(attrs).filter(([key]) => key !== 'class')),
+)
+
+// Kept when the info row is hidden, so a consumer can render its own (e.g. the
+// transaction input card) and still describe the input with it
+const externalDescribedBy = computed(
+  () => attrs['aria-describedby'] as string | undefined,
 )
 
 const generatedId = useId()
@@ -168,10 +174,70 @@ const infoColorClass = computed(() => {
   return props.error ? 'text-text-error' : 'text-text-subtle'
 })
 
+/** Edits that replace text wholesale, however short the text is. */
+const WHOLE_VALUE_INPUTS = [
+  'insertFromPaste',
+  'insertFromDrop',
+  'insertFromYank',
+  'insertReplacementText',
+]
+
+/**
+ * One typed character is typing, and so is whatever a composing keyboard
+ * hands over; anything else is read like a paste.
+ */
+const describeEdit = (event: Event, input: HTMLInputElement): AmountEdit => {
+  const isTyping =
+    event instanceof InputEvent &&
+    !WHOLE_VALUE_INPUTS.includes(event.inputType) &&
+    (event.data?.length === 1 || event.inputType === 'insertCompositionText')
+  if (!isTyping) return { kind: 'paste' }
+  // The typed character sits right before the caret, whatever the event says.
+  const typedAt = (input.selectionStart ?? 0) - 1
+  const typed = input.value[typedAt]
+  return typed === '.' || typed === ','
+    ? { kind: 'typing', separatorAt: typedAt }
+    : { kind: 'typing' }
+}
+
+/** Where the caret belongs once `raw` has been rewritten to `cleaned`. */
+const caretAfterRewrite = (
+  raw: string,
+  cleaned: string,
+  caretAt: number,
+  edit: AmountEdit,
+): number => {
+  if (edit.kind === 'typing' && edit.separatorAt !== undefined) {
+    const { separatorAt } = edit
+    const wasIgnored =
+      cleaned === raw.slice(0, separatorAt) + raw.slice(separatorAt + 1)
+    // An ignored separator leaves the caret where it was typed; one that
+    // became the decimal point has the caret right after it.
+    return wasIgnored ? separatorAt : cleaned.indexOf('.') + 1
+  }
+  // Only text after the caret changed (the decimal cap): the caret stays.
+  if (cleaned.startsWith(raw.slice(0, caretAt))) return caretAt
+  // Otherwise it keeps its distance from the end.
+  return Math.max(0, cleaned.length - (raw.length - caretAt))
+}
+
 const onInput = (event: Event) => {
   const input = event.target as HTMLInputElement
-  const cleaned = sanitizeAmount(input.value, props.maxDecimals)
-  if (cleaned !== input.value) input.value = cleaned
+  const raw = input.value
+  const edit = describeEdit(event, input)
+  // A paste that is not an amount is ignored: the field keeps what it had.
+  const cleaned = sanitizeAmount(raw, props.maxDecimals, edit) ?? model.value
+  if (cleaned !== raw) {
+    const caret = caretAfterRewrite(
+      raw,
+      cleaned,
+      input.selectionStart ?? raw.length,
+      edit,
+    )
+    // Writing the value sends the caret to the end, so put it back.
+    input.value = cleaned
+    input.setSelectionRange(caret, caret)
+  }
   model.value = cleaned
 }
 </script>

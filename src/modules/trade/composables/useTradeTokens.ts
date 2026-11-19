@@ -26,6 +26,7 @@ type SupportingAsset = GetWebSwapOndoSupportingAssetsResponse[number]
 export interface TradeAssetToken extends NewTokenInfo {
   priceChangePercentage24h?: number
   pauseReason?: PauseReason | null
+  marketCap?: number
 }
 
 interface UseTradeTokensOptions {
@@ -231,6 +232,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       fromTokensMap,
       hardcodedTokensInfo.value,
       now.value.getTime(),
+      stockMarketCapBySymbol.value,
     )
 
     // If selling a tradable asset, add additional buy assets
@@ -272,6 +274,7 @@ function mapTradableAssetsToTokens(
   fromTokensMap: Map<string, NewTokenInfo>,
   hardcodedTokensInfo: HardcodedTokenInfo[],
   now: number,
+  marketCapBySymbol: Record<string, number>,
 ): NewTokenInfo[] {
   const balanceSources = Array.from(fromTokensMap.values()).map(token => ({
     address: token.address,
@@ -321,6 +324,7 @@ function mapTradableAssetsToTokens(
         // tagged row as unselectable, so a stale pause record left on a
         // tradable asset must not block it.
         pauseReason: asset.tradable ? null : getActivePauseReason(asset, now),
+        marketCap: marketCapBySymbol[asset.symbol.toUpperCase()],
         networkInfo: {
           name: chainName.toLowerCase(),
           isAddress: tokenAddress,

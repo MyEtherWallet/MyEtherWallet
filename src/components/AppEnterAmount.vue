@@ -1,76 +1,39 @@
 <template>
-  <div
-    ref="target"
-    class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
-    :class="{
-      'ring-2 ring-border-brand': inFocusInput || isOpenSelectToken,
-    }"
-    @click="setInFocusInput"
-  >
-    <div class="flex justify-between items-center w-full gap-2">
-      <input
-        ref="amountInput"
-        class="grow py-1 text-3xl font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0"
-        :class="{
-          'text-text-error': !!error && !isOpenSelectToken && !isPristine,
-        }"
-        name="amount-input"
-        type="text"
-        autoComplete="off"
-        placeholder="0"
-        :aria-label="$t('common.amount')"
-        v-model="amount"
-        @focus="setInFocusInput"
-        @keypress="checkIfNumber"
-        @paste="onAmountPaste"
-      />
-      <slot name="token-select">
-        <app-token-select
-          v-model:selected-token-contract="selectedToken"
-          @open:select-token="setIsOpenSelectToken"
-        />
-      </slot>
-    </div>
-    <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
-      <transition name="fade" mode="out-in">
-        <div
-          v-if="isLoading"
-          class="h-5 flex bg-background-default-hover rounded-full w-1/2"
-        ></div>
-        <div v-else class="flex justify-between items-center gap-2">
-          <div
-            :class="[
-              !!error && !isOpenSelectToken && !isPristine
-                ? 'text-text-error'
-                : 'text-text-subtle',
-              'text-s-14',
-            ]"
-          >
-            {{ balanceFiat }}
-          </div>
-          <div
-            v-if="isWalletConnected"
-            class="flex items-center gap-2 text-s-12 leading-p-120 text-text-subtle font-medium whitespace-nowrap"
-          >
-            <div>
-              {{ $t('common.balance') }}:
-              <span class="text-black">{{ balance }}</span>
-            </div>
-            <slot name="balance-action" />
-          </div>
-        </div>
-      </transition>
-      <transition name="fade" mode="out-in">
-        <!-- Inside the card padding, so no side inset of its own -->
-        <AppInputFeedback
-          v-if="!!error && !isLoading && !isOpenSelectToken && !isPristine"
-          type="error"
-          :message="error"
-          class="mt-1 px-0!"
-        />
-      </transition>
-    </div>
-    <slot name="footer" />
+  <div ref="target" @click="setInFocusInput">
+    <AppTransactionInputCard
+      :model-value="String(amount)"
+      :input-label="$t('common.amount')"
+      :error="showError"
+      :loading="isLoading"
+      :info-message="$t('common.enter_amount')"
+      :conversion="`≈ ${balanceFiat}`"
+      :balance="balanceCaption"
+      @update:model-value="amount = $event"
+      @focus="setInFocusInput"
+    >
+      <template #picker>
+        <slot name="token-select">
+          <app-token-select
+            v-model:selected-token-contract="selectedToken"
+            @open:select-token="setIsOpenSelectToken"
+          />
+        </slot>
+      </template>
+      <template #feedback>
+        <transition name="fade" mode="out-in">
+          <!-- Inside the card padding, so no side inset of its own -->
+          <AppInputFeedback
+            v-if="showError && !isLoading"
+            type="error"
+            :message="error"
+            class="px-0!"
+          />
+        </transition>
+      </template>
+      <template v-if="$slots.footer" #actions>
+        <slot name="footer" />
+      </template>
+    </AppTransactionInputCard>
   </div>
 </template>
 
@@ -81,19 +44,21 @@ import { watch, ref, computed, type PropType, nextTick } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 import AppTokenSelect from './AppTokenSelect.vue'
+import AppTransactionInputCard from './AppTransactionInputCard.vue'
 import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useI18n } from 'vue-i18n'
 import { useCurrency } from '@/composables/useCurrency'
 import { useInFocusInput } from '@/composables/useInFocusInput'
-import { useNumericInput } from '@/composables/useNumericInput'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading, isWalletConnected } =
   storeToRefs(walletStore)
 
 const { formatFiat } = useCurrency()
+const { t } = useI18n()
 
 const props = defineProps({
   validateInput: {
@@ -146,6 +111,15 @@ const balance = computed(() => {
     : '0'
 })
 
+const balanceCaption = computed(() =>
+  isWalletConnected.value
+    ? t('common.balance_amount', {
+        amount:
+          `${balance.value} ${tokenBalanceRaw.value?.symbol ?? ''}`.trim(),
+      })
+    : undefined,
+)
+
 const isOpenSelectToken = ref(false)
 const setIsOpenSelectToken = (value: boolean) => {
   isOpenSelectToken.value = value
@@ -167,7 +141,10 @@ watch(
  -------------------------*/
 const target = ref<HTMLElement | null>(null)
 const targetValue = ref<HTMLElement | null>(null)
-const amountInput = ref<HTMLElement | null>(null)
+// AppInputNaked owns the <input>; focus goes to it through the card root.
+const amountInput = computed<HTMLElement | null>(
+  () => target.value?.querySelector('input') ?? null,
+)
 
 const {
   inFocusInput,
@@ -209,5 +186,7 @@ watch(
   },
 )
 
-const { checkIfNumber, onPaste: onAmountPaste } = useNumericInput(amount)
+const showError = computed(
+  () => !!error.value && !isOpenSelectToken.value && !props.isPristine,
+)
 </script>

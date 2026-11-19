@@ -2,7 +2,8 @@
   "send": {
     "send-tokens": "Enviar tokens",
     "send-nfts": "Enviar NFT",
-    "need-help": "¿Necesitas ayuda para enviar?",
+    "description": "A cualquier dirección cripto",
+    "review-send": "Revisar envío",
     "approve-tx-on-device": "Aprueba la transacción en tu dispositivo",
     "unknown": "Desconocido",
     "unknown_chain": "Cadena desconocida",
@@ -29,12 +30,11 @@
     }
   },
   "verify-tx": {
-    "title": "Verificar transacción",
-    "description": "Revisa bien la información antes de confirmar la transacción.",
-    "unknown-network": "Red desconocida",
-    "confirm": "Confirmar y enviar"
+    "title": "Revisar envío",
+    "summary": "Resumen",
+    "youre-sending": "Estás enviando",
+    "confirm": "Confirmar envío"
   },
-
   "error": {
     "amount": {
       "required": "la cantidad es obligatoria",

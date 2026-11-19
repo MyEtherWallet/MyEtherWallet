@@ -21,7 +21,10 @@
     <!-- Dialog Container -->
     <div
       v-if="isOpen"
-      :class="[isOpenSideMenu ? 'mr-[455px]' : 'mr-20', zIndexContainer]"
+      :class="[
+        isOpenSideMenu ? 'mr-[455px]' : 'mr-15 sm:mr-20',
+        zIndexContainer,
+      ]"
       class="cursor-pointer fixed inset-0 flex items-center justify-end pl-3 ls:pl-6 overscroll-none overflow-y-auto scrollbar-hide no-scrollbar mt-[77px]"
       @click="closeDialog()"
     >

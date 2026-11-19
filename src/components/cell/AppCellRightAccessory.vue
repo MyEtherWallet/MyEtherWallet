@@ -3,8 +3,12 @@ import { computed } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
-import type { CellRightAccessory } from '@/components/cell/cellSizes'
-import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import {
+  formatChange,
+  trendOf,
+  type CellRightAccessory,
+  type Trend,
+} from '@/components/cell/cellSizes'
 
 /**
  * Cell right accessory (design library, MEW-2445). Internal to AppCell, which
@@ -13,31 +17,17 @@ import { formatPercentageValue } from '@/utils/numberFormatHelper'
  */
 const props = defineProps<{ accessory: CellRightAccessory }>()
 
-type Trend = 'up' | 'down' | 'neutral'
-
 const TREND_CLASS: Record<Trend, string> = {
   up: 'text-text-success',
   down: 'text-text-error',
   neutral: 'text-text-subtle',
 }
 
-const trendOf = (n: number): Trend =>
-  n > 0 ? 'up' : n < 0 ? 'down' : 'neutral'
-
 const change = computed(() =>
   'change' in props.accessory ? props.accessory.change : 0,
 )
 const trend = computed(() => trendOf(change.value))
-
-const changeText = computed(() => {
-  // The shared formatter returns a bare '0' here; Figma wants 0.00%.
-  if (trend.value === 'neutral') return '0.00%'
-  // The formatter keeps the sign, bounds included ('> -0.01%', '< -1000%');
-  // Figma wants the U+2212 minus.
-  const value = formatPercentageValue(change.value).value.replace('-', '−')
-  // A '+' in front of a bound would read '+< 0.01%'.
-  return trend.value === 'up' && !/^[<>]/.test(value) ? `+${value}` : value
-})
+const changeText = computed(() => formatChange(change.value))
 
 // TableSparkline picks its colour from the sign of percentChange.
 const graphChange = computed(() => {

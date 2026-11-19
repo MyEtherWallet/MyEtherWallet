@@ -78,6 +78,16 @@ describe('AppSlider', () => {
     expect(wrapper.get(thumb()).classes()).toContain('border-border-brand')
   })
 
+  it('colours the fill and thumb by tone', () => {
+    const success = mountSlider({ tone: 'success' })
+    expect(success.get(fill()).classes()).toContain('bg-background-success')
+    expect(success.get(thumb()).classes()).toContain('border-border-success')
+
+    const danger = mountSlider({ tone: 'danger' })
+    expect(danger.get(fill()).classes()).toContain('bg-background-error')
+    expect(danger.get(thumb()).classes()).toContain('border-border-error')
+  })
+
   it('forwards attrs to the input', () => {
     const wrapper = mountSlider({}, { 'aria-describedby': 'hint', name: 'pct' })
     const el = wrapper.get(input())

@@ -43,6 +43,8 @@ const props = withDefaults(
     address?: string
     background?: boolean
     name?: string
+    /** Image fit for remote-logo types; `cover` for non-square art. */
+    fit?: 'contain' | 'cover'
     /** Icon type only: solid status fill with an inverted glyph. */
     tone?: AvatarIconTone
   }>(),
@@ -98,6 +100,7 @@ const forwardProps = computed(() => ({
   address: props.address,
   background: props.background,
   name: props.name,
+  fit: props.fit,
   tone: iconTone.value,
 }))
 

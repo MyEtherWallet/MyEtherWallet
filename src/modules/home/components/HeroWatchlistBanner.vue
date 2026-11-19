@@ -76,10 +76,13 @@ defineEmits<{
 
     <span
       data-test="hero-watchlist-cta"
-      class="flex h-12 shrink-0 items-center gap-2 rounded-3xl pl-4 pr-6 text-s-16 font-semibold tracking-[-0.32px] text-black"
+      class="flex h-12 shrink-0 items-center gap-2 rounded-3xl pl-4 pr-6 text-s-16 font-semibold tracking-[-0.32px] text-black max-xs:pl-2 max-xs:pr-0"
     >
       <AppIcon name="plus" />
-      {{ t('homePage.hero.watchlist.addAssets') }}
+      <!-- Below xs only the + stays, so the copy keeps its width -->
+      <span class="max-xs:hidden">{{
+        t('homePage.hero.watchlist.addAssets')
+      }}</span>
     </span>
 
     <!-- Fade on the left edge (over the avatars), per Figma. Its solid end

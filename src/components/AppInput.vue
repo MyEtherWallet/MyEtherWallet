@@ -8,6 +8,7 @@
         surfaceClass,
         { 'cursor-not-allowed': disabled },
       ]"
+      @click="onFieldClick"
     >
       <div
         v-if="$slots.leading"
@@ -37,6 +38,7 @@
           :id="inputId"
           ref="baseInput"
           :type="inputType"
+          :inputmode="inputmode"
           v-model="model"
           :disabled="disabled"
           :placeholder="resolvedPlaceholder"
@@ -50,7 +52,6 @@
               : 'text-text-default placeholder:text-text-placeholder',
           ]"
           autocomplete="off"
-          @pointerdown="setActive()"
           @focus="setInFocusInput()"
           @blur="startOutOfFocusTimeout()"
           @input="onInput"
@@ -60,6 +61,7 @@
 
       <div
         v-if="$slots.trailing || showClear || showReveal"
+        ref="trailingEl"
         :inert="disabled || undefined"
         :class="[
           'flex items-center shrink-0',
@@ -118,6 +120,7 @@ import {
   useId,
   type PropType,
   type InputTypeHTMLAttribute,
+  type HTMLAttributes,
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -178,6 +181,11 @@ const props = defineProps({
     type: String as PropType<InputTypeHTMLAttribute>,
     default: 'text',
   },
+  /** Virtual keyboard hint, e.g. 'decimal' for amounts typed as text. */
+  inputmode: {
+    type: String as PropType<HTMLAttributes['inputmode']>,
+    required: false,
+  },
   isRequired: {
     type: Boolean,
     default: false,
@@ -203,6 +211,7 @@ const onEnter = () => {
 
 const model = defineModel<string>()
 const baseInput = ref<HTMLInputElement | null>(null)
+const trailingEl = ref<HTMLDivElement | null>(null)
 const inputId = useId()
 const feedbackId = useId()
 
@@ -211,13 +220,21 @@ const spec = computed(() => INPUT_SIZE_SPEC[props.size])
 /**------------------------
  * Focus State
  -------------------------*/
-const {
-  inFocusInput,
-  isActive,
-  setActive,
-  setInFocusInput,
-  startOutOfFocusTimeout,
-} = useInFocusInput(baseInput)
+const { inFocusInput, setInFocusInput, startOutOfFocusTimeout } =
+  useInFocusInput(baseInput)
+
+/**
+ * The field box is wider than the <input> (padding, leading avatar, label
+ * row), so a click there would otherwise land on a plain div. Forward it to
+ * the input. Disabled fields are skipped because `focus()` is a no-op on a
+ * disabled input and the focus flag would stick; trailing actions keep their
+ * own click handling.
+ */
+const onFieldClick = (event: MouseEvent) => {
+  if (props.disabled) return
+  if (trailingEl.value?.contains(event.target as Node)) return
+  setInFocusInput()
+}
 
 /**------------------------
  * Value / label float
@@ -257,7 +274,6 @@ watch(inFocusInput, value => {
 })
 
 const onInput = () => {
-  setActive()
   if (hasRequiredError.value) {
     hasRequiredError.value = false
   }
@@ -270,7 +286,6 @@ const surfaceClass = computed(() =>
   inputSurfaceClass({
     surface: props.surface,
     focused: inFocusInput.value,
-    active: isActive.value,
     error: hasError.value,
     disabled: props.disabled,
   }),
@@ -288,7 +303,6 @@ const showReveal = computed(() => props.type === 'password' && !props.disabled)
 
 const showPassword = ref(false)
 const togglePasswordVisibility = () => {
-  setActive()
   setInFocusInput()
   nextTick(() => {
     showPassword.value = !showPassword.value
@@ -302,7 +316,6 @@ const inputType = computed(() => {
 })
 
 const clearInputValue = () => {
-  setActive()
   setInFocusInput()
   nextTick(() => {
     model.value = ''

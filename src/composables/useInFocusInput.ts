@@ -6,15 +6,6 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
    * Focus State
    -------------------------*/
   const inFocusInput = ref(false)
-  /**
-   * Figma "Active" state: the user is editing (pointer focus or typing), so the
-   * field shows only the caret. Keyboard focus before any edit is "Focus" and
-   * keeps the ring. Resets when the field loses focus.
-   */
-  const isActive = ref(false)
-  const setActive = () => {
-    isActive.value = true
-  }
 
   /**
    * Destructures the `useTimeoutFn` function to handle the out-of-focus timeout for the input field.
@@ -23,7 +14,7 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
    * @function startOutOfFocusTimeout - Starts the out-of-focus timeout.
    * @function stopOutOfFocusTimeout - Stops the out-of-focus timeout.
    *
-   * The timeout function sets `inFocusInput` (and `isActive`) to false.
+   * The timeout function sets `inFocusInput` to false.
    *
    * @param {number} 150 - The duration of the timeout in milliseconds.
    * @param {Object} { immediate: false } - Does not start the timeout immediately.
@@ -35,19 +26,16 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
   } = useTimeoutFn(
     () => {
       inFocusInput.value = false
-      isActive.value = false
     },
     150,
     { immediate: false },
   )
 
   /**
-   * Called on blur. Active ends right away, so a quick Tab back (inside the
-   * 150ms grace window) is keyboard Focus again; the focus flag itself waits
-   * out the timeout so trailing-button clicks don't flicker the field.
+   * Called on blur. The focus flag waits out the 150ms grace window so a
+   * trailing-button click (which briefly blurs the field) doesn't flicker it.
    */
   const startOutOfFocusTimeout = () => {
-    isActive.value = false
     startOutOfFocusTimer()
   }
 
@@ -74,8 +62,6 @@ export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
   })
   return {
     inFocusInput,
-    isActive,
-    setActive,
     setInFocusInput,
     startOutOfFocusTimeout,
   }

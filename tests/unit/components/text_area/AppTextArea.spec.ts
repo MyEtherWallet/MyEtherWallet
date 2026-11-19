@@ -13,7 +13,6 @@ const base = {
   error: false,
   disabled: false,
   focused: false,
-  active: false,
 } as const
 
 describe('textAreaFieldClass (Figma 3094:65088)', () => {
@@ -51,15 +50,14 @@ describe('textAreaFieldClass (Figma 3094:65088)', () => {
     expect(cls).not.toContain('border-error')
   })
 
-  it('active (editing) and disabled look like rest, with no hover', () => {
+  it('disabled looks like rest, with no hover; focus keeps the brand ring while editing', () => {
     const alt = { ...base, surface: 'alternative', filled: true } as const
-    for (const s of [
-      { ...alt, focused: true, active: true },
-      { ...alt, disabled: true },
-    ]) {
-      expect(textAreaFieldClass(s)).toContain('inset-ring-border-default')
-      expect(textAreaFieldClass(s)).not.toContain('hover:')
-    }
+    const disabled = textAreaFieldClass({ ...alt, disabled: true })
+    expect(disabled).toContain('inset-ring-border-default')
+    expect(disabled).not.toContain('hover:')
+    expect(textAreaFieldClass({ ...alt, focused: true })).toContain(
+      'inset-ring-2 inset-ring-border-brand',
+    )
   })
 })
 
@@ -95,13 +93,13 @@ describe('AppTextArea', () => {
     expect(field(w).className).toContain('inset-ring-border-default')
   })
 
-  it('shows the brand line on keyboard focus and drops it while typing', async () => {
+  it('shows the brand line on focus and keeps it while typing', async () => {
     const w = mount(AppTextArea, { props: { modelValue: '' } })
     const textarea = w.get('textarea')
     await textarea.trigger('focus')
     expect(field(w).className).toContain('inset-ring-border-brand')
     await textarea.trigger('input')
-    expect(field(w).className).not.toContain('inset-ring-border-brand')
+    expect(field(w).className).toContain('inset-ring-border-brand')
   })
 
   it('shows the message, and the error replaces it', async () => {

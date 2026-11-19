@@ -56,27 +56,24 @@ const INPUT_SURFACE_SPEC: Record<InputSurface, InputSurfaceSpec> = {
  *
  * Every line is an inset ring, never a CSS border: a ring takes no layout
  * space, so the 1px rest → 2px hover/focus change never moves the content and
- * the inline padding stays exactly 16px. The ring is Focus-only: while editing
- * (Figma "Active": pointer focus or typing) the field keeps its resting line with no ring or hover, and
- * an unfocused errored field keeps its normal line, signalled by the feedback
- * row alone.
+ * the inline padding stays exactly 16px. The focus ring stays for as long as
+ * the field has focus (pointer, keyboard or typing), and an unfocused errored
+ * field keeps its normal line, signalled by the feedback row alone.
  */
 export const inputSurfaceClass = ({
   surface,
   focused,
-  active = false,
   error,
   disabled = false,
 }: {
   surface: InputSurface
   focused: boolean
-  active?: boolean
   error: boolean
   disabled?: boolean
 }): string => {
   const { bg, rest } = INPUT_SURFACE_SPEC[surface]
   const base = `box-border transition-shadow ${bg}`
-  if (disabled || (focused && active)) return `${base} ${rest}`
+  if (disabled) return `${base} ${rest}`
   if (focused)
     return error
       ? `${base} inset-ring-2 inset-ring-border-error`

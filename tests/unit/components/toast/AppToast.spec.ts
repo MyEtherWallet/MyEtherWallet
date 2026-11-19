@@ -124,7 +124,7 @@ describe('AppToast — design-library Toast (MEW-1975)', () => {
     }
     const wrapper = mountToast({ type: 'processing' })
     const dismiss = wrapper.get('button[aria-label]')
-    expect(dismiss.classes()).toContain('size-[22px]')
+    expect(dismiss.classes()).toContain('size-8')
     expect(dismiss.classes()).toContain('text-icon-inverted')
     await dismiss.trigger('click')
     expect(wrapper.emitted('dismiss')).toHaveLength(1)

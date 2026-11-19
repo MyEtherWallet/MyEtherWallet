@@ -50,6 +50,23 @@ export function isExtensionContextInvalidatedError(err: unknown): boolean {
 }
 
 /**
+ * Whether an error is a wallet refusing to sign because its active account is
+ * watch-only. Trust Wallet rejects `eth_sendTransaction` from one of its own
+ * watch-only accounts with "Watch-only wallets cannot sign transactions or
+ * messages." (APP-MEW-WEB-1RY). That is wallet-side user state, not app code:
+ * MEW can't see that the account is watch-only before it asks for a signature,
+ * and the send flow already shows the message in the failure toast.
+ */
+export function isWatchOnlyWalletSignError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' &&
+    message.toLowerCase().includes('watch-only wallets cannot sign')
+  )
+}
+
+/**
  * Whether an error is the external "not found rainbowkit" rejection. It is
  * emitted by a wallet's injected in-app-browser detection script (observed on
  * mobile Safari / iOS in-app wallet browsers), never by app code or any bundled
@@ -390,6 +407,49 @@ export function isBenignPurchaseInfoForbidden(event: unknown): boolean {
 }
 
 /**
+ * Whether a Sentry event is the portfolio balance-history endpoint answering
+ * 406. The backend does this intermittently for addresses it normally serves
+ * (same query: 200 most days, 406 for hours on others), and
+ * `PortfolioHistory.vue` already shows its "No chart data" state, so it is
+ * unactionable noise (APP-MEW-WEB-1K0 / MEW-2547). Matched on the
+ * `describeMewApiFetchError` tags, so other statuses from this endpoint and a
+ * 406 from any other route still report.
+ */
+export function isBenignBalanceHistoryNotAcceptable(event: unknown): boolean {
+  if (!event || typeof event !== 'object') return false
+  const tags = (event as { tags?: Record<string, unknown> }).tags
+  if (!tags) return false
+  return (
+    tags.mew_api_url ===
+      `${configs.MEW_PURCHASE_BASE_URL}/v5/portfolio/balance-history` &&
+    tags.mew_api_status === '406'
+  )
+}
+
+/**
+ * Whether a Sentry event is the legacy 7d back-projection endpoint
+ * (`/v1/web/chains/<CHAIN>/addresses/<address>/7d-balances-back-projection`)
+ * answering 500. `PortfolioHistory.vue` calls it for chains the
+ * balance-history endpoint doesn't cover, and the backend 500s on several of
+ * them (MOONBEAM, CANTO, MOONRIVER, BLAST, RARI, ...). The
+ * chart already shows its "No chart data" state, so the client report is
+ * unactionable noise (APP-MEW-WEB-1FJ / MEW-2665). Matched on the
+ * `describeMewApiFetchError` tags, so other statuses from this endpoint and a
+ * 500 from any other route still report.
+ */
+export function isBenignBackProjectionServerError(event: unknown): boolean {
+  if (!event || typeof event !== 'object') return false
+  const tags = (event as { tags?: Record<string, unknown> }).tags
+  const url = tags?.mew_api_url
+  return (
+    typeof url === 'string' &&
+    url.startsWith(`${configs.MEW_API_URL}/v1/web/chains/`) &&
+    url.endsWith('/7d-balances-back-projection') &&
+    tags?.mew_api_status === '500'
+  )
+}
+
+/**
  * Whether an error is the WalletConnect relay "Connection interrupted while
  * trying to subscribe" rejection. Thrown entirely inside `@walletconnect/core`'s
  * Relayer when the relay WebSocket (`wss://relay.walletconnect.org`) disconnects
@@ -410,6 +470,55 @@ export function isWalletConnectSubscribeInterruptedError(
   if (!err || typeof err !== 'object') return false
   const message = (err as { message?: unknown }).message
   return typeof message === 'string' && message.includes(MESSAGE)
+}
+
+/**
+ * Whether an error is the WalletConnect "No matching key. session topic doesn't
+ * exist" rejection thrown while processing an inbound relay message. The relay
+ * delivers a message (e.g. `wc_sessionEvent`) for a session the sign-client
+ * already removed from its store, `isValidSessionTopic` throws, and nothing
+ * inside `@walletconnect/sign-client` catches it, so it reaches Sentry as an
+ * `onunhandledrejection` with no MEW frame. The SDK just drops that message and
+ * nothing changes for the user (APP-MEW-WEB-C9 / MEW-2656).
+ *
+ * Anchored on the `onRelayMessage` frame (a non-mangled class property name,
+ * present in Chrome, Edge, Firefox and Safari stacks) so an outbound `request()`
+ * on a stale session, which would break a signing flow, keeps reporting. Fails
+ * open when no stack is present.
+ */
+export function isWalletConnectStaleSessionTopicError(err: unknown): boolean {
+  if (!err || typeof err !== 'object') return false
+  const { message, stack } = err as { message?: unknown; stack?: unknown }
+  return (
+    typeof message === 'string' &&
+    message.includes("No matching key. session topic doesn't exist") &&
+    typeof stack === 'string' &&
+    stack.includes('onRelayMessage')
+  )
+}
+
+/**
+ * Whether an error is the WalletConnect relay publish timeout for a session
+ * deletion (`Failed to publish payload, please try again. id:<id> tag:1112`),
+ * thrown by `@walletconnect/core`'s publisher when the relay doesn't
+ * acknowledge the message in time. Seen when wagmi's WalletConnect connector
+ * deletes a stale session before connecting (tag 1112 = `wc_sessionDelete`).
+ * The connect flow already shows a "Could not connect" toast and the user can
+ * retry, so it is transient relay noise (APP-MEW-WEB-1RW / MEW-2657).
+ *
+ * Fails closed on every other tag: e.g. tag 1108 (`wc_sessionRequest`) is a
+ * signing/send request, where a failed publish breaks a user flow, so it keeps
+ * reporting. Handles both the Error-object and bare-string payload shapes.
+ */
+export function isWalletConnectPublishFailedError(err: unknown): boolean {
+  const SESSION_DELETE_PUBLISH_FAILED =
+    /^Failed to publish payload, please try again\. id:\d+ tag:1112$/
+  if (typeof err === 'string') return SESSION_DELETE_PUBLISH_FAILED.test(err)
+  if (!err || typeof err !== 'object') return false
+  const message = (err as { message?: unknown }).message
+  return (
+    typeof message === 'string' && SESSION_DELETE_PUBLISH_FAILED.test(message)
+  )
 }
 
 // The null-`info` deref message, in both shapes the crash surfaces as: the

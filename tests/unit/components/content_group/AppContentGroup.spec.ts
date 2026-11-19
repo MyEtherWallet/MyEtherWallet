@@ -23,6 +23,18 @@ describe('AppContentGroup', () => {
     expect(wrapper.text()).not.toContain('Fallback')
   })
 
+  it('lets a description slot replace the description text', () => {
+    const wrapper = mount(AppContentGroup, {
+      props: { title: 'ETH', description: 'Fallback' },
+      slots: { description: '<b data-testid="custom-description">$1</b>' },
+    })
+    expect(
+      wrapper.get(description()).find('[data-testid="custom-description"]')
+        .exists(),
+    ).toBe(true)
+    expect(wrapper.text()).not.toContain('Fallback')
+  })
+
   it('omits the description block when no description is given', () => {
     const wrapper = mount(AppContentGroup, { props: { title: 'Only title' } })
     expect(wrapper.find(description()).exists()).toBe(false)
@@ -156,6 +168,13 @@ describe('AppContentGroup', () => {
       props: { title: 'T', description: 'D', noWrap: true },
     })
     expect(wrapper.get(description()).classes()).toContain('truncate')
+  })
+
+  it('wrapTitle lets the title wrap', () => {
+    const wrapper = mount(AppContentGroup, {
+      props: { title: 'T', wrapTitle: true },
+    })
+    expect(wrapper.get(title()).classes()).not.toContain('truncate')
   })
 
   it('loading replaces text with skeletons', () => {
