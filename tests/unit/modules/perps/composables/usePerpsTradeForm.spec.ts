@@ -671,3 +671,52 @@ describe('triggerOrderPriceErrorKey (MEW-2075)', () => {
     expect(triggerOrderPriceErrorKey('')).toBeNull()
   })
 })
+
+// MEW-2684 review: a position whose direction is missing or 'neutral' now
+// renders in the positions table, so its Close action must not fall back to a
+// buy order. Close stays disabled and the handler never submits.
+describe('usePerpsTradeForm — close with an unknown direction (MEW-2684)', () => {
+  const position = (direction?: string) =>
+    ({
+      market: 'AAPL-USD',
+      netQuantity: '1',
+      ...(direction ? { direction } : {}),
+    }) as unknown as Position
+
+  beforeEach(() => {
+    walletMenuState.selectedTradeOrderSide = 'buy'
+    walletMenuState.selectedTradeManageMode = null
+    walletMenuState.selectedTradeTokenSymbol = 'AAPL-USD'
+    mockPerpsState.markets.value = []
+  })
+
+  afterEach(() => {
+    mockPerpsState.positions.value = []
+  })
+
+  it.each([undefined, 'neutral'])(
+    'disables Close and does not submit when direction is %s',
+    async direction => {
+      mockPerpsState.positions.value = [position(direction)]
+      const form = usePerpsTradeForm()
+      form.closeSliderValue.value = 100
+
+      expect(form.closeDisabled.value).toBe(true)
+      // Confirm from an already-open modal: no order, and the modal stays open
+      // with an error instead of closing as if the close succeeded.
+      form.showCloseConfirmModal.value = true
+      await form.confirmAndClosePosition()
+      expect(form.isClosing.value).toBe(false)
+      expect(form.closeError.value).toBe('perps.errors.close-position-failed')
+      expect(form.showCloseConfirmModal.value).toBe(true)
+    },
+  )
+
+  it('keeps Close enabled for a known direction', () => {
+    mockPerpsState.positions.value = [position('long')]
+    const form = usePerpsTradeForm()
+    form.closeSliderValue.value = 100
+
+    expect(form.closeDisabled.value).toBe(false)
+  })
+})
