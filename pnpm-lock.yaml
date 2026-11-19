@@ -18,7 +18,7 @@ importers:
   .:
     dependencies:
       '@1inch/fusion-sdk':
-        specifier: ^2.4.5
+        specifier: '2'
         version: 2.4.15(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@1inch/limit-order-sdk':
         specifier: ^5.2.3
@@ -2400,6 +2400,7 @@ packages:
 
   '@ledgerhq/hw-transport-node-hid@6.33.5':
     resolution: {integrity: sha512-uJ7VztZEDdhCAmCByMltH9Zg6qrU1CrTjVpLrO7IQD5paQbMhZNOLSrtBhWSoP8LYNo/gx5VtLTdtUIIedjsVA==}
+    deprecated: This package is no longer maintained. Use @ledgerhq/device-transport-kit-node-hid instead.
 
   '@ledgerhq/hw-transport-node-speculos-http@6.29.4':
     resolution: {integrity: sha512-UTIqSxf1jH2aVGsg6VnQXDj9fpzn/q/cf9eNwg87QSTNvJ8wbomNBy+x+fgjXt4pZpv9lbFzIyGhE6qsh9QvMQ==}
@@ -6567,6 +6568,7 @@ packages:
 
   axios-retry@4.5.0:
     resolution: {integrity: sha512-aR99oXhpEDGo0UuAlYcn2iGRds30k366Zfa05XWScR9QaQD4JYiP3/1Qt1u7YlefUOK+cn0CcwoL1oefavQUlQ==}
+    deprecated: axios-retry is no longer maintained. See https://github.com/softonic/axios-retry for alternatives.
     peerDependencies:
       axios: 1.14.0
 

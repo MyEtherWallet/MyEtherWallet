@@ -9,7 +9,7 @@ labels: fix
 - **Version**:
 - **Browser**: (Chrome/Firefox/Opera/etc..)
 - **OS**: (Windows/Linux/Mac)
-- **Page Url**: (ie https://v6.myetherwallet.com)
+- **Page Url**: (ie https://v6.myetherwallet.com/wallet/access)
 
 ###### Steps to reproduce
 
