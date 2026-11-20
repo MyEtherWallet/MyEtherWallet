@@ -1,3 +1,40 @@
+<template>
+  <div class="relative flex h-5 w-full items-center" data-testid="slider">
+    <!-- Native thumb sized like the drawn one so pointer positions line up -->
+    <input
+      v-bind="$attrs"
+      :value="model"
+      :min="min"
+      :max="max"
+      :step="step"
+      :disabled="disabled"
+      :aria-label="label"
+      :aria-valuetext="ariaValueText?.(model)"
+      type="range"
+      class="peer absolute inset-0 z-10 m-0 h-full w-full cursor-pointer appearance-none opacity-0 disabled:cursor-default [&::-moz-range-thumb]:size-5 [&::-webkit-slider-thumb]:size-5 [&::-webkit-slider-thumb]:appearance-none"
+      data-testid="slider-input"
+      @input="onInput"
+    />
+    <div
+      class="absolute inset-x-0 top-1/2 h-2.5 -translate-y-1/2 rounded-full"
+      :class="trackClass"
+      data-testid="slider-track"
+    />
+    <div
+      class="absolute left-0 top-1/2 h-2.5 -translate-y-1/2 rounded-full"
+      :class="fillClass"
+      :style="{ width: fillWidth }"
+      data-testid="slider-fill"
+    />
+    <div
+      class="pointer-events-none absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-3 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-border-focus"
+      :class="thumbClass"
+      :style="{ left: thumbLeft }"
+      data-testid="slider-thumb"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 /**
  * Slider (Figma: MEW Web App — Design Library › Slider, node 4059:4392).
@@ -60,40 +97,3 @@ const onInput = (event: Event) => {
   model.value = Number((event.target as HTMLInputElement).value)
 }
 </script>
-
-<template>
-  <div class="relative flex h-5 w-full items-center" data-testid="slider">
-    <!-- Native thumb sized like the drawn one so pointer positions line up -->
-    <input
-      v-bind="$attrs"
-      :value="model"
-      :min="min"
-      :max="max"
-      :step="step"
-      :disabled="disabled"
-      :aria-label="label"
-      :aria-valuetext="ariaValueText?.(model)"
-      type="range"
-      class="peer absolute inset-0 z-10 m-0 h-full w-full cursor-pointer appearance-none opacity-0 disabled:cursor-default [&::-moz-range-thumb]:size-5 [&::-webkit-slider-thumb]:size-5 [&::-webkit-slider-thumb]:appearance-none"
-      data-testid="slider-input"
-      @input="onInput"
-    />
-    <div
-      class="absolute inset-x-0 top-1/2 h-2.5 -translate-y-1/2 rounded-full"
-      :class="trackClass"
-      data-testid="slider-track"
-    />
-    <div
-      class="absolute left-0 top-1/2 h-2.5 -translate-y-1/2 rounded-full"
-      :class="fillClass"
-      :style="{ width: fillWidth }"
-      data-testid="slider-fill"
-    />
-    <div
-      class="pointer-events-none absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-3 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-border-focus"
-      :class="thumbClass"
-      :style="{ left: thumbLeft }"
-      data-testid="slider-thumb"
-    />
-  </div>
-</template>

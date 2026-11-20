@@ -1,3 +1,41 @@
+<template>
+  <label
+    v-bind="forwarded.label"
+    class="group/checkbox inline-flex items-start gap-2 text-text-sm"
+    :class="
+      disabled
+        ? 'cursor-default text-text-disabled'
+        : 'cursor-pointer text-text-default'
+    "
+  >
+    <input
+      v-bind="forwarded.input"
+      ref="inputEl"
+      v-model="model"
+      type="checkbox"
+      class="peer sr-only"
+      :indeterminate="indeterminate"
+      :disabled="disabled"
+      @change="syncInput"
+    />
+    <span
+      aria-hidden="true"
+      class="flex size-5 shrink-0 items-center justify-center rounded text-icon-inverted transition-colors duration-150 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-border-focus"
+      :class="boxClass"
+    >
+      <span
+        v-if="indeterminate"
+        data-testid="checkbox-bar"
+        class="h-0.5 w-2.5 rounded-full bg-icon-inverted"
+      />
+      <AppIcon v-else-if="model" name="check" size="xxs" />
+    </span>
+    <span v-if="label || $slots.default">
+      <slot>{{ label }}</slot>
+    </span>
+  </label>
+</template>
+
 <script setup lang="ts">
 import { computed, nextTick, ref, useAttrs, type StyleValue } from 'vue'
 import AppIcon from '@components/icon/AppIcon.vue'
@@ -70,41 +108,3 @@ const boxClass = computed(() => {
   ]
 })
 </script>
-
-<template>
-  <label
-    v-bind="forwarded.label"
-    class="group/checkbox inline-flex items-start gap-2 text-text-sm"
-    :class="
-      disabled
-        ? 'cursor-default text-text-disabled'
-        : 'cursor-pointer text-text-default'
-    "
-  >
-    <input
-      v-bind="forwarded.input"
-      ref="inputEl"
-      v-model="model"
-      type="checkbox"
-      class="peer sr-only"
-      :indeterminate="indeterminate"
-      :disabled="disabled"
-      @change="syncInput"
-    />
-    <span
-      aria-hidden="true"
-      class="flex size-5 shrink-0 items-center justify-center rounded text-icon-inverted transition-colors duration-150 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-border-focus"
-      :class="boxClass"
-    >
-      <span
-        v-if="indeterminate"
-        data-testid="checkbox-bar"
-        class="h-0.5 w-2.5 rounded-full bg-icon-inverted"
-      />
-      <AppIcon v-else-if="model" name="check" size="xxs" />
-    </span>
-    <span v-if="label || $slots.default">
-      <slot>{{ label }}</slot>
-    </span>
-  </label>
-</template>

@@ -1,5 +1,11 @@
 {
   "multi_address": {
+    "fund": {
+      "buy_title": "购买加密货币",
+      "buy_description": "借记卡或银行账户",
+      "deposit_title": "从钱包存入",
+      "deposit_description": "从其他钱包转入资金。"
+    },
     "title": "管理账户",
     "active": "当前",
     "saved": "已保存的地址",

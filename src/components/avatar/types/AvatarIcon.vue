@@ -1,3 +1,14 @@
+<template>
+  <div class="w-full h-full flex items-center justify-center">
+    <div
+      class="w-3/4 h-3/4 flex items-center justify-center [&_svg]:w-full [&_svg]:h-full"
+      :class="tone ? 'text-icon-inverted' : 'text-text-default'"
+    >
+      <slot />
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import type { AvatarIconTone, AvatarSize } from '../types'
 
@@ -15,14 +26,3 @@ defineProps<{
 
 defineOptions({ inheritAttrs: false })
 </script>
-
-<template>
-  <div class="w-full h-full flex items-center justify-center">
-    <div
-      class="w-3/4 h-3/4 flex items-center justify-center [&_svg]:w-full [&_svg]:h-full"
-      :class="tone ? 'text-icon-inverted' : 'text-text-default'"
-    >
-      <slot />
-    </div>
-  </div>
-</template>

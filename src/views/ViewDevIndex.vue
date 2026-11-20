@@ -1,3 +1,26 @@
+<template>
+  <div class="mx-auto flex max-w-4xl flex-col gap-8 p-8">
+    <header class="flex flex-col gap-1">
+      <h1 class="text-heading-lg">Design library — dev previews</h1>
+      <p class="text-text-sm text-text-subtle">
+        Every component preview registered under /dev/. Pick one here or from
+        the sidebar to preview it against Figma.
+      </p>
+    </header>
+
+    <ul class="flex max-w-[480px] flex-col gap-1">
+      <li v-for="route in previewRoutes" :key="route.path">
+        <AppCell
+          size="small"
+          :title="route.label"
+          :description="route.path"
+          @click="router.push(route.path)"
+        />
+      </li>
+    </ul>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -23,26 +46,3 @@ const previewRoutes = computed(() =>
     .sort((a, b) => a.label.localeCompare(b.label)),
 )
 </script>
-
-<template>
-  <div class="mx-auto flex max-w-4xl flex-col gap-8 p-8">
-    <header class="flex flex-col gap-1">
-      <h1 class="text-heading-lg">Design library — dev previews</h1>
-      <p class="text-text-sm text-text-subtle">
-        Every component preview registered under /dev/. Pick one here or from
-        the sidebar to preview it against Figma.
-      </p>
-    </header>
-
-    <ul class="flex max-w-[480px] flex-col gap-1">
-      <li v-for="route in previewRoutes" :key="route.path">
-        <AppCell
-          size="small"
-          :title="route.label"
-          :description="route.path"
-          @click="router.push(route.path)"
-        />
-      </li>
-    </ul>
-  </div>
-</template>

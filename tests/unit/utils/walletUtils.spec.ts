@@ -4,7 +4,121 @@ import {
   isInsufficientFundsError,
   isUserRejectionError,
   isBlindSigningDisabledError,
+  isSignableWallet,
+  isInAppSigner,
+  holdsKeyInApp,
+  getLocalizedWalletError,
 } from '@/utils/walletUtils'
+import { WalletType } from '@/providers/types'
+
+const walletOf = (type: WalletType) => ({ getWalletType: () => type })
+
+describe('isSignableWallet', () => {
+  it('sends wallets that sign for MEW to broadcast through sign-then-broadcast, the Privy wallet among them', () => {
+    for (const type of [
+      WalletType.LEDGER,
+      WalletType.TREZOR,
+      WalletType.PRIVATE_KEY,
+      WalletType.MNEMONIC,
+      WalletType.PRIVY,
+    ]) {
+      expect(isSignableWallet(walletOf(type))).toBe(true)
+    }
+  })
+
+  it('leaves wallets that broadcast themselves out', () => {
+    for (const type of [WalletType.WAGMI, WalletType.INJECTED]) {
+      expect(isSignableWallet(walletOf(type))).toBe(false)
+    }
+  })
+})
+
+describe('getLocalizedWalletError', () => {
+  // The Privy wallet's errors are already sentences for the user. The send
+  // review lowercases an error before it looks it up, so they come back here
+  // lowercased and must leave as they were written.
+  it('gives an expired Privy login back in its own casing', () => {
+    expect(
+      getLocalizedWalletError(
+        'your login has expired. log in again to continue.',
+      ),
+    ).toBe('Your login has expired. Log in again to continue.')
+  })
+
+  it('gives a refused Privy signature back in its own casing', () => {
+    expect(
+      getLocalizedWalletError(
+        'the signature could not be verified, so nothing was sent. please try again.',
+      ),
+    ).toBe(
+      'The signature could not be verified, so nothing was sent. Please try again.',
+    )
+  })
+
+  it('gives a failed passkey check back in its own casing', () => {
+    expect(
+      getLocalizedWalletError(
+        'your passkey could not be checked, so nothing was done. please try again.',
+      ),
+    ).toBe(
+      'Your passkey could not be checked, so nothing was done. Please try again.',
+    )
+  })
+})
+
+describe('holdsKeyInApp', () => {
+  it('holds for the wallets whose key is in this page, so signing costs nothing', () => {
+    // A keystore file unlocks into a private key wallet.
+    for (const type of [WalletType.PRIVATE_KEY, WalletType.MNEMONIC]) {
+      expect(holdsKeyInApp(walletOf(type))).toBe(true)
+    }
+  })
+
+  it('does not hold for a Privy wallet, whose every signature is a request to Privy', () => {
+    expect(holdsKeyInApp(walletOf(WalletType.PRIVY))).toBe(false)
+  })
+
+  it('does not hold for hardware and external wallets, or with no wallet', () => {
+    for (const type of [
+      WalletType.LEDGER,
+      WalletType.TREZOR,
+      WalletType.WAGMI,
+      WalletType.INJECTED,
+    ]) {
+      expect(holdsKeyInApp(walletOf(type))).toBe(false)
+    }
+    expect(holdsKeyInApp(null)).toBe(false)
+  })
+})
+
+describe('isInAppSigner', () => {
+  it('holds for wallets that sign with no step outside the app: private key, mnemonic and Privy', () => {
+    // A keystore file unlocks into a private key wallet.
+    for (const type of [
+      WalletType.PRIVATE_KEY,
+      WalletType.MNEMONIC,
+      WalletType.PRIVY,
+    ]) {
+      expect(isInAppSigner(walletOf(type))).toBe(true)
+    }
+  })
+
+  it('does not hold for wallets the user approves on elsewhere', () => {
+    for (const type of [
+      WalletType.LEDGER,
+      WalletType.TREZOR,
+      WalletType.WAGMI,
+      WalletType.INJECTED,
+    ]) {
+      expect(isInAppSigner(walletOf(type))).toBe(false)
+    }
+  })
+
+  it('does not hold when no wallet is connected', () => {
+    expect(isInAppSigner(null)).toBe(false)
+    expect(isInAppSigner(undefined)).toBe(false)
+  })
+})
 
 // ---------------------------------------------------------------------------
 // isTrezorSupported — MEW-2041

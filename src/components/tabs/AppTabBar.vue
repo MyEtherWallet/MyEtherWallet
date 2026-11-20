@@ -1,3 +1,29 @@
+<template>
+  <div class="w-full border-b" :class="ruleClass" data-testid="tab-bar">
+    <!-- Scrolls sideways when the tabs don't fit. -m-1.5/p-1.5 keeps the focus
+         ring inside the scroll box; -mb-[7px] (6px + 1px) keeps the underline on
+         the rule, as in Figma. `relative` measures offsetLeft from the list. -->
+    <div
+      ref="listRef"
+      role="tablist"
+      :aria-label="label"
+      class="no-scrollbar relative -m-1.5 -mb-[7px] flex items-center gap-3 overflow-x-auto p-1.5"
+      @keydown="onKeydown"
+    >
+      <AppTabItem
+        v-for="item in items"
+        :key="item.id"
+        class="shrink-0"
+        :label="item.label"
+        :disabled="item.disabled"
+        :selected="item.id === model"
+        :tabindex="item.id === focusableId ? 0 : -1"
+        @click="select(item.id)"
+      />
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts" generic="TId extends string">
 /**
  * TabBar (Figma: MEW Web App — Design Library › TabBar, node 2175:7168).
@@ -86,29 +112,3 @@ const onKeydown = (event: KeyboardEvent) => {
   scrollToTab(tabs[next])
 }
 </script>
-
-<template>
-  <div class="w-full border-b" :class="ruleClass" data-testid="tab-bar">
-    <!-- Scrolls sideways when the tabs don't fit. -m-1.5/p-1.5 keeps the focus
-         ring inside the scroll box; -mb-[7px] (6px + 1px) keeps the underline on
-         the rule, as in Figma. `relative` measures offsetLeft from the list. -->
-    <div
-      ref="listRef"
-      role="tablist"
-      :aria-label="label"
-      class="no-scrollbar relative -m-1.5 -mb-[7px] flex items-center gap-3 overflow-x-auto p-1.5"
-      @keydown="onKeydown"
-    >
-      <AppTabItem
-        v-for="item in items"
-        :key="item.id"
-        class="shrink-0"
-        :label="item.label"
-        :disabled="item.disabled"
-        :selected="item.id === model"
-        :tabindex="item.id === focusableId ? 0 : -1"
-        @click="select(item.id)"
-      />
-    </div>
-  </div>
-</template>

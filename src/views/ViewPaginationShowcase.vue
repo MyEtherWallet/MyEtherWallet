@@ -1,47 +1,3 @@
-<script setup lang="ts">
-// Preview for the Pagination design-library component (MEW-2447) at
-// /dev/pagination. Matches Figma set 1074:3108: each variant on its surface,
-// in both breakpoints. Breakpoint is a container query on the pager's width
-// (48rem), so the Mobile cells sit in a narrow wrapper; the Default cells need
-// a window of ~1120px or more to clear 48rem next to the dev sidebar.
-import { computed, ref } from 'vue'
-import AppPagination from '@/components/pagination/AppPagination.vue'
-import type { PaginationVariant } from '@/components/pagination/types'
-
-const VARIANTS: { variant: PaginationVariant; label: string; page: string }[] =
-  [
-    {
-      variant: 'default',
-      label: 'Variant: on default — grey surface',
-      page: 'bg-background-default',
-    },
-    {
-      variant: 'alternative',
-      label: 'Variant: on alternative — white surface',
-      page: 'bg-background-alternative',
-    },
-  ]
-const BREAKPOINTS = [
-  { name: 'Default', width: 'w-full' },
-  { name: 'Mobile', width: 'max-w-sm' },
-]
-
-const PER_PAGE = 3
-const ITEMS = Array.from({ length: 9 }, (_, i) => `Item ${i + 1}`)
-const page = ref(1)
-const pageItems = computed(() =>
-  ITEMS.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE),
-)
-
-const variantPages = ref<Record<PaginationVariant, number>>({
-  default: 1,
-  alternative: 1,
-})
-const singlePage = ref(1)
-const customPage = ref(2)
-const customLabel = (p: number, total: number) => `${p} / ${total}`
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -120,3 +76,47 @@ const customLabel = (p: number, total: number) => `${p} / ${total}`
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Pagination design-library component (MEW-2447) at
+// /dev/pagination. Matches Figma set 1074:3108: each variant on its surface,
+// in both breakpoints. Breakpoint is a container query on the pager's width
+// (48rem), so the Mobile cells sit in a narrow wrapper; the Default cells need
+// a window of ~1120px or more to clear 48rem next to the dev sidebar.
+import { computed, ref } from 'vue'
+import AppPagination from '@/components/pagination/AppPagination.vue'
+import type { PaginationVariant } from '@/components/pagination/types'
+
+const VARIANTS: { variant: PaginationVariant; label: string; page: string }[] =
+  [
+    {
+      variant: 'default',
+      label: 'Variant: on default — grey surface',
+      page: 'bg-background-default',
+    },
+    {
+      variant: 'alternative',
+      label: 'Variant: on alternative — white surface',
+      page: 'bg-background-alternative',
+    },
+  ]
+const BREAKPOINTS = [
+  { name: 'Default', width: 'w-full' },
+  { name: 'Mobile', width: 'max-w-sm' },
+]
+
+const PER_PAGE = 3
+const ITEMS = Array.from({ length: 9 }, (_, i) => `Item ${i + 1}`)
+const page = ref(1)
+const pageItems = computed(() =>
+  ITEMS.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE),
+)
+
+const variantPages = ref<Record<PaginationVariant, number>>({
+  default: 1,
+  alternative: 1,
+})
+const singlePage = ref(1)
+const customPage = ref(2)
+const customLabel = (p: number, total: number) => `${p} / ${total}`
+</script>

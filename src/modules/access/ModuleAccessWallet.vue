@@ -2,7 +2,9 @@
   <app-modal
     v-model="bigDialogOpen"
     :title="getTitle"
-    :show-back-button="currentView !== 'default'"
+    :show-back-button="showBack"
+    :persistent="inLoginFlow && isPersistent"
+    :aria-label="inLoginFlow ? t('access_wallet.social.title') : undefined"
     :class="[
       'w-full',
       dialogWidth,
@@ -60,32 +62,10 @@
             <WalletTabs />
             <div class="flex flex-col gap-4 pt-2">
               <AppDivider />
-              <AccessCell
-                v-if="showSocialLogin"
-                :title="$t('common.dont_have_wallet')"
-              >
-                <template #avatar>
-                  <span
-                    class="flex size-8 shrink-0 items-center justify-center rounded-full bg-white"
-                  >
-                    <AppIcon name="plus" size="xs" />
-                  </span>
-                </template>
-                <template #trailing>
-                  <button
-                    type="button"
-                    data-testid="sign-up-cta"
-                    class="shrink-0 text-base font-semibold text-text-brand cursor-pointer"
-                    @click="accessStore.setCurrentView('sign_up')"
-                  >
-                    {{ $t('access_wallet.sign_up.cta') }}
-                  </button>
-                </template>
-              </AccessCell>
-              <AccessDownloadWallets v-else />
+              <AccessCreateWallet v-model:expanded="isCreateWalletOpen" />
             </div>
           </div>
-          <AccessSignUp v-else-if="currentView === 'sign_up'" />
+          <PrivyFlow v-else-if="inLoginFlow" />
           <AccessDownloadMobile v-else-if="currentView === 'download_mobile'" />
           <module-access-keystore v-else-if="currentView === 'keystore'" />
           <module-access-private-key
@@ -112,17 +92,19 @@
 <script setup lang="ts">
 import NetworkChips from '@/modules/access/components/NetworkChips.vue'
 import WalletTabs from '@/modules/access/components/WalletTabs.vue'
-import AccessCell from '@/modules/access/components/AccessCell.vue'
-import AccessSignUp from '@/modules/access/components/AccessSignUp.vue'
+import AccessCreateWallet from '@/modules/access/components/AccessCreateWallet.vue'
+import PrivyFlow from '@/modules/access/components/privy/PrivyFlow.vue'
+import { usePrivyOnboarding } from '@/modules/access/composables/usePrivyOnboarding'
 import AccessDownloadMobile from '@/modules/access/components/AccessDownloadMobile.vue'
-import AccessDownloadWallets from '@/modules/access/components/AccessDownloadWallets.vue'
-import configs from '@/configs'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDivider from '@/components/divider/AppDivider.vue'
-import { parentView } from '@/modules/access/common/accessViews'
+import {
+  FIRST_ACCESS_VIEW,
+  isAccessHubView,
+  type AccessHubView,
+} from '@/modules/access/common/accessViews'
 import type { WalletView } from '@/modules/access/common/walletConfigs'
 import AppModal from '@/components/modal/AppModal.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
 import { type Chain } from '@/mew_api/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -147,7 +129,6 @@ const { t } = useI18n()
  * Access Wallet Dialog
  -------------------------------*/
 const accessStore = useAccessStore()
-const showSocialLogin = configs.SHOW_SOCIAL_LOGIN
 const {
   isOpenAccessDialog,
   currentView,
@@ -169,16 +150,78 @@ const bigDialogOpen = computed<boolean>({
   },
 })
 
+/**-------------------------------
+ * Google / email login (the sign-up view)
+ * The flow owns its own screens, so it decides the title, where Back leads
+ * and whether the modal may be closed.
+ -------------------------------*/
+const {
+  state: loginState,
+  backTarget,
+  isPersistent,
+  back: loginBack,
+  cancel: cancelLogin,
+} = usePrivyOnboarding()
+const inLoginFlow = computed(() => currentView.value === FIRST_ACCESS_VIEW)
+// Log in / Sign Up is the first screen: it has a Back only on its own later
+// screens. Every other view leads back to where it was opened from.
+const showBack = computed(() =>
+  inLoginFlow.value ? backTarget.value !== null : true,
+)
+
+/**-------------------------------
+ * Where Back leads from a step
+ * A step is opened from Log in / Sign Up (its wallet row) or from the wallet
+ * chooser, and Back returns there. A step reached any other way (a link, a
+ * reload, a saved wallet being reconnected) goes back to the first screen.
+ -------------------------------*/
+const openedFrom = ref<AccessHubView>(FIRST_ACCESS_VIEW)
+// Both are watched so the opening itself can be told apart: a caller that
+// opens the dialog and names a step in the same breath did not come from the
+// chooser, whatever view the closed dialog was left on.
+watch(
+  [isOpenAccessDialog, currentView],
+  ([open, view], [wasOpen, previous]) => {
+    if (!open || !wasOpen) return
+    if (!isAccessHubView(view) && isAccessHubView(previous)) {
+      openedFrom.value = previous
+    }
+  },
+)
+
+/**-------------------------------
+ * "Don't have a wallet?" (under the chooser)
+ * Its list of wallets to create stays open across a trip to the MEW Mobile
+ * download step, whose Back returns here.
+ -------------------------------*/
+const isCreateWalletOpen = ref(false)
+
+// However the dialog closes (its own buttons, browser Back, a link elsewhere)
+// the login flow is told, so nothing carries on behind a closed modal and the
+// next open starts clean.
+watch(isOpenAccessDialog, open => {
+  if (open) return
+  void cancelLogin()
+  isCreateWalletOpen.value = false
+  openedFrom.value = FIRST_ACCESS_VIEW
+})
+
 const closeAccess = () => {
   accessStore.setCurrentView('default')
 }
 
 const goBack = () => {
+  if (inLoginFlow.value) {
+    loginBack()
+    return
+  }
   if (accessStep.value > 1) {
     accessStep.value -= 1
     return
   }
-  accessStore.setCurrentView(parentView(currentView.value))
+  accessStore.setCurrentView(
+    currentView.value === 'default' ? FIRST_ACCESS_VIEW : openedFrom.value,
+  )
 }
 
 /** Views built on the new onboarding design (white surface, no help link). */
@@ -286,8 +329,16 @@ const ADVANCED_TITLES: Partial<Record<WalletView, string[]>> = {
 }
 
 const getTitle = computed(() => {
-  if (currentView.value === 'default' || currentView.value === 'sign_up') {
-    return t('connect_wallet')
+  // Only the first login screens carry a title; the later ones name
+  // themselves in their content.
+  if (inLoginFlow.value) {
+    return loginState.value === 'entry' || loginState.value === 'existing_login'
+      ? t('access_wallet.social.title')
+      : ''
+  }
+  // The chooser is part of logging in, so it carries the same title.
+  if (currentView.value === 'default') {
+    return t('access_wallet.social.title')
   }
   if (currentView.value === 'download_mobile') {
     return t('access_wallet.download_mobile.title')

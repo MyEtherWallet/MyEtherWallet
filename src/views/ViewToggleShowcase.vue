@@ -1,24 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Toggle design-library component (MEW-1974), reachable at
-// /dev/toggle via the design-library shell — see routesDefault.ts. Mirrors the
-// Status × State matrix in Figma (node 628-190). Hover is CSS only, so the
-// Hover column forces it with `is-forced-hover`; the interactive toggle shows
-// the real hover, press and Tab focus.
-import { ref } from 'vue'
-import AppToggle from '@/components/AppToggle.vue'
-
-const STATUSES = [
-  { label: 'Off', value: false },
-  { label: 'On', value: true },
-]
-const STATES = [
-  { label: 'Default', forcedHover: false },
-  { label: 'Hover', forcedHover: true },
-]
-
-const interactiveValue = ref(false)
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -82,6 +61,27 @@ const interactiveValue = ref(false)
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Toggle design-library component (MEW-1974), reachable at
+// /dev/toggle via the design-library shell — see routesDefault.ts. Mirrors the
+// Status × State matrix in Figma (node 628-190). Hover is CSS only, so the
+// Hover column forces it with `is-forced-hover`; the interactive toggle shows
+// the real hover, press and Tab focus.
+import { ref } from 'vue'
+import AppToggle from '@/components/AppToggle.vue'
+
+const STATUSES = [
+  { label: 'Off', value: false },
+  { label: 'On', value: true },
+]
+const STATES = [
+  { label: 'Default', forcedHover: false },
+  { label: 'Hover', forcedHover: true },
+]
+
+const interactiveValue = ref(false)
+</script>
 
 <style scoped>
 /* Preview only: paint the CSS hover fill without a pointer over it. */

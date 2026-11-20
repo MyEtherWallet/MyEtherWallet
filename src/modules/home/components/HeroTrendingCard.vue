@@ -1,26 +1,3 @@
-<script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import { useRouter, type RouteLocationRaw } from 'vue-router'
-import AppCell from '@/components/cell/AppCell.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { useCurrency } from '@/composables/useCurrency'
-import type { TrendingRowItem } from './heroTrending'
-
-interface Props {
-  title: string
-  seeAllTo: RouteLocationRaw
-  items: TrendingRowItem[]
-  isLoading?: boolean
-}
-
-defineProps<Props>()
-
-const { t } = useI18n()
-const router = useRouter()
-const { formatFiat } = useCurrency()
-</script>
-
 <template>
   <div
     data-test="hero-trending-card"
@@ -102,3 +79,26 @@ const { formatFiat } = useCurrency()
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { useRouter, type RouteLocationRaw } from 'vue-router'
+import AppCell from '@/components/cell/AppCell.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import { useCurrency } from '@/composables/useCurrency'
+import type { TrendingRowItem } from './heroTrending'
+
+interface Props {
+  title: string
+  seeAllTo: RouteLocationRaw
+  items: TrendingRowItem[]
+  isLoading?: boolean
+}
+
+defineProps<Props>()
+
+const { t } = useI18n()
+const router = useRouter()
+const { formatFiat } = useCurrency()
+</script>

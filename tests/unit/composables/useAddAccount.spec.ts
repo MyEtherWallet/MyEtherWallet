@@ -34,4 +34,17 @@ describe('useAddAccount', () => {
     )
     expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
   })
+
+  it('reconnects a saved Privy address through the login popup, without tying it to that address', async () => {
+    await useAddAccount().connectSaved({
+      address: '0x1111111111111111111111111111111111111111',
+      providerType: 'PRIVY',
+      walletName: 'Privy',
+    } as never)
+
+    expect(accessStore.openAccessDialog).toHaveBeenCalledTimes(1)
+    // A login to another Privy account is added as a new wallet, so no
+    // "select this address" prompt may be armed.
+    expect(accessStore.setIntendedAddress).toHaveBeenCalledWith(null)
+  })
 })

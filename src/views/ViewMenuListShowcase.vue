@@ -1,50 +1,3 @@
-<script setup lang="ts">
-// Preview for the Menu List design-library component (MEW-2466) at
-// /dev/menu-list. Figma: MEW Web App — Design Library › MenuList (873:4728),
-// its showSearchbar / showScrollBar booleans and the row setups it is used with.
-import { computed, ref } from 'vue'
-import AppMenuList from '@components/menu_list/AppMenuList.vue'
-import AppCell from '@components/cell/AppCell.vue'
-import AppAvatar from '@components/avatar/AppAvatar.vue'
-import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
-import AppDivider from '@components/divider/AppDivider.vue'
-import AppIcon from '@components/icon/AppIcon.vue'
-
-const NETWORKS = [
-  'Ethereum',
-  'Arbitrum',
-  'Avalanche',
-  'Base',
-  'Blast',
-  'BNB Chain',
-  'Celo',
-  'Fantom',
-  'Gnosis',
-  'Linea',
-  'Mantle',
-  'Moonbeam',
-  'Optimism',
-  'Polygon',
-  'Rootstock',
-  'Scroll',
-  'Sei',
-  'Sonic',
-  'Unichain',
-  'zkSync',
-]
-
-const query = ref('')
-const picked = ref('Ethereum')
-const shownNetworks = computed(() =>
-  NETWORKS.filter(network =>
-    network.toLowerCase().includes(query.value.trim().toLowerCase()),
-  ),
-)
-
-const MENU_ACTIONS = ['Copy address', 'View on explorer', 'Rename', 'Remove']
-const lastAction = ref('none')
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -234,3 +187,50 @@ const lastAction = ref('none')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Menu List design-library component (MEW-2466) at
+// /dev/menu-list. Figma: MEW Web App — Design Library › MenuList (873:4728),
+// its showSearchbar / showScrollBar booleans and the row setups it is used with.
+import { computed, ref } from 'vue'
+import AppMenuList from '@components/menu_list/AppMenuList.vue'
+import AppCell from '@components/cell/AppCell.vue'
+import AppAvatar from '@components/avatar/AppAvatar.vue'
+import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
+import AppDivider from '@components/divider/AppDivider.vue'
+import AppIcon from '@components/icon/AppIcon.vue'
+
+const NETWORKS = [
+  'Ethereum',
+  'Arbitrum',
+  'Avalanche',
+  'Base',
+  'Blast',
+  'BNB Chain',
+  'Celo',
+  'Fantom',
+  'Gnosis',
+  'Linea',
+  'Mantle',
+  'Moonbeam',
+  'Optimism',
+  'Polygon',
+  'Rootstock',
+  'Scroll',
+  'Sei',
+  'Sonic',
+  'Unichain',
+  'zkSync',
+]
+
+const query = ref('')
+const picked = ref('Ethereum')
+const shownNetworks = computed(() =>
+  NETWORKS.filter(network =>
+    network.toLowerCase().includes(query.value.trim().toLowerCase()),
+  ),
+)
+
+const MENU_ACTIONS = ['Copy address', 'View on explorer', 'Rename', 'Remove']
+const lastAction = ref('none')
+</script>

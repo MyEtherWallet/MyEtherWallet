@@ -1,3 +1,24 @@
+<template>
+  <div class="w-full h-full flex items-center justify-center overflow-hidden">
+    <img
+      v-if="image && !isLoading"
+      :src="image"
+      :class="[
+        'w-full h-full',
+        fit === 'cover' ? 'object-cover' : 'object-contain',
+      ]"
+      alt=""
+    />
+    <span
+      v-else-if="!isLoading && fallbackText"
+      class="text-text-subtle font-medium uppercase leading-none"
+      :class="fallbackTextClass ?? 'text-s-12'"
+    >
+      {{ fallbackText.substring(0, 2) }}
+    </span>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 
@@ -55,24 +76,3 @@ watch(
   },
 )
 </script>
-
-<template>
-  <div class="w-full h-full flex items-center justify-center overflow-hidden">
-    <img
-      v-if="image && !isLoading"
-      :src="image"
-      :class="[
-        'w-full h-full',
-        fit === 'cover' ? 'object-cover' : 'object-contain',
-      ]"
-      alt=""
-    />
-    <span
-      v-else-if="!isLoading && fallbackText"
-      class="text-text-subtle font-medium uppercase leading-none"
-      :class="fallbackTextClass ?? 'text-s-12'"
-    >
-      {{ fallbackText.substring(0, 2) }}
-    </span>
-  </div>
-</template>

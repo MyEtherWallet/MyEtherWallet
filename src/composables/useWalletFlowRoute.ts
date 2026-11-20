@@ -8,6 +8,7 @@ import {
   type WalletFlowKind,
 } from '@/router/routeNames'
 import { pageRouteName } from '@/router/routeHierarchy'
+import { FIRST_ACCESS_VIEW } from '@/modules/access/common/accessViews'
 
 /**
  * Targets for the connect ("access") and create-wallet overlay routes, resolved against
@@ -34,8 +35,12 @@ export const useWalletFlowRoute = () => {
         ? name
         : walletFlowRouteName(ROUTES_MAIN.HOME.NAME, kind),
       // Carry the host's deep-link query through (/crypto?category=defi) and pre-set a
-      // valid `type` so the route's beforeEnter guard has nothing to redirect.
-      query: { ...route.query, type: 'default' },
+      // valid `type` so the route's beforeEnter guard has nothing to redirect. The
+      // connect overlay starts on Log in / Sign Up, the create one on its first step.
+      query: {
+        ...route.query,
+        type: kind === 'access' ? FIRST_ACCESS_VIEW : 'default',
+      },
       // No `params`: a named location already inherits the required params from the
       // current location, and passing extras trips a dev-only "Discarded invalid
       // param(s)" warning. So this resolves to /crypto/token/peaq-2/access on its own.

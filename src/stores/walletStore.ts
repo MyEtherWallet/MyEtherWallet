@@ -71,6 +71,17 @@ export const useWalletStore = defineStore('walletStore', () => {
     'lastActiveAddress',
     {},
   )
+  /**
+   * Make `address` the one to restore for a type of network.
+   *
+   * An account picked on another type of network switches the network first,
+   * and a change of network type falls back to the address remembered for the
+   * new type (the watcher on the selected chain, below). This is how that
+   * fallback comes to the account that was picked and not to another one.
+   */
+  const rememberActiveAddress = (type: string, address: string): void => {
+    lastActiveAddress.value[type] = address
+  }
   const userProperties = reactive<UserProperties>({})
   const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
   const stocksStore = useStocksStore()
@@ -88,14 +99,27 @@ export const useWalletStore = defineStore('walletStore', () => {
   const connectInFlight = ref(0)
   const isConnectingWallet = computed(() => connectInFlight.value > 0)
 
+  // The latest request to set the wallet, or to clear it. Setting a wallet
+  // waits on the network before it takes effect, so requests overlap, and one
+  // that has been overtaken changes nothing. Without this the slowest answer
+  // wins: a restore still on its way brings back, and saves again, an address
+  // the user has since switched away from or deleted.
+  let walletRequest = 0
+
   const setWallet = async (
     newWallet: WalletInterface,
     _walletName: string = '',
     _walletType: WalletConfigType,
   ): Promise<void> => {
     connectInFlight.value++
+    const request = ++walletRequest
     try {
-      await _setWallet(newWallet, _walletName, _walletType)
+      await _setWallet(
+        newWallet,
+        _walletName,
+        _walletType,
+        () => request === walletRequest,
+      )
     } finally {
       connectInFlight.value--
     }
@@ -105,6 +129,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     newWallet: WalletInterface,
     _walletName: string = '',
     _walletType: WalletConfigType,
+    isLatestRequest: () => boolean,
   ): Promise<void> => {
     const _address = await newWallet.getAddress()
     // A failed restriction check (network hiccup, unsupported address format)
@@ -116,6 +141,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     } catch {
       isRestricted = false
     }
+    if (!isLatestRequest()) return
     const tradingRestricted = isTradingRestrictedInRegion.value
     const canTrade = !tradingRestricted && !isRestricted
     userProperties.canTrade = canTrade
@@ -147,7 +173,12 @@ export const useWalletStore = defineStore('walletStore', () => {
     }
   }
 
-  const setWatchOnlyIfExist = () => {
+  /**
+   * Fall back to a saved address, watch-only, or to no wallet when none is
+   * saved. Resolves once that wallet is the connected one, for a caller that
+   * has to wait for it; most do not.
+   */
+  const setWatchOnlyIfExist = async (): Promise<void> => {
     const { watchOnlyAddresses } = useWatchOnlyStore()
     const type = selectedChain.value?.type || 'EVM'
     const currentRecentAddressList = watchOnlyAddresses[type]
@@ -177,12 +208,15 @@ export const useWalletStore = defineStore('walletStore', () => {
       // Don't null the wallet first: setWallet replaces it once ready. Nulling
       // here briefly flips isWalletConnected to false, which unmounts the header
       // address menu (v-if) and tears the popup down mid-switch.
-      setWallet(
+      await setWallet(
         newWallet,
         entry.walletName,
         entry.walletType as WalletConfigType,
       )
     } else {
+      // Clearing is a request too: a wallet still being set must not land
+      // after it.
+      walletRequest++
       wallet.value = null
       walletAddress.value = null
       removeTokens()
@@ -213,10 +247,14 @@ export const useWalletStore = defineStore('walletStore', () => {
   -------------------------------*/
   const setAddress = async () => {
     if (wallet.value) {
+      const current = wallet.value
       const watchOnlyStore = useWatchOnlyStore()
       const { selectedChain } = storeToRefs(useChainsStore())
       const type = selectedChain.value!.type
-      walletAddress.value = await wallet.value.getAddress()
+      const address = await current.getAddress()
+      // Replaced or cleared while it answered: nothing of it is shown or saved.
+      if (wallet.value !== current) return
+      walletAddress.value = address
       watchOnlyStore.addWallet(
         walletAddress.value,
         selectedChain.value!,
@@ -679,6 +717,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     userAddress,
     walletName,
     setWatchOnlyIfExist,
+    rememberActiveAddress,
     isConnectingWallet,
     setWallet,
     disconnectWallet,

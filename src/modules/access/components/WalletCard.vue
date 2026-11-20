@@ -31,14 +31,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent } from '@/analytics/events'
-import configs from '@/configs'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import type { WalletStatus } from '@/modules/access/common/walletTabs'
+import { useWalletIconUrl } from '@/modules/access/composables/useWalletIconUrl'
 
 const props = defineProps<{ wallet: WalletConfig; status?: WalletStatus }>()
 const emit = defineEmits<{ select: [wallet: WalletConfig] }>()
@@ -53,28 +53,7 @@ const STATUS_KEY: Record<WalletStatus, string> = {
 const displayName = computed(() =>
   props.wallet.nameKey ? t(props.wallet.nameKey) : props.wallet.name,
 )
-const iconUrl = ref<string | undefined>()
-// Follow the wallet prop (not just the first one) so a reused card never keeps
-// another wallet's logo.
-watch(
-  () => props.wallet.icon,
-  async icon => {
-    iconUrl.value = typeof icon === 'string' ? icon : undefined
-    if (typeof icon !== 'function') return
-    try {
-      const url = await icon()
-      if (props.wallet.icon === icon) iconUrl.value = url
-    } catch (error) {
-      // The logo is a lazily imported chunk; failing to load it (network blip, stale
-      // chunk after a redeploy, content blockers) is expected and non-actionable.
-      // AppAvatar falls back to initials, so don't report it as noise.
-      if (configs.BUILD_MODE !== 'production') {
-        console.error('Error loading wallet image:', props.wallet.name, error)
-      }
-    }
-  },
-  { immediate: true },
-)
+const iconUrl = useWalletIconUrl(() => props.wallet)
 
 const select = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.SELECT_WALLET, {

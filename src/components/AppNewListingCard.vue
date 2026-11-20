@@ -1,50 +1,3 @@
-<script setup lang="ts">
-import { computed } from 'vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-
-import AppIcon from '@/components/icon/AppIcon.vue'
-interface Props {
-  logo?: string
-  symbol: string
-  name?: string
-  isStock?: boolean
-  price?: string
-  description?: string
-  marketCapLabel?: string
-  marketCap?: string
-  changeLabel?: string
-  change?: number
-  volumeLabel?: string
-  volume?: string
-  favorite?: boolean
-  /** Accessible name for the favorite toggle (add / remove from watchlist). */
-  favoriteLabel: string
-  tradeLabel?: string
-  /** Renders the CTA disabled (e.g. crypto coin with no swap/bridge path) so
-   *  the card keeps a button instead of an empty gap. */
-  tradeDisabled?: boolean
-}
-
-const props = defineProps<Props>()
-
-defineEmits<{
-  select: []
-  trade: []
-  'toggle-favorite': []
-}>()
-
-const up = computed(() => (props.change ?? 0) >= 0)
-const changeColor = computed(() =>
-  up.value ? 'text-text-success' : 'text-text-error',
-)
-const changeArrowIcon = computed(() => (up.value ? 'arrow-up' : 'arrow-down'))
-const changeText = computed(() =>
-  props.change != null ? `${Math.abs(props.change).toFixed(1)}%` : '',
-)
-</script>
-
 <template>
   <div
     data-test="listing-card"
@@ -160,3 +113,50 @@ const changeText = computed(() =>
     <div v-else class="h-10 w-full" aria-hidden="true" />
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+
+import AppIcon from '@/components/icon/AppIcon.vue'
+interface Props {
+  logo?: string
+  symbol: string
+  name?: string
+  isStock?: boolean
+  price?: string
+  description?: string
+  marketCapLabel?: string
+  marketCap?: string
+  changeLabel?: string
+  change?: number
+  volumeLabel?: string
+  volume?: string
+  favorite?: boolean
+  /** Accessible name for the favorite toggle (add / remove from watchlist). */
+  favoriteLabel: string
+  tradeLabel?: string
+  /** Renders the CTA disabled (e.g. crypto coin with no swap/bridge path) so
+   *  the card keeps a button instead of an empty gap. */
+  tradeDisabled?: boolean
+}
+
+const props = defineProps<Props>()
+
+defineEmits<{
+  select: []
+  trade: []
+  'toggle-favorite': []
+}>()
+
+const up = computed(() => (props.change ?? 0) >= 0)
+const changeColor = computed(() =>
+  up.value ? 'text-text-success' : 'text-text-error',
+)
+const changeArrowIcon = computed(() => (up.value ? 'arrow-up' : 'arrow-down'))
+const changeText = computed(() =>
+  props.change != null ? `${Math.abs(props.change).toFixed(1)}%` : '',
+)
+</script>

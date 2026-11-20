@@ -1,41 +1,3 @@
-<script setup lang="ts">
-// Dev-only preview for AppBaseButton, rendered inside the
-// design-library shell (ViewDevLayout). Route is registered only outside
-// production builds — see routesDefault.ts.
-// Visit https://localhost:8080/dev/button in dev.
-//
-// This page doubles as the "collect examples and test the secondary in
-// multiple contexts" surface: the Contexts section below renders the secondary
-// against every background it ships on.
-import AppBaseButton from '@components/AppBaseButton.vue'
-import { BTN_SIZES } from '@components/buttonSizes'
-
-const types = [
-  { label: 'Primary', props: { type: 'primary' } },
-  { label: 'Secondary', props: { type: 'secondary' } },
-  {
-    label: 'Secondary — on alternative',
-    props: { type: 'secondary', surface: 'alternative' },
-  },
-  { label: 'Tertiary', props: { type: 'tertiary' } },
-  {
-    label: 'Tertiary — on alternative',
-    props: { type: 'tertiary', surface: 'alternative' },
-  },
-  { label: 'Link', props: { type: 'link' } },
-] as const
-
-const tones = ['default', 'danger', 'success'] as const
-
-// Surfaces the secondary has to survive, for the "revisit secondary" review.
-const contexts = [
-  { label: 'App background', class: 'bg-background-default' },
-  { label: 'White card', class: 'bg-white' },
-  { label: 'Muted', class: 'bg-background-default-hover' },
-  { label: 'Brand tint', class: 'bg-background-brand-subtle' },
-] as const
-</script>
-
 <template>
   <div class="p-10 bg-background-alternative min-h-screen">
     <h1 class="title5 mb-8">AppBaseButton — types × tones × sizes</h1>
@@ -123,3 +85,41 @@ const contexts = [
     </p>
   </div>
 </template>
+
+<script setup lang="ts">
+// Dev-only preview for AppBaseButton, rendered inside the
+// design-library shell (ViewDevLayout). Route is registered only outside
+// production builds — see routesDefault.ts.
+// Visit https://localhost:8080/dev/button in dev.
+//
+// This page doubles as the "collect examples and test the secondary in
+// multiple contexts" surface: the Contexts section below renders the secondary
+// against every background it ships on.
+import AppBaseButton from '@components/AppBaseButton.vue'
+import { BTN_SIZES } from '@components/buttonSizes'
+
+const types = [
+  { label: 'Primary', props: { type: 'primary' } },
+  { label: 'Secondary', props: { type: 'secondary' } },
+  {
+    label: 'Secondary — on alternative',
+    props: { type: 'secondary', surface: 'alternative' },
+  },
+  { label: 'Tertiary', props: { type: 'tertiary' } },
+  {
+    label: 'Tertiary — on alternative',
+    props: { type: 'tertiary', surface: 'alternative' },
+  },
+  { label: 'Link', props: { type: 'link' } },
+] as const
+
+const tones = ['default', 'danger', 'success'] as const
+
+// Surfaces the secondary has to survive, for the "revisit secondary" review.
+const contexts = [
+  { label: 'App background', class: 'bg-background-default' },
+  { label: 'White card', class: 'bg-white' },
+  { label: 'Muted', class: 'bg-background-default-hover' },
+  { label: 'Brand tint', class: 'bg-background-brand-subtle' },
+] as const
+</script>

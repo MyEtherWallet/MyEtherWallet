@@ -1,41 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Checkbox design-library component (MEW-2399), reachable at
-// /dev/checkbox via the design-library shell — see routesDefault.ts. Mirrors the
-// Type × State matrix in Figma (component set 3822:42450). Hover and focus are
-// CSS only, so those columns force them with `is-forced-*`; every other sample
-// shows the real hover and Tab focus.
-import { computed, ref } from 'vue'
-import AppCheckbox from '@components/checkbox/AppCheckbox.vue'
-
-const TYPES = [
-  { label: 'Unselected', checked: false, indeterminate: false },
-  { label: 'Selected', checked: true, indeterminate: false },
-  { label: 'Indeterminate', checked: false, indeterminate: true },
-]
-const STATES = [
-  { label: 'Default', forced: '', disabled: false },
-  { label: 'Hover', forced: 'is-forced-hover', disabled: false },
-  { label: 'Focused', forced: 'is-forced-focus', disabled: false },
-  { label: 'Disabled', forced: '', disabled: true },
-]
-
-const remember = ref(true)
-const terms = ref(false)
-
-// Select-all over three children: the header goes indeterminate on a partial
-// selection, and checking it from there selects every child (native behaviour).
-const networks = ref([
-  { name: 'Ethereum', checked: true },
-  { name: 'Bitcoin', checked: false },
-  { name: 'Solana', checked: false },
-])
-const allSelected = computed({
-  get: () => networks.value.every(n => n.checked),
-  set: value => networks.value.forEach(n => (n.checked = value)),
-})
-const someSelected = computed(() => networks.value.some(n => n.checked))
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -122,6 +84,44 @@ const someSelected = computed(() => networks.value.some(n => n.checked))
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Checkbox design-library component (MEW-2399), reachable at
+// /dev/checkbox via the design-library shell — see routesDefault.ts. Mirrors the
+// Type × State matrix in Figma (component set 3822:42450). Hover and focus are
+// CSS only, so those columns force them with `is-forced-*`; every other sample
+// shows the real hover and Tab focus.
+import { computed, ref } from 'vue'
+import AppCheckbox from '@components/checkbox/AppCheckbox.vue'
+
+const TYPES = [
+  { label: 'Unselected', checked: false, indeterminate: false },
+  { label: 'Selected', checked: true, indeterminate: false },
+  { label: 'Indeterminate', checked: false, indeterminate: true },
+]
+const STATES = [
+  { label: 'Default', forced: '', disabled: false },
+  { label: 'Hover', forced: 'is-forced-hover', disabled: false },
+  { label: 'Focused', forced: 'is-forced-focus', disabled: false },
+  { label: 'Disabled', forced: '', disabled: true },
+]
+
+const remember = ref(true)
+const terms = ref(false)
+
+// Select-all over three children: the header goes indeterminate on a partial
+// selection, and checking it from there selects every child (native behaviour).
+const networks = ref([
+  { name: 'Ethereum', checked: true },
+  { name: 'Bitcoin', checked: false },
+  { name: 'Solana', checked: false },
+])
+const allSelected = computed({
+  get: () => networks.value.every(n => n.checked),
+  set: value => networks.value.forEach(n => (n.checked = value)),
+})
+const someSelected = computed(() => networks.value.some(n => n.checked))
+</script>
 
 <style scoped>
 /* Preview only: paint the CSS hover / focus states without a pointer or Tab. */

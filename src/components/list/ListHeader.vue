@@ -1,24 +1,3 @@
-<script setup lang="ts">
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import type { ContentGroupSize } from '@/components/content_group/types'
-import type { ListAction } from './types'
-
-/**
- * Header row of AppList (Figma List › Title: _Content Group + Slot + Buttcon
- * Icon). Internal: the same row sits inside the `rows` container (size M,
- * title only) or above the list (size L, title + description).
- */
-defineProps<{
-  title: string
-  description?: string
-  size: ContentGroupSize
-  action?: ListAction
-}>()
-
-const emit = defineEmits<{ action: [] }>()
-</script>
-
 <template>
   <div
     data-testid="list-header"
@@ -49,3 +28,24 @@ const emit = defineEmits<{ action: [] }>()
     </slot>
   </div>
 </template>
+
+<script setup lang="ts">
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import type { ContentGroupSize } from '@/components/content_group/types'
+import type { ListAction } from './types'
+
+/**
+ * Header row of AppList (Figma List › Title: _Content Group + Slot + Buttcon
+ * Icon). Internal: the same row sits inside the `rows` container (size M,
+ * title only) or above the list (size L, title + description).
+ */
+defineProps<{
+  title: string
+  description?: string
+  size: ContentGroupSize
+  action?: ListAction
+}>()
+
+const emit = defineEmits<{ action: [] }>()
+</script>

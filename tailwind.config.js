@@ -3,6 +3,9 @@ export default {
   content: [
     './src/**/*.{js,vue,ts}',
     './index.html',
+    // The wallet export page: React, outside src (see export_wallet/).
+    './export_wallet/**/*.{ts,tsx}',
+    './wallet-export.html',
     './node_modules/@myetherwallet/vue-common-components/dist/*.js',
     './node_modules/@myetherwallet/vue-common-components/dist/*.cjs',
   ],

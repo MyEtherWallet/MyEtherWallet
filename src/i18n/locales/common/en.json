@@ -40,8 +40,6 @@
     "more": "more",
     "dont_have_wallet": "Don't have a wallet?",
     "create_wallet": "Create wallet",
-    "create_wallet_short": "Create",
-    "connect_wallet_short": "Connect",
     "access_wallet": "Access wallet",
     "load_more": "Load more",
     "not_found": {
@@ -75,6 +73,9 @@
       "ledger_interface_busy": "Another app or browser tab (e.g. Ledger Live) is using your Ledger. Close it, reconnect the device, and try again.",
       "trezor_read_failed": "Couldn't read your address from Trezor. Reconnect the device and try again.",
       "ledger_device_busy": "Another app is using your Ledger. Close Ledger Live or any other tab connected to it and try again.",
+      "login_expired": "Your login has expired. Log in again to continue.",
+      "signature_not_verified": "The signature could not be verified, so nothing was sent. Please try again.",
+      "passkey_check_failed": "Your passkey could not be checked, so nothing was done. Please try again.",
       "method_not_implemented": "Method not implemented: {method}",
       "invalid_name": "Invalid name",
       "address_resolution_failed": "Address resolution failed",
@@ -220,7 +221,11 @@
     "chart_3m": "3m",
     "chart_1y": "1y",
     "chart_all": "all",
-    "chart_range": "Chart range"
+    "chart_range": "Chart range",
+    "code_input": {
+      "label": "Confirmation code",
+      "digit_label": "Digit {index} of {total}"
+    }
   },
   "deposit": "Deposit",
   "learn": "Learn",

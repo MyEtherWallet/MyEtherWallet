@@ -1,16 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Tooltip design-library component (MEW-2272), reachable at
-// /dev/tooltip via the design-library shell — see routesDefault.ts. Lets us
-// eyeball the four placements, text / slot / text+slot content, the max-width
-// wrap and the edge auto-flip against Figma (node 2279-37377). Hover or
-// Tab to a trigger to show its tooltip.
-import AppTooltip from '@/components/tooltip/AppTooltip.vue'
-import AppChip from '@/components/chip/AppChip.vue'
-import type { TooltipPlacement } from '@/components/tooltip/types'
-
-const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -110,3 +97,16 @@ const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Tooltip design-library component (MEW-2272), reachable at
+// /dev/tooltip via the design-library shell — see routesDefault.ts. Lets us
+// eyeball the four placements, text / slot / text+slot content, the max-width
+// wrap and the edge auto-flip against Figma (node 2279-37377). Hover or
+// Tab to a trigger to show its tooltip.
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
+import AppChip from '@/components/chip/AppChip.vue'
+import type { TooltipPlacement } from '@/components/tooltip/types'
+
+const PLACEMENTS: TooltipPlacement[] = ['top', 'bottom', 'left', 'right']
+</script>

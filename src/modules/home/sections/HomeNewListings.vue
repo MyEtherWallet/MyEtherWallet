@@ -1,3 +1,42 @@
+<template>
+  <div class="relative">
+    <AppTabBar v-model="activeTabIndex" :tabs="tabLabels" />
+    <div class="relative mt-6">
+      <AppSlideGroup ref="slideGroup" :total-items="items.length" edge-nav>
+        <template v-for="(it, index) in items" :key="it.key" #[`item-${index}`]>
+          <AppNewListingCard
+            :logo="it.logo"
+            :symbol="it.symbol"
+            :is-stock="it.isStock"
+            :name="it.name"
+            :price="it.price"
+            :description="it.description"
+            :market-cap-label="t('homePage.listings.stat.marketCap')"
+            :market-cap="it.marketCap"
+            :change-label="t('homePage.listings.stat.change24h')"
+            :change="it.change"
+            :volume-label="t('homePage.listings.stat.volume24h')"
+            :volume="it.volume"
+            :favorite="it.favorite"
+            :favorite-label="
+              it.favorite
+                ? t('common.remove_from_watchlist')
+                : t('common.add_to_watchlist')
+            "
+            :trade-label="it.ctaLabel"
+            :trade-disabled="it.tradeDisabled"
+            @select="router.push(it.to)"
+            @trade="onTrade(it)"
+            @toggle-favorite="
+              watchlistStore.setWatchlistItem(it.favoriteId, it.isStock)
+            "
+          />
+        </template>
+      </AppSlideGroup>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, ref, onMounted, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -187,42 +226,3 @@ const onTrade = (it: ListingCardItem) => {
   }
 }
 </script>
-
-<template>
-  <div class="relative">
-    <AppTabBar v-model="activeTabIndex" :tabs="tabLabels" />
-    <div class="relative mt-6">
-      <AppSlideGroup ref="slideGroup" :total-items="items.length" edge-nav>
-        <template v-for="(it, index) in items" :key="it.key" #[`item-${index}`]>
-          <AppNewListingCard
-            :logo="it.logo"
-            :symbol="it.symbol"
-            :is-stock="it.isStock"
-            :name="it.name"
-            :price="it.price"
-            :description="it.description"
-            :market-cap-label="t('homePage.listings.stat.marketCap')"
-            :market-cap="it.marketCap"
-            :change-label="t('homePage.listings.stat.change24h')"
-            :change="it.change"
-            :volume-label="t('homePage.listings.stat.volume24h')"
-            :volume="it.volume"
-            :favorite="it.favorite"
-            :favorite-label="
-              it.favorite
-                ? t('common.remove_from_watchlist')
-                : t('common.add_to_watchlist')
-            "
-            :trade-label="it.ctaLabel"
-            :trade-disabled="it.tradeDisabled"
-            @select="router.push(it.to)"
-            @trade="onTrade(it)"
-            @toggle-favorite="
-              watchlistStore.setWatchlistItem(it.favoriteId, it.isStock)
-            "
-          />
-        </template>
-      </AppSlideGroup>
-    </div>
-  </div>
-</template>

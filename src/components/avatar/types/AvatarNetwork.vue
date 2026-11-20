@@ -1,3 +1,11 @@
+<template>
+  <AvatarRemoteImage
+    :url="resolvedUrl"
+    :fallback-text="chain"
+    :fallback-text-class="fallbackTextClass"
+  />
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -30,11 +38,3 @@ const resolvedUrl = computed(
 )
 const fallbackTextClass = computed(() => AVATAR_FALLBACK_TEXT_CLASS[props.size])
 </script>
-
-<template>
-  <AvatarRemoteImage
-    :url="resolvedUrl"
-    :fallback-text="chain"
-    :fallback-text-class="fallbackTextClass"
-  />
-</template>

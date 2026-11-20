@@ -13,6 +13,7 @@ import {
 } from '@/modules/access/common/walletConfigs'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
+import { WalletType } from '@/providers/types'
 
 export function useAddAccount() {
   const accessStore = useAccessStore()
@@ -43,18 +44,27 @@ export function useAddAccount() {
 
   /**
    * Connecting an already-saved (watch-only) address: we know which wallet it
-   * belongs to, so jump straight to that wallet's connect flow and skip the
-   * wallet chooser. Falls back to the chooser when the wallet can't be resolved
-   * to a static config (e.g. MetaMask and other dynamic injected connectors).
+   * belongs to, so jump straight to that wallet's connect flow. Falls back to
+   * the dialog's first screen when the wallet can't be resolved to a static
+   * config (e.g. MetaMask and other dynamic injected connectors).
    */
   const connectSaved = async (account: SavedAccount): Promise<void> => {
+    // A Privy address is reconnected by logging in again, which is where the
+    // dialog opens. No intended address: a login to another Privy account is
+    // simply added as a new wallet and this entry stays watch-only.
+    if (account.providerType === WalletType.PRIVY) {
+      accessStore.setExpectNewAddress(false)
+      accessStore.setIntendedAddress(null)
+      accessStore.openAccessDialog()
+      return
+    }
     // 1) Static config (Enkrypt, Unisat, Ledger, Trezor, keystore, mnemonic,
     //    privateKey, MEW) resolved from the saved connectorId.
     // 2) Otherwise a dynamic injected wallet (MetaMask, Rabby, …) matched by
     //    name against the detected EIP-6963 providers — same list the chooser
     //    renders, so connect() drives the identical flow.
     // 3) If neither resolves (wallet not installed/detected) fall back to the
-    //    chooser, which openAccessDialog shows.
+    //    dialog's first screen, which leads to every wallet.
     const config =
       (account.connectorId
         ? walletConfigs[account.connectorId as defaultWalletId]
@@ -67,8 +77,8 @@ export function useAddAccount() {
     // Connect straight to the wallet only when its injected (EIP-6963) provider
     // is actually present — otherwise connect() would fall back to WalletConnect
     // with no visible UI from the popup. When it isn't (e.g. MetaMask isn't
-    // announcing because another extension took over window.ethereum), surface
-    // the access chooser so the user gets a working, visible reconnect path.
+    // announcing because another extension took over window.ethereum), open the
+    // dialog so the user gets a working, visible reconnect path.
     if (config && isInjectedAvailable(config)) {
       await connect(config)
     } else {

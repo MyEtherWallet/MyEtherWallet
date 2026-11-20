@@ -1,33 +1,3 @@
-<script setup lang="ts">
-// Gallery for the size scale (MEW-2364), reachable at /dev/sizes via the
-// design-library shell — see routesDefault.ts. Renders the 35 tokens as bars
-// sized from the `--size-*` CSS vars (main.css) and prints the px/rem from
-// `sizeScale.ts`, so a drift between the CSS contract and the TS map is visible
-// at a glance. On mount it also reads each var back and flags any mismatch.
-import { onMounted, ref } from 'vue'
-import {
-  SIZE,
-  SIZE_TOKENS,
-  sizeVar,
-  type SizeToken,
-} from '@/components/sizeScale'
-
-const drift = ref<SizeToken[]>([])
-
-onMounted(() => {
-  const root = getComputedStyle(document.documentElement)
-  const rootPx = parseFloat(root.fontSize) || 16
-  drift.value = SIZE_TOKENS.filter(token => {
-    const raw = root.getPropertyValue(sizeVar(token)).trim()
-    if (!raw) return true // var missing entirely
-    const cssPx = raw.endsWith('rem')
-      ? parseFloat(raw) * rootPx
-      : parseFloat(raw)
-    return Math.round(cssPx) !== SIZE[token]
-  })
-})
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-8 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -76,3 +46,33 @@ onMounted(() => {
     </ul>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the size scale (MEW-2364), reachable at /dev/sizes via the
+// design-library shell — see routesDefault.ts. Renders the 35 tokens as bars
+// sized from the `--size-*` CSS vars (main.css) and prints the px/rem from
+// `sizeScale.ts`, so a drift between the CSS contract and the TS map is visible
+// at a glance. On mount it also reads each var back and flags any mismatch.
+import { onMounted, ref } from 'vue'
+import {
+  SIZE,
+  SIZE_TOKENS,
+  sizeVar,
+  type SizeToken,
+} from '@/components/sizeScale'
+
+const drift = ref<SizeToken[]>([])
+
+onMounted(() => {
+  const root = getComputedStyle(document.documentElement)
+  const rootPx = parseFloat(root.fontSize) || 16
+  drift.value = SIZE_TOKENS.filter(token => {
+    const raw = root.getPropertyValue(sizeVar(token)).trim()
+    if (!raw) return true // var missing entirely
+    const cssPx = raw.endsWith('rem')
+      ? parseFloat(raw) * rootPx
+      : parseFloat(raw)
+    return Math.round(cssPx) !== SIZE[token]
+  })
+})
+</script>

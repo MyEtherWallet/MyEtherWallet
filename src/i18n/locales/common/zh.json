@@ -40,8 +40,6 @@
     "more": "更多",
     "dont_have_wallet": "还没有钱包？",
     "create_wallet": "创建钱包",
-    "create_wallet_short": "创建",
-    "connect_wallet_short": "连接",
     "access_wallet": "访问钱包",
     "load_more": "加载更多",
     "not_found": {
@@ -75,6 +73,9 @@
       "ledger_interface_busy": "其他应用或浏览器标签页（例如 Ledger Live）正在使用您的 Ledger。请关闭它，重新连接设备后重试。",
       "trezor_read_failed": "无法从 Trezor 读取您的地址。请重新连接设备后重试。",
       "ledger_device_busy": "另一个应用正在使用您的 Ledger。请关闭 Ledger Live 或其他已连接的标签页后重试。",
+      "login_expired": "您的登录已过期。请重新登录以继续。",
+      "signature_not_verified": "无法验证签名，因此未发送任何内容。请重试。",
+      "passkey_check_failed": "无法验证您的通行密钥，因此未执行任何操作。请重试。",
       "method_not_implemented": "方法未实现：{method}",
       "invalid_name": "名称无效",
       "address_resolution_failed": "地址解析失败",
@@ -220,7 +221,11 @@
     "chart_3m": "3月",
     "chart_1y": "1年",
     "chart_all": "全部",
-    "chart_range": "图表时间范围"
+    "chart_range": "图表时间范围",
+    "code_input": {
+      "label": "确认码",
+      "digit_label": "第 {index} 位，共 {total} 位"
+    }
   },
   "deposit": "充值",
   "learn": "学习",

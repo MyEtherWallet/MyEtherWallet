@@ -44,6 +44,7 @@ const SIGNING_WALLET_TYPES = new Set([
   'INJECTED',
   'TREZOR',
   'LEDGER',
+  'PRIVY',
 ])
 
 export function buildId(chainType: ChainType, address: string): string {

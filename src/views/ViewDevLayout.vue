@@ -1,67 +1,3 @@
-<script setup lang="ts">
-// Shell for the design-library previews. The sidebar lists the components that
-// have a preview page; the selected one renders in the main area via
-// <router-view>. Add a row here as each component gains a preview. Never
-// registered in production builds — see routesDefault.ts.
-const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
-  {
-    title: 'Foundations',
-    items: [
-      { name: 'Colors', to: '/dev/colors' },
-      { name: 'Sizes', to: '/dev/sizes' },
-      { name: 'Typography', to: '/dev/typography' },
-    ],
-  },
-  {
-    title: 'Components',
-    items: [
-      { name: 'Accordion', to: '/dev/accordion' },
-      { name: 'Action Bar', to: '/dev/action-bar' },
-      { name: 'Address Selector', to: '/dev/address-selector' },
-      { name: 'Avatar', to: '/dev/avatar' },
-      { name: 'Banner', to: '/dev/banner' },
-      { name: 'Button', to: '/dev/button' },
-      { name: 'Button Group', to: '/dev/button-group' },
-      { name: 'Button Icon', to: '/dev/btn-icon' },
-      { name: 'Card', to: '/dev/card' },
-      { name: 'Cell', to: '/dev/cell' },
-      { name: 'Checkbox', to: '/dev/checkbox' },
-      { name: 'Chip', to: '/dev/chip' },
-      { name: 'Content Group', to: '/dev/content-group' },
-      { name: 'Divider', to: '/dev/divider' },
-      { name: 'Dropdown', to: '/dev/dropdown' },
-      { name: 'Footer', to: '/dev/footer' },
-      { name: 'Icon', to: '/dev/icons' },
-      { name: 'Input', to: '/dev/input' },
-      { name: 'Input Feedback', to: '/dev/input-feedback' },
-      { name: 'Input Naked', to: '/dev/input-naked' },
-      { name: 'List', to: '/dev/list' },
-      { name: 'Menu List', to: '/dev/menu-list' },
-      { name: 'Modal', to: '/dev/modal' },
-      { name: 'Navbar', to: '/dev/navbar' },
-      { name: 'NavLink', to: '/dev/navlink' },
-      { name: 'Pagination', to: '/dev/pagination' },
-      { name: 'Picker', to: '/dev/picker' },
-      { name: 'Radio Button', to: '/dev/radio' },
-      { name: 'ScrollFade', to: '/dev/scroll-fade' },
-      { name: 'Searchbar', to: '/dev/searchbar' },
-      { name: 'Segmented Control', to: '/dev/segmented-control' },
-      { name: 'Slider', to: '/dev/slider' },
-      { name: 'Spinner', to: '/dev/spinner' },
-      { name: 'Tab Bar', to: '/dev/tab-bar' },
-      { name: 'Tab Item', to: '/dev/tab-item' },
-      { name: 'Table', to: '/dev/table' },
-      { name: 'Tag', to: '/dev/tag' },
-      { name: 'Text Area', to: '/dev/text-area' },
-      { name: 'Toast', to: '/dev/toast' },
-      { name: 'Toggle', to: '/dev/toggle' },
-      { name: 'Token Selector', to: '/dev/token-selector' },
-      { name: 'Tooltip', to: '/dev/tooltip' },
-    ],
-  },
-]
-</script>
-
 <template>
   <!-- Fixed to the space below the app header so only the main column scrolls;
        the sidebar stays put. Header is 76px — see AppNavbar. -->
@@ -99,3 +35,68 @@ const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
     </main>
   </div>
 </template>
+
+<script setup lang="ts">
+// Shell for the design-library previews. The sidebar lists the components that
+// have a preview page; the selected one renders in the main area via
+// <router-view>. Add a row here as each component gains a preview. Never
+// registered in production builds — see routesDefault.ts.
+const SECTIONS: { title: string; items: { name: string; to: string }[] }[] = [
+  {
+    title: 'Foundations',
+    items: [
+      { name: 'Colors', to: '/dev/colors' },
+      { name: 'Sizes', to: '/dev/sizes' },
+      { name: 'Typography', to: '/dev/typography' },
+    ],
+  },
+  {
+    title: 'Components',
+    items: [
+      { name: 'Accordion', to: '/dev/accordion' },
+      { name: 'Action Bar', to: '/dev/action-bar' },
+      { name: 'Address Selector', to: '/dev/address-selector' },
+      { name: 'Avatar', to: '/dev/avatar' },
+      { name: 'Banner', to: '/dev/banner' },
+      { name: 'Button', to: '/dev/button' },
+      { name: 'Button Group', to: '/dev/button-group' },
+      { name: 'Button Icon', to: '/dev/btn-icon' },
+      { name: 'Card', to: '/dev/card' },
+      { name: 'Cell', to: '/dev/cell' },
+      { name: 'Checkbox', to: '/dev/checkbox' },
+      { name: 'Chip', to: '/dev/chip' },
+      { name: 'Code Input', to: '/dev/code-input' },
+      { name: 'Content Group', to: '/dev/content-group' },
+      { name: 'Divider', to: '/dev/divider' },
+      { name: 'Dropdown', to: '/dev/dropdown' },
+      { name: 'Footer', to: '/dev/footer' },
+      { name: 'Icon', to: '/dev/icons' },
+      { name: 'Input', to: '/dev/input' },
+      { name: 'Input Feedback', to: '/dev/input-feedback' },
+      { name: 'Input Naked', to: '/dev/input-naked' },
+      { name: 'List', to: '/dev/list' },
+      { name: 'Menu List', to: '/dev/menu-list' },
+      { name: 'Modal', to: '/dev/modal' },
+      { name: 'Navbar', to: '/dev/navbar' },
+      { name: 'NavLink', to: '/dev/navlink' },
+      { name: 'Pagination', to: '/dev/pagination' },
+      { name: 'Picker', to: '/dev/picker' },
+      { name: 'Radio Button', to: '/dev/radio' },
+      { name: 'ScrollFade', to: '/dev/scroll-fade' },
+      { name: 'Searchbar', to: '/dev/searchbar' },
+      { name: 'Segmented Control', to: '/dev/segmented-control' },
+      { name: 'Slider', to: '/dev/slider' },
+      { name: 'Spinner', to: '/dev/spinner' },
+      { name: 'Tab Bar', to: '/dev/tab-bar' },
+      { name: 'Tab Item', to: '/dev/tab-item' },
+      { name: 'Table', to: '/dev/table' },
+      { name: 'Tag', to: '/dev/tag' },
+      { name: 'Text Area', to: '/dev/text-area' },
+      { name: 'Toast', to: '/dev/toast' },
+      { name: 'Toggle', to: '/dev/toggle' },
+      { name: 'Token Selector', to: '/dev/token-selector' },
+      { name: 'Tooltip', to: '/dev/tooltip' },
+    ],
+  },
+]
+</script>

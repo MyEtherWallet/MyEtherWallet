@@ -1,10 +1,18 @@
 {
   "homePage": {
+    "passkeyPrompt": {
+      "title": "添加通行密钥以保护您的账户",
+      "benefit": "没有会丢失或泄露的密码",
+      "add": "添加通行密钥",
+      "error": "出了点问题，请重试。"
+    },
+    "passkeyAdded": {
+      "title": "通行密钥已添加",
+      "body": "您的钱包现已由面容或指纹保护。"
+    },
     "hero": {
       "welcomeTitle": "欢迎使用 MEW",
       "welcomeSubtitle": "连接您的钱包，开始交易股票和加密货币",
-      "createWallet": "创建钱包",
-      "connectWallet": "连接钱包",
       "ownTotal": "您共持有",
       "today": "今日",
       "goToPortfolio": "前往投资组合",

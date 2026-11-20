@@ -215,13 +215,13 @@ export const useConnectWallet = () => {
           wallet.downloadUrls?.firefox
         const link = _haslink
           ? {
-            title: t('access_wallet.toast.click_here_to_install'),
-            url: _haslink,
-          }
+              title: t('access_wallet.toast.click_here_to_install'),
+              url: _haslink,
+            }
           : {
-            title: t('common.dont_have_wallet'),
-            url: 'https://enkrypt.com',
-          }
+              title: t('common.dont_have_wallet'),
+              url: 'https://enkrypt.com',
+            }
         // A fixed id replaces the toast on a repeat click instead of stacking it.
         toastStore.addToastMessage({
           id: 'web3-wallet-not-detected',

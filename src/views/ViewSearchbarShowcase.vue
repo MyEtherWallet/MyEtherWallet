@@ -1,33 +1,3 @@
-<script setup lang="ts">
-// Preview for the Searchbar design-library component (MEW-1976) at
-// /dev/searchbar. Figma 82:14709: Outline sits on grey surfaces, Default on
-// white ones. Focus is live: Tab in for the ring, click in for the caret.
-import { computed, reactive, ref } from 'vue'
-import AppSearchbar from '@components/AppSearchbar.vue'
-
-const VARIANTS = [
-  { variant: 'outline', surface: 'bg-background-default' },
-  { variant: 'default', surface: 'bg-background-alternative' },
-] as const
-const STATES = ['Default', 'Focus — Tab in', 'Typing'] as const
-const models = reactive<Record<string, string>>({
-  'outline-Typing': 'Type',
-  'default-Typing': 'Type something',
-})
-
-const TOKENS = ['Bitcoin', 'Ethereum', 'Solana', 'Tether', 'USD Coin', 'XRP']
-const filter = ref('')
-const matches = computed(() =>
-  TOKENS.filter((t) => t.toLowerCase().includes(filter.value.toLowerCase())),
-)
-
-const debounced = ref('')
-const log = ref<string[]>([])
-const push = (line: string) => {
-  log.value = [line, ...log.value].slice(0, 5)
-}
-</script>
-
 <template>
   <div class="mx-auto flex max-w-5xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -97,3 +67,33 @@ const push = (line: string) => {
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Searchbar design-library component (MEW-1976) at
+// /dev/searchbar. Figma 82:14709: Outline sits on grey surfaces, Default on
+// white ones. Focus is live: Tab in for the ring, click in for the caret.
+import { computed, reactive, ref } from 'vue'
+import AppSearchbar from '@components/AppSearchbar.vue'
+
+const VARIANTS = [
+  { variant: 'outline', surface: 'bg-background-default' },
+  { variant: 'default', surface: 'bg-background-alternative' },
+] as const
+const STATES = ['Default', 'Focus — Tab in', 'Typing'] as const
+const models = reactive<Record<string, string>>({
+  'outline-Typing': 'Type',
+  'default-Typing': 'Type something',
+})
+
+const TOKENS = ['Bitcoin', 'Ethereum', 'Solana', 'Tether', 'USD Coin', 'XRP']
+const filter = ref('')
+const matches = computed(() =>
+  TOKENS.filter((t) => t.toLowerCase().includes(filter.value.toLowerCase())),
+)
+
+const debounced = ref('')
+const log = ref<string[]>([])
+const push = (line: string) => {
+  log.value = [line, ...log.value].slice(0, 5)
+}
+</script>

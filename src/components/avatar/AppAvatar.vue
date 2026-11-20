@@ -1,3 +1,27 @@
+<template>
+  <div class="relative inline-block align-middle" :style="boxStyle">
+    <!-- Outer box must not clip: badges overhang. The inner layer clips artwork. -->
+    <div
+      class="w-full h-full rounded-full overflow-hidden flex items-center justify-center"
+      :class="innerBgClass"
+    >
+      <component :is="typeComponent" v-bind="forwardProps">
+        <slot name="icon" />
+      </component>
+    </div>
+
+    <div v-if="activePosition" class="absolute" :style="badgeStyle">
+      <slot name="badge" />
+    </div>
+
+    <span
+      v-if="showConnectedRing"
+      class="absolute rounded-full border-2 border-border-success pointer-events-none"
+      :style="connectedRingStyle"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, watchEffect } from 'vue'
 import AvatarWallet from './types/AvatarWallet.vue'
@@ -139,27 +163,3 @@ watchEffect(() => {
   }
 })
 </script>
-
-<template>
-  <div class="relative inline-block align-middle" :style="boxStyle">
-    <!-- Outer box must not clip: badges overhang. The inner layer clips artwork. -->
-    <div
-      class="w-full h-full rounded-full overflow-hidden flex items-center justify-center"
-      :class="innerBgClass"
-    >
-      <component :is="typeComponent" v-bind="forwardProps">
-        <slot name="icon" />
-      </component>
-    </div>
-
-    <div v-if="activePosition" class="absolute" :style="badgeStyle">
-      <slot name="badge" />
-    </div>
-
-    <span
-      v-if="showConnectedRing"
-      class="absolute rounded-full border-2 border-border-success pointer-events-none"
-      :style="connectedRingStyle"
-    />
-  </div>
-</template>

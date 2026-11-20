@@ -1,37 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Content Group design-library component (MEW-2271), reachable
-// at /dev/content-group via the design-library shell — see routesDefault.ts.
-// Lets us eyeball the Size × Align × Inverted matrix, the trailing icon/avatar
-// slots and the loading state per size against Figma (component set 1952:43).
-import AppIcon from '@/components/icon/AppIcon.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
-import type {
-  ContentGroupAlign,
-  ContentGroupSize,
-} from '@/components/content_group/types'
-
-const SIZES: ContentGroupSize[] = ['m', 'l']
-const ALIGNS: ContentGroupAlign[] = ['left', 'center', 'right']
-const ADDRESS = '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8'
-
-const sizeAlign = SIZES.flatMap(size =>
-  ALIGNS.map(align => ({
-    size,
-    align,
-    label: `size=${size} · align=${align}`,
-  })),
-)
-
-const combos = sizeAlign.flatMap(c =>
-  [false, true].map(inverted => ({
-    ...c,
-    inverted,
-    label: `${c.label} · inverted=${inverted}`,
-  })),
-)
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-3xl mx-auto">
     <h1 class="text-s-24 font-bold">Content Group</h1>
@@ -134,3 +100,37 @@ const combos = sizeAlign.flatMap(c =>
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Content Group design-library component (MEW-2271), reachable
+// at /dev/content-group via the design-library shell — see routesDefault.ts.
+// Lets us eyeball the Size × Align × Inverted matrix, the trailing icon/avatar
+// slots and the loading state per size against Figma (component set 1952:43).
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import type {
+  ContentGroupAlign,
+  ContentGroupSize,
+} from '@/components/content_group/types'
+
+const SIZES: ContentGroupSize[] = ['m', 'l']
+const ALIGNS: ContentGroupAlign[] = ['left', 'center', 'right']
+const ADDRESS = '0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8'
+
+const sizeAlign = SIZES.flatMap(size =>
+  ALIGNS.map(align => ({
+    size,
+    align,
+    label: `size=${size} · align=${align}`,
+  })),
+)
+
+const combos = sizeAlign.flatMap(c =>
+  [false, true].map(inverted => ({
+    ...c,
+    inverted,
+    label: `${c.label} · inverted=${inverted}`,
+  })),
+)
+</script>

@@ -1,47 +1,3 @@
-<script setup lang="ts">
-// Preview for the ScrollFade design-library component (MEW-2444) at
-// /dev/scroll-fade. Matches Figma component set 1080:702 (specs 3535:116133).
-import { useTemplateRef } from 'vue'
-import AppScrollFade from '@/components/scroll_fade/AppScrollFade.vue'
-import { useScrollEdges } from '@/components/scroll_fade/useScrollEdges'
-import {
-  SCROLL_FADE_SIDES,
-  SCROLL_FADE_VARIANTS,
-  type ScrollFadeSide,
-} from '@/components/scroll_fade/types'
-
-const SIDE_LABEL: Record<ScrollFadeSide, string> = {
-  left: 'Scroll left',
-  right: 'Scroll right',
-  top: 'Scroll up',
-  bottom: 'Scroll down',
-}
-
-const CHIPS = Array.from({ length: 16 }, (_, index) => `Chip ${index + 1}`)
-const ROWS = Array.from({ length: 14 }, (_, index) => `Row ${index + 1}`)
-
-const horizontalScroller = useTemplateRef<HTMLElement>('horizontalScroller')
-const horizontalEdges = useScrollEdges(horizontalScroller, 'x')
-const verticalScroller = useTemplateRef<HTMLElement>('verticalScroller')
-const verticalEdges = useScrollEdges(verticalScroller, 'y')
-const fadeOnlyScroller = useTemplateRef<HTMLElement>('fadeOnlyScroller')
-const fadeOnlyEdges = useScrollEdges(fadeOnlyScroller, 'x')
-
-const scrollStep = (
-  scroller: HTMLElement | null,
-  axis: 'x' | 'y',
-  direction: 1 | -1,
-) => {
-  if (!scroller) return
-  const step =
-    (axis === 'x' ? scroller.clientWidth : scroller.clientHeight) * 0.8
-  scroller.scrollBy({
-    [axis === 'x' ? 'left' : 'top']: direction * step,
-    behavior: 'smooth',
-  })
-}
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -179,3 +135,47 @@ const scrollStep = (
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the ScrollFade design-library component (MEW-2444) at
+// /dev/scroll-fade. Matches Figma component set 1080:702 (specs 3535:116133).
+import { useTemplateRef } from 'vue'
+import AppScrollFade from '@/components/scroll_fade/AppScrollFade.vue'
+import { useScrollEdges } from '@/components/scroll_fade/useScrollEdges'
+import {
+  SCROLL_FADE_SIDES,
+  SCROLL_FADE_VARIANTS,
+  type ScrollFadeSide,
+} from '@/components/scroll_fade/types'
+
+const SIDE_LABEL: Record<ScrollFadeSide, string> = {
+  left: 'Scroll left',
+  right: 'Scroll right',
+  top: 'Scroll up',
+  bottom: 'Scroll down',
+}
+
+const CHIPS = Array.from({ length: 16 }, (_, index) => `Chip ${index + 1}`)
+const ROWS = Array.from({ length: 14 }, (_, index) => `Row ${index + 1}`)
+
+const horizontalScroller = useTemplateRef<HTMLElement>('horizontalScroller')
+const horizontalEdges = useScrollEdges(horizontalScroller, 'x')
+const verticalScroller = useTemplateRef<HTMLElement>('verticalScroller')
+const verticalEdges = useScrollEdges(verticalScroller, 'y')
+const fadeOnlyScroller = useTemplateRef<HTMLElement>('fadeOnlyScroller')
+const fadeOnlyEdges = useScrollEdges(fadeOnlyScroller, 'x')
+
+const scrollStep = (
+  scroller: HTMLElement | null,
+  axis: 'x' | 'y',
+  direction: 1 | -1,
+) => {
+  if (!scroller) return
+  const step =
+    (axis === 'x' ? scroller.clientWidth : scroller.clientHeight) * 0.8
+  scroller.scrollBy({
+    [axis === 'x' ? 'left' : 'top']: direction * step,
+    behavior: 'smooth',
+  })
+}
+</script>

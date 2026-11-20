@@ -1,104 +1,3 @@
-<script setup lang="ts">
-import { computed, inject, provide, ref, toRef, useAttrs } from 'vue'
-import { RouterLink, type RouteLocationRaw } from 'vue-router'
-import AppIcon from '@/components/icon/AppIcon.vue'
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
-import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
-import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
-import AppTableCell from './AppTableCell.vue'
-import { BTN_ICON_SIZE, type BtnIconSize } from '@/components/btnIconTypes'
-import { ICON_SIZE_CLASS } from '@/components/icon/icons'
-import { AVATAR_SIZES } from '@/components/avatar/types'
-import type { CellSurface } from '@/components/cell/cellSizes'
-import {
-  ROW_PADDING,
-  TABLE_CONTEXT,
-  TABLE_ROW_LOADING,
-  defaultTableContext,
-  type TableAvatarSize,
-} from './types'
-
-/**
- * Table row (design library, Figma TableRow 2126:16555). Lives inside an
- * AppTable: the row is a subgrid of the table grid, so its cells sit on the
- * same tracks as the header. Size (L/M/S) comes from the table.
- *
- * Cells left to right: drag handle + watchlist star (when the table has a
- * start track), the leading cell (`#avatar` + title/description, or
- * `#leading`; `#title` / `#title-icon` pass through to the Content Group),
- * the data cells from the default slot (AppTableCell), then
- * `#actions`. The actions slot gets `size` (Figma: two buttons at L, one at M,
- * the ellipsis Button Icon at S) and `surface` for AppBaseButton: grey buttons
- * on the white row, white ones while the row is hovered grey.
- *
- * Navigation: `to` turns the title into a RouterLink stretched over the
- * whole row, so the row keeps link semantics (new tab, middle-click, screen
- * readers) and Tab reaches the star before it. Without `to`, the row is
- * clickable only when a `@click` listener is bound (tabindex 0, Enter/Space).
- * A `@click` next to `to` still fires (analytics). The star, handle and
- * actions sit above the link and never trigger the row.
- *
- * `loading` turns the row into a skeleton copy of itself: every skeleton
- * sits in the box of the element it stands for, so nothing moves when the
- * data lands. The avatar (when `#avatar` is given) becomes a skeleton of the
- * same size, the title and description the Content Group's bars, each
- * AppTableCell line a bar (see AppTableCell), and the actions
- * `loadingButtons` medium-button skeletons, or a Button Icon M one at 0
- * (default: one at L/M, the icon at S).
- * A bound star stays live; without one, a table with a watchlist gets a
- * skeleton in its place. AppTable's `loading` rows use the same mode.
- */
-const props = withDefaults(
-  defineProps<{
-    title?: string
-    description?: string
-    to?: RouteLocationRaw
-    /** Bind to show the watchlist star; leave unbound for no star. */
-    watchlisted?: boolean
-    watchlistLoading?: boolean
-    loading?: boolean
-    /** Buttons the loading actions show; 0 is the Button Icon. */
-    loadingButtons?: number
-  }>(),
-  { title: '', description: '', watchlisted: undefined },
-)
-
-const emit = defineEmits<{ 'update:watchlisted': [on: boolean] }>()
-
-const { size, visibleKeys, start, watchlist, reorderable, actions } = inject(
-  TABLE_CONTEXT,
-  defaultTableContext,
-  true,
-)
-provide(TABLE_ROW_LOADING, toRef(props, 'loading'))
-
-const attrs = useAttrs()
-const clickable = computed(
-  () => !props.to && !props.loading && Boolean(attrs.onClick),
-)
-
-const hovered = ref(false)
-const surface = computed<CellSurface>(() =>
-  hovered.value ? 'alternative' : 'default',
-)
-const loadingButtonCount = computed(
-  () => props.loadingButtons ?? (size.value === 's' ? 0 : 1),
-)
-const avatarSize = computed<TableAvatarSize>(() =>
-  size.value === 's' ? 's' : 'l',
-)
-const starSize = computed<BtnIconSize>(() => (size.value === 's' ? 's' : 'm'))
-// Same box as the avatar it stands in for (AppCell does the same).
-const avatarBox = computed(() => {
-  const px = `${AVATAR_SIZES[avatarSize.value].box}px`
-  return { width: px, height: px }
-})
-
-const activate = (e: KeyboardEvent) => {
-  if (clickable.value) (e.currentTarget as HTMLElement).click()
-}
-</script>
-
 <template>
   <div
     role="row"
@@ -237,3 +136,104 @@ const activate = (e: KeyboardEvent) => {
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed, inject, provide, ref, toRef, useAttrs } from 'vue'
+import { RouterLink, type RouteLocationRaw } from 'vue-router'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppCellWatchlistToggle from '@/components/cell/AppCellWatchlistToggle.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
+import AppTableCell from './AppTableCell.vue'
+import { BTN_ICON_SIZE, type BtnIconSize } from '@/components/btnIconTypes'
+import { ICON_SIZE_CLASS } from '@/components/icon/icons'
+import { AVATAR_SIZES } from '@/components/avatar/types'
+import type { CellSurface } from '@/components/cell/cellSizes'
+import {
+  ROW_PADDING,
+  TABLE_CONTEXT,
+  TABLE_ROW_LOADING,
+  defaultTableContext,
+  type TableAvatarSize,
+} from './types'
+
+/**
+ * Table row (design library, Figma TableRow 2126:16555). Lives inside an
+ * AppTable: the row is a subgrid of the table grid, so its cells sit on the
+ * same tracks as the header. Size (L/M/S) comes from the table.
+ *
+ * Cells left to right: drag handle + watchlist star (when the table has a
+ * start track), the leading cell (`#avatar` + title/description, or
+ * `#leading`; `#title` / `#title-icon` pass through to the Content Group),
+ * the data cells from the default slot (AppTableCell), then
+ * `#actions`. The actions slot gets `size` (Figma: two buttons at L, one at M,
+ * the ellipsis Button Icon at S) and `surface` for AppBaseButton: grey buttons
+ * on the white row, white ones while the row is hovered grey.
+ *
+ * Navigation: `to` turns the title into a RouterLink stretched over the
+ * whole row, so the row keeps link semantics (new tab, middle-click, screen
+ * readers) and Tab reaches the star before it. Without `to`, the row is
+ * clickable only when a `@click` listener is bound (tabindex 0, Enter/Space).
+ * A `@click` next to `to` still fires (analytics). The star, handle and
+ * actions sit above the link and never trigger the row.
+ *
+ * `loading` turns the row into a skeleton copy of itself: every skeleton
+ * sits in the box of the element it stands for, so nothing moves when the
+ * data lands. The avatar (when `#avatar` is given) becomes a skeleton of the
+ * same size, the title and description the Content Group's bars, each
+ * AppTableCell line a bar (see AppTableCell), and the actions
+ * `loadingButtons` medium-button skeletons, or a Button Icon M one at 0
+ * (default: one at L/M, the icon at S).
+ * A bound star stays live; without one, a table with a watchlist gets a
+ * skeleton in its place. AppTable's `loading` rows use the same mode.
+ */
+const props = withDefaults(
+  defineProps<{
+    title?: string
+    description?: string
+    to?: RouteLocationRaw
+    /** Bind to show the watchlist star; leave unbound for no star. */
+    watchlisted?: boolean
+    watchlistLoading?: boolean
+    loading?: boolean
+    /** Buttons the loading actions show; 0 is the Button Icon. */
+    loadingButtons?: number
+  }>(),
+  { title: '', description: '', watchlisted: undefined },
+)
+
+const emit = defineEmits<{ 'update:watchlisted': [on: boolean] }>()
+
+const { size, visibleKeys, start, watchlist, reorderable, actions } = inject(
+  TABLE_CONTEXT,
+  defaultTableContext,
+  true,
+)
+provide(TABLE_ROW_LOADING, toRef(props, 'loading'))
+
+const attrs = useAttrs()
+const clickable = computed(
+  () => !props.to && !props.loading && Boolean(attrs.onClick),
+)
+
+const hovered = ref(false)
+const surface = computed<CellSurface>(() =>
+  hovered.value ? 'alternative' : 'default',
+)
+const loadingButtonCount = computed(
+  () => props.loadingButtons ?? (size.value === 's' ? 0 : 1),
+)
+const avatarSize = computed<TableAvatarSize>(() =>
+  size.value === 's' ? 's' : 'l',
+)
+const starSize = computed<BtnIconSize>(() => (size.value === 's' ? 's' : 'm'))
+// Same box as the avatar it stands in for (AppCell does the same).
+const avatarBox = computed(() => {
+  const px = `${AVATAR_SIZES[avatarSize.value].box}px`
+  return { width: px, height: px }
+})
+
+const activate = (e: KeyboardEvent) => {
+  if (clickable.value) (e.currentTarget as HTMLElement).click()
+}
+</script>

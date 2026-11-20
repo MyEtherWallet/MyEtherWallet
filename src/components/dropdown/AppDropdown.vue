@@ -1,3 +1,91 @@
+<template>
+  <div
+    ref="root"
+    v-bind="$attrs"
+    data-testid="dropdown"
+    class="relative"
+    :class="layout === 'm' ? 'flex w-full' : 'inline-flex'"
+    @keydown.esc="close(true)"
+    @focusout="onFocusOut"
+  >
+    <button
+      :id="triggerId"
+      ref="trigger"
+      type="button"
+      data-testid="dropdown-trigger"
+      :aria-haspopup="menuRole"
+      :aria-expanded="open"
+      :aria-controls="open ? listId : undefined"
+      :disabled="disabled"
+      class="items-center text-left transition-colors"
+      :class="[
+        triggerClass,
+        DROPDOWN_TRIGGER_STATE_CLASS,
+        { [DROPDOWN_TRIGGER_BORDER_CLASS]: bordered },
+      ]"
+      @click="toggle"
+      @keydown.down.prevent="show()"
+    >
+      <span v-if="$slots.avatar" class="flex shrink-0">
+        <slot name="avatar" :size="AVATAR_SIZE" />
+      </span>
+      <AppContentGroup
+        v-if="layout === 'm'"
+        :title="title"
+        size="m"
+        no-wrap
+        class="min-w-0 flex-1"
+      >
+        <template v-if="$slots.title" #title>
+          <slot name="title" />
+        </template>
+      </AppContentGroup>
+      <span
+        v-else
+        class="whitespace-nowrap text-label-base text-text-default"
+        :class="{ 'px-2': !bare }"
+      >
+        <slot name="title">{{ title }}</slot>
+      </span>
+      <!-- Figma "Custom content": shares the row with the title, right-aligned. -->
+      <span
+        v-if="layout === 'm' && $slots.suffix"
+        data-testid="dropdown-suffix"
+        class="flex min-w-0 flex-1 items-center justify-end overflow-hidden"
+      >
+        <slot name="suffix" />
+      </span>
+      <AppIcon
+        name="chevron-down"
+        :size="bare ? 'xs' : 's'"
+        class="shrink-0 text-icon-subtle transition-transform motion-reduce:transition-none"
+        :class="{ 'rotate-180': open }"
+      />
+    </button>
+
+    <AppMenuList
+      v-if="open"
+      ref="menu"
+      v-model:search="search"
+      :list-id="listId"
+      :aria-labelledby="triggerId"
+      :role="menuRole"
+      :searchable="searchable"
+      :search-placeholder="searchPlaceholder"
+      :list-class="menuClass"
+      class="absolute z-20"
+      :class="[
+        menuPositionClass,
+        flipUp ? 'bottom-full mb-1' : 'top-full mt-1',
+      ]"
+      @click="onMenuClick"
+      @keydown="onMenuKeydown"
+    >
+      <slot :close="() => close(true)" />
+    </AppMenuList>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, nextTick, ref, useId, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core'
@@ -169,91 +257,3 @@ const onMenuKeydown = (event: KeyboardEvent) => {
 
 defineExpose({ show, close })
 </script>
-
-<template>
-  <div
-    ref="root"
-    v-bind="$attrs"
-    data-testid="dropdown"
-    class="relative"
-    :class="layout === 'm' ? 'flex w-full' : 'inline-flex'"
-    @keydown.esc="close(true)"
-    @focusout="onFocusOut"
-  >
-    <button
-      :id="triggerId"
-      ref="trigger"
-      type="button"
-      data-testid="dropdown-trigger"
-      :aria-haspopup="menuRole"
-      :aria-expanded="open"
-      :aria-controls="open ? listId : undefined"
-      :disabled="disabled"
-      class="items-center text-left transition-colors"
-      :class="[
-        triggerClass,
-        DROPDOWN_TRIGGER_STATE_CLASS,
-        { [DROPDOWN_TRIGGER_BORDER_CLASS]: bordered },
-      ]"
-      @click="toggle"
-      @keydown.down.prevent="show()"
-    >
-      <span v-if="$slots.avatar" class="flex shrink-0">
-        <slot name="avatar" :size="AVATAR_SIZE" />
-      </span>
-      <AppContentGroup
-        v-if="layout === 'm'"
-        :title="title"
-        size="m"
-        no-wrap
-        class="min-w-0 flex-1"
-      >
-        <template v-if="$slots.title" #title>
-          <slot name="title" />
-        </template>
-      </AppContentGroup>
-      <span
-        v-else
-        class="whitespace-nowrap text-label-base text-text-default"
-        :class="{ 'px-2': !bare }"
-      >
-        <slot name="title">{{ title }}</slot>
-      </span>
-      <!-- Figma "Custom content": shares the row with the title, right-aligned. -->
-      <span
-        v-if="layout === 'm' && $slots.suffix"
-        data-testid="dropdown-suffix"
-        class="flex min-w-0 flex-1 items-center justify-end overflow-hidden"
-      >
-        <slot name="suffix" />
-      </span>
-      <AppIcon
-        name="chevron-down"
-        :size="bare ? 'xs' : 's'"
-        class="shrink-0 text-icon-subtle transition-transform motion-reduce:transition-none"
-        :class="{ 'rotate-180': open }"
-      />
-    </button>
-
-    <AppMenuList
-      v-if="open"
-      ref="menu"
-      v-model:search="search"
-      :list-id="listId"
-      :aria-labelledby="triggerId"
-      :role="menuRole"
-      :searchable="searchable"
-      :search-placeholder="searchPlaceholder"
-      :list-class="menuClass"
-      class="absolute z-20"
-      :class="[
-        menuPositionClass,
-        flipUp ? 'bottom-full mb-1' : 'top-full mt-1',
-      ]"
-      @click="onMenuClick"
-      @keydown="onMenuKeydown"
-    >
-      <slot :close="() => close(true)" />
-    </AppMenuList>
-  </div>
-</template>

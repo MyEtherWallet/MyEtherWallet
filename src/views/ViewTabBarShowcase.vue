@@ -1,38 +1,3 @@
-<script setup lang="ts">
-// Preview for the TabBar design-library component (MEW-2407) at /dev/tab-bar.
-// Matches Figma node 2175:7168; Tab into a bar and use the arrow keys.
-import { ref } from 'vue'
-import AppTabBar from '@/components/tabs/AppTabBar.vue'
-import type { TabBarItem, TabBarSurface } from '@/components/tabs/types'
-
-type AssetTab = 'stocks' | 'crypto' | 'perps'
-
-const ITEMS: TabBarItem<AssetTab>[] = [
-  { id: 'stocks', label: 'Stocks' },
-  { id: 'crypto', label: 'Crypto' },
-  { id: 'perps', label: 'Perps' },
-]
-
-const VARIANTS: { surface: TabBarSurface; label: string; page: string }[] = [
-  {
-    surface: 'alternative',
-    label: 'Variant: on alternative — white surface',
-    page: 'bg-background-alternative',
-  },
-  {
-    surface: 'default',
-    label: 'Variant: on default — grey surface',
-    page: 'bg-background-default',
-  },
-]
-
-const activeBySurface = ref<Record<TabBarSurface, AssetTab>>({
-  alternative: 'stocks',
-  default: 'stocks',
-})
-const withDisabled = ref<AssetTab>('stocks')
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -76,3 +41,38 @@ const withDisabled = ref<AssetTab>('stocks')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the TabBar design-library component (MEW-2407) at /dev/tab-bar.
+// Matches Figma node 2175:7168; Tab into a bar and use the arrow keys.
+import { ref } from 'vue'
+import AppTabBar from '@/components/tabs/AppTabBar.vue'
+import type { TabBarItem, TabBarSurface } from '@/components/tabs/types'
+
+type AssetTab = 'stocks' | 'crypto' | 'perps'
+
+const ITEMS: TabBarItem<AssetTab>[] = [
+  { id: 'stocks', label: 'Stocks' },
+  { id: 'crypto', label: 'Crypto' },
+  { id: 'perps', label: 'Perps' },
+]
+
+const VARIANTS: { surface: TabBarSurface; label: string; page: string }[] = [
+  {
+    surface: 'alternative',
+    label: 'Variant: on alternative — white surface',
+    page: 'bg-background-alternative',
+  },
+  {
+    surface: 'default',
+    label: 'Variant: on default — grey surface',
+    page: 'bg-background-default',
+  },
+]
+
+const activeBySurface = ref<Record<TabBarSurface, AssetTab>>({
+  alternative: 'stocks',
+  default: 'stocks',
+})
+const withDisabled = ref<AssetTab>('stocks')
+</script>

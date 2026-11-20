@@ -1,5 +1,6 @@
 import { WALLET_FLOW_ROUTES, walletFlowRouteName } from './routeNames'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import { FIRST_ACCESS_VIEW } from '@/modules/access/common/accessViews'
 import type {
   RouteRecordRaw,
   RouteLocationNormalized,
@@ -35,7 +36,7 @@ const beforeRouteEnter = (
   next({
     name: to.name,
     params: to.params,
-    query: { ...to.query, type: 'default' },
+    query: { ...to.query, type: FIRST_ACCESS_VIEW },
   })
 }
 

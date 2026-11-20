@@ -1,3 +1,30 @@
+<template>
+  <button
+    type="button"
+    role="radio"
+    :aria-checked="selected"
+    data-testid="segment"
+    class="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-3xl text-label-sm transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus"
+    :class="[
+      SEGMENT_SIZE[size].box,
+      // Text colour sits here too: a tone's inverted text can't share a
+      // static text-text-default (Tailwind order would pick the winner).
+      selected && tone
+        ? SEGMENT_TONE_CLASS[tone]
+        : [
+            'text-text-default',
+            selected ? 'bg-background-alternative' : SEGMENT_SIZE[size].hover,
+          ],
+    ]"
+  >
+    <slot name="avatar" :size="SEGMENT_SIZE[size].avatar" />
+    <span class="px-1.5">
+      <slot>{{ label }}</slot>
+    </span>
+    <AppIcon v-if="trailingIcon" :name="trailingIcon" size="s" />
+  </button>
+</template>
+
 <script setup lang="ts">
 import AppIcon from '@components/icon/AppIcon.vue'
 import type { IconName } from '@components/icon/icons'
@@ -31,30 +58,3 @@ withDefaults(
   },
 )
 </script>
-
-<template>
-  <button
-    type="button"
-    role="radio"
-    :aria-checked="selected"
-    data-testid="segment"
-    class="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-3xl text-label-sm transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus"
-    :class="[
-      SEGMENT_SIZE[size].box,
-      // Text colour sits here too: a tone's inverted text can't share a
-      // static text-text-default (Tailwind order would pick the winner).
-      selected && tone
-        ? SEGMENT_TONE_CLASS[tone]
-        : [
-            'text-text-default',
-            selected ? 'bg-background-alternative' : SEGMENT_SIZE[size].hover,
-          ],
-    ]"
-  >
-    <slot name="avatar" :size="SEGMENT_SIZE[size].avatar" />
-    <span class="px-1.5">
-      <slot>{{ label }}</slot>
-    </span>
-    <AppIcon v-if="trailingIcon" :name="trailingIcon" size="s" />
-  </button>
-</template>

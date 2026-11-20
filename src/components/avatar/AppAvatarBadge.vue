@@ -1,3 +1,29 @@
+<template>
+  <div
+    v-if="type === 'network'"
+    class="w-full h-full rounded-full border border-white bg-white overflow-hidden flex items-center justify-center box-border"
+  >
+    <slot />
+  </div>
+
+  <div
+    v-else-if="type === 'icon'"
+    class="w-full h-full rounded-full border border-white overflow-hidden flex items-center justify-center box-border p-px [&_svg]:w-full [&_svg]:h-full"
+    :class="ICON_TONE_CLASS[tone]"
+  >
+    <slot />
+  </div>
+
+  <div v-else class="w-full h-full flex items-center justify-center">
+    <div
+      class="rounded-full bg-white p-px flex items-center justify-center box-border"
+      :style="statusStyle"
+    >
+      <AvatarStatusDot :type="status ?? 'muted'" />
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import AvatarStatusDot from './AvatarStatusDot.vue'
 import {
@@ -34,29 +60,3 @@ const statusStyle = {
   height: `${STATUS_BADGE_BOX}px`,
 }
 </script>
-
-<template>
-  <div
-    v-if="type === 'network'"
-    class="w-full h-full rounded-full border border-white bg-white overflow-hidden flex items-center justify-center box-border"
-  >
-    <slot />
-  </div>
-
-  <div
-    v-else-if="type === 'icon'"
-    class="w-full h-full rounded-full border border-white overflow-hidden flex items-center justify-center box-border p-px [&_svg]:w-full [&_svg]:h-full"
-    :class="ICON_TONE_CLASS[tone]"
-  >
-    <slot />
-  </div>
-
-  <div v-else class="w-full h-full flex items-center justify-center">
-    <div
-      class="rounded-full bg-white p-px flex items-center justify-center box-border"
-      :style="statusStyle"
-    >
-      <AvatarStatusDot :type="status ?? 'muted'" />
-    </div>
-  </div>
-</template>

@@ -107,6 +107,10 @@ import type {
   SellErrorPayload,
   MarketingAbTestEvent,
   MarketingAbTestEventPayload,
+  OnboardingEvent,
+  OnboardingPayload,
+  AccountSecurityEvent,
+  AccountSecurityPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -1086,6 +1090,34 @@ export class Analytics {
   readonly trackSellEventError = (
     event: SellEventError,
     payload: SellErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  /**
+   * Send an Onboarding (Google / email login) analytics event to Amplitude
+   *
+   * @param event     Type of Onboarding event
+   * @param payload   Event properties; never an email, address or Privy id
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackOnboardingEvent = (
+    event: OnboardingEvent,
+    payload?: OnboardingPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  /**
+   * Track a passkey or recovery phrase event of a Privy account.
+   * @param event   - The account security event
+   * @param payload - Where it happened and, on failure, why. Never anything
+   *                  that identifies the account or its secrets.
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackAccountSecurityEvent = (
+    event: AccountSecurityEvent,
+    payload?: AccountSecurityPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

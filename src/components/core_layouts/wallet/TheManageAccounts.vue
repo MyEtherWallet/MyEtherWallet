@@ -199,6 +199,13 @@
                   <p v-else class="text-center text-text-subtle py-6">
                     {{ $t('multi_address.empty') }}
                   </p>
+                  <!-- An empty Privy wallet: the two ways to fund it, under
+                       the saved address so that stays in view. -->
+                  <manage-accounts-fund-actions
+                    v-if="showFundActions"
+                    @buy="onFundBuy"
+                    @deposit="onFundDeposit"
+                  />
                   <div class="pb-10" />
                 </div>
                 <div
@@ -335,6 +342,7 @@
       :account-name="deleteTarget?.addressName"
       @confirm="onDeleteConfirm"
     />
+    <the-deposit-dialog v-model:open-dialog="depositOpen" />
   </teleport>
 </template>
 <script setup lang="ts">
@@ -355,6 +363,11 @@ import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsC
 import ManageAccountsNetworkView from '@/components/core_layouts/wallet/ManageAccountsNetworkView.vue'
 import ManageAccountsConnectAddressView from '@/components/core_layouts/wallet/ManageAccountsConnectAddressView.vue'
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
+import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
+import ManageAccountsFundActions from '@/components/core_layouts/wallet/ManageAccountsFundActions.vue'
+import { usePrivyAccount } from '@/composables/usePrivyAccount'
+import { fundActionsOffered } from '@/providers/privy/accountOffer'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import ManageAccountsRenameModal from '@/components/core_layouts/wallet/ManageAccountsRenameModal.vue'
 import ManageAccountsDeleteModal from '@/components/core_layouts/wallet/ManageAccountsDeleteModal.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
@@ -825,6 +838,31 @@ const isRenameNameTaken = (name: string): boolean =>
         renameTarget.value.id,
       )
     : false
+// Fund actions: for a connected Privy wallet that holds nothing and is the
+// only saved account. The zero rule is the Home hero's (dust with no price
+// counts as nothing), and loading balances never count as zero, so the cards
+// do not flash on a funded wallet. Each closes the popup before it opens its
+// target, the way the paper wallet does.
+const { isPrivyConnected } = usePrivyAccount()
+const showFundActions = computed(
+  () =>
+    fundActionsOffered() &&
+    isPrivyConnected.value &&
+    allAccounts.value.length === 1 &&
+    !isLoadingBalances.value &&
+    !totalFiatPortfolioValueBN.value.isGreaterThan(0),
+)
+const depositOpen = ref(false)
+const onFundBuy = (): void => {
+  openDialog.value = false
+  useWalletMenuStore().openPanel('purchase')
+  void analytics.trackMultiAddressEvent(MultiAddressEvent.FUND_BUY)
+}
+const onFundDeposit = (): void => {
+  openDialog.value = false
+  depositOpen.value = true
+  void analytics.trackMultiAddressEvent(MultiAddressEvent.FUND_DEPOSIT)
+}
 // Paper wallet opens a modal (same as the home wallet card) for the chosen
 // account's address; close the popup first.
 const onPaper = (acc: SavedAccount): void => {

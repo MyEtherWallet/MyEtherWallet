@@ -1,6 +1,6 @@
 <template>
   <section class="flex flex-col gap-3">
-    <h3 class="text-sm font-semibold">
+    <h3 v-if="!hideHeading" class="text-sm font-semibold">
       {{ t('access_wallet.sign_up.download_official') }}
     </h3>
     <div class="grid grid-cols-2 gap-3">
@@ -54,6 +54,11 @@ import MewLogo from '@/assets/images/access/mew-app.webp'
 import EnkryptLogo from '@/assets/images/access/enkrypt.webp'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useAccessStore } from '@/stores/accessStore'
+
+defineProps<{
+  /** For a list that already sits under its own question (the chooser). */
+  hideHeading?: boolean
+}>()
 
 const { t } = useI18n()
 const accessStore = useAccessStore()

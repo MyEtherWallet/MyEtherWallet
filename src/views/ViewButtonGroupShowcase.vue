@@ -1,11 +1,3 @@
-<script setup lang="ts">
-// Preview for the Button Group design-library component (MEW-2441) at
-// /dev/button-group. Matches Figma component set 1762:1095: buttons on the
-// grey default surface, so the secondary uses surface="alternative" (white).
-import AppBaseButton from '@components/AppBaseButton.vue'
-import AppBtnGroup from '@components/AppBtnGroup.vue'
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -64,3 +56,11 @@ import AppBtnGroup from '@components/AppBtnGroup.vue'
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Button Group design-library component (MEW-2441) at
+// /dev/button-group. Matches Figma component set 1762:1095: buttons on the
+// grey default surface, so the secondary uses surface="alternative" (white).
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
+</script>

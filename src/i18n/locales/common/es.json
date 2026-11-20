@@ -40,8 +40,6 @@
     "more": "más",
     "dont_have_wallet": "¿No tienes una billetera?",
     "create_wallet": "Crear billetera",
-    "create_wallet_short": "Crear",
-    "connect_wallet_short": "Conectar",
     "access_wallet": "Acceder a la billetera",
     "load_more": "Cargar más",
     "not_found": {
@@ -75,6 +73,9 @@
       "ledger_interface_busy": "Otra aplicación o pestaña del navegador (p. ej. Ledger Live) está usando tu Ledger. Ciérrala, vuelve a conectar el dispositivo e inténtalo de nuevo.",
       "trezor_read_failed": "No se pudo leer tu dirección desde Trezor. Reconecta el dispositivo e inténtalo de nuevo.",
       "ledger_device_busy": "Otra aplicación está usando tu Ledger. Cierra Ledger Live o cualquier otra pestaña conectada a él e inténtalo de nuevo.",
+      "login_expired": "Tu sesión ha caducado. Inicia sesión de nuevo para continuar.",
+      "signature_not_verified": "No se pudo verificar la firma, así que no se envió nada. Inténtalo de nuevo.",
+      "passkey_check_failed": "No se pudo comprobar tu llave de acceso, así que no se hizo nada. Inténtalo de nuevo.",
       "method_not_implemented": "Método no implementado: {method}",
       "invalid_name": "Nombre no válido",
       "address_resolution_failed": "No se pudo resolver la dirección",
@@ -220,7 +221,11 @@
     "chart_3m": "3m",
     "chart_1y": "1a",
     "chart_all": "todo",
-    "chart_range": "Rango del gráfico"
+    "chart_range": "Rango del gráfico",
+    "code_input": {
+      "label": "Código de confirmación",
+      "digit_label": "Dígito {index} de {total}"
+    }
   },
   "deposit": "Depositar",
   "learn": "Aprender",

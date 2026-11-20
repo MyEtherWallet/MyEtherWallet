@@ -30,8 +30,10 @@ export const useRecentWalletsStore = defineStore(
       )
       const isOfficial = passedWallet.isOfficial
 
-      // If wallet already exists, don't add again
+      // Used again: it is not added twice, it becomes the most recent one.
       if (existingWalletIndex !== -1) {
+        const [usedAgain] = recentWallets.value.splice(existingWalletIndex, 1)
+        recentWallets.value.push(usedAgain)
         return
       }
 

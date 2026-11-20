@@ -1,34 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Input feedback row (MEW-2402), reachable at
-// /dev/input-feedback via the design-library shell — see routesDefault.ts.
-// The four Figma types standalone (node 2564:1269), then the row under
-// AppInput / AppTextArea, including a long message that wraps.
-import { ref } from 'vue'
-import AppInput from '@/components/AppInput.vue'
-import AppTextArea from '@/components/text_area/AppTextArea.vue'
-import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
-import { FEEDBACK_TYPES } from '@/components/input_feedback/types'
-
-const LABEL = {
-  error: 'Error message',
-  success: 'Success message',
-  warning: 'Warning message',
-  text: 'Message',
-} as const
-
-const LONG =
-  'This address has never received funds on this network. Double-check it before you send, transfers to the wrong address cannot be reversed.'
-
-// Unbroken, so the row has to break it to wrap.
-const UNBROKEN =
-  'Signature mismatch: 0x3a6e1b2c9f4d8e7a5b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b'
-
-const address = ref('0x742d35Cc6634C0532925a3b844Bc454e4438f44e')
-const amount = ref('12')
-const name = ref('')
-const message = ref('Hello MEW')
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -109,3 +78,34 @@ const message = ref('Hello MEW')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Input feedback row (MEW-2402), reachable at
+// /dev/input-feedback via the design-library shell — see routesDefault.ts.
+// The four Figma types standalone (node 2564:1269), then the row under
+// AppInput / AppTextArea, including a long message that wraps.
+import { ref } from 'vue'
+import AppInput from '@/components/AppInput.vue'
+import AppTextArea from '@/components/text_area/AppTextArea.vue'
+import AppInputFeedback from '@/components/input_feedback/AppInputFeedback.vue'
+import { FEEDBACK_TYPES } from '@/components/input_feedback/types'
+
+const LABEL = {
+  error: 'Error message',
+  success: 'Success message',
+  warning: 'Warning message',
+  text: 'Message',
+} as const
+
+const LONG =
+  'This address has never received funds on this network. Double-check it before you send, transfers to the wrong address cannot be reversed.'
+
+// Unbroken, so the row has to break it to wrap.
+const UNBROKEN =
+  'Signature mismatch: 0x3a6e1b2c9f4d8e7a5b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b'
+
+const address = ref('0x742d35Cc6634C0532925a3b844Bc454e4438f44e')
+const amount = ref('12')
+const name = ref('')
+const message = ref('Hello MEW')
+</script>

@@ -1,35 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Icon design-library component (MEW-2359), reachable at
-// /dev/icons via the design-library shell — see routesDefault.ts. Renders the
-// whole registry so we can eyeball every glyph across the two variants and the
-// seven sizes against Figma (🗂️ Icons, 4159:108945). Toggle stroke/filled and
-// pick a size to re-render the grid; the size row shows one glyph at all sizes.
-// A glyph with only one variant falls back, so nothing renders blank.
-import { computed, ref } from 'vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
-import AppSearchbar from '@/components/AppSearchbar.vue'
-import {
-  ICON_NAMES,
-  ICON_SIZES,
-  type IconName,
-  type IconSize,
-} from '@/components/icon/icons'
-
-const variant = ref<'stroke' | 'filled'>('stroke')
-const size = ref<IconSize>('m')
-const query = ref('')
-
-const SIZE_NAMES = Object.keys(ICON_SIZES) as IconSize[]
-
-const filtered = computed<IconName[]>(() => {
-  const q = query.value.trim().toLowerCase()
-  return q ? ICON_NAMES.filter(n => n.includes(q)) : ICON_NAMES
-})
-
-// A representative glyph that ships both variants, for the size scale.
-const SAMPLE: IconName = 'wallet'
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-10 max-w-5xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -157,3 +125,35 @@ const SAMPLE: IconName = 'wallet'
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Icon design-library component (MEW-2359), reachable at
+// /dev/icons via the design-library shell — see routesDefault.ts. Renders the
+// whole registry so we can eyeball every glyph across the two variants and the
+// seven sizes against Figma (🗂️ Icons, 4159:108945). Toggle stroke/filled and
+// pick a size to re-render the grid; the size row shows one glyph at all sizes.
+// A glyph with only one variant falls back, so nothing renders blank.
+import { computed, ref } from 'vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+import AppSearchbar from '@/components/AppSearchbar.vue'
+import {
+  ICON_NAMES,
+  ICON_SIZES,
+  type IconName,
+  type IconSize,
+} from '@/components/icon/icons'
+
+const variant = ref<'stroke' | 'filled'>('stroke')
+const size = ref<IconSize>('m')
+const query = ref('')
+
+const SIZE_NAMES = Object.keys(ICON_SIZES) as IconSize[]
+
+const filtered = computed<IconName[]>(() => {
+  const q = query.value.trim().toLowerCase()
+  return q ? ICON_NAMES.filter(n => n.includes(q)) : ICON_NAMES
+})
+
+// A representative glyph that ships both variants, for the size scale.
+const SAMPLE: IconName = 'wallet'
+</script>

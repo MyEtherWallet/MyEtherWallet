@@ -1,3 +1,32 @@
+<template>
+  <button
+    type="button"
+    :disabled="disabled"
+    :aria-pressed="showIcon ? undefined : selected"
+    :aria-haspopup="showIcon ? 'menu' : undefined"
+    data-testid="chip"
+    class="inline-flex h-8 items-center justify-center rounded-full border px-1 text-label-sm text-text-default transition-colors duration-150 hover:bg-background-default-hover active:bg-background-default-pressed focus-visible:border-border-brand focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
+    :class="[CHIP_SURFACE_BG_CLASS[surface], borderClass]"
+    @click="emit('click', $event)"
+  >
+    <span v-if="$slots.avatar" class="shrink-0" data-testid="chip-avatar">
+      <slot name="avatar" :size="avatarSize" />
+    </span>
+
+    <span class="whitespace-nowrap px-2" data-testid="chip-label">{{
+      label
+    }}</span>
+
+    <span
+      v-if="showIcon"
+      class="flex shrink-0 items-center pr-1"
+      data-testid="chip-icon"
+    >
+      <AppIcon name="chevron-down" size="xs" />
+    </span>
+  </button>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -46,32 +75,3 @@ const borderClass = computed(() =>
   props.selected ? 'border-border-selected' : 'border-transparent',
 )
 </script>
-
-<template>
-  <button
-    type="button"
-    :disabled="disabled"
-    :aria-pressed="showIcon ? undefined : selected"
-    :aria-haspopup="showIcon ? 'menu' : undefined"
-    data-testid="chip"
-    class="inline-flex h-8 items-center justify-center rounded-full border px-1 text-label-sm text-text-default transition-colors duration-150 hover:bg-background-default-hover active:bg-background-default-pressed focus-visible:border-border-brand focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40"
-    :class="[CHIP_SURFACE_BG_CLASS[surface], borderClass]"
-    @click="emit('click', $event)"
-  >
-    <span v-if="$slots.avatar" class="shrink-0" data-testid="chip-avatar">
-      <slot name="avatar" :size="avatarSize" />
-    </span>
-
-    <span class="whitespace-nowrap px-2" data-testid="chip-label">{{
-      label
-    }}</span>
-
-    <span
-      v-if="showIcon"
-      class="flex shrink-0 items-center pr-1"
-      data-testid="chip-icon"
-    >
-      <AppIcon name="chevron-down" size="xs" />
-    </span>
-  </button>
-</template>

@@ -1,24 +1,3 @@
-<script setup lang="ts">
-// Preview for the Divider design-library component (MEW-2422) at /dev/divider.
-// Matches Figma node 3533:107915; each style on the surface it is meant for.
-import AppDivider from '@/components/divider/AppDivider.vue'
-import type { DividerVariant } from '@/components/divider/types'
-
-const VARIANTS: { variant: DividerVariant; label: string; page: string }[] = [
-  {
-    variant: 'default',
-    label: 'Style: Default — white surface',
-    page: 'bg-background-alternative',
-  },
-  {
-    variant: 'alternative',
-    label: 'Style: Alternative — grey surface',
-    page: 'bg-background-default',
-  },
-]
-const ROWS = ['First row', 'Second row', 'Third row']
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -48,3 +27,24 @@ const ROWS = ['First row', 'Second row', 'Third row']
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Divider design-library component (MEW-2422) at /dev/divider.
+// Matches Figma node 3533:107915; each style on the surface it is meant for.
+import AppDivider from '@/components/divider/AppDivider.vue'
+import type { DividerVariant } from '@/components/divider/types'
+
+const VARIANTS: { variant: DividerVariant; label: string; page: string }[] = [
+  {
+    variant: 'default',
+    label: 'Style: Default — white surface',
+    page: 'bg-background-alternative',
+  },
+  {
+    variant: 'alternative',
+    label: 'Style: Alternative — grey surface',
+    page: 'bg-background-default',
+  },
+]
+const ROWS = ['First row', 'Second row', 'Third row']
+</script>

@@ -266,6 +266,16 @@ const { setWallet } = walletStore // actions (no storeToRefs needed)
 ## Component Pattern (Standard)
 
 ```vue
+<template>
+  <div>
+    <AppBaseButton
+      :disabled="props.disabled"
+      @click="emit('submit', localState)"
+    >
+      {{ props.label }}
+    </AppBaseButton>
+  </div>
+</template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -288,16 +298,7 @@ const localState = ref('')
 const computed = computed(() => wallet.value?.address ?? '')
 </script>
 
-<template>
-  <div>
-    <AppBaseButton
-      :disabled="props.disabled"
-      @click="emit('submit', localState)"
-    >
-      {{ props.label }}
-    </AppBaseButton>
-  </div>
-</template>
+<!-- Any styling needed -->
 ```
 
 ---

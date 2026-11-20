@@ -1,3 +1,42 @@
+<template>
+  <div>
+    <p
+      v-if="total === 0"
+      data-test="news-empty"
+      class="text-s-16 text-text-subtle"
+    >
+      {{ t('homePage.news.empty') }}
+    </p>
+    <template v-else>
+      <div class="@container">
+        <div
+          class="grid grid-cols-1 gap-6 @min-[624px]:grid-cols-2 @min-[1136px]:grid-cols-3"
+        >
+          <AppNewsCard
+            v-for="n in pageItems"
+            :key="n.articleUrl"
+            :title="n.title ?? ''"
+            :source="sourceFromUrl(n.articleUrl)"
+            :date="dateLabel(n.timestamp)"
+            :description="newsDescription(n)"
+            :ticker="n.tickers?.[0]"
+            :token-logo="tokenLogo(n)"
+            :token-to="tokenTo(n)"
+            :href="n.articleUrl"
+          />
+        </div>
+      </div>
+      <AppPagination
+        v-if="pages > 1"
+        v-model="page"
+        :total-pages="pages"
+        variant="default"
+        class="mt-6"
+      />
+    </template>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -79,42 +118,3 @@ const tokenTo = (item: {
     : undefined
 }
 </script>
-
-<template>
-  <div>
-    <p
-      v-if="total === 0"
-      data-test="news-empty"
-      class="text-s-16 text-text-subtle"
-    >
-      {{ t('homePage.news.empty') }}
-    </p>
-    <template v-else>
-      <div class="@container">
-        <div
-          class="grid grid-cols-1 gap-6 @min-[624px]:grid-cols-2 @min-[1136px]:grid-cols-3"
-        >
-          <AppNewsCard
-            v-for="n in pageItems"
-            :key="n.articleUrl"
-            :title="n.title ?? ''"
-            :source="sourceFromUrl(n.articleUrl)"
-            :date="dateLabel(n.timestamp)"
-            :description="newsDescription(n)"
-            :ticker="n.tickers?.[0]"
-            :token-logo="tokenLogo(n)"
-            :token-to="tokenTo(n)"
-            :href="n.articleUrl"
-          />
-        </div>
-      </div>
-      <AppPagination
-        v-if="pages > 1"
-        v-model="page"
-        :total-pages="pages"
-        variant="default"
-        class="mt-6"
-      />
-    </template>
-  </div>
-</template>
