@@ -114,6 +114,17 @@ const fill = (start: number, chars: string): void => {
   publish()
 }
 
+/**
+ * What arrived in a box when the browser does not say (no `inputType`, or a
+ * keyboard that composes). A box that held a digit and now holds that digit
+ * and one more character was typed into, so the other character is the new
+ * one. Anything longer is an autofill, taken whole.
+ */
+const arrivedIn = (value: string, held: string): string =>
+  held && value.length === 2 && value.includes(held)
+    ? value.replace(held, '')
+    : value
+
 const onInput = (index: number, event: Event): void => {
   const target = event.target as HTMLInputElement
   if (target.value === '') {
@@ -128,7 +139,9 @@ const onInput = (index: number, event: Event): void => {
     event instanceof InputEvent && event.inputType === 'insertText'
       ? event.data
       : null
-  const entered = (typedChar ?? target.value).replace(/\D/g, '')
+  const entered = (
+    typedChar ?? arrivedIn(target.value, digits.value[index])
+  ).replace(/\D/g, '')
   if (entered.length >= props.length) {
     // A whole code at once is autofill: it starts at the first box wherever
     // the cursor happened to be.

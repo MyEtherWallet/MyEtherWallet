@@ -324,23 +324,26 @@ const disconnectWallet = () => {
 }
 
 const deleteWallet = async () => {
+  // The address and network on the card as the user asks. The steps below
+  // wait, and the wallet can be another one by then: ending a Privy login
+  // leaves the wallet watch-only, on another saved address when this one was
+  // never saved (a full list).
+  const address = walletAddress.value
+  const chain = selectedChain.value!
   // Deleting a Privy address also ends its login, as disconnecting it does.
   // Best effort: the address is deleted even if Privy cannot be reached.
-  if (
-    walletAddress.value &&
-    wallet.value?.getWalletType() === WalletType.PRIVY
-  ) {
+  if (address && wallet.value?.getWalletType() === WalletType.PRIVY) {
     await useAuthStore()
-      .endLoginFor(walletAddress.value)
+      .endLoginFor(address)
       .catch(() => undefined)
   }
   const recentAddressStore = useWatchOnlyStore()
-  recentAddressStore.removeWallet(
-    walletAddress.value as string,
-    selectedChain.value!,
-  )
+  recentAddressStore.removeWallet(address as string, chain)
   await usePerpsAuth().logout()
-  disconnectWallet()
+  // Only the wallet that was deleted is disconnected.
+  if (walletAddress.value?.toLowerCase() === address?.toLowerCase()) {
+    disconnectWallet()
+  }
   emit('close')
 }
 

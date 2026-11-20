@@ -28,6 +28,10 @@ export function useAccountSwitch() {
     if (chainsStore.selectedChain?.type === account.chainType) return
     const target = chainForType(account.chainType)
     if (!target) return
+    // The wallet store answers a change of network type by falling back to
+    // the address it remembers for that type. Without this that is whichever
+    // account was last active there, and it lands after the one picked here.
+    walletStore.rememberActiveAddress(account.chainType, account.address)
     globalStore.setSelectedNetwork(target.name)
     toastStore.addToastMessage({
       text: 'Network switched',

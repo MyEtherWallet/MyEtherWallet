@@ -166,6 +166,44 @@ describe('usePrivyOnboarding', () => {
     })
   })
 
+  describe('logging out for a different account, when the logout is slow', () => {
+    it('leaves alone a login the user has started since', async () => {
+      mocked('findExistingLogin').mockResolvedValue({
+        email: 'ada@example.com',
+      })
+      await flow.enter()
+      const logout = deferred()
+      mocked('useDifferentAccount').mockReturnValue(logout.promise)
+      const leaving = flow.useDifferentAccount()
+
+      // The modal is closed, and the user asks for an email code instead.
+      await flow.cancel()
+      await flow.chooseEmail('grace@example.com')
+      expect(flow.state.value).toBe('email.code')
+
+      logout.resolve(undefined)
+      await leaving
+
+      expect(flow.state.value).toBe('email.code')
+      expect(flow.email.value).toBe('grace@example.com')
+    })
+
+    it('still shows the entry screen when nothing else was started', async () => {
+      mocked('findExistingLogin').mockResolvedValue({
+        email: 'ada@example.com',
+      })
+      await flow.enter()
+      const logout = deferred()
+      mocked('useDifferentAccount').mockReturnValue(logout.promise)
+      const leaving = flow.useDifferentAccount()
+
+      logout.resolve(undefined)
+      await leaving
+
+      expect(flow.state.value).toBe('entry')
+    })
+  })
+
   describe('Google', () => {
     it('remembers where to return and leaves for Google', async () => {
       await flow.chooseGoogle('/stocks?tab=all')

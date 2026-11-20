@@ -82,9 +82,15 @@ describe('PrivyEmailCode', () => {
 
   it('shows the incorrect-code message, clears the boxes and refocuses the first', async () => {
     const w = mountCode()
+    // The screen puts the cursor in the first box as it opens. Let that
+    // happen first, so it cannot stand in for the recovery checked below.
+    await nextTick()
     await typeCode(w, '123456')
+    expect(document.activeElement).toBe(cells(w)[5].element)
 
-    await w.setProps({ status: 'error' })
+    // The code is checked, with the boxes locked, and then refused.
+    await w.setProps({ busy: true })
+    await w.setProps({ busy: false, status: 'error' })
     await nextTick()
 
     expect(w.text()).toContain('access_wallet.social.code.incorrect')

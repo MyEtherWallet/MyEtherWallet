@@ -230,8 +230,11 @@ export const usePrivyOnboarding = () => {
 
   const useDifferentAccount = (): Promise<void> =>
     exclusive(async () => {
+      const token = run
       await auth.useDifferentAccount().catch(() => undefined)
-      reset()
+      // The modal was closed meanwhile and something else may be under way:
+      // that is not this logout's to reset.
+      if (token === run) reset()
     })
 
   /**

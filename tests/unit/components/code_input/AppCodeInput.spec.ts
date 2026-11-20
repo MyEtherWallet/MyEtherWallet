@@ -43,6 +43,24 @@ const press = async (w: VueWrapper, index: number, char: string) => {
   await nextTick()
 }
 
+/**
+ * Press a key in a box in a browser that does not say what was typed: no
+ * `inputType` (a plain event), or a keyboard that composes. The new character
+ * lands before or after the digit the box holds.
+ */
+const pressUnreported = async (
+  w: VueWrapper,
+  index: number,
+  char: string,
+  where: 'after' | 'before' = 'after',
+) => {
+  const cell = cells(w)[index].element as HTMLInputElement
+  cell.value =
+    where === 'after' ? `${cell.value}${char}` : `${char}${cell.value}`
+  cell.dispatchEvent(new Event('input'))
+  await nextTick()
+}
+
 /** Type one character into a cell the way a keyboard does. */
 const type = async (w: VueWrapper, index: number, char: string) => {
   const cell = cells(w)[index]
@@ -119,6 +137,41 @@ describe('AppCodeInput', () => {
     await press(w, 0, '1')
 
     expect(values(w).slice(0, 3)).toEqual(['1', '2', '3'])
+  })
+
+  describe('when the browser does not say what was typed', () => {
+    it('still replaces the digit of a filled box, and leaves the next box alone', async () => {
+      const w = mountInput({ modelValue: '123' })
+
+      await pressUnreported(w, 0, '9')
+
+      expect(values(w).slice(0, 3)).toEqual(['9', '2', '3'])
+      expect(lastEmitted(w, 'update:modelValue')).toBe('923')
+    })
+
+    it('does so wherever the cursor was in the box', async () => {
+      const w = mountInput({ modelValue: '123' })
+
+      await pressUnreported(w, 0, '9', 'before')
+
+      expect(values(w).slice(0, 3)).toEqual(['9', '2', '3'])
+    })
+
+    it('keeps a box to one digit when its own digit is typed again', async () => {
+      const w = mountInput({ modelValue: '123' })
+
+      await pressUnreported(w, 0, '1')
+
+      expect(values(w).slice(0, 3)).toEqual(['1', '2', '3'])
+    })
+
+    it('still spreads a longer autofill over the boxes that follow', async () => {
+      const w = mountInput({ modelValue: '1' })
+
+      await type(w, 0, '456')
+
+      expect(values(w).slice(0, 4)).toEqual(['4', '5', '6', ''])
+    })
   })
 
   it('empties a box when its digit is deleted', async () => {

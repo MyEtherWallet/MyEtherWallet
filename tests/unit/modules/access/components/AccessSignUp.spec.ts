@@ -9,7 +9,17 @@ vi.mock('@/modules/access/common/walletConfigs', () => ({
   },
 }))
 const setCurrentView = vi.fn()
-const access = reactive({ isBitcoinChain: false, setCurrentView })
+// The access store's own rules, over a network the test picks.
+const access = reactive({
+  selectedChain: { type: 'EVM' } as { type: string } | null,
+  get isEvmChain(): boolean {
+    return this.selectedChain?.type === 'EVM'
+  },
+  get isBitcoinChain(): boolean {
+    return this.selectedChain?.type === 'BITCOIN'
+  },
+  setCurrentView,
+})
 vi.mock('@/stores/accessStore', () => ({
   useAccessStore: () => access,
 }))
@@ -48,7 +58,7 @@ const mountSignUp = (props: Record<string, unknown> = {}) => {
   return wrapper
 }
 beforeEach(() => {
-  access.isBitcoinChain = false
+  access.selectedChain = { type: 'EVM' }
 })
 afterEach(() => wrapper?.unmount())
 
@@ -106,8 +116,31 @@ describe('AccessSignUp', () => {
     expect(w.find('[data-testid="wallet-row"]').exists()).toBe(true)
   })
 
+  // The embedded wallet is an Ethereum one.
+  it.each(['SOLANA', 'KADENA', 'POLKADOT'])(
+    'keeps only the wallet row when %s is selected',
+    type => {
+      access.selectedChain = { type }
+
+      const w = mountSignUp()
+
+      expect(w.find('[data-testid="google"]').exists()).toBe(false)
+      expect(w.find('input[type="email"]').exists()).toBe(false)
+      expect(w.find('[data-testid="wallet-row"]').exists()).toBe(true)
+    },
+  )
+
+  it('offers Google and email while no network has been selected yet', () => {
+    access.selectedChain = null
+
+    const w = mountSignUp()
+
+    expect(w.find('[data-testid="google"]').exists()).toBe(true)
+    expect(w.find('input[type="email"]').exists()).toBe(true)
+  })
+
   it('keeps only the wallet row when Bitcoin is selected', () => {
-    access.isBitcoinChain = true
+    access.selectedChain = { type: 'BITCOIN' }
 
     const w = mountSignUp()
 

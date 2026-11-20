@@ -231,13 +231,23 @@ export const useAuthStore = defineStore('authStore', () => {
    * connecting its wallet, the address being deleted) must not have that
    * switch land on top of it. A switch that fails is not this caller's
    * failure, and the outcome of the logout is what is reported.
+   *
+   * "Its wallet" is the one connected as the logout begins. A wallet that
+   * has taken its place by the time the logout is over, another login's
+   * Privy wallet included, is not this login's to take away.
    */
   const dropLogin = async (): Promise<void> => {
+    const walletStore = useWalletStore()
+    // The store holds its wallet behind a reactive proxy: keep the wallet
+    // itself, to compare with.
+    const ownWallet = toRaw(walletStore.wallet)
     try {
       await endLogin()
     } finally {
-      const walletStore = useWalletStore()
-      if (walletStore.wallet instanceof PrivyWallet) {
+      const stillConnected =
+        ownWallet instanceof PrivyWallet &&
+        toRaw(walletStore.wallet) === ownWallet
+      if (stillConnected) {
         await walletStore.setWatchOnlyIfExist().catch(() => undefined)
       }
     }

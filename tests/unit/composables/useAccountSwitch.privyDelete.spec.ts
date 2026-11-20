@@ -193,4 +193,20 @@ describe('deleting the connected Privy account', () => {
     expect(auth.status).toBe('anonymous')
     if (withOther) expect(savedAddresses(saved)).toContain(OTHER)
   })
+
+  it('keeps its address removed when it is deleted right after it was disconnected', async () => {
+    const { wallets, saved } = await connectPrivyWallet()
+    const account = (saved.allAccounts as Saved[]).find(
+      entry => entry.address.toLowerCase() === ADDRESS,
+    )
+
+    // Disconnecting falls back to the same address, watch-only, and that
+    // takes a moment. The address is deleted before it has landed.
+    wallets.disconnectWallet()
+    await useAccountSwitch().deleteAccount(account as never)
+    await wait(200)
+
+    expect(savedAddresses(saved)).not.toContain(ADDRESS)
+    expect(wallets.walletAddress).toBeNull()
+  })
 })

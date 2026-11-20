@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 const walletStore = {
   activeId: 'EVM:0xactive',
   setWallet: vi.fn(),
+  rememberActiveAddress: vi.fn(),
   disconnectWallet: vi.fn(),
   walletAddress: '0xactive',
   isWatchOnly: false,
@@ -80,6 +81,26 @@ describe('useAccountSwitch', () => {
     await useAccountSwitch().switchTo(acc({ kind: 'signing' }))
     expect(walletStore.setWallet).toHaveBeenCalledTimes(1)
     expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
+  })
+
+  it('makes an account on another network type the remembered one for that type, before the network follows', async () => {
+    await useAccountSwitch().switchTo(
+      acc({ id: 'BITCOIN:bc1q', address: 'bc1q', chainType: 'BITCOIN' as any }),
+    )
+
+    expect(walletStore.rememberActiveAddress).toHaveBeenCalledWith('BITCOIN', 'bc1q')
+    // The network change is what triggers the wallet store's fallback.
+    expect(
+      walletStore.rememberActiveAddress.mock.invocationCallOrder[0],
+    ).toBeLessThan(globalStore.setSelectedNetwork.mock.invocationCallOrder[0])
+    expect(globalStore.setSelectedNetwork).toHaveBeenCalledWith('BTC')
+  })
+
+  it('leaves the remembered address alone for an account on the network type already selected', async () => {
+    await useAccountSwitch().switchTo(acc())
+
+    expect(walletStore.rememberActiveAddress).not.toHaveBeenCalled()
+    expect(globalStore.setSelectedNetwork).not.toHaveBeenCalled()
   })
 
   it('deleteAccount removes and promotes the next entry as a read-only view when active', async () => {

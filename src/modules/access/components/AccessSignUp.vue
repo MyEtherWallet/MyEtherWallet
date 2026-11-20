@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col gap-6">
     <section class="flex flex-col gap-4 rounded-16 bg-background-default p-5">
-      <!-- The embedded wallet is Ethereum-only: with Bitcoin selected only
-           the wallet row is offered. -->
-      <template v-if="!isBitcoinChain">
+      <!-- The embedded wallet is Ethereum-only: on any other kind of network
+           only the wallet row is offered. -->
+      <template v-if="offersSocialLogin">
         <AppBaseButton
           data-testid="google"
           class="w-full"
@@ -79,7 +79,7 @@
         </i18n-t>
       </template>
       <SignUpWalletRow />
-      <PrivyProtectedBy v-if="!isBitcoinChain" />
+      <PrivyProtectedBy v-if="offersSocialLogin" />
     </section>
     <AccessDownloadWallets />
   </div>
@@ -116,7 +116,12 @@ defineProps<{
 const emit = defineEmits<{ 'sign-up': [payload: SignUpPayload] }>()
 const { t } = useI18n()
 const accessStore = useAccessStore()
-const isBitcoinChain = computed(() => accessStore.isBitcoinChain)
+// Google and email, on an EVM network: the rule the login flow itself goes
+// by (usePrivyOnboarding). Before the dialog has picked a network they are
+// offered as well, as they were; the login then connects on the app's own.
+const offersSocialLogin = computed(
+  () => !accessStore.selectedChain || accessStore.isEvmChain,
+)
 
 const email = ref('')
 // Shape check only; Privy validates the address for real.

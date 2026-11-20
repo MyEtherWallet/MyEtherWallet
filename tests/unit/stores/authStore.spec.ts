@@ -560,6 +560,31 @@ describe('authStore', () => {
         expect(fake.privy.auth.email.sendCode).toHaveBeenCalledTimes(1)
       })
 
+      it('leaves alone a wallet that took its place while the logout was on its way', async () => {
+        // Another login connected meanwhile: that wallet is not this login's.
+        const store = await connectedStore()
+        let finishLogout: () => void = () => undefined
+        fake.privy.auth.logout.mockImplementation(
+          () => new Promise<void>(resolve => (finishLogout = resolve)),
+        )
+
+        const dropping = store.useDifferentAccount()
+        await vi.waitFor(() =>
+          expect(fake.privy.auth.logout).toHaveBeenCalled(),
+        )
+        fake.walletStore.wallet = new PrivyWallet({
+          provider: { request: vi.fn() },
+          address: ADDRESS,
+          chainId: '1',
+          logout: async () => undefined,
+          loginLost: async () => false,
+        })
+        finishLogout()
+        await dropping
+
+        expect(fake.walletStore.setWatchOnlyIfExist).not.toHaveBeenCalled()
+      })
+
       it('does not fail the next login when the switch to watch-only does', async () => {
         const store = await connectedStore()
         fake.walletStore.setWatchOnlyIfExist.mockRejectedValue(
