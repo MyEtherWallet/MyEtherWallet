@@ -54,6 +54,17 @@ export function isLedgerInterfaceBusyError(e: unknown): boolean {
   )
 }
 
+/**
+ * The WebUSB/BLE device picker stayed open past the listen timeout without a
+ * Ledger being chosen (unplugged, locked, or not listed). @ledgerhq raises a
+ * `TransportError` with id `ListenTimeout` (APP-MEW-WEB-19N).
+ */
+export function isLedgerListenTimeoutError(e: unknown): boolean {
+  const id = (e as { id?: string } | null)?.id
+  const msg = e instanceof Error ? e.message : String(e ?? '')
+  return id === 'ListenTimeout' || /no ledger device found/i.test(msg)
+}
+
 function isUserCancelError(e: unknown): boolean {
   const msg = e instanceof Error ? e.message : String(e ?? '')
   return (
