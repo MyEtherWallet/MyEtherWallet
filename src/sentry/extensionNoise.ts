@@ -177,6 +177,13 @@ export function isTrezorHandshakeError(err: unknown): boolean {
 // bundles are served from `app.myetherwallet.com/assets/…`.
 const APP_FRAME_URL =
   /^(?:https?:\/\/(?:(?:[a-z0-9-]+\.)*myetherwallet\.com|localhost|127\.0\.0\.1)(?::\d+)?(?:\/|$)|\/assets\/)/i
+// ...and it must point at a script file. A frame whose URL is the page itself
+// (`https://app.myetherwallet.com/`, `/access`) is an inline script in the HTML
+// document, which is where Chrome iOS attributes the scripts it injects
+// (APP-MEW-WEB-1SP / MEW-2692). Our code always runs from a script file
+// (`/assets/*.js` in prod, `/src/*.ts|vue` in dev). The extension is matched
+// before any `?`/`#`, so a route query like `?token=a.js` doesn't count.
+const SCRIPT_FILE = /^[^?#]*\.(?:[cm]?js|tsx?|vue)(?:[?#]|$)/i
 
 interface SentryFrameLike {
   filename?: unknown
@@ -199,9 +206,10 @@ interface SentryEventLike {
  * reported as if they were ours. Since iOS 16.4 / WebKit masks the source URL
  * of such scripts (`webkit-masked-url://` or an empty URL), the event carries
  * only frames Sentry cannot attribute to a file (rendered as `undefined:LL:CC`).
+ * Chrome iOS instead attributes its injected scripts to the page URL itself.
  *
- * A genuine in-app recursion always leaves at least one frame whose URL is an
- * app origin, so the presence of any app frame keeps the event. This is
+ * A genuine in-app recursion always leaves at least one frame in one of our
+ * script files, so the presence of any app frame keeps the event. This is
  * event-based (not `originalException`-based) because "no app frame" is only
  * reliable on the parsed event frames — the raw exception often has no stack.
  */
@@ -225,7 +233,11 @@ export function isForeignStackOverflow(event: unknown): boolean {
     if (!Array.isArray(frames)) return false
     return frames.some(f => {
       const filename = (f as SentryFrameLike)?.filename
-      return typeof filename === 'string' && APP_FRAME_URL.test(filename)
+      return (
+        typeof filename === 'string' &&
+        APP_FRAME_URL.test(filename) &&
+        SCRIPT_FILE.test(filename)
+      )
     })
   })
   return !hasAppFrame
