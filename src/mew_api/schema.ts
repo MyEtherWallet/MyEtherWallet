@@ -1693,6 +1693,7 @@ export interface components {
     }[]
     GetWebSwapOndoAssetsResponse: {
       stockAlias?: string
+      isPortfolio: null | boolean
       iconPngUrl?: string
       iconSvgUrl?: string
       symbol: string
@@ -1730,6 +1731,7 @@ export interface components {
       name: string
       symbol: string
       price: number
+      isPortfolio: null | boolean
       addresses: {
         chainName: null | string
         tokenLogoUrl: null | string
@@ -3929,6 +3931,8 @@ export interface operations {
   GetWebWatchlistAssets: {
     parameters: {
       query?: {
+        /** @description Comma separated asset types to include, matching the user's step 1 selection. Omit to include every type. */
+        types?: components['parameters']['WatchlistAssetTypes']
         /** @description Comma separated category ids from /v1/web/watchlist/categories. Assets in any of them are returned. Omit to return every asset, which is what the wizard shows before anything is picked. */
         categories?: components['parameters']['WatchlistCategories']
         search?: components['parameters']['Search']
