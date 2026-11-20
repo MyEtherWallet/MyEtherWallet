@@ -18,7 +18,7 @@ importers:
   .:
     dependencies:
       '@1inch/fusion-sdk':
-        specifier: ^2.4.5
+        specifier: '2'
         version: 2.4.15(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@1inch/limit-order-sdk':
         specifier: ^5.2.3

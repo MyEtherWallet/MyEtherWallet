@@ -27,7 +27,7 @@
     "update-perps-schema": "npx openapi-typescript https://registry.scalar.com/@ondoperps/apis/ondo-perps-rest-api@latest?format=json -o src/modules/perps/api/schema.ts"
   },
   "dependencies": {
-    "@1inch/fusion-sdk": "^2.4.5",
+    "@1inch/fusion-sdk": "2",
     "@1inch/limit-order-sdk": "^5.2.3",
     "@amplitude/analytics-browser": "^2.36.2",
     "@amplitude/plugin-page-url-enrichment-browser": "^0.7.13",

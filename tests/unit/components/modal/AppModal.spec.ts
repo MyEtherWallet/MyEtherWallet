@@ -91,6 +91,21 @@ describe('AppModal', () => {
       expect(dialog()!.getAttribute('aria-label')).toBe('Title')
     })
 
+    // MEW-2669: a long title ("Connect with Recovery Phrase") was cut off on
+    // mobile and slid under the 40px back button.
+    it('wraps a long title and keeps it clear of the 40px back/close buttons', async () => {
+      mountModal({ showBackButton: true })
+      await nextTick()
+      const title = dialog()!.querySelector('[data-testid="cg-title"]')!
+      expect(title.classList).not.toContain('truncate')
+      // Buttons sit at the header padding and are 40px wide (size-10): the
+      // title needs at least that much side padding, plus a gap.
+      expect(backBtn()!.classList).toContain('size-10')
+      expect(
+        dialog()!.querySelector('[data-testid="cg-root"]')!.classList,
+      ).toContain('px-12')
+    })
+
     it('hides the header when there is no title and no #header slot', async () => {
       mountModal({ title: undefined, ariaLabel: 'x' })
       await nextTick()

@@ -53,14 +53,16 @@
             :class="{ 'justify-center': centeredHeader }"
           >
             <slot name="header">
-              <!-- px-8 keeps the title clear of the 32px back/close buttons. -->
+              <!-- px-12 keeps the title 8px clear of the 40px back/close
+                   buttons; a long title wraps instead of being cut off. -->
               <AppContentGroup
                 :id="titleId"
                 :title="title ?? ''"
                 :description="subtitle"
                 size="l"
                 align="center"
-                class="w-full px-8"
+                wrap-title
+                class="w-full px-12"
               />
             </slot>
           </header>

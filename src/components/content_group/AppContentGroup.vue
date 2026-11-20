@@ -24,8 +24,8 @@
       <div class="flex items-center gap-1 min-w-0" :class="rowJustifyClass">
         <span
           data-testid="cg-title"
-          class="truncate min-w-0"
-          :class="titleClass"
+          class="min-w-0"
+          :class="[titleClass, { truncate: !wrapTitle }]"
         >
           <slot name="title">{{ title }}</slot>
         </span>
@@ -106,6 +106,8 @@ const props = withDefaults(
     loading?: boolean
     /** Force a single-line, ellipsised description (defaults to wrapping). */
     noWrap?: boolean
+    /** Let the title wrap instead of ellipsising (defaults to single-line). */
+    wrapTitle?: boolean
   }>(),
   {
     size: 'm',
@@ -114,6 +116,7 @@ const props = withDefaults(
     inverted: false,
     loading: false,
     noWrap: false,
+    wrapTitle: false,
   },
 )
 
@@ -125,8 +128,8 @@ const SLOT_SIZE = 'xs' as const
 const hasDescription = computed(() => !!props.description)
 
 // Text alignment cascades to the (possibly wrapping) text. The rows themselves
-// stay full-width (default stretch) so the title can actually clip —
-// items-start/end would shrink them to content width.
+// stay full-width (default stretch) so the title can actually clip (or wrap,
+// with wrapTitle) — items-start/end would shrink them to content width.
 const ALIGN_CLASS: Record<ContentGroupAlign, string> = {
   left: 'text-left',
   center: 'text-center',

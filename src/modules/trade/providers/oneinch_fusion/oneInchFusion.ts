@@ -53,6 +53,7 @@ import {
   REPORTABLE_CLIENT_STATUSES,
 } from '@/modules/trade/common/expectedTradeError'
 import { getAPIPath } from '@/utils/constructAPIPath'
+import configs from '@/configs'
 import i18n from '@/i18n'
 export type HardcodedTokenInfo = {
   address: string
@@ -189,9 +190,10 @@ class OneInchFusion {
     this.web3Provider = new Web3ProviderConnector(wallet, this.publicClient)
     this.chain = chainConfig.chain
     this.httpConnector = new IsolatedAxiosConnector()
+
     this.sdk = new FusionSDK({
       network: chainId === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE,
-      url: 'https://fusion.1inch.io',
+      url: `${configs.MEW_WALLET_API}/v5/swap/oneinch/proxy/fusion`,
       blockchainProvider: this.web3Provider,
       httpProvider: this.httpConnector,
     })
@@ -225,8 +227,8 @@ class OneInchFusion {
       const raw = this.httpConnector.lastQuoteResponse
       const priceImpact =
         raw &&
-        raw.marketAmount === quote.marketReturn.toString() &&
-        typeof raw.priceImpactPercent === 'number'
+          raw.marketAmount === quote.marketReturn.toString() &&
+          typeof raw.priceImpactPercent === 'number'
           ? raw.priceImpactPercent
           : undefined
       return {
@@ -259,8 +261,8 @@ class OneInchFusion {
       // outage (isPairUnavailableError builds on this flag).
       const error = new Error(
         response ||
-          rawMessage ||
-          i18n.global.t('trade.error.failed-fetch-quote-1inch'),
+        rawMessage ||
+        i18n.global.t('trade.error.failed-fetch-quote-1inch'),
       ) as Error & {
         expectedClientError?: boolean
         transientNetworkError?: boolean

@@ -165,13 +165,16 @@
                 Disabled in restricted regions: there is no order to place,
                 so the action is dead rather than redirected. Users reach
                 the explanatory card via the Perps action-bar button.
+                Dead is neutral grey (DISABLED_NEUTRAL): the button's own
+                disabled state only dims the green and red, which still
+                reads as a live Long/Short.
               -->
               <template v-if="rowSize === 'l' && !getPosition(contract.market)">
                 <AppBaseButton
                   type="secondary"
                   size="medium"
                   tone="success"
-                  class="w-24"
+                  :class="['w-24', DISABLED_NEUTRAL]"
                   :surface="surface"
                   :disabled="isPerpsRestricted"
                   @click="
@@ -188,7 +191,7 @@
                   type="secondary"
                   size="medium"
                   tone="danger"
-                  class="w-24"
+                  :class="['w-24', DISABLED_NEUTRAL]"
                   :surface="surface"
                   :disabled="isPerpsRestricted"
                   @click="
@@ -214,7 +217,7 @@
                     v-if="rowSize === 'l'"
                     type="secondary"
                     size="medium"
-                    class="min-w-24"
+                    :class="['min-w-24', DISABLED_NEUTRAL]"
                     :surface="surface"
                     :disabled="isWatchOnly"
                     :tone="
@@ -556,6 +559,13 @@ function getPosition(market: string) {
 
 const MENU_ITEM =
   'flex w-full items-center rounded-12 p-2 text-left hoverBGWhite disabled:pointer-events-none disabled:opacity-40'
+
+// A disabled row action (Long, Short, Manage) drops its tone for the
+// design-library disabled colours at full opacity. The `disabled:` variants
+// outrank AppBaseButton's own classes, and pointer-events-none keeps its hover
+// and pressed feedback off.
+const DISABLED_NEUTRAL =
+  'disabled:pointer-events-none disabled:bg-background-disabled! disabled:text-text-disabled! disabled:opacity-100!'
 
 const searchQuery = ref('')
 // Persisted + shared with the home watchlist via the store. Exposed as a Set so
