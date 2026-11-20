@@ -1,0 +1,8 @@
+{
+  "access": {
+    "no_supported_derivation_paths": "No supported derivation paths found for this wallet"
+  },
+  "select_address_list": {
+    "view_in_explorer": "view address in explorer"
+  }
+}
