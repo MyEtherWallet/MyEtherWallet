@@ -350,4 +350,81 @@ describe('TheSettingsPopup', () => {
       expect(row(w, 'settings.recovery_phrase')).toBeUndefined()
     })
   })
+
+  // The popup is fixed to the screen, so the page cannot scroll it: a panel
+  // taller than the room under the popup has to scroll by itself, or its last
+  // controls (removing a passkey, the button to the phrase) cannot be reached.
+  describe('a Privy panel on a short screen', () => {
+    const SCREEN_HEIGHT = window.innerHeight
+    afterEach(() => {
+      window.innerHeight = SCREEN_HEIGHT
+    })
+
+    // jsdom lays nothing out, so the popup sits at the top of the screen:
+    // 8px under its button, with 16px kept clear at the bottom.
+    const ROOM_ON_500 = 500 - 8 - 16
+    const panels = [
+      ['Login methods', 'settings.login_methods', 'settings-login-methods'],
+      [
+        '"Before you continue"',
+        'settings.recovery_phrase',
+        'settings-phrase-ack',
+      ],
+    ] as const
+
+    /** Open `rowLabel`'s panel, laid out `contentHeight` tall, on a 500px screen. */
+    const openPanel = async (
+      rowLabel: string,
+      testId: string,
+      contentHeight: number,
+    ) => {
+      window.innerHeight = 500
+      connectPrivy()
+      const w = open()
+      const panel = w.find(`[data-test="${testId}"]`)
+      Object.defineProperty(panel.element, 'scrollHeight', {
+        configurable: true,
+        value: contentHeight,
+      })
+      await row(w, rowLabel)!.trigger('click')
+      await flushPromises()
+      const track = panel.element.parentElement as HTMLElement
+      return { w, panel: panel.element as HTMLElement, track }
+    }
+
+    it.each(panels)(
+      '%s keeps its own height when it fits',
+      async (_name, rowLabel, testId) => {
+        const { track } = await openPanel(rowLabel, testId, 300)
+
+        expect(track.style.height).toBe('300px')
+      },
+    )
+
+    it.each(panels)(
+      '%s stops at the bottom of the screen and scrolls when it does not fit',
+      async (_name, rowLabel, testId) => {
+        const { panel, track } = await openPanel(rowLabel, testId, 700)
+
+        expect(track.style.height).toBe(`${ROOM_ON_500}px`)
+        expect(panel.style.maxHeight).toBe(`${ROOM_ON_500}px`)
+        expect(panel.classList).toContain('overflow-y-auto')
+      },
+    )
+
+    it('follows the screen when it gets shorter', async () => {
+      const { track } = await openPanel(
+        'settings.recovery_phrase',
+        'settings-phrase-ack',
+        400,
+      )
+      expect(track.style.height).toBe('400px')
+
+      window.innerHeight = 300
+      window.dispatchEvent(new Event('resize'))
+      await flushPromises()
+
+      expect(track.style.height).toBe(`${300 - 8 - 16}px`)
+    })
+  })
 })

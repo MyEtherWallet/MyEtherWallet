@@ -771,21 +771,33 @@ const MAX_REQUOTES = 3
  */
 const openReview = async (): Promise<'done' | 'amount-moved'> => {
   const submitted = reviewedForm()
-  const isNativeMax = isMaxSelected.value && isNativeTokenSelected.value
+  // Typing an amount gives MAX up, so this is asked again after every wait:
+  // a form that changed with MAX still on was moved by a fee, and any other
+  // change is the user editing, who submits again when done.
+  const isNativeMaxNow = (): boolean =>
+    isMaxSelected.value && isNativeTokenSelected.value
+  const isNativeMax = isNativeMaxNow()
   const latestGasFees = await getGasFeeQuotes()
-  if (!wallet.value || !latestGasFees || gasFeeError.value) return 'done'
+  if (!wallet.value || !latestGasFees) return 'done'
   if (isNativeMax) {
+    // Not put back over an amount typed while the quote was on its way.
+    if (!isNativeMaxNow()) return 'done'
     // Have this quote's fee move the amount now, not under the open review.
+    // This comes before the fee error is read: a fee that outgrew the amount
+    // reads as "not enough balance" until MAX has taken it off.
     await nextTick()
     await applyMaxAmount()
-    if (reviewedForm() !== submitted) return 'amount-moved'
+    if (reviewedForm() !== submitted) {
+      return isNativeMaxNow() ? 'amount-moved' : 'done'
+    }
   }
+  // Still set for an amount MAX did not move, or with no MAX at all.
+  if (gasFeeError.value) return 'done'
   const built = await buildSignedTx(latestGasFees.quoteId)
   if (!built) return 'done'
   if (reviewedForm() !== submitted) {
     signedTx.value = ''
-    // Any other change is the user editing, who submits again when done.
-    return isNativeMax ? 'amount-moved' : 'done'
+    return isNativeMax && isNativeMaxNow() ? 'amount-moved' : 'done'
   }
   openTxModal.value = true
   return 'done'

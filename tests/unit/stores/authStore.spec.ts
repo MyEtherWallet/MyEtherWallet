@@ -150,6 +150,7 @@ describe('authStore', () => {
       request: vi.fn(),
     })
     fake.walletStore.setWallet.mockResolvedValue(undefined)
+    fake.walletStore.setWatchOnlyIfExist.mockResolvedValue(undefined)
     fake.walletStore.wallet = undefined
     fake.chain.selectedChain = { chainID: '1', name: 'ETHEREUM', type: 'EVM' }
   })
@@ -422,18 +423,49 @@ describe('authStore', () => {
         )
       })
 
-      it('still connects when the wallet does not answer the clearing', async () => {
+      // A check that may still stand is one the wallet would sign on: no
+      // wallet is handed out unless the clearing is known to have happened.
+      it('does not connect when the wallet does not answer the clearing', async () => {
         const store = await loggedInStore(protectedUser)
         fake.privy.user.get.mockResolvedValue({ user: protectedUser })
         fake.privy.mfa.clearMfa.mockReturnValue(new Promise(() => undefined))
         vi.useFakeTimers()
         try {
           const connecting = store.provisionWallet()
+          const refused = expect(connecting).rejects.toThrow()
           await vi.advanceTimersByTimeAsync(10_000)
-          await connecting
+          await refused
         } finally {
           vi.useRealTimers()
         }
+
+        expect(
+          fake.privy.embeddedWallet.getEthereumProvider,
+        ).not.toHaveBeenCalled()
+        expect(fake.walletStore.setWallet).not.toHaveBeenCalled()
+        expect(store.error).toBe('passkey_check_not_cleared')
+      })
+
+      it('does not connect when the clearing fails', async () => {
+        const store = await loggedInStore(protectedUser)
+        fake.privy.user.get.mockResolvedValue({ user: protectedUser })
+        fake.privy.mfa.clearMfa.mockRejectedValue(new Error('not loaded'))
+
+        await expect(store.provisionWallet()).rejects.toThrow()
+
+        expect(
+          fake.privy.embeddedWallet.getEthereumProvider,
+        ).not.toHaveBeenCalled()
+        expect(fake.walletStore.setWallet).not.toHaveBeenCalled()
+      })
+
+      it('connects on a later try, once the clearing is confirmed', async () => {
+        const store = await loggedInStore(protectedUser)
+        fake.privy.user.get.mockResolvedValue({ user: protectedUser })
+        fake.privy.mfa.clearMfa.mockRejectedValueOnce(new Error('not loaded'))
+        await expect(store.provisionWallet()).rejects.toThrow()
+
+        await store.provisionWallet()
 
         expect(fake.walletStore.setWallet).toHaveBeenCalledTimes(1)
       })
@@ -496,6 +528,48 @@ describe('authStore', () => {
       await expect(store.useDifferentAccount()).rejects.toThrow('offline')
 
       expect(fake.walletStore.setWatchOnlyIfExist).toHaveBeenCalledTimes(1)
+    })
+
+    describe('with its wallet as the connected one', () => {
+      const connectedStore = async () => {
+        const store = await loggedInStore(userWithWallet)
+        await store.provisionWallet()
+        holdLogin(userWithWallet)
+        fake.walletStore.wallet = fake.walletStore.setWallet.mock.calls[0][0]
+        return store
+      }
+
+      it('has the wallet watch-only before the next login takes its first step', async () => {
+        // A switch still under way when the next login connects its wallet
+        // would land on top of that wallet.
+        const store = await connectedStore()
+        let finishSwitch: () => void = () => undefined
+        fake.walletStore.setWatchOnlyIfExist.mockImplementation(
+          () => new Promise<void>(resolve => (finishSwitch = resolve)),
+        )
+
+        const sending = store.sendEmailCode('grace@example.com')
+        await vi.waitFor(() =>
+          expect(fake.walletStore.setWatchOnlyIfExist).toHaveBeenCalled(),
+        )
+        await new Promise(resolve => setTimeout(resolve, 0))
+        expect(fake.privy.auth.email.sendCode).not.toHaveBeenCalled()
+
+        finishSwitch()
+        await sending
+        expect(fake.privy.auth.email.sendCode).toHaveBeenCalledTimes(1)
+      })
+
+      it('does not fail the next login when the switch to watch-only does', async () => {
+        const store = await connectedStore()
+        fake.walletStore.setWatchOnlyIfExist.mockRejectedValue(
+          new Error('could not restore'),
+        )
+
+        await store.sendEmailCode('grace@example.com')
+
+        expect(fake.privy.auth.email.sendCode).toHaveBeenCalledTimes(1)
+      })
     })
 
     describe('for a user whose wallet has a passkey check', () => {
@@ -863,6 +937,70 @@ describe('authStore', () => {
       await store.continueWithExistingLogin()
 
       expect(store.loginMethod).toBe('google')
+    })
+
+    describe('while that login is being logged out', () => {
+      // The tokens stay in the tab for a moment after the logout began.
+      const logOutSlowly = async () => {
+        const store = await loggedInStore(userWithWallet)
+        await store.provisionWallet()
+        holdLogin(userWithWallet)
+        const connected = fake.walletStore.setWallet.mock
+          .calls[0][0] as PrivyWallet
+        let finishLogout: () => void = () => undefined
+        fake.privy.auth.logout.mockImplementation(
+          () => new Promise<void>(resolve => (finishLogout = resolve)),
+        )
+        const disconnecting = connected.disconnect()
+        await vi.waitFor(() =>
+          expect(fake.privy.auth.logout).toHaveBeenCalled(),
+        )
+        return {
+          store,
+          finish: async () => {
+            finishLogout()
+            await disconnecting
+          },
+        }
+      }
+
+      it('is not offered', async () => {
+        const { store, finish } = await logOutSlowly()
+
+        expect(await store.findExistingLogin()).toBeNull()
+
+        await finish()
+      })
+
+      it('is not adopted', async () => {
+        const { store, finish } = await logOutSlowly()
+
+        await expect(store.continueWithExistingLogin()).rejects.toThrow()
+        expect(store.status).toBe('anonymous')
+        expect(store.user).toBeNull()
+
+        await finish()
+      })
+    })
+
+    it('is not adopted when it is logged out while it is being looked up', async () => {
+      holdLogin(userWithWallet)
+      let answer: (value: unknown) => void = () => undefined
+      fake.privy.user.get.mockImplementation(
+        () => new Promise(resolve => (answer = resolve)),
+      )
+      const store = useAuthStore()
+
+      const refused = expect(
+        store.continueWithExistingLogin(),
+      ).rejects.toThrow()
+      await vi.waitFor(() => expect(fake.privy.user.get).toHaveBeenCalled())
+      await store.useDifferentAccount()
+      answer({ user: userWithWallet })
+      await refused
+
+      expect(store.status).toBe('anonymous')
+      expect(store.user).toBeNull()
     })
 
     it('logs out when the user picks a different account', async () => {

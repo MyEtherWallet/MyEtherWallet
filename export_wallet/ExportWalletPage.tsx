@@ -157,7 +157,10 @@ export const ExportWalletPage = () => {
     setStep('showing')
     void (async () => {
       const shown = await showExport()
-      await sdk.current.logout().catch(() => undefined)
+      // The next screen says the visitor is logged out. If the SDK's logout
+      // fails, the login is taken out of this browser here, while a tab that
+      // closes meanwhile is still covered by the handler below.
+      await sdk.current.logout().catch(() => forgetSdkSession())
       showing.current = false
       setStep(shown ? 'done' : 'error')
     })()

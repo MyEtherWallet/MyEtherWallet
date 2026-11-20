@@ -147,7 +147,12 @@ export const useWalletStore = defineStore('walletStore', () => {
     }
   }
 
-  const setWatchOnlyIfExist = () => {
+  /**
+   * Fall back to a saved address, watch-only, or to no wallet when none is
+   * saved. Resolves once that wallet is the connected one, for a caller that
+   * has to wait for it; most do not.
+   */
+  const setWatchOnlyIfExist = async (): Promise<void> => {
     const { watchOnlyAddresses } = useWatchOnlyStore()
     const type = selectedChain.value?.type || 'EVM'
     const currentRecentAddressList = watchOnlyAddresses[type]
@@ -177,7 +182,7 @@ export const useWalletStore = defineStore('walletStore', () => {
       // Don't null the wallet first: setWallet replaces it once ready. Nulling
       // here briefly flips isWalletConnected to false, which unmounts the header
       // address menu (v-if) and tears the popup down mid-switch.
-      setWallet(
+      await setWallet(
         newWallet,
         entry.walletName,
         entry.walletType as WalletConfigType,

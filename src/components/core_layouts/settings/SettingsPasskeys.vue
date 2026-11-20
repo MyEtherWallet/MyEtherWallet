@@ -149,8 +149,21 @@ const add = async (): Promise<void> => {
   adding.value = false
 }
 
+/**
+ * Whether removing this passkey turns the check off: it is the only one in
+ * use as the check. A passkey that is linked but not active protects nothing,
+ * so it neither counts as another one nor needs the question itself.
+ */
+const isOnlyActive = (credentialId: string): boolean => {
+  const active = passkeys.value.filter(passkey => passkey.active)
+  return (
+    active.length === 1 &&
+    active.some(passkey => passkey.credentialId === credentialId)
+  )
+}
+
 const remove = (credentialId: string): void => {
-  if (passkeys.value.length === 1) {
+  if (isOnlyActive(credentialId)) {
     confirmingLast.value = credentialId
     return
   }

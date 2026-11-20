@@ -267,8 +267,9 @@
               ref="loginMethodsPanelRef"
               data-test="settings-login-methods"
               :inert="view !== 'login-methods'"
-              class="absolute top-0 left-0 w-full p-6"
+              class="absolute top-0 left-0 w-full overflow-y-auto p-6"
               :style="{
+                maxHeight: `${panelMaxHeight}px`,
                 transform:
                   view === 'login-methods'
                     ? 'translateX(0)'
@@ -290,8 +291,9 @@
               ref="phraseAckPanelRef"
               data-test="settings-phrase-ack"
               :inert="view !== 'phrase-ack'"
-              class="absolute top-0 left-0 w-full p-6"
+              class="absolute top-0 left-0 w-full overflow-y-auto p-6"
               :style="{
+                maxHeight: `${panelMaxHeight}px`,
                 transform:
                   view === 'phrase-ack'
                     ? 'translateX(0)'
@@ -561,7 +563,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { onClickOutside, useResizeObserver } from '@vueuse/core'
+import { onClickOutside, useResizeObserver, useWindowSize } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
@@ -759,6 +761,29 @@ const loginMethodsPanelRef = ref<HTMLElement | null>(null)
 const phraseAckPanelRef = ref<HTMLElement | null>(null)
 const containerHeight = ref(0)
 
+/** Where the popup's top edge sits: just under its button. */
+const popupTop = (): number => {
+  const buttonEl = containerRef.value
+  return buttonEl ? buttonEl.getBoundingClientRect().bottom + 8 : 76
+}
+/** Kept clear between the popup and the bottom of the screen. */
+const SCREEN_MARGIN = 16
+const { height: screenHeight } = useWindowSize()
+/**
+ * The room under the popup's top edge. The popup is fixed to the screen, so
+ * the page cannot scroll it into view. The Privy account's panels grow with
+ * the account (its passkeys, their confirmations) and end in the control the
+ * user came for, so they stop here and scroll instead of running off the
+ * screen.
+ */
+const panelMaxHeight = computed(() =>
+  Math.max(0, screenHeight.value - popupTop() - SCREEN_MARGIN),
+)
+const SCROLLING_VIEWS: ReadonlySet<SettingsView> = new Set([
+  'login-methods',
+  'phrase-ack',
+])
+
 const measureHeight = () => {
   const panelByView = {
     main: mainPanelRef.value,
@@ -769,7 +794,12 @@ const measureHeight = () => {
     'phrase-ack': phraseAckPanelRef.value,
   }
   const activeRef = panelByView[view.value]
-  if (activeRef) containerHeight.value = activeRef.scrollHeight
+  if (!activeRef) return
+  // A panel reports the height of all it holds, also when it scrolls.
+  const natural = activeRef.scrollHeight
+  containerHeight.value = SCROLLING_VIEWS.has(view.value)
+    ? Math.min(natural, panelMaxHeight.value)
+    : natural
 }
 
 watch(isSettingsOpen, val => {
@@ -792,6 +822,7 @@ watch(filteredLanguages, () => nextTick(measureHeight))
 // and its confirmations and errors come and go.
 useResizeObserver(loginMethodsPanelRef, () => measureHeight())
 useResizeObserver(phraseAckPanelRef, () => measureHeight())
+watch(panelMaxHeight, () => nextTick(measureHeight))
 // The main panel gains and loses rows as the connected wallet changes, and a
 // screen that belongs to the Privy account closes when that account is gone.
 watch([isPrivyConnected, isWalletUnlocked, walletAddress], () => {
@@ -808,11 +839,11 @@ const popupStyle = computed(() => {
   if (buttonEl) {
     const rect = buttonEl.getBoundingClientRect()
     return {
-      top: `${rect.bottom + 8}px`,
+      top: `${popupTop()}px`,
       right: `${window.innerWidth - rect.right}px`,
     }
   }
-  return { top: '76px', right: '16px' }
+  return { top: `${popupTop()}px`, right: '16px' }
 })
 
 const togglePopup = () => {

@@ -143,6 +143,22 @@ describe('the wallet export page', () => {
       expect(host.querySelector('a')?.getAttribute('href')).toBe('/')
     })
 
+    it("drops the login from this browser itself when Privy's logout fails, before it says so", async () => {
+      const SDK_KEYS = ['privy:token', 'privy:refresh_token']
+      await render()
+      await press('Log in')
+      SDK_KEYS.forEach(key => localStorage.setItem(key, '"secret"'))
+      privy.authenticated = true
+      privy.logout.mockRejectedValue(new Error('logout failed'))
+
+      await render()
+
+      // The phrase may be on the clipboard: the visitor still gets the page
+      // that says so, and no login is left behind it.
+      expect(host.textContent).toContain("You're logged out of this page")
+      SDK_KEYS.forEach(key => expect(localStorage.getItem(key)).toBeNull())
+    })
+
     describe('once the export screen is left', () => {
       // Privy hands the phrase over through its Copy buttons and nowhere
       // else: it is on the clipboard when the user comes back to this page.

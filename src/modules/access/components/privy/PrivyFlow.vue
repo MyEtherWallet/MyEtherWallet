@@ -39,10 +39,13 @@
       </AppBaseButton>
       <!-- This screen stands in for the entry screen and its wallet row, so
            it leads to the wallets too. The login is left as it is: someone
-           logged in with Google can add a Ledger beside it. -->
+           logged in with Google can add a Ledger beside it. Not while one of
+           the actions above is under way: it would carry on behind the
+           wallet chooser. -->
       <AppBaseButton
         data-testid="existing-other-methods"
         type="link"
+        :disabled="busy"
         @click="accessStore.setCurrentView('default')"
       >
         {{ t('access_wallet.social.other_methods') }}

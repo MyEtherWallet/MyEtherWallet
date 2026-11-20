@@ -116,6 +116,11 @@ export const useAuthStore = defineStore('authStore', () => {
    * nothing is applied to the store for a login that has ended meanwhile.
    */
   let loginEpoch = 0
+  /**
+   * Logouts that have begun and not finished. The tokens of the login they
+   * end stay in the tab for a moment, so that login still looks alive.
+   */
+  let logoutsInFlight = 0
 
   const reset = (): void => {
     loginEpoch += 1
@@ -146,15 +151,21 @@ export const useAuthStore = defineStore('authStore', () => {
    * The Privy login still valid in this tab, if any. A tab that has not used
    * Privy answers without loading the SDK. `user.get()` throws when logged
    * out, so the access token is what tells a login from leftover data.
+   *
+   * A login that is being logged out is not one: neither when the logout
+   * began before this was asked, nor when it began while Privy was answering.
+   * Nothing is then built on a login that is about to be gone.
    */
   const liveLogin = async () => {
-    if (!tabHoldsPrivyData()) return null
+    if (logoutsInFlight > 0 || !tabHoldsPrivyData()) return null
+    const epoch = loginEpoch
     const loaded = await loadPrivy()
     if (!(await loaded.privy.getAccessToken())) return null
     const current = await loaded.privy.user.get().then(
       result => result.user,
       () => null,
     )
+    if (epoch !== loginEpoch) return null
     return { loaded, user: current }
   }
 
@@ -167,20 +178,24 @@ export const useAuthStore = defineStore('authStore', () => {
    * Have the wallet iframe forget a passkey check this user has passed. Privy
    * keeps a passed check for a while on the device; left there, the next
    * login to the account from this browser could use the wallet without the
-   * passkey. Best-effort and short: a logout neither fails nor hangs on it.
+   * passkey. Never rejects and never waits longer than `timeoutMs`; resolves
+   * whether the iframe confirmed it. A logout goes on either way, so that it
+   * neither fails nor hangs; a connection does not (see `provisionWallet`).
    */
   const forgetPasskeyCheck = (
     userId: string,
     timeoutMs: number = FORGET_CHECK_TIMEOUT_MS,
-  ): Promise<void> =>
+  ): Promise<boolean> =>
     new Promise(resolve => {
-      const timer = setTimeout(resolve, timeoutMs)
-      const done = (): void => {
+      const timer = setTimeout(() => resolve(false), timeoutMs)
+      const settle = (forgotten: boolean) => (): void => {
         clearTimeout(timer)
-        resolve()
+        resolve(forgotten)
       }
-      if (!loadedModules) return done()
-      void loadedModules.privy.mfa.clearMfa({ userId }).then(done, done)
+      if (!loadedModules) return settle(false)()
+      void loadedModules.privy.mfa
+        .clearMfa({ userId })
+        .then(settle(true), settle(false))
     })
 
   /**
@@ -198,20 +213,32 @@ export const useAuthStore = defineStore('authStore', () => {
     const checkedUser =
       user.value && hasWalletCheck(user.value) ? user.value.id : null
     reset()
-    if (checkedUser) await forgetPasskeyCheck(checkedUser)
-    loadedModules?.teardownWalletIframe()
-    const { privy } = await loadPrivy()
-    await privy.auth.logout()
+    logoutsInFlight += 1
+    try {
+      if (checkedUser) await forgetPasskeyCheck(checkedUser)
+      loadedModules?.teardownWalletIframe()
+      const { privy } = await loadPrivy()
+      await privy.auth.logout()
+    } finally {
+      logoutsInFlight -= 1
+    }
   }
 
-  /** End the login and, if its wallet is the active one, leave it watch-only. */
+  /**
+   * End the login and, if its wallet is the active one, leave it watch-only.
+   *
+   * Done only once the wallet is watch-only: what comes next (the next login
+   * connecting its wallet, the address being deleted) must not have that
+   * switch land on top of it. A switch that fails is not this caller's
+   * failure, and the outcome of the logout is what is reported.
+   */
   const dropLogin = async (): Promise<void> => {
     try {
       await endLogin()
     } finally {
       const walletStore = useWalletStore()
       if (walletStore.wallet instanceof PrivyWallet) {
-        walletStore.setWatchOnlyIfExist()
+        await walletStore.setWatchOnlyIfExist().catch(() => undefined)
       }
     }
   }
@@ -349,10 +376,21 @@ export const useAuthStore = defineStore('authStore', () => {
       if (!input) throw new Error('The embedded wallet was not created')
       // Every connection starts with no passed check. A logout clears it too,
       // but a tab can be closed, or reloaded, without one: whoever logs in
-      // next in this browser is asked for the passkey themselves.
+      // next in this browser is asked for the passkey themselves. A clearing
+      // that is not confirmed may have left that check standing, so no
+      // wallet is handed out on it: the connection fails and can be retried.
       if (hasWalletCheck(account)) {
-        await forgetPasskeyCheck(account.id, FORGET_CHECK_AT_LOGIN_TIMEOUT_MS)
+        const forgotten = await forgetPasskeyCheck(
+          account.id,
+          FORGET_CHECK_AT_LOGIN_TIMEOUT_MS,
+        )
         if (loginEnded()) throw ended()
+        if (!forgotten) {
+          throw Object.assign(
+            new Error('The passkey check could not be cleared'),
+            { code: 'passkey_check_not_cleared' },
+          )
+        }
       }
       const provider =
         await loaded.privy.embeddedWallet.getEthereumProvider(input)

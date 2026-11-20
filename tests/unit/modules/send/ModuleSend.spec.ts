@@ -292,14 +292,17 @@ describe('ModuleSend review', () => {
   })
 
   /** Fill the form with `wallet` connected and press "Review send". */
-  const reviewWith = async (wallet: ReturnType<typeof makeWallet>) => {
+  const reviewWith = async (
+    wallet: ReturnType<typeof makeWallet>,
+    amount = '0.1',
+  ) => {
     const w = mount(ModuleSend, {
       global: { stubs, mocks: { $t: (k: string) => k } },
     })
     await flushPromises()
     h.wallet.value = wallet
     h.walletAddress.value = SIGNER
-    w.findComponent(AppEnterAmount).vm.$emit('update:amount', '0.1')
+    w.findComponent(AppEnterAmount).vm.$emit('update:amount', amount)
     w.findComponent(AppSelectTxFee).vm.$emit('fee-is-loading', false)
     await flushPromises()
     await clickSend(w)
@@ -569,6 +572,65 @@ describe('ModuleSend review', () => {
       )
       expect(wallet.getGasFee).toHaveBeenCalledTimes(3)
       expect(wallet.getSignableTransaction).not.toHaveBeenCalled()
+    })
+
+    // The balance is 10. An amount of 10 is MAX worked out before any fee
+    // was known: with the quote's fee on top it is more than the balance,
+    // until MAX has taken that fee off.
+    it('quotes again when the fee of the new quote no longer fits, instead of stopping on the balance', async () => {
+      h.isMaxSelected.value = true
+      h.applyMaxAmount.mockImplementationOnce(async () => h.setAmount('9.9'))
+      const wallet = quotedWallet()
+
+      const w = await reviewWith(wallet, '10')
+
+      expect(wallet.getGasFee).toHaveBeenCalledTimes(2)
+      expect(wallet.getSignableTransaction.mock.calls).toEqual([
+        [expect.objectContaining({ quoteId: 'q2' })],
+      ])
+      expect(reviewOf(w).props('modelValue')).toBe(true)
+    })
+
+    it('opens no review when the amount still does not fit once the fee is taken off', async () => {
+      h.isMaxSelected.value = true
+      const wallet = quotedWallet()
+
+      const w = await reviewWith(wallet, '10')
+
+      expect(wallet.getGasFee).toHaveBeenCalledTimes(1)
+      expect(wallet.getSignableTransaction).not.toHaveBeenCalled()
+      expect(reviewOf(w).props('modelValue')).toBe(false)
+    })
+
+    it('opens no review when the quote has no fee for the selected speed', async () => {
+      h.isMaxSelected.value = true
+      const wallet = quotedWallet()
+      wallet.getGasFee.mockResolvedValue({ quoteId: 'q1', fees: {} })
+
+      const w = await reviewWith(wallet)
+
+      expect(wallet.getSignableTransaction).not.toHaveBeenCalled()
+      expect(reviewOf(w).props('modelValue')).toBe(false)
+    })
+
+    it('keeps an amount typed while the quote was on its way, and opens no review over it', async () => {
+      h.isMaxSelected.value = true
+      const wallet = quotedWallet()
+      const quote = wallet.getGasFee.getMockImplementation()!
+      wallet.getGasFee.mockImplementationOnce(async (body: QuoteBody) => {
+        // Typing an amount gives MAX up.
+        h.setAmount('0.05')
+        h.isMaxSelected.value = false
+        return quote(body)
+      })
+
+      const w = await reviewWith(wallet)
+
+      // MAX is not put back over what the user typed, and they submit again
+      // themselves once they are done.
+      expect(h.applyMaxAmount).not.toHaveBeenCalled()
+      expect(wallet.getGasFee).toHaveBeenCalledTimes(1)
+      expect(reviewOf(w).props('modelValue')).toBe(false)
     })
 
     it('leaves the amount alone when the maximum is not what is being sent', async () => {

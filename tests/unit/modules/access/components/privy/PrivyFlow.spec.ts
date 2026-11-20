@@ -175,6 +175,11 @@ describe('PrivyFlow', () => {
     expect(
       w.get('[data-testid="different-account"]').attributes('disabled'),
     ).toBeDefined()
+    // Leaving for the wallets mid-action would leave that action running
+    // behind the wallet chooser.
+    expect(
+      w.get('[data-testid="existing-other-methods"]').attributes('disabled'),
+    ).toBeDefined()
   })
 
   it('shows the verifying screen while Google is checked', () => {

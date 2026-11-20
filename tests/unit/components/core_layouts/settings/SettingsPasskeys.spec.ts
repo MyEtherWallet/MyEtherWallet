@@ -174,6 +174,36 @@ describe('SettingsPasskeys', () => {
     expect(h.removePasskey).toHaveBeenCalledWith('cred-a')
   })
 
+  it('asks before removing the only passkey in use as the check, even with another one linked that is not', async () => {
+    // The linked one protects nothing: without the first, the check is off.
+    h.passkeys.value = [passkey('cred-a'), passkey('cred-b', { active: false })]
+    const w = render()
+
+    await removeButtons(w)[0].trigger('click')
+
+    expect(h.removePasskey).not.toHaveBeenCalled()
+    expect(w.text()).toContain('settings.remove_last_passkey')
+  })
+
+  it('removes a passkey that is not in use as the check straight away', async () => {
+    h.passkeys.value = [passkey('cred-a'), passkey('cred-b', { active: false })]
+    const w = render()
+
+    await removeButtons(w)[1].trigger('click')
+
+    expect(h.removePasskey).toHaveBeenCalledWith('cred-b')
+  })
+
+  it('does not warn about the check when the only passkey was never in use as one', async () => {
+    h.passkeys.value = [passkey('cred-a', { active: false })]
+    const w = render()
+
+    await removeButtons(w)[0].trigger('click')
+
+    expect(h.removePasskey).toHaveBeenCalledWith('cred-a')
+    expect(w.text()).not.toContain('settings.remove_last_passkey')
+  })
+
   it('keeps the last passkey when the user backs out', async () => {
     h.passkeys.value = [passkey('cred-a')]
     const w = render()
