@@ -419,6 +419,59 @@ describe('isForeignStackOverflow', () => {
     ).toBe(true)
   })
 
+  it('is true when every frame is the page document URL (Chrome iOS injected script)', () => {
+    // APP-MEW-WEB-1SP / 1SN / 1GE: Chrome Mobile iOS injects a script into the
+    // page and its frames carry the document URL itself, not a script file.
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'https://app.myetherwallet.com/' },
+        ]),
+      ),
+    ).toBe(true)
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'https://app.myetherwallet.com/access' },
+          { filename: 'https://app.myetherwallet.com/' },
+        ]),
+      ),
+    ).toBe(true)
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'https://app.myetherwallet.com/portfolio/stock/USHYon' },
+          { filename: '/access' },
+          { filename: 'https://app.myetherwallet.com/swap?token=a.js' },
+        ]),
+      ),
+    ).toBe(true)
+  })
+
+  it('is FALSE when a real bundle frame sits among document-URL frames', () => {
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'https://app.myetherwallet.com/access' },
+          { filename: '[native code]' },
+          {
+            filename: 'https://app.myetherwallet.com/assets/index-CdBOKFxJ.js',
+          },
+        ]),
+      ),
+    ).toBe(false)
+  })
+
+  it('is FALSE for a dev-server module frame with a query string', () => {
+    expect(
+      isForeignStackOverflow(
+        evt('Maximum call stack size exceeded.', [
+          { filename: 'http://localhost:5173/src/App.vue?t=1732100000000' },
+        ]),
+      ),
+    ).toBe(false)
+  })
+
   it('is FALSE for a non-stack-overflow error, even with no app frame', () => {
     expect(
       isForeignStackOverflow(
