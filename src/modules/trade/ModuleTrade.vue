@@ -1,12 +1,12 @@
 <template>
   <div
-    class="flex flex-col -mx-4 -mb-6 sm:-mt-6 min-h-[calc(100%+24px)] sm:min-h-[calc(100%+48px)]"
+    class="flex flex-col -mx-4 -mb-6 min-h-[calc(100%+24px)]"
   >
     <app-content-group
       :title="$t('trade.title')"
       :description="$t('trade.subtitle')"
       size="l"
-      class="pt-8 px-5 w-full max-w-[540px] mx-auto"
+      class="sm:pt-2 px-5 w-full max-w-[540px] mx-auto"
     />
     <div
       :class="[

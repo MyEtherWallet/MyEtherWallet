@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col h-full sm:pt-2">
     <app-content-group
       :title="t('purchase.title')"
       :description="t('purchase.description')"

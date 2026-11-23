@@ -32,11 +32,12 @@
         ]"
         class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-5 pt-4 pb-5 sm:pt-8 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
-        <!-- z-10: some panels pull their header up with negative margins and
-             would otherwise cover the button's hit area -->
+        <!-- Mobile (full-screen panel): its own row at the top left. From sm it
+             floats top right, on the module title's line, so the title isn't
+             pushed down by a whole button row. z-10 keeps it above the module. -->
         <app-btn-icon-close
           :label="$t('common.close_side_menu')"
-          class="relative z-10 flex-none self-start sm:self-end"
+          class="relative z-10 flex-none self-start sm:absolute sm:top-8 sm:right-5"
           @close="closePanel"
         />
         <div class="flex-1 min-h-0">
