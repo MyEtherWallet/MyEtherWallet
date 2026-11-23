@@ -42,20 +42,19 @@
         />
         <div class="flex-1 min-h-0">
           <transition name="fade" mode="out-in">
-            <ModuleTrade v-if="walletPanel === 'trade'" key="trade" />
-            <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
-            <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
-            <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
-            <ModulePerpsTrade
-              v-else-if="walletPanel === 'perps'"
-              key="perps-trade"
-            />
-            <ModulePurchase
-              v-else-if="walletPanel === 'purchase'"
-              key="purchase"
-            />
-            <div v-else key="coming-soon" class="mt-6 text-center font-medium">
-              {{ comingSoon }}
+            <!-- out-in animates this keyed element, never a module root: a module
+                 whose root isn't a single element (e.g. a root-level comment,
+                 kept in dev) would wedge the transition and blank the panel. -->
+            <div :key="walletPanel" class="h-full">
+              <ModuleTrade v-if="walletPanel === 'trade'" />
+              <ModuleSend v-else-if="walletPanel === 'send'" />
+              <ModuleSwap v-else-if="walletPanel === 'swap'" />
+              <ModuleSwap v-else-if="walletPanel === 'bridge'" />
+              <ModulePerpsTrade v-else-if="walletPanel === 'perps'" />
+              <ModulePurchase v-else-if="walletPanel === 'purchase'" />
+              <div v-else class="mt-6 text-center font-medium">
+                {{ comingSoon }}
+              </div>
             </div>
           </transition>
         </div>
