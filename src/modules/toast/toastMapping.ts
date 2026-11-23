@@ -10,13 +10,6 @@ const STORE_TYPE_TO_TOAST_TYPE: Record<StoreToastType, ToastType> = {
   [StoreToastType.Info]: 'info',
 }
 
-/**
- * Toasts the design-library Toast has no slot for (a raw copied value, the
- * swap/bridge from → to summary) keep the legacy layout.
- */
-export const isLegacyToast = (toast: Toast) =>
-  Boolean(toast.hash || toast.tradeInfo)
-
 export const toastTypeOf = (toast: Toast): ToastType => {
   if (toast.tradeStatus) {
     return toast.tradeStatus.kind === 'processing'

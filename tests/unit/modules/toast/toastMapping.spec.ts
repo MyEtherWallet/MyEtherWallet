@@ -2,33 +2,12 @@ import { describe, it, expect } from 'vitest'
 import { ToastType } from '@/types/notification'
 import {
   DEFAULT_TOAST_DURATION,
-  isLegacyToast,
   toastAssetOf,
   toastDurationOf,
   toastTypeOf,
 } from '@/modules/toast/toastMapping'
 
 describe('toastMapping', () => {
-  it('keeps only copied-value and swap-summary toasts on the legacy layout', () => {
-    expect(isLegacyToast({ text: 'Copied', hash: '0xabc' })).toBe(true)
-    expect(
-      isLegacyToast({
-        text: 'Swap done',
-        tradeInfo: {
-          fromToken: 'ETH',
-          fromtTokenIcon: '',
-          fromTokenIsStock: false,
-          fromAmount: '1',
-          toToken: 'USDC',
-          toTokenIcon: '',
-          toTokenIsStock: false,
-          toAmount: '3000',
-        },
-      }),
-    ).toBe(true)
-    expect(isLegacyToast({ text: 'Plain', type: ToastType.Error })).toBe(false)
-  })
-
   it('maps store types, defaulting to info', () => {
     expect(toastTypeOf({ text: 'a', type: ToastType.Success })).toBe('success')
     expect(toastTypeOf({ text: 'a', type: ToastType.Error })).toBe('error')
