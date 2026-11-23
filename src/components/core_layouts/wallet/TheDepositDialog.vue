@@ -10,32 +10,34 @@
     class="min-h-[400px]"
   >
     <template #header>
-      <div class="flex justify-start!">
-        <app-token-logo
-          v-if="selectedChain?.icon"
-          :url="selectedChain?.icon"
-          :symbol="selectedChain.currencyName"
-          width="w-12"
-          height="h-12"
-        ></app-token-logo>
-      </div>
+      <app-avatar
+        v-if="selectedChain?.icon"
+        type="network"
+        size="xl"
+        :url="selectedChain.icon"
+        :chain="selectedChain.name"
+      />
     </template>
-    <div v-if="walletAddress" class="px-8 pb-8 flex flex-col gap-2">
-      <h1 class="text-s-28 font-bold text-left leading-tight">
-        {{
+    <div
+      v-if="walletAddress"
+      class="flex flex-col gap-6 px-4 pb-4 sm:px-6 sm:pb-6"
+    >
+      <app-content-group
+        :title="
           $t('common.deposit_title', {
             chain: selectedChain?.nameLong || 'Ethereum',
           })
-        }}
-      </h1>
-      <p class="text-s-15 text-text-subtle leading-relaxed max-w-80">
-        {{
+        "
+        :description="
           $t('common.deposit_description', {
             chain: selectedChain?.nameLong || 'Ethereum',
           })
-        }}
-      </p>
-      <div class="flex items-center justify-center my-6">
+        "
+        size="l"
+        wrap-title
+      />
+      <div class="flex items-center justify-center">
+        <!-- QR stays on white in every theme so it remains scannable. -->
         <div
           class="rounded-30 p-8 shadow-button-elevated bg-white flex items-center justify-center"
         >
@@ -44,40 +46,38 @@
             ref="qrCode"
             class="qr-code-container"
           ></div>
-          <!-- Loading QR Placeholder -->
-          <div
+          <app-skeleton
             v-show="isLoadingQRCode"
-            class="h-[150px] w-[150px] animate-pulse bg-background-default-hover rounded-xl"
-          ></div>
+            shape="rectangle-rounded"
+            class="size-[150px]"
+          />
         </div>
       </div>
-      <div class="flex items-center gap-4 mt-2">
-        <app-blockie
+      <div class="flex items-center gap-4">
+        <app-avatar
+          type="account"
+          size="xl"
           :address="walletAddress"
-          :size="12"
-          class="flex-none rounded-full"
+          class="shrink-0"
         />
-        <div
-          class="grow font-medium text-s-17 text-black break-all leading-tight tracking-sp-06"
-        >
-          {{ walletAddress }}
-        </div>
+        <!-- break-all is inherited by the title span so the hex wraps. -->
+        <app-content-group
+          :title="walletAddress"
+          wrap-title
+          class="flex-1 break-all"
+        />
         <div class="flex items-center gap-1">
-          <!-- Copy -->
           <app-btn-copy
             :copy-value="walletAddress"
             size="l"
             class="text-text-brand"
           />
-          <!-- Block Explorer Link -->
-          <a
+          <app-btn-icon
             :href="getExplorerLink"
-            :aria-label="$t('view_in_block_explorer')"
-            target="_blank"
-            class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-background-brand-subtle transition-colors"
-          >
-            <AppIcon name="arrow-top-right-on-square" class="text-text-brand" />
-          </a>
+            :label="$t('view_in_block_explorer')"
+            icon="arrow-top-right-on-square"
+            class="text-text-brand"
+          />
         </div>
       </div>
     </div>
@@ -87,16 +87,17 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import AppModal from '@/components/modal/AppModal.vue'
-import AppBlockie from '@/components/AppBlockie.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
 import { watch, computed } from 'vue'
 import { analytics, DepositEvent } from '@/analytics'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()
