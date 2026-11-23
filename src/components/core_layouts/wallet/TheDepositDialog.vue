@@ -4,15 +4,15 @@
     v-model="openDialog"
     :title="$t('common.deposit_title', { chain: chainName })"
   >
-    <!-- Left-aligned header (AppModal's default one is centred); pr-12 keeps
-         the title clear of the close button. `title` above stays the label. -->
+    <!-- Left-aligned header (AppModal's default one is centred); pr-16 leaves
+         24px between the text and the close button. `title` above stays the label. -->
     <template #header>
       <app-content-group
         :title="$t('common.deposit_title', { chain: chainName })"
         :description="$t('common.deposit_description', { chain: chainName })"
         size="l"
         wrap-title
-        class="w-full pr-12"
+        class="w-full pr-16"
       />
     </template>
     <div
@@ -52,11 +52,8 @@
           :address="walletAddress"
           class="shrink-0"
         />
-        <!-- Same short form as the multi-address switcher; copy keeps the full value. -->
-        <app-content-group
-          :title="truncateAddress(walletAddress, 6, 4)"
-          class="min-w-0 flex-1"
-        />
+        <!-- Multi-address truncation, as long as one line fits; copy keeps the full value. -->
+        <app-content-group :title="shortAddress" class="min-w-0 flex-1" />
         <!-- Naked Button Icons inherit the glyph color from here. -->
         <div class="flex shrink-0 items-center gap-1 text-icon-brand">
           <app-btn-copy :copy-value="walletAddress" size="m" icon-size="m" />
@@ -81,6 +78,7 @@ import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { truncateAddress } from '@/utils/filters'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
@@ -115,6 +113,15 @@ watch(
       analytics.trackDepositEvent(DepositEvent.SHOWN)
     }
   },
+)
+
+// The row leaves ~170px for the address on a phone and ~290px from sm (480px
+// modal), so show as many characters as fit on one line.
+const { isMobile } = useAppBreakpoints()
+const shortAddress = computed(() =>
+  isMobile.value
+    ? truncateAddress(walletAddress.value || '', 8, 6)
+    : truncateAddress(walletAddress.value || '', 12, 10),
 )
 
 const getExplorerLink = computed(() => {

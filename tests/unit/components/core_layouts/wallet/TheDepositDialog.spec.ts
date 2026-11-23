@@ -53,6 +53,17 @@ vi.mock('@/analytics', () => ({
   analytics: { trackDepositEvent },
   DepositEvent: { SHOWN: 'shown' },
 }))
+const isMobile = vi.hoisted(() => ({ value: false }))
+vi.mock('@/composables/useAppBreakpoints', async () => {
+  const { ref } = await import('vue')
+  const mobile = ref(false)
+  return {
+    useAppBreakpoints: () => {
+      mobile.value = isMobile.value
+      return { isMobile: mobile }
+    },
+  }
+})
 // blockies needs a canvas.
 vi.mock('@/utils/blockies', () => ({
   default: () => ({ toDataURL: () => 'data:image/png;base64,stub' }),
@@ -113,6 +124,8 @@ describe('TheDepositDialog', () => {
       'You can deposit any tokens supported by Ethereum.',
     )
     expect(group.props('align')).toBe('left')
+    // 24px clear of the 40px close button (header pads 16/24, X sits at 16/24).
+    expect(group.classes()).toContain('pr-16')
     // Only the header carries the title, not a second copy in the body.
     expect(w.text().split('Your Ethereum address')).toHaveLength(2)
   })
@@ -140,10 +153,15 @@ describe('TheDepositDialog', () => {
     expect(account?.props('size')).toBe('m')
   })
 
-  it('shows the address on one line, copies it in full and links it to the explorer', () => {
+  it('shortens the address to fit one line: more characters from sm', () => {
+    expect(factory().text()).toContain('0x32Be343B94...D38C102D88')
+    isMobile.value = true
+    expect(factory().text()).toContain('0x32Be34...102D88')
+    isMobile.value = false
+  })
+
+  it('copies the full address and links it to the explorer', () => {
     const w = factory()
-    // Multi-address short form (6 + 4); the full value is what gets copied.
-    expect(w.text()).toContain('0x32Be...2D88')
     expect(w.text()).not.toContain(ADDRESS)
     const copy = w.findComponent(AppBtnCopy)
     expect(copy.props('copyValue')).toBe(ADDRESS)
