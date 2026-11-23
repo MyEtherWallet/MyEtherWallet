@@ -2,58 +2,40 @@
   <app-modal
     v-if="isWalletConnected && isLoadedChainsData"
     v-model="openDialog"
-    :title="
-      $t('common.deposit_title', {
-        chain: selectedChain?.nameLong || 'Ethereum',
-      })
-    "
-    class="min-h-[400px]"
+    :title="$t('common.deposit_title', { chain: chainName })"
+    :subtitle="$t('common.deposit_description', { chain: chainName })"
   >
-    <template #header>
-      <app-avatar
-        v-if="selectedChain?.icon"
-        type="network"
-        size="xl"
-        :url="selectedChain.icon"
-        :chain="selectedChain.name"
-      />
-    </template>
     <div
       v-if="walletAddress"
-      class="flex flex-col gap-6 px-4 pb-4 sm:px-6 sm:pb-6"
+      class="flex flex-col items-center gap-6 px-4 pb-4 sm:px-6 sm:pb-6"
     >
-      <app-content-group
-        :title="
-          $t('common.deposit_title', {
-            chain: selectedChain?.nameLong || 'Ethereum',
-          })
-        "
-        :description="
-          $t('common.deposit_description', {
-            chain: selectedChain?.nameLong || 'Ethereum',
-          })
-        "
-        size="l"
-        wrap-title
-      />
-      <div class="flex items-center justify-center">
-        <!-- QR stays on white in every theme so it remains scannable. -->
+      <!-- The QR draws on a transparent background, so it keeps a white tile in
+           every theme to stay scannable; only dark mode needs a quiet zone. -->
+      <div
+        data-test="deposit-qr"
+        class="relative size-50 bg-white dark:box-content dark:rounded-16 dark:p-3"
+      >
+        <div v-show="!isLoadingQRCode" ref="qrCode" class="qr-code-container" />
+        <app-skeleton
+          v-show="isLoadingQRCode"
+          shape="rectangle-rounded"
+          class="size-full"
+        />
+        <!-- The chain mark covers well under the 25% of the code that its
+             error correction (level Q) can recover. -->
         <div
-          class="rounded-30 p-8 shadow-button-elevated bg-white flex items-center justify-center"
+          v-if="selectedChain?.icon && !isLoadingQRCode"
+          class="absolute inset-0 m-auto flex size-12 items-center justify-center rounded-full bg-white"
         >
-          <div
-            v-show="!isLoadingQRCode"
-            ref="qrCode"
-            class="qr-code-container"
-          ></div>
-          <app-skeleton
-            v-show="isLoadingQRCode"
-            shape="rectangle-rounded"
-            class="size-[150px]"
+          <app-avatar
+            type="network"
+            size="l"
+            :url="selectedChain.icon"
+            :chain="selectedChain.name"
           />
         </div>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex w-full items-center gap-4">
         <app-avatar
           type="account"
           size="xl"
@@ -64,19 +46,16 @@
         <app-content-group
           :title="walletAddress"
           wrap-title
-          class="flex-1 break-all"
+          class="min-w-0 flex-1 break-all"
         />
-        <div class="flex items-center gap-1">
-          <app-btn-copy
-            :copy-value="walletAddress"
-            size="l"
-            class="text-text-brand"
-          />
+        <!-- Naked Button Icons inherit the glyph color from here. -->
+        <div class="flex shrink-0 items-center gap-1 text-icon-brand">
+          <app-btn-copy :copy-value="walletAddress" size="m" icon-size="m" />
           <app-btn-icon
             :href="getExplorerLink"
             :label="$t('view_in_block_explorer')"
             icon="arrow-top-right-on-square"
-            class="text-text-brand"
+            size="m"
           />
         </div>
       </div>
@@ -102,6 +81,7 @@ const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()
 const { selectedChain, isLoaded: isLoadedChainsData } = storeToRefs(chainsStore)
+const chainName = computed(() => selectedChain.value?.nameLong || 'Ethereum')
 
 /** -------------------------------
  * Dialog

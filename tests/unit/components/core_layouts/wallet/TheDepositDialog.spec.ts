@@ -78,11 +78,12 @@ const i18n = createI18n({
   },
 })
 
-// AppModal teleports; render its header + default slots inline.
+// AppModal teleports; render a custom header (if any) + the body inline.
 const AppModalStub = {
   name: 'AppModal',
-  props: ['modelValue', 'title'],
-  template: '<div :data-open="modelValue"><slot name="header" /><slot /></div>',
+  props: ['modelValue', 'title', 'subtitle'],
+  template:
+    '<div :data-open="modelValue"><header data-test="custom-header"><slot name="header" /></header><slot /></div>',
 }
 
 const factory = () =>
@@ -98,29 +99,50 @@ describe('TheDepositDialog', () => {
     trackDepositEvent.mockClear()
   })
 
-  it('renders the chain title and description', () => {
+  it('puts the chain title and description in the standard modal header', () => {
     const w = factory()
-    expect(w.findComponent({ name: 'AppModal' }).props('title')).toBe(
-      'Your Ethereum address',
-    )
-    expect(w.text()).toContain('Your Ethereum address')
-    expect(w.text()).toContain(
+    const modal = w.findComponent({ name: 'AppModal' })
+    expect(modal.props('title')).toBe('Your Ethereum address')
+    expect(modal.props('subtitle')).toBe(
       'You can deposit any tokens supported by Ethereum.',
+    )
+    // No custom header and no second copy of the title in the body.
+    expect(w.get('[data-test="custom-header"]').element.children).toHaveLength(
+      0,
+    )
+    expect(w.text()).not.toContain('Your Ethereum address')
+  })
+
+  it('centres the chain mark on the QR, which sits flush without a frame', () => {
+    const w = factory()
+    const qr = w.get('[data-test="deposit-qr"]')
+    const network = qr
+      .findAllComponents(AppAvatar)
+      .find(a => a.props('type') === 'network')
+    expect(network?.props('url')).toBe('https://example.com/eth.svg')
+    expect(network?.element.parentElement?.className).toContain('rounded-full')
+    // Light mode: no shadow, border or outer padding around the QR.
+    const lightClasses = qr.classes().filter(c => !c.startsWith('dark:'))
+    expect(lightClasses.some(c => /^(shadow|border|p-|px-|py-)/.test(c))).toBe(
+      false,
     )
   })
 
-  it('shows the chain mark and the account blockie', () => {
-    const avatars = factory().findAllComponents(AppAvatar)
-    const network = avatars.find(a => a.props('type') === 'network')
-    const account = avatars.find(a => a.props('type') === 'account')
-    expect(network?.props('url')).toBe('https://example.com/eth.svg')
+  it('shows the account blockie', () => {
+    const account = factory()
+      .findAllComponents(AppAvatar)
+      .find(a => a.props('type') === 'account')
     expect(account?.props('address')).toBe(ADDRESS)
   })
 
   it('shows the address, copies it and links it to the explorer', () => {
     const w = factory()
     expect(w.text()).toContain(ADDRESS)
-    expect(w.findComponent(AppBtnCopy).props('copyValue')).toBe(ADDRESS)
+    const copy = w.findComponent(AppBtnCopy)
+    expect(copy.props('copyValue')).toBe(ADDRESS)
+    // Same Button Icon size (M: 40px box, 24px glyph) as the explorer link.
+    expect(copy.props('size')).toBe('m')
+    expect(copy.props('iconSize')).toBe('m')
     const link = w.get('a[aria-label="View in block explorer"]')
     expect(link.attributes('href')).toBe(
       `https://etherscan.io/address/${ADDRESS}`,
