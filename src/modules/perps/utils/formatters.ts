@@ -238,13 +238,15 @@ export const fillDirectionTagType = (direction: string | undefined): TagType =>
 
 // An order side (buy / sell) or position direction (long / short): its i18n
 // key and text colour. Anything else shows raw ($t renders it verbatim), subtle.
+// A missing side returns '', since $t(undefined) throws.
 const SIDES: Record<string, { key: string; color: string }> = {
   buy: { key: 'perps.order.buy', color: 'text-text-success' },
   sell: { key: 'perps.order.sell', color: 'text-text-error' },
   long: { key: 'perps.trade.long', color: 'text-text-success' },
   short: { key: 'perps.trade.short', color: 'text-text-error' },
 }
-export const sideKey = (side: string): string => SIDES[side]?.key ?? side
+export const sideKey = (side: string | undefined): string =>
+  side ? (SIDES[side]?.key ?? side) : ''
 export const sideColor = (side: string): string =>
   SIDES[side]?.color ?? 'text-text-subtle'
 
