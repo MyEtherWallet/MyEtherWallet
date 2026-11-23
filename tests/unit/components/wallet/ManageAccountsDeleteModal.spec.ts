@@ -21,6 +21,18 @@ const factory = (props = {}) =>
   })
 
 describe('ManageAccountsDeleteModal', () => {
+  it('centres the title in the header and puts the description left-aligned in the body', () => {
+    const w = factory()
+    const modal = w.findComponent({ name: 'AppModal' })
+    expect(modal.props('title')).toBe('multi_address.remove.title')
+    // Default (centred) header with the title alone.
+    expect(modal.props('subtitle')).toBeUndefined()
+    expect(modal.props('headerAlign')).toBeUndefined()
+    const description = w.get('[data-test="body"] [data-test="delete-modal-description"]')
+    expect(description.text()).toBe('multi_address.remove.subtitle')
+    expect(description.classes()).not.toContain('text-center')
+  })
+
   it('uses the modal footer buttons: a danger primary next to a secondary close', () => {
     const w = factory()
     const { primary, secondary } = w
@@ -32,9 +44,6 @@ describe('ManageAccountsDeleteModal', () => {
     })
     // A filled secondary, not a text-only tertiary that floats in its half.
     expect(secondary).toMatchObject({ label: 'multi_address.remove.cancel' })
-    expect(
-      w.findComponent({ name: 'AppModal' }).props('headerAlign'),
-    ).toBe('left')
     // No hand-rolled buttons left in the body.
     expect(w.get('[data-test="body"]').findAll('button')).toHaveLength(0)
   })

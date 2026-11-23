@@ -1,11 +1,10 @@
 <template>
-  <!-- Footer from AppModal's `buttons`: a Button Group (equal widths) under the
-       left-aligned header, with the design-library danger tone on the confirm. -->
+  <!-- Title centred in the header bar, on the close button's line; the
+       description reads as left-aligned body copy. Footer from AppModal's
+       `buttons`: equal-width Button Group, danger tone on the confirm. -->
   <app-modal
     v-model="isOpen"
     :title="$t('multi_address.remove.title', { name: displayName })"
-    :subtitle="$t('multi_address.remove.subtitle', { name: displayName })"
-    header-align="left"
     :buttons="{
       primary: {
         label: $t('multi_address.remove.confirm'),
@@ -17,7 +16,15 @@
         onClick: () => (isOpen = false),
       },
     }"
-  />
+  >
+    <!-- Content Group L supporting style. -->
+    <p
+      data-test="delete-modal-description"
+      class="px-4 text-text-base text-text-subtle sm:px-6"
+    >
+      {{ $t('multi_address.remove.subtitle', { name: displayName }) }}
+    </p>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
