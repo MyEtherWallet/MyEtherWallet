@@ -1,17 +1,18 @@
 <template>
   <!-- Footer from AppModal's `buttons`: a Button Group (equal widths) under the
-       centred header, with the design-library danger tone on the confirm. -->
+       left-aligned header, with the design-library danger tone on the confirm. -->
   <app-modal
     v-model="isOpen"
     :title="$t('multi_address.remove.title', { name: displayName })"
     :subtitle="$t('multi_address.remove.subtitle', { name: displayName })"
+    header-align="left"
     :buttons="{
       primary: {
         label: $t('multi_address.remove.confirm'),
         tone: 'danger',
         onClick: confirm,
       },
-      tertiary: {
+      secondary: {
         label: $t('multi_address.remove.cancel'),
         onClick: () => (isOpen = false),
       },

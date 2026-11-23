@@ -72,7 +72,6 @@ vi.mock('@/utils/blockies', () => ({
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 
 const i18n = createI18n({
   legacy: false,
@@ -93,7 +92,7 @@ const i18n = createI18n({
 // AppModal teleports; render a custom header (if any) + the body inline.
 const AppModalStub = {
   name: 'AppModal',
-  props: ['modelValue', 'title', 'subtitle'],
+  props: ['modelValue', 'title', 'subtitle', 'headerAlign'],
   template:
     '<div :data-open="modelValue"><header data-test="custom-header"><slot name="header" /></header><slot /></div>',
 }
@@ -111,23 +110,19 @@ describe('TheDepositDialog', () => {
     trackDepositEvent.mockClear()
   })
 
-  it('puts the chain title and description left-aligned in the modal header', () => {
+  it('puts the chain title and description in the left-aligned modal header', () => {
     const w = factory()
-    // The modal keeps the title as its accessible name.
-    expect(w.findComponent({ name: 'AppModal' }).props('title')).toBe(
-      'Your Ethereum address',
-    )
-    const header = w.get('[data-test="custom-header"]')
-    const group = header.findComponent(AppContentGroup)
-    expect(group.props('title')).toBe('Your Ethereum address')
-    expect(group.props('description')).toBe(
+    const modal = w.findComponent({ name: 'AppModal' })
+    expect(modal.props('title')).toBe('Your Ethereum address')
+    expect(modal.props('subtitle')).toBe(
       'You can deposit any tokens supported by Ethereum.',
     )
-    expect(group.props('align')).toBe('left')
-    // 24px clear of the 40px close button (header pads 16/24, X sits at 16/24).
-    expect(group.classes()).toContain('pr-16')
-    // Only the header carries the title, not a second copy in the body.
-    expect(w.text().split('Your Ethereum address')).toHaveLength(2)
+    expect(modal.props('headerAlign')).toBe('left')
+    // The default header renders it: no custom header, no copy in the body.
+    expect(w.get('[data-test="custom-header"]').element.children).toHaveLength(
+      0,
+    )
+    expect(w.text()).not.toContain('Your Ethereum address')
   })
 
   it('centres the chain mark on the QR, which sits flush without a frame', () => {

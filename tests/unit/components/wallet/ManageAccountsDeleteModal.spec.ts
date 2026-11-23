@@ -7,7 +7,7 @@ import ManageAccountsDeleteModal from '@/components/core_layouts/wallet/ManageAc
 const stubs = {
   AppModal: {
     name: 'AppModal',
-    props: ['modelValue', 'title', 'subtitle', 'buttons'],
+    props: ['modelValue', 'title', 'subtitle', 'buttons', 'headerAlign'],
     template: `<div :data-open="modelValue"><h1>{{ title }}</h1><p>{{ subtitle }}</p>
       <section data-test="body"><slot /></section>
       <button v-for="(b, slot) in buttons" :key="slot" :data-test="'modal-' + slot" @click="b.onClick">{{ b.label }}</button></div>`,
@@ -21,16 +21,20 @@ const factory = (props = {}) =>
   })
 
 describe('ManageAccountsDeleteModal', () => {
-  it('uses the modal footer buttons: a danger primary and a tertiary close', () => {
+  it('uses the modal footer buttons: a danger primary next to a secondary close', () => {
     const w = factory()
-    const { primary, tertiary } = w
+    const { primary, secondary } = w
       .findComponent({ name: 'AppModal' })
       .props('buttons')
     expect(primary).toMatchObject({
       label: 'multi_address.remove.confirm',
       tone: 'danger',
     })
-    expect(tertiary).toMatchObject({ label: 'multi_address.remove.cancel' })
+    // A filled secondary, not a text-only tertiary that floats in its half.
+    expect(secondary).toMatchObject({ label: 'multi_address.remove.cancel' })
+    expect(
+      w.findComponent({ name: 'AppModal' }).props('headerAlign'),
+    ).toBe('left')
     // No hand-rolled buttons left in the body.
     expect(w.get('[data-test="body"]').findAll('button')).toHaveLength(0)
   })
@@ -44,7 +48,7 @@ describe('ManageAccountsDeleteModal', () => {
 
   it('closes without confirming when cancel is clicked', async () => {
     const w = factory()
-    await w.get('[data-test="modal-tertiary"]').trigger('click')
+    await w.get('[data-test="modal-secondary"]').trigger('click')
     expect(w.emitted('confirm')).toBeUndefined()
     expect(w.emitted('update:isOpen')?.at(-1)).toEqual([false])
   })

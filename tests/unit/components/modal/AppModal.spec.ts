@@ -106,6 +106,24 @@ describe('AppModal', () => {
       ).toContain('px-12')
     })
 
+    it('left-aligns the header with headerAlign="left", 24px clear of the buttons', async () => {
+      mountModal({ headerAlign: 'left', subtitle: 'Sub' })
+      await nextTick()
+      const group = dialog()!.querySelector('[data-testid="cg-root"]')!
+      expect(group.classList).not.toContain('text-center')
+      expect(group.classList).toContain('pr-16')
+      expect(group.classList).not.toContain('pl-16')
+      // Still the default header, so the dialog stays labelled by its title.
+      expect(dialog()!.getAttribute('aria-labelledby')).toBe(group.id)
+
+      mounted.splice(0).forEach(w => w.unmount())
+      mountModal({ headerAlign: 'left', showBackButton: true })
+      await nextTick()
+      expect(
+        dialog()!.querySelector('[data-testid="cg-root"]')!.classList,
+      ).toContain('pl-16')
+    })
+
     it('hides the header when there is no title and no #header slot', async () => {
       mountModal({ title: undefined, ariaLabel: 'x' })
       await nextTick()
