@@ -137,11 +137,14 @@ describe('TheDepositDialog', () => {
       .findAllComponents(AppAvatar)
       .find(a => a.props('type') === 'account')
     expect(account?.props('address')).toBe(ADDRESS)
+    expect(account?.props('size')).toBe('m')
   })
 
-  it('shows the address, copies it and links it to the explorer', () => {
+  it('shows the address on one line, copies it in full and links it to the explorer', () => {
     const w = factory()
-    expect(w.text()).toContain(ADDRESS)
+    // Multi-address short form (6 + 4); the full value is what gets copied.
+    expect(w.text()).toContain('0x32Be...2D88')
+    expect(w.text()).not.toContain(ADDRESS)
     const copy = w.findComponent(AppBtnCopy)
     expect(copy.props('copyValue')).toBe(ADDRESS)
     // Same Button Icon size (M: 40px box, 24px glyph) as the explorer link.

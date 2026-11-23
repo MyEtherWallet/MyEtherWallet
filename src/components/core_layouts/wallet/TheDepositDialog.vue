@@ -45,18 +45,17 @@
           />
         </div>
       </div>
-      <div class="flex w-full items-center gap-4">
+      <div class="flex w-full items-center gap-3">
         <app-avatar
           type="account"
-          size="xl"
+          size="m"
           :address="walletAddress"
           class="shrink-0"
         />
-        <!-- break-all is inherited by the title span so the hex wraps. -->
+        <!-- Same short form as the multi-address switcher; copy keeps the full value. -->
         <app-content-group
-          :title="walletAddress"
-          wrap-title
-          class="min-w-0 flex-1 break-all"
+          :title="truncateAddress(walletAddress, 6, 4)"
+          class="min-w-0 flex-1"
         />
         <!-- Naked Button Icons inherit the glyph color from here. -->
         <div class="flex shrink-0 items-center gap-1 text-icon-brand">
@@ -81,6 +80,7 @@ import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import { truncateAddress } from '@/utils/filters'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
