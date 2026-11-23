@@ -75,25 +75,40 @@
           >
             <div class="flex flex-col gap-4">
               <div class="flex items-center gap-3">
+                <!-- The label keeps its width so the amount gets the rest of the row. -->
                 <app-content-group
                   :title="t('swap.swap-offer.youre-paying')"
-                  class="flex-1"
+                  class="shrink-0"
                 />
                 <app-content-group
-                  :title="String(amount)"
+                  :title="payingAmount.value"
                   :description="`≈ ${currencySymbol}${fromAmountFiat}`"
                   align="right"
-                  class="flex-1"
+                  wrap-title
+                  class="min-w-0 flex-1"
                 >
                   <template #title>
-                    <span class="inline-flex gap-1">
-                      {{ amount }}
+                    <span
+                      class="inline-flex flex-wrap justify-end gap-x-1 text-label-sm sm:text-label-base"
+                    >
+                      <span data-testid="swap-paying-amount" class="break-all">
+                        {{ payingAmount.value }}
+                      </span>
                       <app-token-symbol
                         :symbol="fromToken?.symbol || 'UNKNOWN'"
                         :address="tokenAddress(fromToken, fromChain)"
-                        class="!text-label-base !font-semibold"
+                        class="!text-label-sm sm:!text-label-base !font-semibold"
                       />
                     </span>
+                  </template>
+                  <template v-if="payingAmount.tooltipText" #title-icon="{ size }">
+                    <app-tooltip :text="payingAmount.tooltipText">
+                      <AppIcon
+                        name="information-circle"
+                        :size="size"
+                        class="cursor-pointer text-icon-default"
+                      />
+                    </app-tooltip>
                   </template>
                 </app-content-group>
                 <app-token-logo
@@ -120,12 +135,14 @@
                   class="flex-1"
                 >
                   <template #title>
-                    <span class="inline-flex gap-1">
+                    <span
+                      class="inline-flex gap-1 text-label-sm sm:text-label-base"
+                    >
                       ≈ {{ toAmountFormatted.value }}
                       <app-token-symbol
                         :symbol="toToken?.symbol || 'UNKNOWN'"
                         :address="tokenAddress(toToken, toChain)"
-                        class="!text-label-base !font-semibold"
+                        class="!text-label-sm sm:!text-label-base !font-semibold"
                       />
                     </span>
                   </template>
@@ -538,6 +555,19 @@ const toAmountFiat = computed(() => {
   const toTokenPrice = toToken.value?.price || '0'
   const value = BigNumber(toAmount.value).multipliedBy(toTokenPrice)
   return formatFiat(value.toString()).value
+})
+
+// The paid amount is what the user typed (or Max), so show it exactly: up to 20
+// characters fit the summary at 14px (mobile) / 16px (sm+). Longer values are
+// cut to 20 with an ellipsis and read in full from the tooltip.
+const PAYING_AMOUNT_MAX_CHARS = 20
+const payingAmount = computed<{ value: string; tooltipText?: string }>(() => {
+  const full = String(props.amount)
+  if (full.length <= PAYING_AMOUNT_MAX_CHARS) return { value: full }
+  return {
+    value: `${full.slice(0, PAYING_AMOUNT_MAX_CHARS - 1)}…`,
+    tooltipText: full,
+  }
 })
 
 const fromAmountFiat = computed(() => {

@@ -31,6 +31,7 @@ vi.mock('pinia', async importOriginal => {
 })
 
 import SwapOfferModal from '@/modules/swap/components/SwapOfferModal.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
 
 const USDT = { address: '0xusdt', symbol: 'USDT', decimals: 6, price: 1 }
 const ETH = { address: '0xeee', symbol: 'ETH', decimals: 18, price: 2000 }
@@ -47,13 +48,13 @@ const quote = (provider: string, eth: string, toToken: object = ETH) =>
 const fair = quote('oneInch', '0.99') // 1% loss
 const bad = quote('zerox', '0.8') // 20% loss
 
-const mountWith = (selectedQuote: ProviderQuoteResponse) =>
+const mountWith = (selectedQuote: ProviderQuoteResponse, amount = '2000') =>
   mount(SwapOfferModal, {
     props: {
       swapOfferOpen: true,
       selectedQuote,
       quotes: [fair, bad],
-      amount: '2000',
+      amount,
       swapGasFeeQuote: {
         quoteId: 'q1',
         fees: { REGULAR: { nativeValue: '0.001' } },
@@ -102,5 +103,32 @@ describe('SwapOfferModal price impact (MEW-2648)', () => {
     expect(wrapper.text()).toContain('swap.price-impact-unknown')
     expect(wrapper.text()).not.toContain('swap.price-impact-too-high')
     expect(proceedButton(wrapper).attributes('disabled')).toBeUndefined()
+  })
+})
+
+describe('SwapOfferModal paying amount', () => {
+  const payingAmount = (wrapper: ReturnType<typeof mountWith>) =>
+    wrapper.get('[data-testid="swap-paying-amount"]')
+  const tooltipTexts = (wrapper: ReturnType<typeof mountWith>) =>
+    wrapper.findAllComponents(AppTooltip).map(t => t.props('text'))
+
+  it('shows an amount of up to 20 characters in full, 14px scaling to 16px', () => {
+    const full = '0.006389040424117250' // 20 characters
+    const wrapper = mountWith(fair, full)
+
+    expect(payingAmount(wrapper).text()).toBe(full)
+    expect(tooltipTexts(wrapper)).not.toContain(full)
+    expect(payingAmount(wrapper).element.parentElement?.className).toContain(
+      'text-label-sm sm:text-label-base',
+    )
+  })
+
+  it('cuts a longer amount to 20 characters and shows it in full in a tooltip', () => {
+    const full = '0.006389040424117250123' // 23 characters
+    const wrapper = mountWith(fair, full)
+
+    expect(payingAmount(wrapper).text()).toBe('0.00638904042411725…')
+    expect(payingAmount(wrapper).text()).toHaveLength(20)
+    expect(tooltipTexts(wrapper)).toContain(full)
   })
 })
