@@ -16,10 +16,12 @@
                 wrap-title
                 class="flex-1"
               />
+              <!-- Capped so the label keeps >=40% of the row; long values wrap. -->
               <app-content-group
                 :title="row.value"
                 align="right"
-                class="shrink-0"
+                wrap-title
+                class="max-w-[60%]"
               >
                 <template #title>
                   <span :class="row.colorClass">{{ row.value }}</span>
