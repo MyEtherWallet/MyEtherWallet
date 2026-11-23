@@ -359,7 +359,9 @@
       "submitting": "Submitting...",
       "submit": "Submit",
       "saving": "Saving...",
-      "save": "Save"
+      "save": "Save",
+      "decrease-leverage": "Decrease leverage",
+      "increase-leverage": "Increase leverage"
     },
     "positions": {
       "tab-positions": "Positions",

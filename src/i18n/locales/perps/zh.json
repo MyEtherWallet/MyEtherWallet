@@ -355,7 +355,9 @@
       "submitting": "提交中…",
       "submit": "提交",
       "saving": "保存中…",
-      "save": "保存"
+      "save": "保存",
+      "decrease-leverage": "降低杠杆",
+      "increase-leverage": "提高杠杆"
     },
     "close": {
       "title": "确认平仓 {symbol} {direction}",
