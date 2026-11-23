@@ -4,20 +4,15 @@
     class="flex w-full h-16 items-center gap-3 rounded-16 bg-background-default p-4 text-left transition-colors hover:bg-background-default-hover cursor-pointer"
     @click="select"
   >
-    <!-- Round brand marks (Ledger, Trezor) already fill their circle; the wallet
-         avatar would inset them as if they were square logos. -->
-    <img
-      v-if="wallet.roundIcon && iconUrl"
-      :src="iconUrl"
-      alt=""
-      class="size-8 shrink-0 rounded-full"
-    />
+    <!-- Every mark fills its circle (square, rounded-square and round logos alike)
+         so the grid reads as one uniform set of circular icons. -->
     <AppAvatar
-      v-else
       type="wallet"
       size="m"
+      fit="cover"
       :url="iconUrl"
       :name="displayName"
+      class="shrink-0"
     />
     <span
       class="grow min-w-0 truncate text-base font-semibold text-text-default"
