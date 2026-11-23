@@ -131,4 +131,15 @@ describe('SwapOfferModal paying amount', () => {
     expect(payingAmount(wrapper).text()).toHaveLength(20)
     expect(tooltipTexts(wrapper)).toContain(full)
   })
+
+  it('makes the full-amount tooltip trigger keyboard-focusable', () => {
+    const full = '0.006389040424117250123'
+    const wrapper = mountWith(fair, full)
+
+    const tooltip = wrapper
+      .findAllComponents(AppTooltip)
+      .find(t => t.props('text') === full)!
+    const trigger = tooltip.find('[tabindex="0"]')
+    expect(trigger.attributes('aria-label')).toBe(full)
+  })
 })

@@ -103,11 +103,17 @@
                   </template>
                   <template v-if="payingAmount.tooltipText" #title-icon="{ size }">
                     <app-tooltip :text="payingAmount.tooltipText">
-                      <AppIcon
-                        name="information-circle"
-                        :size="size"
-                        class="cursor-pointer text-icon-default"
-                      />
+                      <span
+                        tabindex="0"
+                        :aria-label="payingAmount.tooltipText"
+                        class="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-brand"
+                      >
+                        <AppIcon
+                          name="information-circle"
+                          :size="size"
+                          class="cursor-pointer text-icon-default"
+                        />
+                      </span>
                     </app-tooltip>
                   </template>
                 </app-content-group>
@@ -151,11 +157,17 @@
                     #title-icon="{ size }"
                   >
                     <app-tooltip :text="toAmountFormatted.tooltipText">
-                      <AppIcon
-                        name="information-circle"
-                        :size="size"
-                        class="cursor-pointer text-icon-default"
-                      />
+                      <span
+                        tabindex="0"
+                        :aria-label="toAmountFormatted.tooltipText"
+                        class="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-brand"
+                      >
+                        <AppIcon
+                          name="information-circle"
+                          :size="size"
+                          class="cursor-pointer text-icon-default"
+                        />
+                      </span>
                     </app-tooltip>
                   </template>
                 </app-content-group>
