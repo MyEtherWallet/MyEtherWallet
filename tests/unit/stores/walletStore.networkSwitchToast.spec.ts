@@ -76,4 +76,30 @@ describe('walletStore network switch toast', () => {
     expect(toasts.messages).toHaveLength(1)
     expect(toasts.messages[0].text).toContain('Arbitrum Nova')
   })
+
+  it.each([false, true])(
+    'ignores a stale wallet switch result (%s) that settles after a newer switch',
+    async staleResult => {
+      const store = useWalletStore()
+      const toasts = useToastStore()
+      let settleFirst!: (ok: boolean) => void
+      const changeNetwork = vi
+        .fn()
+        .mockReturnValueOnce(new Promise(r => (settleFirst = r)))
+        .mockResolvedValue(true)
+      store.wallet = { changeNetwork } as never
+
+      await switchTo('MATIC', 'Polygon') // wallet still deciding
+      await switchTo('ARB', 'Arbitrum One')
+      expect(toasts.messages).toHaveLength(1)
+      expect(toasts.messages[0].text).toContain('Arbitrum One')
+
+      settleFirst(staleResult)
+      await new Promise(r => setTimeout(r))
+
+      expect(toasts.messages).toHaveLength(1)
+      expect(toasts.messages[0].type).toBe('success')
+      expect(toasts.messages[0].text).toContain('Arbitrum One')
+    },
+  )
 })

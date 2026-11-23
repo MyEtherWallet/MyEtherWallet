@@ -301,6 +301,8 @@ export const useWalletStore = defineStore('walletStore', () => {
         const networkChangeStatus = await (
           wallet.value as BaseEvmWallet
         ).changeNetwork(Number(newChain.chainID))
+        // A newer selection owns the network-switch toast; drop this stale result.
+        if (selectedChain.value?.name !== newChain.name) return
         if (!networkChangeStatus) {
           // Wallet rejected the switch — show only the failure toast, never a
           // contradictory "switched" success toast alongside it.
