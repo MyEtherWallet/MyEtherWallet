@@ -54,6 +54,12 @@ describe('getLocalizedWalletError (MEW-2049)', () => {
     )
   })
 
+  it('maps the device picker listen timeout to a localized message', () => {
+    expect(getLocalizedWalletError('No Ledger device found (timeout)')).toBe(
+      'No Ledger was detected. Connect and unlock your device, then try again.',
+    )
+  })
+
   it('maps on-device rejection to the shared cancel message', () => {
     expect(getLocalizedWalletError('Ledger device: 0x6985')).toBe(
       'User canceled the request',
