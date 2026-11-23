@@ -3,8 +3,18 @@
     v-if="isWalletConnected && isLoadedChainsData"
     v-model="openDialog"
     :title="$t('common.deposit_title', { chain: chainName })"
-    :subtitle="$t('common.deposit_description', { chain: chainName })"
   >
+    <!-- Left-aligned header (AppModal's default one is centred); pr-12 keeps
+         the title clear of the close button. `title` above stays the label. -->
+    <template #header>
+      <app-content-group
+        :title="$t('common.deposit_title', { chain: chainName })"
+        :description="$t('common.deposit_description', { chain: chainName })"
+        size="l"
+        wrap-title
+        class="w-full pr-12"
+      />
+    </template>
     <div
       v-if="walletAddress"
       class="flex flex-col items-center gap-6 px-4 pb-4 sm:px-6 sm:pb-6"

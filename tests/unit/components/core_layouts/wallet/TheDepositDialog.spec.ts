@@ -61,6 +61,7 @@ vi.mock('@/utils/blockies', () => ({
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 
 const i18n = createI18n({
   legacy: false,
@@ -99,18 +100,21 @@ describe('TheDepositDialog', () => {
     trackDepositEvent.mockClear()
   })
 
-  it('puts the chain title and description in the standard modal header', () => {
+  it('puts the chain title and description left-aligned in the modal header', () => {
     const w = factory()
-    const modal = w.findComponent({ name: 'AppModal' })
-    expect(modal.props('title')).toBe('Your Ethereum address')
-    expect(modal.props('subtitle')).toBe(
+    // The modal keeps the title as its accessible name.
+    expect(w.findComponent({ name: 'AppModal' }).props('title')).toBe(
+      'Your Ethereum address',
+    )
+    const header = w.get('[data-test="custom-header"]')
+    const group = header.findComponent(AppContentGroup)
+    expect(group.props('title')).toBe('Your Ethereum address')
+    expect(group.props('description')).toBe(
       'You can deposit any tokens supported by Ethereum.',
     )
-    // No custom header and no second copy of the title in the body.
-    expect(w.get('[data-test="custom-header"]').element.children).toHaveLength(
-      0,
-    )
-    expect(w.text()).not.toContain('Your Ethereum address')
+    expect(group.props('align')).toBe('left')
+    // Only the header carries the title, not a second copy in the body.
+    expect(w.text().split('Your Ethereum address')).toHaveLength(2)
   })
 
   it('centres the chain mark on the QR, which sits flush without a frame', () => {
