@@ -2,14 +2,15 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ManageAccountsDeleteModal from '@/components/core_layouts/wallet/ManageAccountsDeleteModal.vue'
 
-// AppModal teleports; stub it to render the title/subtitle props + default slot
-// inline and surface its v-model so we can assert the modal closes.
+// AppModal teleports; stub it to render the title/subtitle props, the default
+// slot and its footer `buttons` inline, and surface its v-model.
 const stubs = {
   AppModal: {
     name: 'AppModal',
-    props: ['modelValue', 'title', 'subtitle'],
-    template:
-      '<div :data-open="modelValue"><h1>{{ title }}</h1><p>{{ subtitle }}</p><slot /></div>',
+    props: ['modelValue', 'title', 'subtitle', 'buttons'],
+    template: `<div :data-open="modelValue"><h1>{{ title }}</h1><p>{{ subtitle }}</p>
+      <section data-test="body"><slot /></section>
+      <button v-for="(b, slot) in buttons" :key="slot" :data-test="'modal-' + slot" @click="b.onClick">{{ b.label }}</button></div>`,
   },
 }
 
@@ -20,16 +21,30 @@ const factory = (props = {}) =>
   })
 
 describe('ManageAccountsDeleteModal', () => {
+  it('uses the modal footer buttons: a danger primary and a tertiary close', () => {
+    const w = factory()
+    const { primary, tertiary } = w
+      .findComponent({ name: 'AppModal' })
+      .props('buttons')
+    expect(primary).toMatchObject({
+      label: 'multi_address.remove.confirm',
+      tone: 'danger',
+    })
+    expect(tertiary).toMatchObject({ label: 'multi_address.remove.cancel' })
+    // No hand-rolled buttons left in the body.
+    expect(w.get('[data-test="body"]').findAll('button')).toHaveLength(0)
+  })
+
   it('emits confirm and closes when the remove button is clicked', async () => {
     const w = factory()
-    await w.get('[data-test="delete-modal-confirm"]').trigger('click')
+    await w.get('[data-test="modal-primary"]').trigger('click')
     expect(w.emitted('confirm')).toHaveLength(1)
     expect(w.emitted('update:isOpen')?.at(-1)).toEqual([false])
   })
 
   it('closes without confirming when cancel is clicked', async () => {
     const w = factory()
-    await w.get('[data-test="delete-modal-cancel"]').trigger('click')
+    await w.get('[data-test="modal-tertiary"]').trigger('click')
     expect(w.emitted('confirm')).toBeUndefined()
     expect(w.emitted('update:isOpen')?.at(-1)).toEqual([false])
   })
