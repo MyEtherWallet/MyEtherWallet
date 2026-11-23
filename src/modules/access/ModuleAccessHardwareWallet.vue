@@ -20,7 +20,7 @@
         data-testid="hw-connect"
         class="w-full"
         :is-loading="connectingWallet"
-        :disabled="connectingWallet"
+        :disabled="connectingWallet || !selectedChain"
         @click="currentView === 'ledger' ? connectViaUSB() : unlockWallet()"
       >
         {{
@@ -34,7 +34,7 @@
         type="button"
         data-testid="hw-connect-bluetooth"
         class="mx-auto text-sm font-semibold text-text-brand cursor-pointer disabled:cursor-default disabled:opacity-50"
-        :disabled="connectingWallet"
+        :disabled="connectingWallet || !selectedChain"
         @click="connectViaBluetooth"
       >
         {{ t('access_wallet_ledger.connect_bluetooth') }}
@@ -738,6 +738,20 @@ const deviceMark = computed(() => {
 /** Only the networks this device's app can sign for. */
 const deviceChains = computed(() =>
   chains.value.filter(chain => walletConfig.value?.canSupport?.(chain) ?? true),
+)
+// Opening this step from the URL (browser Back, a refresh, a deep link to
+// ?type=ledger) skips the wallet chooser, which only offers the device on chains
+// it supports. The access chain is then the app's chain, which the device may not
+// sign on, and connecting threw "ledger: no provider for network: ARBNova"
+// (APP-MEW-WEB-1GR). Move it to the first chain the network dropdown offers; also
+// when no chain resolved at all, which would hand the device `undefined`.
+watch(
+  [selectedChain, deviceChains],
+  ([chain, supported]) => {
+    if (chain && supported.some(c => c.name === chain.name)) return
+    if (supported.length) updateChain(supported[0])
+  },
+  { immediate: true },
 )
 const { closeAccessDialog } = useAccessStore()
 
