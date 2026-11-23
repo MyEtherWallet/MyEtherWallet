@@ -28,11 +28,14 @@ export const isTrezorSupported = (): boolean =>
 
 /**
  * Checks if an error is a user rejection (e.g. user cancelled transaction in wallet).
- * Detects EIP-1193 code 4001 and common rejection message patterns.
+ * Detects EIP-1193 code 4001 and common rejection message patterns. Some
+ * wallets (Enkrypt's Bitcoin provider) reject with a bare string instead of an
+ * error object (APP-MEW-WEB-1Z).
  */
 export const isUserRejectionError = (error: unknown): boolean => {
   const err = error as { code?: number; message?: string }
-  const message = err?.message?.toLowerCase() ?? ''
+  const message =
+    (typeof error === 'string' ? error : err?.message)?.toLowerCase() ?? ''
   return (
     err?.code === 4001 ||
     message.includes('rejected') ||
