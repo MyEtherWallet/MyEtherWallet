@@ -35,6 +35,10 @@ import configs from '@/configs'
 
 const PARTNER = 'ondo-finance'
 
+// One toast slot for network switches: each switch's outcome (switched or
+// failed) replaces the previous one instead of stacking a toast per switch.
+const NETWORK_SWITCH_TOAST_ID = 'network-switch'
+
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
   const walletAddress: Ref<string | null> = ref(null)
@@ -282,6 +286,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     const showNetworkSwitchedToast = () => {
       if (!isNetworkSwitch || !newChain) return
       useToastStore().addToastMessage({
+        id: NETWORK_SWITCH_TOAST_ID,
         text: i18n.global.t('common.network_switched', {
           network: newChain.nameLong,
         }),
@@ -300,6 +305,7 @@ export const useWalletStore = defineStore('walletStore', () => {
           // Wallet rejected the switch — show only the failure toast, never a
           // contradictory "switched" success toast alongside it.
           useToastStore().addToastMessage({
+            id: NETWORK_SWITCH_TOAST_ID,
             text: i18n.global.t('common.network_change_failed'),
             textSecondary: i18n.global.t(
               'common.network_change_failed_description',
