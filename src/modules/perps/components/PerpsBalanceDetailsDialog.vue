@@ -4,33 +4,42 @@
     :title="$t('perps.balance.title')"
     @close="$emit('close')"
   >
-    <div class="px-4 sm:px-6 pb-6 pt-4">
-      <div
-        class="bg-background-brand-subtle rounded-2xl divide-y divide-border-strong p-2"
-      >
-        <div
-          v-for="row in balanceRows"
-          :key="row.label"
-          class="flex items-center justify-between px-5 py-4"
-        >
-          <span
-            class="text-s-11 uppercase text-text-subtle tracking-sp-06 font-bold"
-            >{{ row.label }}</span
-          >
-          <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
-            {{ row.value }}
-          </span>
+    <div class="px-4 sm:px-6">
+      <app-card surface="alternative">
+        <div class="flex flex-col gap-4 p-4">
+          <template v-for="(row, index) in balanceRows" :key="row.label">
+            <app-divider v-if="index" variant="alternative" class="-my-1" />
+            <div class="flex items-center gap-3">
+              <app-content-group
+                :title="row.label"
+                inverted
+                wrap-title
+                class="flex-1"
+              />
+              <app-content-group
+                :title="row.value"
+                align="right"
+                class="shrink-0"
+              >
+                <template #title>
+                  <span :class="row.colorClass">{{ row.value }}</span>
+                </template>
+              </app-content-group>
+            </div>
+          </template>
         </div>
-      </div>
+      </app-card>
+    </div>
 
+    <template #footer>
       <app-base-button
         type="link"
         size="large"
-        class="w-full mt-4 text-text-brand"
+        class="w-full"
         @click="$emit('close')"
         >{{ $t('perps.trade.tab-close') }}</app-base-button
       >
-    </div>
+    </template>
   </app-modal>
 </template>
 
@@ -39,6 +48,9 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppModal from '@/components/modal/AppModal.vue'
+import AppCard from '@/components/card/AppCard.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppDivider from '@/components/divider/AppDivider.vue'
 import {
   usePerpsBalance,
   usePerpsPortfolioSummary,
