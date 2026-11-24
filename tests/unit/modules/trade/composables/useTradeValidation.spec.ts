@@ -82,85 +82,41 @@ describe('useTradeValidation minimum errors', () => {
 })
 
 describe('useTradeValidation balance check', () => {
-  beforeEach(() => {
-    setActivePinia(createPinia())
-    // Live wallet balance: 4.478202 USDC, what the card and % buttons read
-    useWalletStore().tokens = [
-      {
-        contract: USDC.address,
-        decimals: 6,
-        symbol: 'USDC',
-        name: 'USD Coin',
-        price: 1,
-        balance: '4.478202',
-        balanceWei: '4478202',
-      },
-    ] as never
-  })
-
-  // MEW-2690: the selected token is a frozen snapshot that can hold an older,
-  // lower balance (1.5 USDC here) after the wallet balance goes up
-  const staleUsdc = { ...USDC, balance: '1500000' }
-
-  it('validates against the live wallet balance, not the token snapshot', () => {
-    const { fromAmountError, isInsufficientBalanceError } = makeValidation(
-      '2.239101',
-      { isWalletConnected: true, fromToken: staleUsdc },
-    )
-
-    expect(isInsufficientBalanceError.value).toBe(false)
-    expect(fromAmountError.value).toBe('')
-  })
-
-  it('accepts the whole live balance (MAX)', () => {
-    const { isInsufficientBalanceError } = makeValidation('4.478202', {
-      isWalletConnected: true,
-      fromToken: staleUsdc,
-    })
-
-    expect(isInsufficientBalanceError.value).toBe(false)
-  })
-
-  it('still flags an amount above the live balance', () => {
-    const { fromAmountError, isInsufficientBalanceError } = makeValidation(
-      '4.478203',
-      { isWalletConnected: true, fromToken: staleUsdc },
-    )
-
-    expect(isInsufficientBalanceError.value).toBe(true)
-    expect(fromAmountError.value).toBe('trade.error.not_enough_balance')
-  })
-})
-
-describe('useTradeValidation native balance check', () => {
   beforeEach(async () => {
     setActivePinia(createPinia())
+    // Live wallet balances, what the card and % buttons read
     await useWalletStore().setTokens([
-      {
-        contract: MAIN_TOKEN_CONTRACT,
-        balance: '2000000000000000000',
-        decimals: 18,
-      },
+      { contract: USDC.address, balance: '4478202', decimals: 6 },
+      { contract: MAIN_TOKEN_CONTRACT, balance: '2000000000000000000' },
     ] as never)
   })
 
-  // The swap list carries the native sentinel checksummed
-  const eth = {
-    ...USDC,
-    symbol: 'ETH',
-    address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-    decimals: 18,
-    balance: '0',
-  }
+  const balanceError = (amount: string, fromToken: typeof USDC) =>
+    makeValidation(amount, { isWalletConnected: true, fromToken })
+      .fromAmountError.value
+
+  it('validates against the live wallet balance, not the token snapshot', () => {
+    // MEW-2690: the selected token is a frozen snapshot that can keep an
+    // older, lower balance (1.5 USDC) after the wallet balance goes up
+    const staleUsdc = { ...USDC, balance: '1500000' }
+
+    // 50% and MAX from the ticket video
+    expect(balanceError('2.239101', staleUsdc)).toBe('')
+    expect(balanceError('4.478202', staleUsdc)).toBe('')
+    expect(balanceError('4.478203', staleUsdc)).toBe(
+      'trade.error.not_enough_balance',
+    )
+  })
 
   it('reads the native balance for a checksummed sentinel', () => {
-    expect(
-      makeValidation('1.5', { isWalletConnected: true, fromToken: eth })
-        .isInsufficientBalanceError.value,
-    ).toBe(false)
-    expect(
-      makeValidation('2.1', { isWalletConnected: true, fromToken: eth })
-        .isInsufficientBalanceError.value,
-    ).toBe(true)
+    const eth = {
+      ...USDC,
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      decimals: 18,
+      balance: '0',
+    }
+
+    expect(balanceError('1.5', eth)).toBe('')
+    expect(balanceError('2.1', eth)).toBe('trade.error.not_enough_balance')
   })
 })

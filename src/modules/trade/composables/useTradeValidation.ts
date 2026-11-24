@@ -38,7 +38,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
   } = form
 
   const { t } = useI18n()
-  const walletStore = useWalletStore()
+  const { getTokenBalance } = useWalletStore()
 
   // Check if amount has pre-quote errors (excludes balance check)
   const hasPreQuoteError = computed(() => {
@@ -133,18 +133,17 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       }
     }
 
-    // Balance check (only when wallet is connected). Uses the live wallet
-    // balance, the one the card shows and the % buttons fill from: the
-    // selected token is a frozen snapshot that can lag behind it (MEW-2690).
+    // Balance check (only when wallet is connected). Reads the wallet store,
+    // like the card's balance and the % buttons: the selected token is a
+    // frozen snapshot that can lag behind it (MEW-2690).
     if (isWalletConnected.value) {
       try {
-        const balance = BigInt(
-          walletStore.getTokenBalance(fromTokenSelected.value.address)
-            ?.balanceWei || '0',
+        const balanceWei = BigInt(
+          getTokenBalance(fromTokenSelected.value.address)?.balanceWei || '0',
         )
         const baseAmount = parseUnits(amountBN.toFixed(decimals), decimals)
 
-        if (balance < baseAmount) {
+        if (balanceWei < baseAmount) {
           return {
             code: 'balance',
             message: t('trade.error.not_enough_balance'),
