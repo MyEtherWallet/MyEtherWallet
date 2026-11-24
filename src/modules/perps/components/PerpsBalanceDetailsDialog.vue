@@ -16,12 +16,13 @@
                 wrap-title
                 class="flex-1"
               />
-              <!-- Capped so the label keeps >=40% of the row; long values wrap. -->
+              <!-- Capped so the label keeps >=40% of the row; long values wrap,
+                   and break-words splits one with no space to wrap at. -->
               <app-content-group
                 :title="row.value"
                 align="right"
                 wrap-title
-                class="max-w-[60%]"
+                class="max-w-[60%] break-words"
               >
                 <template #title>
                   <span :class="row.colorClass">{{ row.value }}</span>

@@ -40,6 +40,7 @@ describe('PerpsBalanceDetailsDialog', () => {
     expect(values.length).toBeGreaterThan(0)
     for (const value of values) {
       expect(value.classes()).toContain('max-w-[60%]')
+      expect(value.classes()).toContain('break-words')
       expect(value.classes()).not.toContain('shrink-0')
       expect(value.props('wrapTitle')).toBe(true)
       expect(value.text()).toBe(value.props('title'))
