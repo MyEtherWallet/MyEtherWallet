@@ -313,4 +313,26 @@ describe('closing the progress modal while the wallet is pending (MEW-2694)', ()
     )
     expect(orderHash.value).toBe('')
   })
+
+  it('does not bring back the deposit flag when closed while the provider loads', async () => {
+    const { confirmTrade, tradeFlowStep, depositPending, form } =
+      await makeHarness()
+    form.fromTokenSelected.value = {
+      ...USDC,
+      symbol: 'ETH',
+      address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      decimals: 18,
+    } as never
+    mockSubmitOrder.mockReturnValue(deferred().promise)
+
+    void confirmTrade()
+    await nextTick()
+    tradeFlowStep.value = 'idle'
+    await nextTick()
+    // Closed before the 1inch provider finished loading.
+    expect(mockSubmitOrder).not.toHaveBeenCalled()
+
+    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalled())
+    expect(depositPending.value).toBe(false)
+  })
 })

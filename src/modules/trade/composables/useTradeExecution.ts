@@ -508,7 +508,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
       const isNativeOrder =
         snapshot.from.address.toLowerCase() === NATIVE_ADDRESS
-      depositPending.value = isNativeOrder
+      // Closed while the provider loaded: the next confirm must not inherit
+      // this order's deposit copy.
+      if (!isAbandoned()) depositPending.value = isNativeOrder
       awaitingDeposit = isNativeOrder
       const result = await fusion.submitOrder(
         {
