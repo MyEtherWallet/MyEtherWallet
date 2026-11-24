@@ -595,6 +595,7 @@ watch(
     }
     isProceeding.value = false
     loadingModel.value = false
+    showApproveMessage.value = false
   },
 )
 
