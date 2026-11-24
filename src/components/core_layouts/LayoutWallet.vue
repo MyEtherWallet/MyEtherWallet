@@ -30,13 +30,14 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-border-default border-l-1',
         ]"
-        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-5 pt-4 pb-5 sm:pt-8 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
+        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-5 pt-4 pb-5 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
-        <!-- z-10: some panels pull their header up with negative margins and
+        <!-- Top right at every width, like the dialog's close button.
+             z-10: some panels pull their header up with negative margins and
              would otherwise cover the button's hit area -->
         <app-btn-icon-close
           :label="$t('common.close_side_menu')"
-          class="relative z-10 flex-none self-start sm:self-end"
+          class="relative z-10 flex-none self-end"
           @close="closePanel"
         />
         <div class="flex-1 min-h-0">

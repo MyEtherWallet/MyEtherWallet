@@ -206,6 +206,14 @@ describe('ModuleAllStock table (MEW-2469)', () => {
     })
   })
 
+  it('drops market cap at size M so the name keeps its room', async () => {
+    cardWidth.value = 900
+    const w = await mountModule()
+    const labels = w.findAll('[role="columnheader"]').map(h => h.text())
+    expect(labels).not.toContain('Market cap')
+    expect(labels).toContain('Price')
+  })
+
   it('keeps only the name and market cap columns at size S', async () => {
     cardWidth.value = 400
     const w = await mountModule()

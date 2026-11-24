@@ -40,8 +40,10 @@ const props = withDefaults(
     error?: boolean
     loading?: boolean
     disabled?: boolean
-    /** Output-only amount (e.g. a quote result): shown, never typed. */
+    /** Output-only amount (e.g. a quote result): shown, never typed or focused. */
     readonly?: boolean
+    /** The amount may shrink past 20px to 16px, then 14px (Swap, Trade). */
+    extendedScale?: boolean
     maxDecimals?: number
     balance?: string
     balanceError?: boolean
@@ -55,6 +57,7 @@ const props = withDefaults(
     loading: false,
     disabled: false,
     readonly: false,
+    extendedScale: false,
     maxDecimals: 18,
     balance: '',
     balanceError: false,
@@ -104,7 +107,8 @@ const infoColorClass = computed(() => {
           :show-currency="false"
           :error="error"
           :disabled="disabled"
-          :readonly="readonly || undefined"
+          :readonly="readonly"
+          :extended-scale="extendedScale"
           :max-decimals="maxDecimals"
           :aria-describedby="hasInfoRow ? infoId : undefined"
           class="flex-1 min-w-0"

@@ -14,11 +14,21 @@ export interface AppInputNakedProps {
   /** Turns currency, value and info row red. */
   error?: boolean
   disabled?: boolean
+  /**
+   * Output only (e.g. a quote result): keeps its colours, but is never typed
+   * in, clicked into or tabbed to. Screen readers still read it.
+   */
+  readonly?: boolean
   /** Swaps the info row for a spinner; the value stays editable. */
   loading?: boolean
   maxDecimals?: number
   /** Steps value + currency down the heading scale when the value overflows. */
   autoScale?: boolean
+  /**
+   * Lets autoScale go on past heading/base (20px) to 16px, then 14px, so a
+   * 20-character amount fits a side-panel card (Swap, Trade).
+   */
+  extendedScale?: boolean
   id?: string
   /** Accessible name — the field has no visible label. */
   label: string
@@ -61,5 +71,26 @@ export const INPUT_NAKED_SCALE: InputNakedScaleStep[] = [
     currencyClass: 'text-heading-base',
     valueFont: { size: 20, tracking: -0.02 },
     currencyFont: { size: 20, tracking: -0.02 },
+  },
+]
+
+/**
+ * `extendedScale`: 16px, then 14px at the smallest. No heading token is this
+ * small, so these are the label sizes kept at the heading weight (the amount
+ * only shrinks, it doesn't get lighter).
+ */
+export const INPUT_NAKED_EXTENDED_SCALE: InputNakedScaleStep[] = [
+  ...INPUT_NAKED_SCALE,
+  {
+    valueClass: 'text-label-base font-bold',
+    currencyClass: 'text-label-base font-bold',
+    valueFont: { size: 16, tracking: -0.02 },
+    currencyFont: { size: 16, tracking: -0.02 },
+  },
+  {
+    valueClass: 'text-label-sm font-bold',
+    currencyClass: 'text-label-sm font-bold',
+    valueFont: { size: 14, tracking: -0.02 },
+    currencyFont: { size: 14, tracking: -0.02 },
   },
 ]

@@ -1,8 +1,13 @@
 <template>
-  <div>
-    <app-sheet class="!p-2 !py-6 !sm:py-8" :is-elivated="false">
+  <!--
+    @container: the card's side padding follows its own width, as
+    AppTableWrapper's does (24px from 768, 8px below, where the header adds 8
+    back), so this card and the Explore Perps one below it line up.
+  -->
+  <div class="@container">
+    <app-sheet class="px-2! py-6! @3xl:px-6!" :is-elivated="false">
       <div
-        class="flex flex-col xs:flex-row flex-wrap lg:justify-between lg:items-center gap-4 mb-5 xs:px-4"
+        class="flex flex-col xs:flex-row flex-wrap lg:justify-between lg:items-center gap-4 mb-5 px-2 @3xl:px-0"
       >
         <h1 class="text-s-24 xs:text-s-20 font-bold hidden lg:block">
           {{ selectedTab.label }}
@@ -238,7 +243,7 @@
 
       <!-- Orders tab -->
       <template v-else-if="activeTab === 'orders'">
-        <div class="mb-4 xs:pl-4">
+        <div class="mb-4 pl-2 @3xl:pl-0">
           <AppSegmentedControl
             v-model="selectedOrderFilterValue"
             :items="orderFilterTabs"

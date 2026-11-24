@@ -4,6 +4,7 @@
     :model-value="side === 'sell' ? amount : displayAmount"
     :input-label="$t(`trade.${side}_label`)"
     :readonly="side === 'buy'"
+    extended-scale
     :conversion="infoText"
     :info-message="infoText"
     :error="isErrorVisible"

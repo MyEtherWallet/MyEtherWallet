@@ -14,6 +14,8 @@
       :class="[
         'flex items-center gap-0.5 h-9 max-w-full',
         disabled ? 'cursor-not-allowed' : 'cursor-text',
+        // Not a click target: a click would focus the input and show a caret.
+        readonly && 'pointer-events-none',
       ]"
     >
       <span
@@ -42,6 +44,8 @@
           v-bind="inputAttrs"
           :value="model"
           :disabled="disabled"
+          :readonly="readonly"
+          :tabindex="readonly ? -1 : undefined"
           :placeholder="placeholder"
           :aria-label="label"
           :aria-invalid="error || undefined"
@@ -88,6 +92,7 @@ import AppSpinner from '@/components/spinner/AppSpinner.vue'
 import { measureTextWidth } from '@/utils/measureText'
 import { sanitizeAmount, type AmountEdit } from './sanitizeAmount'
 import {
+  INPUT_NAKED_EXTENDED_SCALE,
   INPUT_NAKED_SCALE,
   type AppInputNakedProps,
   type InputNakedScaleStep,
@@ -103,16 +108,18 @@ const props = withDefaults(defineProps<AppInputNakedProps>(), {
   conversion: '',
   error: false,
   disabled: false,
+  readonly: false,
   loading: false,
   maxDecimals: 18,
   autoScale: true,
+  extendedScale: false,
   id: undefined,
 })
 
 // String, never number — keeps "0.", trailing zeros and amounts above 2^53
 const model = defineModel<string>({ required: true })
 
-// `class` styles the root, everything else (readonly, name, …) reaches the input
+// `class` styles the root, everything else (name, …) reaches the input
 const attrs = useAttrs()
 const attrsClass = computed(() => attrs.class)
 const inputAttrs = computed(() =>
@@ -150,17 +157,20 @@ const measure = (
   text.length * tracking * size
 
 const scale = computed<InputNakedScaleStep>(() => {
-  const [defaultStep] = INPUT_NAKED_SCALE
+  const steps = props.extendedScale
+    ? INPUT_NAKED_EXTENDED_SCALE
+    : INPUT_NAKED_SCALE
+  const [defaultStep] = steps
   if (!props.autoScale || !rootWidth.value) return defaultStep
   const text = model.value || props.placeholder
   const currency = props.showCurrency ? props.currency : ''
   const available = rootWidth.value - VALUE_ROW_CHROME_PX
   return (
-    INPUT_NAKED_SCALE.find(
+    steps.find(
       step =>
         measure(currency, step.currencyFont) + measure(text, step.valueFont) <=
         available,
-    ) ?? INPUT_NAKED_SCALE[INPUT_NAKED_SCALE.length - 1]
+    ) ?? steps[steps.length - 1]
   )
 })
 
