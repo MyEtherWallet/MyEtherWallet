@@ -184,15 +184,24 @@ watch(
   },
 )
 
+// modal actions
+const signing = ref(false)
+// Bumped on every confirm and every close. Closing the review while the wallet
+// is still waiting (a phone over WalletConnect, a hardware device) abandons
+// that request: whatever the wallet answers later is dropped, nothing is
+// broadcast, saved or shown.
+let signSession = 0
+
 watch(
   () => openModal.value,
   value => {
     model.value = value
+    if (value) return
+    signSession++
+    signing.value = false
+    showApproveMessage.value = false
   },
 )
-
-// modal actions
-const signing = ref(false)
 
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
@@ -217,6 +226,8 @@ const confirmTransaction = async () => {
   analytics.trackSendEvent(SendEvent.CONFIRM_PROCEED, {
     token: props.toToken?.symbol,
   })
+  const session = ++signSession
+  const isAbandoned = () => session !== signSession
   try {
     //TO: show message that wallet is not connected
     if (!wallet.value) {
@@ -236,6 +247,7 @@ const confirmTransaction = async () => {
           )
         )?.signed
       : (props.signedTx as HexPrefixedString)
+    if (isAbandoned()) return
 
     const txPromise =
       wallet.value?.getWalletType() === WalletType.WAGMI ||
@@ -246,6 +258,7 @@ const confirmTransaction = async () => {
 
     await txPromise
       ?.then(hash => {
+        if (isAbandoned()) return
         // Build block explorer URLs
         const blockExplorerUrl = selectedChain.value?.blockExplorerTX
           ? selectedChain.value.blockExplorerTX.replace('[[txHash]]', hash)
@@ -289,6 +302,7 @@ const confirmTransaction = async () => {
         emit('tx-sent', hash)
       })
       .catch(e => {
+        if (isAbandoned()) return
         if (isUserRejectionError(e)) {
           toastStore.addToastMessage({
             type: ToastType.Info,
@@ -331,9 +345,11 @@ const confirmTransaction = async () => {
           },
         })
       })
+    if (isAbandoned()) return
     signing.value = false
     showApproveMessage.value = false
   } catch (e) {
+    if (isAbandoned()) return
     signing.value = false
     showApproveMessage.value = false
 
