@@ -1,4 +1,12 @@
-import { ref, computed, watch, nextTick, type Ref, type ComputedRef } from 'vue'
+import {
+  ref,
+  computed,
+  watch,
+  nextTick,
+  onScopeDispose,
+  type Ref,
+  type ComputedRef,
+} from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
@@ -565,6 +573,9 @@ export function useSwapModule(): SwapModuleBindings {
   watch(bestOfferSelectionOpen, open => {
     if (!open) swapSession++
   })
+  // Leaving the swap view abandons it the same way (the modal unmounts
+  // without emitting a close).
+  onScopeDispose(() => swapSession++)
 
   const handleBitcoinTransaction = async (
     quoteId: string,
