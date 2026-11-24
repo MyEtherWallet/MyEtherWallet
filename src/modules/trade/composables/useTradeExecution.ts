@@ -163,13 +163,26 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     })
   }
 
+  // Bumped on every confirm, and when the progress modal is closed before the
+  // order is in (MEW-2694). That confirm keeps running, so an order the wallet
+  // signs later is still saved and toasted, but it no longer drives the
+  // modals: Review isn't left spinning and a newer confirm keeps its state.
+  let confirmSession = 0
+
   // Closing the progress modal while the order is still pending leaves the user
   // with no in-flight indicator — hand over to the processing toast, which
   // ModuleNotifications removes by id when the order settles.
   watch(tradeFlowStep, (step, prevStep) => {
     if (prevStep !== 'processing' || step !== 'idle') return
     const hash = orderHash.value
-    if (!hash) return
+    if (!hash) {
+      if (txProceeding.value) {
+        confirmSession++
+        txProceeding.value = false
+        depositPending.value = false
+      }
+      return
+    }
     const order = tradeOrdersStore
       .getOrdersByAddress(walletAddress.value ?? '')
       .find(o => o.hash === hash)
@@ -464,6 +477,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     const snapshot = snapshotTrade()
     if (!snapshot) return
 
+    const session = ++confirmSession
+    const isAbandoned = () => session !== confirmSession
     txProceeding.value = true
     const analyticsPayload = getAnalyticsPayload()
     analytics.trackTradeEvent(TradeEvent.OFFER_PROCEED, analyticsPayload)
@@ -502,13 +517,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         },
         {
           onDepositSent: () => {
-            depositPending.value = false
+            if (!isAbandoned()) depositPending.value = false
           },
         },
       )
-      depositPending.value = false
-
-      orderHash.value = result.hash
+      if (!isAbandoned()) {
+        depositPending.value = false
+        orderHash.value = result.hash
+      }
 
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue = BigNumber(snapshot.amount || '0').times(
@@ -538,7 +554,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       // The user dismissed the progress modal while the order was submitting —
       // the toast is now the only in-flight indicator. The normal flow (modal
       // kept open, closed later) gets its toast from the step watcher below.
-      if (stepIs('idle')) {
+      if (isAbandoned() || stepIs('idle')) {
         addProcessingToast(result.hash)
       }
     } catch (e) {
@@ -553,7 +569,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         return
       }
 
-      if (stepIs('processing')) {
+      if (!isAbandoned() && stepIs('processing')) {
         tradeFlowStep.value = 'review'
       }
       if (isUserRejectionError(e)) {
@@ -593,8 +609,10 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         type: ToastType.Error,
       })
     } finally {
-      txProceeding.value = false
-      depositPending.value = false
+      if (!isAbandoned()) {
+        txProceeding.value = false
+        depositPending.value = false
+      }
     }
   }
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 
 // Partial: `useTradeExecution` transitively pulls in `@/i18n`, which needs the
 // real `createI18n`. Only `useI18n` is stubbed, to keep `t()` outside a component.
@@ -8,8 +8,9 @@ vi.mock('vue-i18n', async importOriginal => ({
   useI18n: () => ({ t: (key: string) => key }),
 }))
 
+const mockAddToast = vi.fn()
 vi.mock('@/stores/toastStore', () => ({
-  useToastStore: () => ({ addToastMessage: vi.fn() }),
+  useToastStore: () => ({ addToastMessage: mockAddToast }),
 }))
 
 const mockAddOrder = vi.fn()
@@ -217,5 +218,66 @@ describe('confirmTrade saves what the user confirmed (MEW trade notification)', 
       }),
       expect.anything(),
     )
+  })
+})
+
+// The wallet (a phone over WalletConnect) holds the order signature until the
+// user acts on it.
+const deferred = <T>() => {
+  let resolve!: (value: T) => void
+  let reject!: (reason: unknown) => void
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res
+    reject = rej
+  })
+  return { promise, resolve, reject }
+}
+
+describe('closing the progress modal while the wallet is pending (MEW-2694)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('stops waiting on close but still saves an order signed later', async () => {
+    const { confirmTrade, tradeFlowStep, txProceeding } = await makeHarness()
+    const pending = deferred<{ hash: string }>()
+    mockSubmitOrder.mockReturnValue(pending.promise)
+
+    const confirming = confirmTrade()
+    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalled())
+    expect(txProceeding.value).toBe(true)
+
+    tradeFlowStep.value = 'idle'
+    await nextTick()
+    expect(txProceeding.value).toBe(false)
+
+    pending.resolve({ hash: '0xorder' })
+    await confirming
+    expect(mockAddOrder).toHaveBeenCalledOnce()
+    expect(mockAddToast).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'trade-processing-0xorder' }),
+    )
+  })
+
+  it('leaves a newer confirm alone when the abandoned one settles', async () => {
+    const { confirmTrade, tradeFlowStep, txProceeding } = await makeHarness()
+    const first = deferred<{ hash: string }>()
+    mockSubmitOrder
+      .mockReturnValueOnce(first.promise)
+      .mockReturnValueOnce(deferred().promise)
+
+    const firstConfirm = confirmTrade()
+    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalledTimes(1))
+    tradeFlowStep.value = 'idle'
+    await nextTick()
+
+    tradeFlowStep.value = 'review'
+    void confirmTrade()
+    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalledTimes(2))
+
+    first.reject(Object.assign(new Error('User rejected'), { code: 4001 }))
+    await firstConfirm
+    expect(tradeFlowStep.value).toBe('processing')
+    expect(txProceeding.value).toBe(true)
   })
 })
