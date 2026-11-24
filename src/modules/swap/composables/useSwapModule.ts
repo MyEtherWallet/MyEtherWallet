@@ -577,6 +577,7 @@ export function useSwapModule(): SwapModuleBindings {
       priority: gasPriceType.value as GasPriceType,
       quoteId: quoteId,
     })
+    if (isAbandoned()) return
 
     const isHardware =
       txCtx.getWalletType() !== WalletType.WAGMI &&

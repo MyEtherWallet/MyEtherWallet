@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { reactive } from 'vue'
 import { parseUnits } from 'viem'
@@ -108,6 +108,10 @@ describe('SwapOfferModal price impact (MEW-2648)', () => {
 })
 
 describe('SwapOfferModal closed while the wallet is pending (MEW-2694)', () => {
+  afterEach(() => {
+    walletState.wallet = null
+  })
+
   it('clears the approve-on-device message on close', async () => {
     walletState.wallet = { getWalletType: () => WalletType.LEDGER }
     const wrapper = mountWith(fair)
@@ -118,6 +122,5 @@ describe('SwapOfferModal closed while the wallet is pending (MEW-2694)', () => {
     await wrapper.setProps({ swapOfferOpen: false })
     await wrapper.setProps({ swapOfferOpen: true })
     expect(wrapper.text()).not.toContain('swap.swap-offer.approve-tx-on-device')
-    walletState.wallet = null
   })
 })
