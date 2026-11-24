@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import type {
@@ -202,6 +202,8 @@ watch(
     showApproveMessage.value = false
   },
 )
+// Leaving Send altogether abandons it the same way.
+onBeforeUnmount(() => signSession++)
 
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)

@@ -147,6 +147,22 @@ describe('EvmTransactionConfirmation closed while the wallet is pending (MEW-269
     expect(w.emitted('tx-sent')).toBeUndefined()
   })
 
+  it('ignores a signature that lands after Send was left altogether', async () => {
+    const pending = deferred()
+    h.wallet.value = {
+      getWalletType: () => WalletType.WAGMI,
+      SendTransaction: vi.fn(() => pending.promise),
+    }
+    const w = await mountReview()
+
+    await w.findComponent(AppBaseButton).trigger('click')
+    w.unmount()
+    pending.resolve('0xhash')
+    await flushPromises()
+
+    expect(h.addTransaction).not.toHaveBeenCalled()
+  })
+
   it('still reports a signature that lands while the review is open', async () => {
     h.wallet.value = {
       getWalletType: () => WalletType.WAGMI,
