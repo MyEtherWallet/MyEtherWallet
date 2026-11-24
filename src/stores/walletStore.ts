@@ -272,8 +272,12 @@ export const useWalletStore = defineStore('walletStore', () => {
     const balanceBN = new BigNumber(balanceWei.value || '0')
     return balanceBN.gt(0)
   })
+  // Advances on every selection, so only the latest one may publish its result
+  // (a chain name can't tell Polygon → Arbitrum → Polygon apart).
+  let chainSelectionGeneration = 0
   // Watch for chain changes and call changeNetwork on the wallet for EVM chains
   watch(selectedChain, async (newChain, oldChain) => {
+    const generation = ++chainSelectionGeneration
     // MEW-1980: announce every global network switch. This watcher is the
     // single point all switch sources funnel through (header selector, Buy,
     // Sell, Swap, Trade). Guard on oldChain to skip the initial
@@ -302,7 +306,7 @@ export const useWalletStore = defineStore('walletStore', () => {
           wallet.value as BaseEvmWallet
         ).changeNetwork(Number(newChain.chainID))
         // A newer selection owns the network-switch toast; drop this stale result.
-        if (selectedChain.value?.name !== newChain.name) return
+        if (generation !== chainSelectionGeneration) return
         if (!networkChangeStatus) {
           // Wallet rejected the switch — show only the failure toast, never a
           // contradictory "switched" success toast alongside it.

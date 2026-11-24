@@ -102,4 +102,29 @@ describe('walletStore network switch toast', () => {
       expect(toasts.messages[0].text).toContain('Arbitrum One')
     },
   )
+
+  it('ignores a stale result when the user switches back to the same network', async () => {
+    const store = useWalletStore()
+    const toasts = useToastStore()
+    let settleFirst!: (ok: boolean) => void
+    const changeNetwork = vi
+      .fn()
+      .mockReturnValueOnce(new Promise(r => (settleFirst = r)))
+      .mockResolvedValue(true)
+    store.wallet = { changeNetwork } as never
+
+    // Polygon (pending) → Arbitrum → Polygon again (succeeds).
+    await switchTo('MATIC', 'Polygon')
+    await switchTo('ARB', 'Arbitrum One')
+    await switchTo('MATIC', 'Polygon')
+    expect(toasts.messages[0]).toMatchObject({ type: 'success' })
+
+    // The first Polygon request fails late: same chain name, but stale.
+    settleFirst(false)
+    await new Promise(r => setTimeout(r))
+
+    expect(toasts.messages).toHaveLength(1)
+    expect(toasts.messages[0].type).toBe('success')
+    expect(toasts.messages[0].text).toContain('Polygon')
+  })
 })
