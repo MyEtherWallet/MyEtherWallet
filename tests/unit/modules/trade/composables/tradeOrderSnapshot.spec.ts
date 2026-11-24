@@ -280,4 +280,37 @@ describe('closing the progress modal while the wallet is pending (MEW-2694)', ()
     expect(tradeFlowStep.value).toBe('processing')
     expect(txProceeding.value).toBe(true)
   })
+
+  it('saves an abandoned unsubmitted native order without taking over the newer confirm', async () => {
+    const { NativeOrderUnsubmittedError } =
+      await import('@/modules/trade/providers/oneinch_fusion/nativeOrderError')
+    const { confirmTrade, tradeFlowStep, orderHash } = await makeHarness()
+    const first = deferred<{ hash: string }>()
+    mockSubmitOrder
+      .mockReturnValueOnce(first.promise)
+      .mockReturnValueOnce(deferred().promise)
+
+    const firstConfirm = confirmTrade()
+    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalledTimes(1))
+    tradeFlowStep.value = 'idle'
+    await nextTick()
+    tradeFlowStep.value = 'review'
+    void confirmTrade()
+    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalledTimes(2))
+
+    first.reject(
+      new NativeOrderUnsubmittedError({
+        orderHash: '0xstranded',
+        depositTxHash: '0xdeposit',
+        proxyAddress: '0xproxy',
+        nativeOrder: {} as never,
+        cause: new Error('relayer 500'),
+      }),
+    )
+    await firstConfirm
+    expect(mockAddOrder).toHaveBeenCalledWith(
+      expect.objectContaining({ hash: '0xstranded', status: 'unsubmitted' }),
+    )
+    expect(orderHash.value).toBe('')
+  })
 })

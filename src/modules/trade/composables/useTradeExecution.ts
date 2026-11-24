@@ -171,7 +171,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
   // Closing the progress modal while the order is still pending leaves the user
   // with no in-flight indicator — hand over to the processing toast, which
-  // ModuleNotifications removes by id when the order settles.
+  // ModuleNotifications removes by id when the order settles. Closed before
+  // the wallet signed (no hash yet), it abandons that confirm instead.
   watch(tradeFlowStep, (step, prevStep) => {
     if (prevStep !== 'processing' || step !== 'idle') return
     const hash = orderHash.value
@@ -421,7 +422,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     snapshot: TradeSnapshot,
     analyticsPayload: TradePayloadShared,
   ) => {
-    orderHash.value = e.orderHash
     tradeOrdersStore.addOrder(
       buildSavedOrder(e.orderHash, snapshot, {
         status: 'unsubmitted',
@@ -479,6 +479,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
     const session = ++confirmSession
     const isAbandoned = () => session !== confirmSession
+    // Tracked here, not read from `depositPending`: closing the progress modal
+    // clears that flag while the deposit prompt may still be up.
+    let awaitingDeposit = false
     txProceeding.value = true
     const analyticsPayload = getAnalyticsPayload()
     analytics.trackTradeEvent(TradeEvent.OFFER_PROCEED, analyticsPayload)
@@ -506,6 +509,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       const isNativeOrder =
         snapshot.from.address.toLowerCase() === NATIVE_ADDRESS
       depositPending.value = isNativeOrder
+      awaitingDeposit = isNativeOrder
       const result = await fusion.submitOrder(
         {
           fromTokenAddress: snapshot.from.address,
@@ -517,6 +521,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         },
         {
           onDepositSent: () => {
+            awaitingDeposit = false
             if (!isAbandoned()) depositPending.value = false
           },
         },
@@ -558,13 +563,16 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         addProcessingToast(result.hash)
       }
     } catch (e) {
-      // Read before `finally` clears it: a rejection while the deposit prompt
-      // was up is a distinct outcome from declining the order signature.
-      const rejectedDeposit = depositPending.value
+      // A rejection while the deposit prompt was up is a distinct outcome from
+      // declining the order signature.
+      const rejectedDeposit = awaitingDeposit
 
       if (e instanceof NativeOrderUnsubmittedError) {
         // Keep the progress modal up: it renders the unsubmitted state with the
         // recovery instructions, which a bounce back to Review would hide.
+        // An abandoned confirm still saves the order, but must not swap a
+        // newer confirm's modal over to it.
+        if (!isAbandoned()) orderHash.value = e.orderHash
         persistUnsubmittedOrder(e, snapshot, analyticsPayload)
         return
       }
