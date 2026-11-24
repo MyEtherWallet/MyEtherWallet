@@ -14,7 +14,13 @@
   >
     <app-blockie :address="adr.address" :size="9" />
     <div class="flex flex-col">
-      <p v-if="adr.name" class="font-bold text-s-17 leading-none mb-1">
+      <!-- `data-private`: the user's own label for someone, kept out of
+           session replay. -->
+      <p
+        v-if="adr.name"
+        data-private
+        class="font-bold text-s-17 leading-none mb-1"
+      >
         {{ adr.name }}
       </p>
       <p

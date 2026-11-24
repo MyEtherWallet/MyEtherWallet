@@ -4,8 +4,12 @@
     <div class="w-[624px] flex flex-col items-center justify-center">
       <app-sheet :title="$t('sign-message')">
         <div class="flex items-center flex-col gap-1 pt-6">
+          <!-- `data-private`: what the user signs is theirs. The message and
+               the signature stay out of session replay, here and in the
+               result below. -->
           <app-text-area-legacy
             v-model="message"
+            data-private
             surface="alternative"
             :placeholder="$t('sign_message.enter_message_to_sign')"
             class="w-full"
@@ -41,6 +45,7 @@
                   {{ $t('sign_message.message_label') }}
                 </h3>
                 <div
+                  data-private
                   class="bg-background-default rounded-xl p-4 text-s-14 break-all border border-border-default text-text-subtle"
                 >
                   {{ hexMessage }}
@@ -61,6 +66,7 @@
                   {{ $t('sign_message.signature_label') }}
                 </h3>
                 <div
+                  data-private
                   class="bg-background-default rounded-xl p-4 text-s-12 break-all border border-border-default text-text-subtle font-mono"
                 >
                   {{ signature }}

@@ -5,8 +5,11 @@
       <app-sheet :title="$t('verify-message')">
         <div class="flex flex-col gap-1 pt-6">
           <select-chain-for-app v-if="!isWalletConnected" class="mb-8" />
+          <!-- `data-private`: the message and its signature stay out of session
+               replay, in both fields and in the result. -->
           <app-text-area-legacy
             v-model="message"
+            data-private
             surface="alternative"
             :placeholder="$t('sign_message.enter_message_to_verify')"
             class="w-full"
@@ -25,6 +28,7 @@
 
           <app-text-area-legacy
             v-model="signature"
+            data-private
             surface="alternative"
             :placeholder="$t('sign_message.enter_signature_to_verify')"
             class="w-full"
@@ -41,7 +45,7 @@
           >
             <i18n-t :keypath="verifyStatusKey" tag="p">
               <template #message>
-                <code class="break-all">{{ message }}</code>
+                <code data-private class="break-all">{{ message }}</code>
               </template>
               <template #address>
                 <code class="break-all">{{ signingAddress }}</code>

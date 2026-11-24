@@ -67,6 +67,16 @@ describe('ModuleAccessWalletConnect', () => {
     expect(w.find('[data-testid="wc-qr-loading"]').exists()).toBe(false)
   })
 
+  // The code is drawn in the page, so a recording of it would hold the link.
+  it('keeps the pairing code out of session replay', () => {
+    clickedWalletConnect.value = {
+      walletName: 'MEW Mobile',
+      wagmiWalletData: 'wc:abc@2',
+    }
+    const w = mountIt()
+    expect(w.get('.qr').element.closest('[data-private]')).not.toBeNull()
+  })
+
   it('links the footer to the help center in a new tab', () => {
     clickedWalletConnect.value = { walletName: 'MEW Mobile' }
     const w = mountIt()
