@@ -66,7 +66,7 @@
     },
     "swap-offer": {
       "max-slippage": "Deslizamiento máx.",
-      "minimum-received": "Mínimo que recibirás",
+      "offer-includes-fee": "La oferta incluye comisión",
       "proceed": "Confirmar intercambio",
       "proceed-bridge": "Confirmar puente",
       "decline": "Rechazar intercambio",
@@ -83,7 +83,8 @@
       "best-value": "Mejor valor",
       "expand-breakdown": "Ver desglose",
       "close-breakdown": "Ocultar desglose",
-      "network-fee": "Comisión de red"
+      "network-fee": "Comisión de red",
+      "quote-refreshes-in": "La cotización se actualiza en {time}"
     },
     "offer": "Oferta"
   }

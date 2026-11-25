@@ -202,21 +202,16 @@
             <expand-transition>
               <div v-if="isBreakdownOpen" class="flex flex-col gap-4 pt-4">
                 <app-divider variant="alternative" class="-my-1" />
-                <div v-if="minimumReceived" class="flex items-center gap-2">
+                <div v-if="feePercent" class="flex items-center gap-2">
                   <p class="flex-1 truncate text-text-base text-text-subtle">
-                    {{ t('swap.swap-offer.minimum-received') }}
+                    {{ t('swap.swap-offer.offer-includes-fee') }}
                   </p>
-                  <p class="text-label-base text-text-default">
-                    {{ minimumReceived }} {{ toToken?.symbol ?? '' }}
+                  <p
+                    data-testid="swap-offer-fee"
+                    class="text-label-base text-text-default"
+                  >
+                    {{ feePercent }}%
                   </p>
-                  <app-token-logo
-                    :url="toToken?.logoURI"
-                    :symbol="toToken?.symbol"
-                    :address="tokenAddress(toToken, toChain)"
-                    width="w-[18px]"
-                    height="h-[18px]"
-                    no-shadow
-                  />
                 </div>
                 <div class="flex items-center gap-2">
                   <p class="flex-1 truncate text-text-base text-text-subtle">
@@ -289,14 +284,31 @@
         :description="t('swap.price-impact-unknown')"
         class="w-full"
       />
-      <app-base-button
-        class="w-full"
-        @click="proceedWithSwap"
-        :is-loading="loadingModel"
-        :disabled="!canProceed"
-      >
-        {{ btnText }}
-      </app-base-button>
+      <div class="flex flex-col items-center gap-4">
+        <app-base-button
+          class="w-full"
+          @click="proceedWithSwap"
+          :is-loading="loadingModel"
+          :disabled="!canProceed"
+        >
+          {{ btnText }}
+        </app-base-button>
+        <i18n-t
+          v-if="expiresAt"
+          keypath="swap.swap-offer.quote-refreshes-in"
+          tag="p"
+          class="text-text-sm text-text-subtle"
+        >
+          <template #time>
+            <span
+              data-testid="swap-quote-countdown"
+              class="text-label-sm text-text-default"
+            >
+              {{ countdownLabel }}
+            </span>
+          </template>
+        </i18n-t>
+      </div>
     </div>
   </app-modal>
 </template>
@@ -321,6 +333,7 @@ import BN from 'bn.js'
 import { useI18n } from 'vue-i18n'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
+import { useCountdown } from '@/composables/useCountdown'
 import { analytics, SwapEvent, type SwapPayloadShared } from '@/analytics'
 import { useWalletStore } from '@/stores/walletStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -419,10 +432,19 @@ const props = defineProps({
   swapFeeError: {
     type: String,
   },
+  expiresAt: {
+    type: Number,
+  },
+  // The parent closed the modal because the expiry re-quote failed: not a
+  // user decline.
+  suppressDeclineTracking: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const showApproveMessage = ref(false)
-const emits = defineEmits(['update:proceedWithSwap'])
+const emits = defineEmits(['update:proceedWithSwap', 'expired'])
 
 const isBreakdownOpen = ref(false)
 
@@ -588,14 +610,35 @@ const fromAmountFiat = computed(() => {
   return formatFiat(value.toString()).value
 })
 
-// What the swap still pays out at the full slippage tolerance.
-const minimumReceived = computed(() => {
-  const slippage = props.swapInfo?.slippage
-  if (!slippage || toAmount.value.isZero()) return ''
-  const min = toAmount.value.multipliedBy(
-    BigNumber(1).minus(BigNumber(slippage).dividedBy(100)),
-  )
-  return formatFloatingPointValue(min).value
+// The library computes the percent in floats (0.8750000000000001).
+const feePercent = computed(() => {
+  const fee = BigNumber(props.swapInfo?.fee ?? 0)
+  return fee.gt(0) ? fee.decimalPlaces(3).toString() : ''
+})
+
+const { remainingMs } = useCountdown(() =>
+  model.value ? props.expiresAt : null,
+)
+
+const countdownLabel = computed(() => {
+  const ms = remainingMs.value
+  if (ms === null) return ''
+  const totalSeconds = Math.ceil(ms / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+})
+
+const isQuoteExpired = computed(() => remainingMs.value === 0)
+
+// One re-quote per expiry, and never while the swap is being signed.
+let lastExpiredTimestamp: number | undefined
+watch([remainingMs, loadingModel], ([ms, loading]) => {
+  if (ms !== 0 || loading || !model.value) return
+  if (props.expiresAt === undefined) return
+  if (lastExpiredTimestamp === props.expiresAt) return
+  lastExpiredTimestamp = props.expiresAt
+  emits('expired')
 })
 
 const getAmountData = (amount: BN, decimals: number) => {
@@ -629,8 +672,9 @@ watch(
     const analyticsPayload = getAnalyticsPayload()
     if (model.value) {
       isBreakdownOpen.value = false
+      lastExpiredTimestamp = undefined
       analytics.trackSwapEvent(SwapEvent.OFFER_SHOWN, { ...analyticsPayload })
-    } else if (!isProceeding.value) {
+    } else if (!isProceeding.value && !props.suppressDeclineTracking) {
       analytics.trackSwapEvent(SwapEvent.OFFER_DECLINED, {
         ...analyticsPayload,
       })
@@ -646,6 +690,7 @@ watch(
 const canProceed = computed(
   () =>
     !priceImpactTooHigh.value &&
+    !isQuoteExpired.value &&
     !gasFeeError.value &&
     !!props.swapGasFeeQuote?.quoteId &&
     !!props.swapGasFeeQuote.fees?.[gasPriceType.value],
