@@ -339,11 +339,11 @@ import {
   isPriceImpactTooHigh,
   quotePriceImpact,
 } from '@/modules/swap/swapPriceImpact'
-import oneInchLogo from '@/assets/images/swap/providers/oneinch.png'
-import paraswapLogo from '@/assets/images/swap/providers/paraswap.png'
-import zeroxLogo from '@/assets/images/swap/providers/zerox.png'
-import changellyLogo from '@/assets/images/swap/providers/changelly.png'
-import rangoLogo from '@/assets/images/swap/providers/rango.png'
+import oneInchLogo from '@/assets/images/swap/providers/oneinch.webp'
+import paraswapLogo from '@/assets/images/swap/providers/paraswap.webp'
+import zeroxLogo from '@/assets/images/swap/providers/zerox.webp'
+import changellyLogo from '@/assets/images/swap/providers/changelly.webp'
+import rangoLogo from '@/assets/images/swap/providers/rango.webp'
 import jupiterLogo from '@/assets/images/swap/providers/jupiter.png'
 import okxLogo from '@/assets/images/swap/providers/okx.png'
 const { t } = useI18n()
