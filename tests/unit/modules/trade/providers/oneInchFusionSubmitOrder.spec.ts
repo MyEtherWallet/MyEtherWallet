@@ -124,6 +124,7 @@ import OneInchFusion, {
   NativeOrderUnsubmittedError,
 } from '@/modules/trade/providers/oneinch_fusion/oneInchFusion'
 import type { WalletInterface } from '@/providers/common/walletInterface'
+import { AbandonedSignError } from '@/utils/signSession'
 
 const axiosError = (status: number) =>
   Object.assign(new Error(`Request failed with status code ${status}`), {
@@ -244,6 +245,27 @@ describe('OneInchFusion.submitOrder', () => {
       })
       expect(submitNativeOrder).not.toHaveBeenCalled()
       expect(sendRawTransaction).not.toHaveBeenCalled()
+    })
+
+    it('drops a deposit signed after its modal was closed (MEW-2694)', async () => {
+      let abandoned = false
+      const wallet = makeWallet()
+      ;(wallet.SignTransaction as ReturnType<typeof vi.fn>).mockImplementation(
+        async () => {
+          // The user closed the progress modal while the device held the tx.
+          abandoned = true
+          return { signed: '0xsigned' }
+        },
+      )
+      const fusion = new OneInchFusion(wallet, 1, {
+        isAbandoned: () => abandoned,
+      })
+
+      await expect(fusion.submitOrder(nativeConfig())).rejects.toBeInstanceOf(
+        AbandonedSignError,
+      )
+      expect(sendRawTransaction).not.toHaveBeenCalled()
+      expect(submitNativeOrder).not.toHaveBeenCalled()
     })
 
     it('never reaches the relayer when the deposit broadcast fails', async () => {
@@ -437,5 +459,46 @@ describe('OneInchFusion.cancelNativeOrder', () => {
       expect(error.reason).toBe('reverted')
       expect(sendRawTransaction).not.toHaveBeenCalled()
     })
+  })
+})
+
+describe('OneInchFusion.setApproval', () => {
+  beforeEach(() => {
+    calls.length = 0
+    sendRawTransaction.mockResolvedValue(DEPOSIT_TX)
+    waitForTransactionReceipt.mockResolvedValue({
+      status: 'success',
+      transactionHash: DEPOSIT_TX,
+    })
+  })
+
+  it('reports the broadcast before waiting for the approval to mine', async () => {
+    const fusion = new OneInchFusion(makeWallet(), 1)
+    const onSent = vi.fn(() => calls.push('hook'))
+
+    await fusion.setApproval(USER, USDC, onSent)
+
+    expect(calls).toEqual(['sign', 'send', 'hook', 'receipt'])
+  })
+
+  it('drops an approval signed after its modal was closed (MEW-2694)', async () => {
+    let abandoned = false
+    const wallet = makeWallet()
+    ;(wallet.SignTransaction as ReturnType<typeof vi.fn>).mockImplementation(
+      async () => {
+        abandoned = true
+        return { signed: '0xsigned' }
+      },
+    )
+    const fusion = new OneInchFusion(wallet, 1, {
+      isAbandoned: () => abandoned,
+    })
+    const onSent = vi.fn()
+
+    await expect(fusion.setApproval(USER, USDC, onSent)).rejects.toBeInstanceOf(
+      AbandonedSignError,
+    )
+    expect(sendRawTransaction).not.toHaveBeenCalled()
+    expect(onSent).not.toHaveBeenCalled()
   })
 })

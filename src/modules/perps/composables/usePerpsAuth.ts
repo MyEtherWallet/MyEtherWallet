@@ -16,6 +16,7 @@ import {
 } from './usePerpsRestriction'
 import { analytics, PerpsSignInEvent, PerpsEventSource } from '@/analytics'
 import { isUserRejectionError } from '@/utils/walletUtils'
+import { createSignSession } from '@/utils/signSession'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
@@ -82,6 +83,11 @@ let _currentAddress: string | null = null
 let _restoreGeneration = 0
 let _resolveSign: (() => void) | null = null
 let _rejectSign: ((reason?: unknown) => void) | null = null
+// The sign-in the prompt is showing. Closing the prompt while the device still
+// holds the message abandons it (MEW-2694): the prompt and the Sign in button
+// reset, and a signature the device gives afterwards is dropped — it does not
+// sign the user in.
+const _loginSession = createSignSession()
 
 function _waitForSignConfirmation(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -343,6 +349,7 @@ export function usePerpsAuth() {
       return
     }
     analytics.trackPerpsSignInEvent(PerpsSignInEvent.CLICKED, { source })
+    const isAbandoned = _loginSession.start()
     isAuthenticating.value = true
     authError.value = null
     let walletTypeStr: string | undefined
@@ -375,6 +382,7 @@ export function usePerpsAuth() {
       const signature = await wallet.value.SignMessage({
         message: challenge.result.message,
       })
+      if (isAbandoned()) return
       const complete = await perpsClient.completeLoginChallenge({
         id: challenge.result.id,
         signature,
@@ -435,6 +443,7 @@ export function usePerpsAuth() {
       })
       analytics.trackPerpsSignInEvent(PerpsSignInEvent.SUCCESS, { source })
     } catch (e) {
+      if (isAbandoned()) return
       const errorMessage =
         e instanceof Error ? e.message : 'Authentication failed'
       if (isUserRejectionError(e)) {
@@ -452,12 +461,18 @@ export function usePerpsAuth() {
         })
       }
     } finally {
-      showSigningPrompt.value = false
-      signingMessage.value = null
-      isHardwareWalletSigning.value = false
-      isWaitingForConfirm.value = false
-      isAuthenticating.value = false
+      // An abandoned sign-in was already reset by `cancelSign`; a newer one
+      // may own these by now.
+      if (!isAbandoned()) resetSigningState()
     }
+  }
+
+  function resetSigningState() {
+    showSigningPrompt.value = false
+    signingMessage.value = null
+    isHardwareWalletSigning.value = false
+    isWaitingForConfirm.value = false
+    isAuthenticating.value = false
   }
 
   function confirmSign() {
@@ -467,9 +482,17 @@ export function usePerpsAuth() {
   }
 
   function cancelSign() {
-    _rejectSign?.(new Error('cancelled'))
-    _resolveSign = null
-    _rejectSign = null
+    if (_rejectSign) {
+      // Still on the review step: the rejection unwinds `login`.
+      _rejectSign(new Error('cancelled'))
+      _resolveSign = null
+      _rejectSign = null
+      return
+    }
+    // The device already has the message: stop waiting on it.
+    if (!showSigningPrompt.value) return
+    _loginSession.abandon()
+    resetSigningState()
   }
 
   function logout() {

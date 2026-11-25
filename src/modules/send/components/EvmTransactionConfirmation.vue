@@ -125,12 +125,13 @@ import { WalletType } from '@/providers/types'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import { useI18n } from 'vue-i18n'
 import {
-  isSignableWallet,
   isUserRejectionError,
   getLocalizedWalletError,
   isTransientTrezorError,
   isBlindSigningDisabledError,
 } from '@/utils/walletUtils'
+import { createSignSession } from '@/utils/signSession'
+import { signForSend } from '@/utils/walletSend'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
@@ -186,24 +187,23 @@ watch(
 
 // modal actions
 const signing = ref(false)
-// Bumped on every confirm and every close. Closing the review while the wallet
-// is still waiting (a phone over WalletConnect, a hardware device) abandons
-// that request: whatever the wallet answers later is dropped, nothing is
-// broadcast, saved or shown.
-let signSession = 0
+// Closing the review while the wallet is still waiting (a phone over
+// WalletConnect, a hardware device) abandons that request: whatever the wallet
+// answers later is dropped, nothing is broadcast, saved or shown.
+const signSession = createSignSession()
 
 watch(
   () => openModal.value,
   value => {
     model.value = value
     if (value) return
-    signSession++
+    signSession.abandon()
     signing.value = false
     showApproveMessage.value = false
   },
 )
 // Leaving Send altogether abandons it the same way.
-onBeforeUnmount(() => signSession++)
+onBeforeUnmount(signSession.abandon)
 
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
@@ -228,8 +228,7 @@ const confirmTransaction = async () => {
   analytics.trackSendEvent(SendEvent.CONFIRM_PROCEED, {
     token: props.toToken?.symbol,
   })
-  const session = ++signSession
-  const isAbandoned = () => session !== signSession
+  const isAbandoned = signSession.start()
   try {
     //TO: show message that wallet is not connected
     if (!wallet.value) {
@@ -241,25 +240,19 @@ const confirmTransaction = async () => {
     )
     signing.value = true
     // This is done because the modal needs to be shown and the user needs to actually
-    // consent to signing the transaction
-    const signedTx = isSignableWallet(wallet.value)
-      ? (
-          await wallet.value?.SignTransaction?.(
-            props.signedTx as HexPrefixedString,
-          )
-        )?.signed
-      : (props.signedTx as HexPrefixedString)
+    // consent to signing the transaction. A wallet that can sign without
+    // sending answers here, which is what lets a closed review drop it.
+    const send = await signForSend(
+      wallet.value,
+      props.signedTx as HexPrefixedString,
+      { isAbandoned },
+    )
     if (isAbandoned()) return
 
-    const txPromise =
-      wallet.value?.getWalletType() === WalletType.WAGMI ||
-      wallet.value?.getWalletType() === WalletType.INJECTED
-        ? wallet.value?.SendTransaction?.(signedTx as HexPrefixedString)
-        : wallet.value.broadcastTransaction(signedTx as HexPrefixedString)
     // TODO: handle hash for user
 
-    await txPromise
-      ?.then(hash => {
+    await send()
+      .then(hash => {
         if (isAbandoned()) return
         // Build block explorer URLs
         const blockExplorerUrl = selectedChain.value?.blockExplorerTX

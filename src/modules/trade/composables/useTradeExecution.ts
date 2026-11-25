@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { computed, ref, watch, type Ref } from 'vue'
+import { computed, onScopeDispose, ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { isExpectedClientError } from '@/modules/trade/common/expectedTradeError'
@@ -25,6 +25,7 @@ import {
   isUserRejectionError,
 } from '@/utils/walletUtils'
 import { reportModuleError } from '@/utils/reportModuleError'
+import { createSignSession } from '@/utils/signSession'
 import BigNumber from 'bignumber.js'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TradeForm } from './useTradeForm'
@@ -151,7 +152,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       qualifiedSince: reward?.qualification_timestamp,
     }
   }
+  // The approval the waiting modal is showing. Closing that modal while the
+  // wallet still holds the request abandons it (MEW-2694): the next Approve
+  // asks the wallet again, and whatever the wallet answers to the old one is
+  // dropped. Once the approval is broadcast there is nothing left to abandon —
+  // closing then only hides the wait for it to mine.
+  const approvalSession = createSignSession()
   let approvalInFlight = false
+  let approvalSent = false
 
   const addProcessingToast = (hash: string) => {
     toastStore.addToastMessage({
@@ -163,22 +171,31 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     })
   }
 
-  // Bumped on every confirm, and when the progress modal is closed before the
-  // order is in (MEW-2694). That confirm keeps running, so an order the wallet
-  // signs later is still saved and toasted, but it no longer drives the
-  // modals: Review isn't left spinning and a newer confirm keeps its state.
-  let confirmSession = 0
+  // The confirm the progress modal is showing. Closing that modal before the
+  // order is in abandons it (MEW-2694): Review opens clean, and a signature the
+  // wallet gives afterwards is dropped, so the order is never submitted. Only
+  // an order already on its way when the modal closed (signed and at the
+  // relayer, or a native deposit the wallet broadcast itself) is still saved
+  // and toasted, without driving the modals.
+  const confirmSession = createSignSession()
 
   // Closing the progress modal while the order is still pending leaves the user
   // with no in-flight indicator — hand over to the processing toast, which
   // ModuleNotifications removes by id when the order settles. Closed before
-  // the wallet signed (no hash yet), it abandons that confirm instead.
+  // the order is in (no hash yet), it abandons that confirm instead.
   watch(tradeFlowStep, (step, prevStep) => {
+    if (prevStep === 'approving' && step === 'idle') {
+      if (approvalInFlight && !approvalSent) {
+        approvalSession.abandon()
+        approvalInFlight = false
+      }
+      return
+    }
     if (prevStep !== 'processing' || step !== 'idle') return
     const hash = orderHash.value
     if (!hash) {
       if (txProceeding.value) {
-        confirmSession++
+        confirmSession.abandon()
         txProceeding.value = false
         depositPending.value = false
       }
@@ -189,6 +206,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       .find(o => o.hash === hash)
     if (order?.status === 'pending') addProcessingToast(hash)
   })
+  // Leaving Trade altogether abandons both the same way.
+  onScopeDispose(() => {
+    approvalSession.abandon()
+    confirmSession.abandon()
+  }, true)
 
   const approveFromToken = async (): Promise<boolean> => {
     // Resolved-and-allowed, not merely "not known to be restricted": this sends
@@ -211,25 +233,36 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     const analyticsPayload = getAnalyticsPayload()
     analytics.trackTradeEvent(TradeEvent.CLICK_APPROVE, analyticsPayload)
 
+    const isAbandoned = approvalSession.start()
     approvalInFlight = true
+    approvalSent = false
     tradeFlowStep.value = 'approving'
 
     try {
       const { default: OneInchFusion } =
         await import('../providers/oneinch_fusion/oneInchFusion')
+      // Closed while the provider loaded: don't prompt the wallet at all.
+      if (isAbandoned()) return false
 
       const chainId = parseInt(selectedFromChain.value?.chainID || '1')
-      const fusion = new OneInchFusion(wallet.value, chainId)
+      const fusion = new OneInchFusion(wallet.value, chainId, { isAbandoned })
 
       await fusion.setApproval(
         walletAddress.value,
         fromTokenSelected.value.address,
+        () => {
+          if (!isAbandoned()) approvalSent = true
+        },
       )
+      if (isAbandoned()) return false
 
       needsApproval.value = false
       return true
     } catch (e) {
-      tradeFlowStep.value = 'idle'
+      // Closed while the wallet held the request: its answer is not ours to
+      // act on, and it must not close a modal opened since.
+      if (isAbandoned()) return false
+      if (stepIs('approving')) tradeFlowStep.value = 'idle'
       if (isInsufficientFundsError(e)) {
         toastStore.addToastMessage({
           text: t('common.not_enough_balance_to_cover_fee', {
@@ -278,7 +311,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       })
       return false
     } finally {
-      approvalInFlight = false
+      if (!isAbandoned()) approvalInFlight = false
     }
   }
 
@@ -477,11 +510,13 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     const snapshot = snapshotTrade()
     if (!snapshot) return
 
-    const session = ++confirmSession
-    const isAbandoned = () => session !== confirmSession
+    const isAbandoned = confirmSession.start()
     // Tracked here, not read from `depositPending`: closing the progress modal
     // clears that flag while the deposit prompt may still be up.
     let awaitingDeposit = false
+    // The native deposit is on-chain (or on its way). From here the order is
+    // real whether or not the modal is still open, so it is seen through.
+    let depositSent = false
     txProceeding.value = true
     const analyticsPayload = getAnalyticsPayload()
     analytics.trackTradeEvent(TradeEvent.OFFER_PROCEED, analyticsPayload)
@@ -491,9 +526,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     try {
       const { default: OneInchFusion } =
         await import('../providers/oneinch_fusion/oneInchFusion')
+      // Closed while the provider loaded: don't prompt the wallet at all.
+      if (isAbandoned()) return
 
       const { chainId } = snapshot
-      const fusion = new OneInchFusion(wallet.value, chainId)
+      const fusion = new OneInchFusion(wallet.value, chainId, { isAbandoned })
 
       const decimals = snapshot.from.decimals || 18
       const amountInBaseUnits = parseUnits(snapshot.amount, decimals).toString()
@@ -508,9 +545,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
       const isNativeOrder =
         snapshot.from.address.toLowerCase() === NATIVE_ADDRESS
-      // Closed while the provider loaded: the next confirm must not inherit
-      // this order's deposit copy.
-      if (!isAbandoned()) depositPending.value = isNativeOrder
+      depositPending.value = isNativeOrder
       awaitingDeposit = isNativeOrder
       const result = await fusion.submitOrder(
         {
@@ -524,6 +559,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         {
           onDepositSent: () => {
             awaitingDeposit = false
+            depositSent = true
             if (!isAbandoned()) depositPending.value = false
           },
         },
@@ -578,6 +614,10 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         persistUnsubmittedOrder(e, snapshot, analyticsPayload)
         return
       }
+
+      // Closed before anything was sent: that request is over, and whatever
+      // the wallet answered (a late signature, a rejection) is dropped.
+      if (isAbandoned() && !depositSent) return
 
       if (!isAbandoned() && stepIs('processing')) {
         tradeFlowStep.value = 'review'

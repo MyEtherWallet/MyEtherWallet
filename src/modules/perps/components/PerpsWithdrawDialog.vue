@@ -134,6 +134,7 @@ import { capturePerps } from '../sentry'
 import { PERPS_FEATURE } from '@/sentry/constants'
 import { useI18n } from 'vue-i18n'
 import { toChecksumAddress } from '@/utils/addressUtils'
+import { createSignSession } from '@/utils/signSession'
 import {
   analytics,
   PerpsWithdrawEvent,
@@ -240,10 +241,21 @@ async function refreshAddressBookStatus() {
   }
 }
 
+// Closing the dialog while the wallet is still waiting abandons that request
+// (MEW-2694): the dialog reopens clean, and a signature the wallet gives
+// afterwards is dropped — the address is not authorized with it.
+const requestSession = createSignSession()
+
 watch(
   () => props.visible,
   async visible => {
-    if (!visible) return
+    if (!visible) {
+      requestSession.abandon()
+      authorizing.value = false
+      sending.value = false
+      error.value = null
+      return
+    }
     analytics.trackPerpsWithdrawEvent(PerpsWithdrawEvent.CLICKED)
     amount.value = null
     amountError.value = ''
@@ -272,6 +284,7 @@ watch(
 
 async function submitAuthorize() {
   if (!walletAddress.value || !wallet.value) return
+  const isAbandoned = requestSession.start()
   authorizing.value = true
   error.value = null
   analytics.trackPerpsWithdrawAuthorizeEvent(PerpsWithdrawAuthorizeEvent.SUBMIT)
@@ -282,9 +295,12 @@ async function submitAuthorize() {
       chainId: PERPS_CHAIN_ID,
       withdrawalAddress: checksumAddress,
     })
+    // Closed while the challenge loaded: don't prompt the wallet at all.
+    if (isAbandoned()) return
     const signature = await wallet.value.SignMessage({
       message: challenge.result.message,
     })
+    if (isAbandoned()) return
     await perpsClient.completeAddressBookChallenge({
       id: challenge.result.id,
       signature,
@@ -296,8 +312,10 @@ async function submitAuthorize() {
     )
     // Keep the withdraw dialog open and switch to the withdraw view now that
     // the address is authorized (the toast already surfaces the 24h cooldown).
-    isAddressAuthorized.value = true
+    // Closed in the meantime, the next open reads it from the address book.
+    if (!isAbandoned()) isAddressAuthorized.value = true
   } catch (e) {
+    if (isAbandoned()) return
     const msg =
       e instanceof Error ? e.message : t('perps.withdraw.authorize-failed')
     error.value = msg
@@ -309,13 +327,14 @@ async function submitAuthorize() {
       title: 'PERPS: Authorize withdrawal address failed',
     })
   } finally {
-    authorizing.value = false
+    if (!isAbandoned()) authorizing.value = false
   }
 }
 
 async function submitWithdraw() {
   if (!isValidAmount.value || !walletAddress.value || !accountId.value) return
   const withdrawAmount = String(amount.value)
+  const isAbandoned = requestSession.start()
   sending.value = true
   error.value = null
   analytics.trackPerpsWithdrawEvent(PerpsWithdrawEvent.SUBMIT, {
@@ -341,12 +360,14 @@ async function submitWithdraw() {
       token: 'USDC',
     })
     perpsToasts.toastWithdrawalComplete()
-    emit('close')
+    // No wallet step here: once the request is out the withdrawal is made, so
+    // it is reported either way. Only a reopened dialog is left alone.
+    if (!isAbandoned()) emit('close')
   } catch (e) {
     // TODO(perps-toasts): spec has no withdrawal-failure toast; revisit with design if needed
     const msg =
       e instanceof Error ? e.message : t('perps.withdraw.withdrawal-failed')
-    error.value = msg
+    if (!isAbandoned()) error.value = msg
     analytics.trackPerpsWithdrawErrorEvent(PerpsWithdrawEvent.ERROR, {
       withdrawAmount,
       token: 'USDC',
@@ -357,7 +378,7 @@ async function submitWithdraw() {
       extra: { withdrawAmount, token: 'USDC' },
     })
   } finally {
-    sending.value = false
+    if (!isAbandoned()) sending.value = false
   }
 }
 

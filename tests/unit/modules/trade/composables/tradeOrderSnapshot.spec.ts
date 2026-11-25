@@ -59,10 +59,22 @@ vi.mock('@/analytics', () => ({
 }))
 
 const mockSubmitOrder = vi.fn()
+const mockSetApproval = vi.fn()
+// The abandon check each provider instance was built with, newest last.
+const fusionIsAbandoned: Array<() => boolean> = []
+const latestIsAbandoned = () =>
+  fusionIsAbandoned[fusionIsAbandoned.length - 1]()
 vi.mock('@/modules/trade/providers/oneinch_fusion/oneInchFusion', () => ({
   default: class {
+    constructor(
+      _wallet: unknown,
+      _chainId: number,
+      options: { isAbandoned?: () => boolean } = {},
+    ) {
+      fusionIsAbandoned.push(options.isAbandoned ?? (() => false))
+    }
     submitOrder = mockSubmitOrder
-    setApproval = vi.fn()
+    setApproval = mockSetApproval
     isApprovalRequired = vi.fn(async () => false)
   },
 }))
@@ -96,7 +108,7 @@ const ORIGINAL_QUOTE = {
   avgAmount: 490_000_000_000_000_000n,
 }
 
-const makeHarness = async () => {
+const makeHarness = async ({ needsApproval = false } = {}) => {
   const { useTradeForm } =
     await import('@/modules/trade/composables/useTradeForm')
   const { useTradeExecution } =
@@ -107,12 +119,13 @@ const makeHarness = async () => {
   form.fromAmount.value = '100'
   const currentQuote = ref<typeof ORIGINAL_QUOTE | null>({ ...ORIGINAL_QUOTE })
   const walletAddress = ref<string | null>('0xwallet')
+  const needsApprovalRef = ref(needsApproval)
   const execution = useTradeExecution({
     form,
     walletAddress,
     wallet: ref({}) as never,
     currentQuote,
-    needsApproval: ref(false),
+    needsApproval: needsApprovalRef,
     isTradingRestrictedInRegion: ref(false),
     isTradingAllowedInRegion: computed(() => true),
   })
@@ -126,7 +139,14 @@ const makeHarness = async () => {
     form.toTokenSelected.value = TSLA as never
     currentQuote.value = null
   }
-  return { ...execution, form, currentQuote, walletAddress, clearForm }
+  return {
+    ...execution,
+    form,
+    currentQuote,
+    walletAddress,
+    clearForm,
+    needsApproval: needsApprovalRef,
+  }
 }
 
 describe('confirmTrade saves what the user confirmed (MEW trade notification)', () => {
@@ -233,23 +253,68 @@ const deferred = <T>() => {
   return { promise, resolve, reject }
 }
 
+const userRejection = () =>
+  Object.assign(new Error('User rejected'), { code: 4001 })
+
 describe('closing the progress modal while the wallet is pending (MEW-2694)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    fusionIsAbandoned.length = 0
   })
 
-  it('stops waiting on close but still saves an order signed later', async () => {
-    const { confirmTrade, tradeFlowStep, txProceeding } = await makeHarness()
+  it('resets on close and tells the provider to drop a late signature', async () => {
+    const { confirmTrade, tradeFlowStep, txProceeding, depositPending } =
+      await makeHarness()
     const pending = deferred<{ hash: string }>()
     mockSubmitOrder.mockReturnValue(pending.promise)
 
     const confirming = confirmTrade()
     await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalled())
     expect(txProceeding.value).toBe(true)
+    expect(latestIsAbandoned()).toBe(false)
 
     tradeFlowStep.value = 'idle'
     await nextTick()
     expect(txProceeding.value).toBe(false)
+    expect(depositPending.value).toBe(false)
+    // The provider reads this after the wallet signs and stops there.
+    expect(latestIsAbandoned()).toBe(true)
+
+    const { AbandonedSignError } = await import('@/utils/signSession')
+    pending.reject(new AbandonedSignError())
+    await confirming
+    expect(mockAddOrder).not.toHaveBeenCalled()
+    expect(mockAddToast).not.toHaveBeenCalled()
+    expect(tradeFlowStep.value).toBe('idle')
+  })
+
+  it('says nothing when the wallet rejects after the modal was closed', async () => {
+    const { confirmTrade, tradeFlowStep } = await makeHarness()
+    const pending = deferred<{ hash: string }>()
+    mockSubmitOrder.mockReturnValue(pending.promise)
+
+    const confirming = confirmTrade()
+    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalled())
+    tradeFlowStep.value = 'idle'
+    await nextTick()
+
+    pending.reject(userRejection())
+    await confirming
+    expect(mockAddToast).not.toHaveBeenCalled()
+    expect(tradeFlowStep.value).toBe('idle')
+  })
+
+  it('still saves an order that was already on its way when the modal closed', async () => {
+    // Signed before the close: the relayer call is in flight and the order is
+    // real, so it has to be tracked.
+    const { confirmTrade, tradeFlowStep } = await makeHarness()
+    const pending = deferred<{ hash: string }>()
+    mockSubmitOrder.mockReturnValue(pending.promise)
+
+    const confirming = confirmTrade()
+    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalled())
+    tradeFlowStep.value = 'idle'
+    await nextTick()
 
     pending.resolve({ hash: '0xorder' })
     await confirming
@@ -274,11 +339,14 @@ describe('closing the progress modal while the wallet is pending (MEW-2694)', ()
     tradeFlowStep.value = 'review'
     void confirmTrade()
     await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalledTimes(2))
+    // Each confirm has its own check: only the first is abandoned.
+    expect(fusionIsAbandoned.map(check => check())).toEqual([true, false])
 
-    first.reject(Object.assign(new Error('User rejected'), { code: 4001 }))
+    first.reject(userRejection())
     await firstConfirm
     expect(tradeFlowStep.value).toBe('processing')
     expect(txProceeding.value).toBe(true)
+    expect(mockAddToast).not.toHaveBeenCalled()
   })
 
   it('saves an abandoned unsubmitted native order without taking over the newer confirm', async () => {
@@ -314,7 +382,33 @@ describe('closing the progress modal while the wallet is pending (MEW-2694)', ()
     expect(orderHash.value).toBe('')
   })
 
-  it('does not bring back the deposit flag when closed while the provider loads', async () => {
+  it('still reports a failure once the wallet has broadcast the native deposit', async () => {
+    // A wallet that broadcasts by itself (extension, WalletConnect) cannot be
+    // stopped: with the deposit out, the outcome is the user's to know.
+    const { confirmTrade, tradeFlowStep } = await makeHarness()
+    const pending = deferred<{ hash: string }>()
+    mockSubmitOrder.mockImplementation(
+      (_config: unknown, hooks: { onDepositSent?: (hash: string) => void }) =>
+        pending.promise.catch(e => {
+          hooks.onDepositSent?.('0xdeposit')
+          throw e
+        }),
+    )
+
+    const confirming = confirmTrade()
+    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalled())
+    tradeFlowStep.value = 'idle'
+    await nextTick()
+
+    pending.reject(new Error('deposit reverted'))
+    await confirming
+    expect(mockAddToast).toHaveBeenCalledWith(
+      expect.objectContaining({ text: 'trade.error.submit-failed' }),
+    )
+    expect(tradeFlowStep.value).toBe('idle')
+  })
+
+  it('does not prompt the wallet when closed while the provider loads', async () => {
     const { confirmTrade, tradeFlowStep, depositPending, form } =
       await makeHarness()
     form.fromTokenSelected.value = {
@@ -323,16 +417,107 @@ describe('closing the progress modal while the wallet is pending (MEW-2694)', ()
       address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       decimals: 18,
     } as never
-    mockSubmitOrder.mockReturnValue(deferred().promise)
 
-    void confirmTrade()
+    const confirming = confirmTrade()
     await nextTick()
     tradeFlowStep.value = 'idle'
     await nextTick()
-    // Closed before the 1inch provider finished loading.
-    expect(mockSubmitOrder).not.toHaveBeenCalled()
 
-    await vi.waitFor(() => expect(mockSubmitOrder).toHaveBeenCalled())
+    await confirming
+    expect(mockSubmitOrder).not.toHaveBeenCalled()
     expect(depositPending.value).toBe(false)
+  })
+})
+
+describe('closing the waiting-approval modal while the wallet is pending (MEW-2694)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    fusionIsAbandoned.length = 0
+  })
+
+  // Review trade → Approve, up to the wallet holding the approval.
+  const startApproval = async () => {
+    const harness = await makeHarness({ needsApproval: true })
+    const pending = deferred<string>()
+    mockSetApproval.mockReturnValueOnce(pending.promise)
+    await harness.startTradeFlow()
+    expect(harness.tradeFlowStep.value).toBe('approvalIntro')
+    const approving = harness.confirmApproval()
+    await vi.waitFor(() => expect(mockSetApproval).toHaveBeenCalledTimes(1))
+    expect(harness.tradeFlowStep.value).toBe('approving')
+    return { ...harness, pending, approving }
+  }
+
+  it('asks the wallet again on the next Approve instead of waiting on the old request', async () => {
+    const { tradeFlowStep, startTradeFlow, confirmApproval } =
+      await startApproval()
+
+    tradeFlowStep.value = 'idle'
+    await nextTick()
+    expect(latestIsAbandoned()).toBe(true)
+
+    mockSetApproval.mockReturnValueOnce(deferred<string>().promise)
+    await startTradeFlow()
+    void confirmApproval()
+    await vi.waitFor(() => expect(mockSetApproval).toHaveBeenCalledTimes(2))
+    expect(tradeFlowStep.value).toBe('approving')
+    expect(latestIsAbandoned()).toBe(false)
+  })
+
+  it('ignores an approval the wallet gives after the modal was closed', async () => {
+    const { tradeFlowStep, needsApproval, pending, approving } =
+      await startApproval()
+
+    tradeFlowStep.value = 'idle'
+    await nextTick()
+
+    pending.resolve('0xapproval')
+    await approving
+    expect(needsApproval.value).toBe(true)
+    expect(tradeFlowStep.value).toBe('idle')
+    expect(mockAddToast).not.toHaveBeenCalled()
+  })
+
+  it('keeps a late rejection off the modal opened since', async () => {
+    const { tradeFlowStep, startTradeFlow, pending, approving } =
+      await startApproval()
+
+    tradeFlowStep.value = 'idle'
+    await nextTick()
+    await startTradeFlow()
+    expect(tradeFlowStep.value).toBe('approvalIntro')
+
+    pending.reject(userRejection())
+    await approving
+    expect(tradeFlowStep.value).toBe('approvalIntro')
+    expect(mockAddToast).not.toHaveBeenCalled()
+  })
+
+  it('keeps tracking an approval that was already broadcast when the modal closed', async () => {
+    const harness = await makeHarness({ needsApproval: true })
+    const mined = deferred<string>()
+    mockSetApproval.mockImplementationOnce(
+      (_from: string, _token: string, onSent: () => void) => {
+        // The wallet prompt is over; only mining is left.
+        onSent()
+        return mined.promise
+      },
+    )
+    await harness.startTradeFlow()
+    const approving = harness.confirmApproval()
+    await vi.waitFor(() => expect(mockSetApproval).toHaveBeenCalled())
+
+    harness.tradeFlowStep.value = 'idle'
+    await nextTick()
+    expect(latestIsAbandoned()).toBe(false)
+
+    mined.resolve('0xapproval')
+    await approving
+    expect(harness.needsApproval.value).toBe(false)
+    expect(mockAddToast).toHaveBeenCalledWith(
+      expect.objectContaining({ text: 'trade.toast.approval_success' }),
+    )
+    // Not forced back open.
+    expect(harness.tradeFlowStep.value).toBe('idle')
   })
 })

@@ -45,6 +45,35 @@ export const isUserRejectionError = (error: unknown): boolean => {
   )
 }
 
+// EIP-1193 4200, JSON-RPC -32601 / -32004, and what WalletConnect wallets
+// answer for a call they do not handle (5101, 5002, 3001, 1001).
+const UNSUPPORTED_METHOD_CODES = [4200, -32601, -32004, 5101, 5002, 3001, 1001]
+
+/**
+ * Whether a wallet turned a call down because it does not have it, as opposed
+ * to the user saying no. Wallets word this loosely ("User rejected methods"
+ * is one), so any refusal that talks about the method counts.
+ */
+export const isUnsupportedMethodError = (error: unknown): boolean => {
+  let err = error as { code?: number; message?: string; cause?: unknown }
+  // viem nests the wallet's own error under `cause`.
+  for (let depth = 0; err && depth < 5; depth++) {
+    if (
+      typeof err.code === 'number' &&
+      UNSUPPORTED_METHOD_CODES.includes(err.code)
+    )
+      return true
+    err = err.cause as typeof err
+  }
+  const message =
+    (typeof error === 'string'
+      ? error
+      : (error as { message?: string })?.message) ?? ''
+  return /method|not supported|unsupported|not available|not implemented/i.test(
+    message,
+  )
+}
+
 export const isInsufficientFundsError = (error: unknown): boolean => {
   const message = (error as { message?: string })?.message?.toLowerCase() ?? ''
   return (

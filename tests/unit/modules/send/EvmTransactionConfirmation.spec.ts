@@ -177,3 +177,84 @@ describe('EvmTransactionConfirmation closed while the wallet is pending (MEW-269
     expect(w.emitted('tx-sent')).toEqual([['0xhash']])
   })
 })
+
+// A WalletConnect wallet whose session offers the sign-only call: it hands the
+// signature back and MEW broadcasts, instead of the wallet sending by itself.
+describe('EvmTransactionConfirmation with a WalletConnect wallet that signs without sending (MEW-2694)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  const walletConnect = (SignTransaction: ReturnType<typeof vi.fn>) => {
+    const wallet = {
+      getWalletType: () => WalletType.WAGMI,
+      canSignWithoutSending: vi.fn(async () => true),
+      SignTransaction,
+      SendTransaction: vi.fn(),
+      broadcastTransaction: vi.fn(() => Promise.resolve('0xhash')),
+    }
+    h.wallet.value = wallet
+    return wallet
+  }
+
+  it('never sends a transaction signed on the phone after the review was closed', async () => {
+    let signOnPhone!: (tx: { signed: string }) => void
+    const wallet = walletConnect(
+      vi.fn(() => new Promise(r => (signOnPhone = r))),
+    )
+    const w = await mountReview()
+    const confirm = () => w.findComponent(AppBaseButton)
+
+    await confirm().trigger('click')
+    await vi.waitFor(() => expect(wallet.SignTransaction).toHaveBeenCalled())
+    expect(confirm().props('isLoading')).toBe(true)
+
+    await w.setProps({ modelValue: false })
+    await w.setProps({ modelValue: true })
+    expect(confirm().props('isLoading')).toBe(false)
+
+    signOnPhone({ signed: '0xsigned' })
+    await flushPromises()
+
+    expect(wallet.broadcastTransaction).not.toHaveBeenCalled()
+    expect(wallet.SendTransaction).not.toHaveBeenCalled()
+    expect(h.addTransaction).not.toHaveBeenCalled()
+    expect(w.emitted('tx-sent')).toBeUndefined()
+    expect(h.addToastMessage).not.toHaveBeenCalled()
+  })
+
+  it('broadcasts from MEW when the review stays open', async () => {
+    const wallet = walletConnect(vi.fn(async () => ({ signed: '0xsigned' })))
+    const w = await mountReview()
+
+    await w.findComponent(AppBaseButton).trigger('click')
+    await flushPromises()
+
+    expect(wallet.broadcastTransaction).toHaveBeenCalledWith('0xsigned')
+    expect(wallet.SendTransaction).not.toHaveBeenCalled()
+    expect(h.addTransaction).toHaveBeenCalledOnce()
+    expect(w.emitted('tx-sent')).toEqual([['0xhash']])
+  })
+
+  it('reports a rejection on the phone as a cancel', async () => {
+    const wallet = walletConnect(
+      vi.fn(async () =>
+        Promise.reject(
+          Object.assign(new Error('User rejected the request.'), {
+            code: 4001,
+          }),
+        ),
+      ),
+    )
+    const w = await mountReview()
+
+    await w.findComponent(AppBaseButton).trigger('click')
+    await flushPromises()
+
+    expect(h.addToastMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ text: 'common.error.user_canceled_request' }),
+    )
+    expect(wallet.SendTransaction).not.toHaveBeenCalled()
+    expect(w.findComponent(AppBaseButton).props('isLoading')).toBe(false)
+  })
+})

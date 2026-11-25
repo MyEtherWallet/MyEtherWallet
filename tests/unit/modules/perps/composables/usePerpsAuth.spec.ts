@@ -464,3 +464,113 @@ describe('usePerpsAuth — stale restore across a wallet switch', () => {
     expect(auth.accountId.value).toBe('account-A')
   })
 })
+
+describe('usePerpsAuth — closing the sign-in prompt while the device is pending (MEW-2694)', () => {
+  // The hardware device holds the message until the user acts on it.
+  let deviceSignature: {
+    promise: Promise<string>
+    resolve: (value: string) => void
+    reject: (reason: unknown) => void
+  }
+
+  beforeEach(() => {
+    vi.resetModules()
+    vi.clearAllMocks()
+    localStorage.clear()
+    walletAddress.value = '0xabc'
+    let resolve!: (value: string) => void
+    let reject!: (reason: unknown) => void
+    const promise = new Promise<string>((res, rej) => {
+      resolve = res
+      reject = rej
+    })
+    deviceSignature = { promise, resolve, reject }
+    wallet.value = {
+      getAddress: vi.fn(async () => '0xabc'),
+      SignMessage: vi.fn(() => deviceSignature.promise),
+      getWalletType: vi.fn(() => 'LEDGER'),
+    }
+    isWalletConnected.value = true
+    isPerpsRestricted.value = false
+    restrictedGate = null
+
+    mockGetLoginChallenge.mockResolvedValue({
+      result: { id: 'challenge-id', message: 'sign-me' },
+    })
+    mockCompleteLoginChallenge.mockResolvedValue({
+      result: { token: 'new-token', accountId: 'acc-1' },
+    })
+    mockAcceptAgreement.mockResolvedValue(undefined)
+  })
+
+  // Sign in → Sign on the review step, up to the device holding the message.
+  const signInUpToDevice = async () => {
+    const { usePerpsAuth } = await import(
+      '@/modules/perps/composables/usePerpsAuth'
+    )
+    const auth = usePerpsAuth()
+    await flushPromises()
+    const signingIn = auth.login()
+    await vi.waitFor(() => expect(auth.isWaitingForConfirm.value).toBe(true))
+    auth.confirmSign()
+    await vi.waitFor(() => expect(wallet.value?.SignMessage).toHaveBeenCalled())
+    expect(auth.showSigningPrompt.value).toBe(true)
+    expect(auth.isAuthenticating.value).toBe(true)
+    return { auth, signingIn }
+  }
+
+  it('resets the prompt and the Sign in button as soon as the prompt is closed', async () => {
+    const { auth } = await signInUpToDevice()
+
+    auth.cancelSign()
+
+    expect(auth.showSigningPrompt.value).toBe(false)
+    expect(auth.signingMessage.value).toBeNull()
+    expect(auth.isAuthenticating.value).toBe(false)
+  })
+
+  it('does not sign the user in with a signature given after the prompt was closed', async () => {
+    const { auth, signingIn } = await signInUpToDevice()
+    auth.cancelSign()
+
+    deviceSignature.resolve('late-signature')
+    await signingIn
+
+    expect(mockCompleteLoginChallenge).not.toHaveBeenCalled()
+    expect(auth.token.value).toBeNull()
+  })
+
+  it('keeps a late rejection off the next sign-in', async () => {
+    const { auth, signingIn } = await signInUpToDevice()
+    auth.cancelSign()
+
+    // Sign in again: a fresh challenge, back on the review step.
+    void auth.login()
+    await vi.waitFor(() => expect(auth.isWaitingForConfirm.value).toBe(true))
+    expect(mockGetLoginChallenge).toHaveBeenCalledTimes(2)
+
+    deviceSignature.reject(new Error('device disconnected'))
+    await signingIn
+
+    expect(auth.authError.value).toBeNull()
+    expect(auth.showSigningPrompt.value).toBe(true)
+    expect(auth.isWaitingForConfirm.value).toBe(true)
+  })
+
+  it('still cancels from the review step, before the device is asked', async () => {
+    const { usePerpsAuth } = await import(
+      '@/modules/perps/composables/usePerpsAuth'
+    )
+    const auth = usePerpsAuth()
+    await flushPromises()
+    const signingIn = auth.login()
+    await vi.waitFor(() => expect(auth.isWaitingForConfirm.value).toBe(true))
+
+    auth.cancelSign()
+    await signingIn
+
+    expect(wallet.value?.SignMessage).not.toHaveBeenCalled()
+    expect(auth.showSigningPrompt.value).toBe(false)
+    expect(auth.isAuthenticating.value).toBe(false)
+  })
+})

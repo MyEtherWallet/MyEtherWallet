@@ -254,14 +254,15 @@ import { storeToRefs } from 'pinia'
 import { Contract } from 'web3-eth-contract'
 import { abi } from '@/modules/send/tokenAbi'
 import { mainnet } from 'viem/chains'
-import { type HexPrefixedString, WalletType } from '@/providers/types'
+import { type HexPrefixedString } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 import type { EstimatesRequestBody, QuotesResponse } from '@/mew_api/types'
-import { isSignableWallet } from '@/utils/walletUtils'
+import { createSignSession } from '@/utils/signSession'
+import { sendFromWallet } from '@/utils/walletSend'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { type TokenBalance } from '@/mew_api/types'
@@ -286,13 +287,7 @@ const toastStore = useToastStore()
 const perpsToasts = usePerpsToasts()
 
 watch(isOpen, open => {
-  if (!open) {
-    // TODO(perps): once the SDK exposes a way to cancel an in-flight deposit
-    // (sandbox API call / live broadcast), hook it up here and surface a
-    // single "Deposit Canceled" toast. For now the request runs to completion
-    // regardless of whether the dialog is closed.
-    return
-  }
+  if (!open) return
   analytics.trackPerpsDepositEvent(PerpsDepositEvent.CLICKED)
   if (selectedChain.value?.name !== 'ETHEREUM') {
     const ethChain = chains.value.find(c => c.name === 'ETHEREUM')
@@ -466,11 +461,22 @@ const depositButtonLabel = computed(() => {
   return t('perps.deposit.title')
 })
 
-// Fetch deposit address on open
+// Closing the dialog while the wallet is still waiting abandons that deposit
+// (MEW-2694): the dialog reopens clean, and whatever the wallet answers later
+// is dropped — a transaction signed late is never broadcast.
+const depositSession = createSignSession()
+
+// Fetch deposit address on open, reset on close
 watch(
   () => isOpen.value,
   async isOpen => {
-    if (!isOpen) return
+    if (!isOpen) {
+      depositSession.abandon()
+      sending.value = false
+      error.value = null
+      clearAmount()
+      return
+    }
     showDepositAddress.value = false
     amount.value = ''
     error.value = null
@@ -526,6 +532,7 @@ const fetchDepositAddress = async () => {
 const sendSandboxDeposit = async () => {
   if (!amount.value || !accountId.value) return
   const depositAmount = amount.value
+  const isAbandoned = depositSession.start()
   sending.value = true
   error.value = null
   try {
@@ -545,9 +552,13 @@ const sendSandboxDeposit = async () => {
       token: 'USDC',
     })
     perpsToasts.toastDepositComplete(depositAmount, 'USDC')
+    // The sandbox has no wallet step: once the request is out the deposit is
+    // made, so it is reported either way. Only the dialog is left alone.
+    if (isAbandoned()) return
     clearAmount()
     isOpen.value = false
   } catch (e: unknown) {
+    if (isAbandoned()) return
     const msg = e instanceof Error ? e.message : String(e ?? '')
     if (isUserCancelError(e)) {
       error.value = t('perps.deposit.transaction-cancelled')
@@ -566,7 +577,7 @@ const sendSandboxDeposit = async () => {
       })
     }
   } finally {
-    sending.value = false
+    if (!isAbandoned()) sending.value = false
   }
 }
 
@@ -579,6 +590,7 @@ const sendLiveDeposit = async () => {
   )
     return
   const depositAmount = amount.value
+  const isAbandoned = depositSession.start()
   sending.value = true
   error.value = null
   try {
@@ -612,24 +624,17 @@ const sendLiveDeposit = async () => {
       priority: selectedFee.value,
       quoteId: gasFees.quoteId,
     })
+    // Closed while the transaction was being built: don't prompt the wallet.
+    if (isAbandoned()) return
 
-    // Sign
-    let signedTx: string
-    if (isSignableWallet(wallet.value)) {
-      const signResponse = await wallet.value.SignTransaction!(
-        signableTx.serialized as HexPrefixedString,
-      )
-      signedTx = signResponse.signed
-    } else {
-      signedTx = signableTx.serialized
-    }
-
-    // Broadcast
-    const hash =
-      wallet.value.getWalletType() === WalletType.WAGMI ||
-      wallet.value.getWalletType() === WalletType.INJECTED
-        ? await wallet.value.SendTransaction?.(signedTx as HexPrefixedString)
-        : await wallet.value.broadcastTransaction(signedTx as HexPrefixedString)
+    // Sign and broadcast. Wherever the wallet can sign without sending, a
+    // signature for a closed dialog is dropped instead of being sent.
+    const hash = await sendFromWallet(
+      wallet.value,
+      signableTx.serialized as HexPrefixedString,
+      { isAbandoned },
+    )
+    if (isAbandoned()) return
 
     if (!hash) {
       throw new Error(t('perps.deposit.broadcast-failed'))
@@ -647,6 +652,7 @@ const sendLiveDeposit = async () => {
     clearAmount()
     isOpen.value = false
   } catch (e: unknown | Error) {
+    if (isAbandoned()) return
     const msg =
       e instanceof Error ? e.message : String((e as Error).message ?? e ?? '')
     if (isUserCancelError(e)) {
@@ -666,7 +672,7 @@ const sendLiveDeposit = async () => {
       })
     }
   } finally {
-    sending.value = false
+    if (!isAbandoned()) sending.value = false
   }
 }
 
