@@ -56,9 +56,7 @@
         :to-loading="toLoadingState"
         :show-balance="isWalletConnected"
         :is-pristine="isPristine"
-        :show-quick-actions="
-          isWalletConnected && !isWatchOnly && !!fromTokenSelected
-        "
+        :show-quick-actions="isWalletConnected && !!fromTokenSelected"
         :max-disabled="!canUseMax()"
         :show-from-network="!isSwapView"
         :from-chains="fromChains"
