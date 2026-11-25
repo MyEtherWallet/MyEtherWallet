@@ -172,6 +172,18 @@ describe('PerpsWithdrawDialog — closed while the wallet is pending (MEW-2694)'
     expect(toastWithdrawalAddressAdded).not.toHaveBeenCalled()
   })
 
+  it('does not authorize the address with a signature given after the page is left', async () => {
+    const { dialog, signature } = await authorizeUpToWallet()
+
+    // Navigating away unmounts the dialog while it is still visible.
+    dialog.unmount()
+    signature.resolve('0xlate')
+    await flushPromises()
+
+    expect(completeAddressBookChallenge).not.toHaveBeenCalled()
+    expect(toastWithdrawalAddressAdded).not.toHaveBeenCalled()
+  })
+
   it('keeps a late rejection off the reopened dialog', async () => {
     const { dialog, signature } = await authorizeUpToWallet()
 

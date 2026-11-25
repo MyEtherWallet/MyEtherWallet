@@ -116,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import AppModal from '@/components/modal/AppModal.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import PerpsAmount from './PerpsAmount.vue'
@@ -245,6 +245,8 @@ async function refreshAddressBookStatus() {
 // (MEW-2694): the dialog reopens clean, and a signature the wallet gives
 // afterwards is dropped — the address is not authorized with it.
 const requestSession = createSignSession()
+// Leaving the page unmounts the dialog without closing it: abandon there too.
+onBeforeUnmount(requestSession.abandon)
 
 watch(
   () => props.visible,
