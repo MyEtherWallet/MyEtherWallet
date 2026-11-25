@@ -630,7 +630,10 @@ export function useSwapModule(): SwapModuleBindings {
       const isLast = index === txs.serialized.length - 1
       if (!tx) continue
 
-      if (!(await signsWithoutSending(txCtx))) {
+      const signOnly = await signsWithoutSending(txCtx)
+      // Closed while the wallet's capability was looked up.
+      if (isAbandoned()) return
+      if (!signOnly) {
         const broadcast = await txCtx.SendTransaction?.(tx as HexPrefixedString)
         if (isLast) lastTxPromise = broadcast
       } else {
