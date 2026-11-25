@@ -21,9 +21,6 @@ vi.mock('@/components/select_chain/SelectChainForApp.vue', () => ({
   default: {},
 }))
 vi.mock('@/components/AppNoChainBalance.vue', () => ({ default: {} }))
-vi.mock('@/modules/swap/components/BestOfferModal.vue', () => ({
-  default: {},
-}))
 vi.mock('@/modules/swap/components/SwapOfferModal.vue', () => ({
   default: {},
 }))
@@ -43,8 +40,7 @@ const mountSwap = (state: { connected: boolean; watchOnly: boolean }) => {
     isWatchOnly: ref(state.watchOnly),
     fromTokenSelected: ref({ address: '0xtoken', symbol: 'USDC' }),
     toTokenSelected: ref(null),
-    selectedChain: ref({ name: 'ETHEREUM' }),
-    isSwapView: ref(true),
+    isSwapView: ref(false),
     fromAmount: ref(''),
     canUseMax: () => true,
     bindWatchers: vi.fn(),
