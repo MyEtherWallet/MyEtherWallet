@@ -328,6 +328,7 @@
                   v-for="pct in [10, 25, 50, 75, 100]"
                   :key="pct"
                   :label="`${pct}%`"
+                  :disabled="!isWalletConnected"
                   class="min-w-0 flex-1"
                   @click="setPercentage(pct)"
                 />

@@ -87,6 +87,18 @@ describe('TradeAmountCard', () => {
     expect(card.emitted('percent')).toBeUndefined()
   })
 
+  it('disables every % chip when there is no balance to size from', () => {
+    const buttons = mountCard({ showBalance: false })
+      .findAll('button')
+      .filter(button => ['25%', '50%', '75%', 'MAX'].includes(button.text()))
+    expect(buttons.map(b => b.attributes('disabled') !== undefined)).toEqual([
+      true,
+      true,
+      true,
+      true,
+    ])
+  })
+
   it('sanitizes pasted input before updating the amount', async () => {
     const card = mountCard()
     await card.find('input').setValue('1.2.3abc')

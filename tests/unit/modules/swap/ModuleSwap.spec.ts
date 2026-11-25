@@ -12,7 +12,7 @@ vi.mock('@/modules/swap/composables/useSwapModule', () => ({
 vi.mock('@/components/AppSwapForm.vue', () => ({
   default: {
     name: 'AppSwapForm',
-    props: ['showQuickActions'],
+    props: ['showQuickActions', 'showBalance'],
     template: '<div />',
   },
 }))
@@ -51,20 +51,27 @@ const mountSwap = (state: { connected: boolean; watchOnly: boolean }) => {
   })
 }
 
-const quickActionsShown = (w: ReturnType<typeof mountSwap>) =>
-  w.findComponent({ name: 'AppSwapForm' }).props('showQuickActions')
+const formProps = (w: ReturnType<typeof mountSwap>) => {
+  const form = w.findComponent({ name: 'AppSwapForm' })
+  return {
+    showQuickActions: form.props('showQuickActions'),
+    showBalance: form.props('showBalance'),
+  }
+}
 
+// MEW-2699: the chips always show; with no balance to size from (no wallet),
+// AppSwapForm disables them. A watch-only wallet still has a balance.
 describe('ModuleSwap % quick actions', () => {
-  // MEW-2699: a watch-only wallet still has a balance to size the swap from.
-  it('shows them for a watch-only wallet', () => {
-    expect(
-      quickActionsShown(mountSwap({ connected: true, watchOnly: true })),
-    ).toBe(true)
+  it('shows them enabled for a watch-only wallet', () => {
+    expect(formProps(mountSwap({ connected: true, watchOnly: true }))).toEqual({
+      showQuickActions: true,
+      showBalance: true,
+    })
   })
 
-  it('hides them with no wallet connected', () => {
+  it('shows them without a balance when no wallet is connected', () => {
     expect(
-      quickActionsShown(mountSwap({ connected: false, watchOnly: false })),
-    ).toBe(false)
+      formProps(mountSwap({ connected: false, watchOnly: false })),
+    ).toEqual({ showQuickActions: true, showBalance: false })
   })
 })

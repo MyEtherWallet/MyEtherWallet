@@ -32,7 +32,8 @@ const props = withDefaults(
     toLoading?: boolean
     showBalance?: boolean
     isPristine?: boolean
-    /** 25/50/75/MAX presets under the from amount. */
+    /** 25/50/75/MAX presets under the from amount; disabled while there is
+     *  no balance to size from (`showBalance` off, i.e. no wallet). */
     showQuickActions?: boolean
     /** MAX stays visible but inert (it needs an internal wallet). */
     maxDisabled?: boolean
@@ -119,7 +120,7 @@ const selectToNetwork = (name: string | null) => {
             v-for="pct in QUICK_ACTIONS"
             :key="pct"
             :label="chipLabel(pct)"
-            :disabled="pct === 100 && maxDisabled"
+            :disabled="!showBalance || (pct === 100 && maxDisabled)"
             class="flex-1 uppercase"
             @click="emit('percent', pct)"
           />
