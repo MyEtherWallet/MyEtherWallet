@@ -80,6 +80,9 @@ export const initAnalytics = async (): Promise<void> => {
     defaultTracking: {
       formInteractions: false,
     },
+    remoteConfig: {
+      fetchRemoteConfig: false,
+    },
   })
 
   const inEU = await isEU()
