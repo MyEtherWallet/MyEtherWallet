@@ -66,6 +66,8 @@ export const signForSend = async (
     }
   }
 
+  // The caller may have awaited something (building the tx) since the check.
+  stopIfAbandoned()
   if (isSignableWallet(wallet)) {
     if (!wallet.SignTransaction) {
       throw new Error('The connected wallet cannot sign transactions')

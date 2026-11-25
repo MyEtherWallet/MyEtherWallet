@@ -144,6 +144,22 @@ describe('sendFromWallet — a request abandoned while the wallet held it (MEW-2
   })
 
   it.each([
+    ['a hardware wallet', () => makeWallet(WalletType.LEDGER)],
+    ['a WalletConnect wallet', () => walletConnect()],
+  ])(
+    'does not prompt %s for a request already closed',
+    async (_name, make) => {
+      const wallet = make()
+
+      await expect(
+        sendFromWallet(wallet, TX, { isAbandoned: () => true }),
+      ).rejects.toBeInstanceOf(AbandonedSignError)
+      expect(wallet.SignTransaction).not.toHaveBeenCalled()
+      expect(wallet.SendTransaction).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([
     ['can sign without sending', true],
     ['cannot sign without sending', false],
   ])(
