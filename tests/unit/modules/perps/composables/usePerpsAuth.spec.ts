@@ -540,6 +540,25 @@ describe('usePerpsAuth — closing the sign-in prompt while the device is pendin
     expect(auth.token.value).toBeNull()
   })
 
+  it('does not sign the user in when the prompt closes while the server checks the signature', async () => {
+    let finishChallenge!: (value: unknown) => void
+    mockCompleteLoginChallenge.mockReturnValueOnce(
+      new Promise(resolve => (finishChallenge = resolve)),
+    )
+    const { auth, signingIn } = await signInUpToDevice()
+    deviceSignature.resolve('signature')
+    await vi.waitFor(() => expect(mockCompleteLoginChallenge).toHaveBeenCalled())
+
+    auth.cancelSign()
+    finishChallenge({ result: { token: 'stale-token', accountId: 'acc-1' } })
+    await signingIn
+
+    expect(auth.token.value).toBeNull()
+    expect(auth.accountId.value).toBeNull()
+    expect(mockSetToken).not.toHaveBeenCalledWith('stale-token')
+    expect(localStorage.length).toBe(0)
+  })
+
   it('keeps a late rejection off the next sign-in', async () => {
     const { auth, signingIn } = await signInUpToDevice()
     auth.cancelSign()

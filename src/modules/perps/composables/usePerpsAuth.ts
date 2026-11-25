@@ -387,11 +387,17 @@ export function usePerpsAuth() {
         id: challenge.result.id,
         signature,
       })
-      token.value = complete.result.token
-      accountId.value = complete.result.accountId
+      // Cancelled while the server checked the signature: a newer sign-in
+      // may own the session by now.
+      if (isAbandoned()) return
+      // This attempt's own values: persisting below awaits, and the refs may
+      // belong to a newer sign-in by the time it writes.
+      const { token: newToken, accountId: newAccountId } = complete.result
+      token.value = newToken
+      accountId.value = newAccountId
 
-      perpsClient.setToken(token.value)
-      perpsWs.login(token.value)
+      perpsClient.setToken(newToken)
+      perpsWs.login(newToken)
 
       const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
       const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
@@ -418,8 +424,8 @@ export function usePerpsAuth() {
         exp: number
       }[]
 
-      const encryptedToken = await encrypt(token.value, address)
-      const encryptedAcc = await encrypt(accountId.value, address)
+      const encryptedToken = await encrypt(newToken, address)
+      const encryptedAcc = await encrypt(newAccountId, address)
 
       localStorage.setItem(
         STORAGE_KEY_TOKEN,
