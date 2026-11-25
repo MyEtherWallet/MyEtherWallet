@@ -256,6 +256,21 @@ describe('PerpsDepositDialog — closed while the wallet is pending (MEW-2694)',
     expect(toasts.toastDepositInitiated).not.toHaveBeenCalled()
   })
 
+  it('never broadcasts what the device signs after the page is left', async () => {
+    const device = deferred<{ signed: string }>()
+    SignTransaction.mockReturnValue(device.promise)
+    const dialog = await depositUpToWallet(SignTransaction)
+
+    // Navigating away unmounts the dialog while it is still open.
+    dialog.unmount()
+    device.resolve({ signed: '0xsigned' })
+    await flushPromises()
+
+    expect(broadcastTransaction).not.toHaveBeenCalled()
+    expect(toasts.toastDepositInitiated).not.toHaveBeenCalled()
+    expect(startPostTxPoll).not.toHaveBeenCalled()
+  })
+
   it('still completes a deposit when the dialog stays open', async () => {
     SignTransaction.mockResolvedValue({ signed: '0xsigned' })
     const dialog = mountDialog()

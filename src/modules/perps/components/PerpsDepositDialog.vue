@@ -229,7 +229,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onBeforeUnmount } from 'vue'
 import QrcodeVue from 'qrcode.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -465,6 +465,8 @@ const depositButtonLabel = computed(() => {
 // (MEW-2694): the dialog reopens clean, and whatever the wallet answers later
 // is dropped — a transaction signed late is never broadcast.
 const depositSession = createSignSession()
+// Leaving the page unmounts the dialog without closing it: abandon there too.
+onBeforeUnmount(depositSession.abandon)
 
 // Fetch deposit address on open, reset on close
 watch(
