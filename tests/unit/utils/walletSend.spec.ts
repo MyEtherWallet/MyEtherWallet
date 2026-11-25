@@ -142,6 +142,44 @@ describe('sendFromWallet — a request abandoned while the wallet held it (MEW-2
     await expect(sending).rejects.toThrow('Method not found')
     expect(wallet.SendTransaction).not.toHaveBeenCalled()
   })
+
+  it.each([
+    ['can sign without sending', true],
+    ['cannot sign without sending', false],
+  ])(
+    'opens no prompt when closed while the wallet said it %s',
+    async (_name, canSign) => {
+      const lookup = deferred<boolean>()
+      const wallet = walletConnect({
+        canSignWithoutSending: vi.fn(() => lookup.promise),
+      })
+      let abandoned = false
+
+      const sending = sendFromWallet(wallet, TX, {
+        isAbandoned: () => abandoned,
+      })
+      await vi.waitFor(() =>
+        expect(wallet.canSignWithoutSending).toHaveBeenCalled(),
+      )
+      abandoned = true
+      lookup.resolve(canSign)
+
+      await expect(sending).rejects.toBeInstanceOf(AbandonedSignError)
+      expect(wallet.SignTransaction).not.toHaveBeenCalled()
+      expect(wallet.SendTransaction).not.toHaveBeenCalled()
+    },
+  )
+
+  it('does not broadcast a signature whose request closed before the second half', async () => {
+    const wallet = walletConnect()
+    let abandoned = false
+
+    const send = await signForSend(wallet, TX, { isAbandoned: () => abandoned })
+    abandoned = true
+
+    expect(send).toThrow(AbandonedSignError)
+    expect(wallet.broadcastTransaction).not.toHaveBeenCalled()
+  })
 })
 
 describe('sendFromWallet — a wallet that lists the sign-only call but will not do it', () => {

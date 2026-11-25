@@ -53,9 +53,17 @@ export const signForSend = async (
   const broadcast =
     options.broadcast ??
     ((signedTx: HexPrefixedString) => wallet.broadcastTransaction(signedTx))
-  const signed = (signedTx: HexPrefixedString) => {
+  // Checked before every wallet prompt and every broadcast: a request closed
+  // while an earlier step was pending goes no further.
+  const stopIfAbandoned = () => {
     if (isAbandoned()) throw new AbandonedSignError()
-    return () => broadcast(signedTx)
+  }
+  const signed = (signedTx: HexPrefixedString) => {
+    stopIfAbandoned()
+    return () => {
+      stopIfAbandoned()
+      return broadcast(signedTx)
+    }
   }
 
   if (isSignableWallet(wallet)) {
@@ -66,6 +74,7 @@ export const signForSend = async (
   }
 
   if (wallet.SignTransaction && (await wallet.canSignWithoutSending?.())) {
+    stopIfAbandoned()
     let signedTx: HexPrefixedString | undefined
     try {
       signedTx = (await wallet.SignTransaction(serializedTx)).signed
@@ -80,6 +89,7 @@ export const signForSend = async (
   }
 
   return () => {
+    stopIfAbandoned()
     if (!wallet.SendTransaction) {
       throw new Error('The connected wallet cannot send transactions')
     }
