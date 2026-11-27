@@ -222,20 +222,23 @@ const confirmTransaction = async () => {
     if (!wallet.value) {
       return
     }
-    showApproveMessage.value = !(
-      wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
-      wallet.value?.getWalletType() === WalletType.MNEMONIC
-    )
+    const walletType = wallet.value.getWalletType()
+    // The parent already signed for these; a second pass breaks Bitcoin.
+    const isPreSigned =
+      walletType === WalletType.PRIVATE_KEY ||
+      walletType === WalletType.MNEMONIC
+    showApproveMessage.value = !isPreSigned
     signing.value = true
     // This is done because the modal needs to be shown and the user needs to actually
     // consent to signing the transaction
-    const signedTx = isSignableWallet(wallet.value)
-      ? (
-          await wallet.value?.SignTransaction?.(
-            props.signedTx as HexPrefixedString,
-          )
-        )?.signed
-      : (props.signedTx as HexPrefixedString)
+    const signedTx =
+      isSignableWallet(wallet.value) && !isPreSigned
+        ? (
+            await wallet.value?.SignTransaction?.(
+              props.signedTx as HexPrefixedString,
+            )
+          )?.signed
+        : (props.signedTx as HexPrefixedString)
 
     const txPromise =
       wallet.value?.getWalletType() === WalletType.WAGMI ||
