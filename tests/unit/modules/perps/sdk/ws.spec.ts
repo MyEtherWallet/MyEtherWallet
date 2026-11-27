@@ -134,6 +134,23 @@ describe('perpsWs — subscribe / routing', () => {
     expect(calls[0]).toEqual([{ equity: '1000' }])
   })
 
+  it('does not deliver subscribe / unsubscribe acks to channel handlers', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    const calls: unknown[][] = []
+    ws.subscribe('markPricesPerps', (rows) => calls.push(rows as unknown[]))
+    for (const type of ['subscribed', 'unsubscribed']) {
+      FakeSocket.instances[0].onmessage?.({
+        data: JSON.stringify({
+          type,
+          channel: 'markPricesPerps',
+          data: { op: 'subscribe', channel: 'markPricesPerps' },
+        }),
+      } as MessageEvent)
+    }
+    expect(calls).toHaveLength(0)
+  })
+
   it('unsubscribe() removes handler and sends unsubscribe when last handler leaves', () => {
     ws.connect()
     FakeSocket.instances[0].open()

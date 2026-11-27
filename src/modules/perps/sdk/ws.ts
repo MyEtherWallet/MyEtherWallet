@@ -257,6 +257,8 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
       }
       return
     }
+    // Acks echo the subscribe request in `data`; they carry no channel rows.
+    if (frame.type === 'subscribed' || frame.type === 'unsubscribed') return
     // Route by channel — frame.type is always 'update' for data frames.
     // (See runbook §5 — earlier attempt routed by frame.type and broke fan-out.)
     if (!frame.channel) return
