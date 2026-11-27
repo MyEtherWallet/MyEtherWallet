@@ -2,7 +2,7 @@ import { ref, computed, watch, nextTick, type Ref, type ComputedRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
-import { useDebounceFn } from '@vueuse/core'
+import { until, useDebounceFn } from '@vueuse/core'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwapStore, type NewTokenInfo } from '@/stores/swapStore'
 import { useMaxAmount } from '@/composables/useMaxAmount'
@@ -45,6 +45,10 @@ import { useSwapQuote } from './useSwapQuote'
 import { useSwapGasFee } from './useSwapGasFee'
 import { useSwapExecution } from './useSwapExecution'
 import { useSwapAnalytics } from './useSwapAnalytics'
+
+// The library returns no expiry for a quote, so the review modal re-quotes on
+// this fixed window.
+const SWAP_QUOTE_TTL_MS = 5 * 60 * 1000
 
 const getErrorMessage = (error: unknown, fallback: string): string => {
   if (error instanceof Error && error.message) return error.message
@@ -125,6 +129,9 @@ interface SwapModuleBindings {
   bestOfferSelectionOpen: Ref<boolean>
   swapInitiatedOpen: Ref<boolean>
   txProceeding: Ref<boolean>
+  quoteExpiresAt: Ref<number | null>
+  quoteRefreshFailed: Ref<boolean>
+  refreshExpiredQuote: () => Promise<void>
   isSwapView: ComputedRef<boolean>
   isCrossChain: ComputedRef<boolean>
   parsedFromTokens: ComputedRef<NewTokenInfo[]>
@@ -628,7 +635,12 @@ export function useSwapModule(): SwapModuleBindings {
     return lastTxPromise
   }
 
+  // Signing keeps its own flag: the selectedQuote watcher also drives
+  // txProceeding and would clear it mid-signature.
+  let isSigning = false
+
   const proceedWithSwap = async (quoteId: string) => {
+    isSigning = true
     txProceeding.value = true
     generalError.value = ''
     const analyticsPayload = getAnalyticsShared()
@@ -749,6 +761,7 @@ export function useSwapModule(): SwapModuleBindings {
         })
       }
     } finally {
+      isSigning = false
       txProceeding.value = false
     }
   }
@@ -946,7 +959,12 @@ export function useSwapModule(): SwapModuleBindings {
   // debounce when the amount/pair changes mid-flight) — MEW-2293.
   let latestQuotesRequestId = 0
 
-  const fetchQuotes = async () => {
+  const quoteExpiresAt = ref<number | null>(null)
+
+  // `keepCurrent` re-quotes under the open review modal: the offers on screen
+  // stay until the new ones land, and the picked provider is kept if it still
+  // quotes.
+  const fetchQuotes = async ({ keepCurrent = false } = {}) => {
     if (!fromTokenSelected.value || !toTokenSelected.value || isSameToken.value)
       return
     // The debounced call reads the amount when it fires, not when it was
@@ -966,12 +984,17 @@ export function useSwapModule(): SwapModuleBindings {
     const toToken = toTokenSelected.value
     const requestedFromAddress = userAddress.value
     const requestedToAddress = toAddress.value
+    const keptProvider = keepCurrent
+      ? selectedQuote.value?.quote.provider
+      : undefined
     isLoadingQuotes.value = true
-    providers.value = []
-    selectedQuote.value = undefined
+    if (!keepCurrent) {
+      providers.value = []
+      selectedQuote.value = undefined
+      toAmount.value = '0'
+    }
 
     generalError.value = ''
-    toAmount.value = '0'
     quotesError.value = false
     const analyticsPayload = getAnalyticsShared()
     try {
@@ -1018,9 +1041,16 @@ export function useSwapModule(): SwapModuleBindings {
             quote =>
               BigInt(quote.minMax.minimumFrom.toString()) <= fromAmountBase,
           )
-        selectedQuote.value = providers.value[0] || undefined
+        selectedQuote.value =
+          providers.value.find(q => q.quote.provider === keptProvider) ||
+          providers.value[0] ||
+          undefined
+        if (providers.value.length > 0) {
+          quoteExpiresAt.value = Date.now() + SWAP_QUOTE_TTL_MS
+        }
         if (providers.value.length === 0) {
           quotesError.value = true
+          if (keepCurrent) closeExpiredReview()
           // Every returned quote reported a minimum above the entered amount, so
           // the amount is too low. The smallest declared minimum overstates the
           // real floor when a provider with an undeclared, fee-dependent floor
@@ -1117,6 +1147,37 @@ export function useSwapModule(): SwapModuleBindings {
   }
 
   const debounceFetchQuotes = useDebounceFn(fetchQuotes, 750)
+
+  // True while the review modal is force-closed after a failed re-quote, so the
+  // modal skips the OFFER_DECLINED a user close would fire.
+  const quoteRefreshFailed = ref(false)
+
+  const closeExpiredReview = () => {
+    if (!bestOfferSelectionOpen.value) return
+    quoteRefreshFailed.value = true
+    bestOfferSelectionOpen.value = false
+    providers.value = []
+    selectedQuote.value = undefined
+    toAmount.value = '0'
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('swap.error.fetching-quotes'),
+    })
+  }
+
+  const refreshExpiredQuote = async () => {
+    if (txProceeding.value || isSigning) return
+    await fetchQuotes({ keepCurrent: true })
+    // A newer request may have replaced this one; judge by the last to settle.
+    await until(isLoadingQuotes).toBe(false)
+    if (!bestOfferSelectionOpen.value || isSigning) return
+    // Fresh quotes carry a future expiry; one still in the past means the
+    // re-quote failed, and the modal would sit at 00:00 with Confirm disabled.
+    const expiresAt = quoteExpiresAt.value
+    if (selectedQuote.value && expiresAt !== null && expiresAt > Date.now())
+      return
+    closeExpiredReview()
+  }
 
   // --- Token Setup Methods ---
 
@@ -1352,6 +1413,10 @@ export function useSwapModule(): SwapModuleBindings {
   })
 
   const bindWatchers = () => {
+    watch(bestOfferSelectionOpen, isOpen => {
+      if (isOpen) quoteRefreshFailed.value = false
+    })
+
     // Sync swap/bridge pair to pairStore
     watch(fromTokenSelected, token => {
       if (isSwapView.value) {
@@ -1549,7 +1614,7 @@ export function useSwapModule(): SwapModuleBindings {
             extra: { errorMessage },
           })
         } finally {
-          if (!cancelled) txProceeding.value = false
+          if (!cancelled && !isSigning) txProceeding.value = false
         }
       },
       { deep: true },
@@ -1734,6 +1799,9 @@ export function useSwapModule(): SwapModuleBindings {
     bestOfferSelectionOpen,
     swapInitiatedOpen,
     txProceeding,
+    quoteExpiresAt,
+    quoteRefreshFailed,
+    refreshExpiredQuote,
     isSwapView,
     isCrossChain,
     parsedFromTokens: swapTokensFeature.parsedFromTokens,

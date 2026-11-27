@@ -253,10 +253,28 @@ describe('AppInputNaked', () => {
   })
 
   it('sends class to the root and other attrs to the input', () => {
-    const wrapper = mountInput({}, { class: 'mt-4', readonly: true })
+    const wrapper = mountInput({}, { class: 'mt-4', name: 'amount' })
     expect(wrapper.classes()).toContain('mt-4')
     expect(wrapper.get(input()).classes()).not.toContain('mt-4')
-    expect(wrapper.get(input()).attributes('readonly')).toBeDefined()
+    expect(wrapper.get(input()).attributes('name')).toBe('amount')
+  })
+
+  it('keeps a readonly value out of reach of the pointer and the Tab key', () => {
+    const wrapper = mountInput({ modelValue: '2.45', readonly: true })
+    const el = wrapper.get(input())
+    expect(el.attributes('readonly')).toBeDefined()
+    expect(el.attributes('tabindex')).toBe('-1')
+    expect(wrapper.get('label').classes()).toContain('pointer-events-none')
+    // Still an input with its value and name, so screen readers read it.
+    expect((el.element as HTMLInputElement).value).toBe('2.45')
+    expect(el.attributes('aria-label')).toBe('Amount')
+  })
+
+  it('leaves an editable input clickable and in the tab order', () => {
+    const wrapper = mountInput()
+    expect(wrapper.get(input()).attributes('readonly')).toBeUndefined()
+    expect(wrapper.get(input()).attributes('tabindex')).toBeUndefined()
+    expect(wrapper.get('label').classes()).not.toContain('pointer-events-none')
   })
 
   describe('autoScale', () => {
@@ -283,6 +301,50 @@ describe('AppInputNaked', () => {
       const wrapper = mountInput({ modelValue: '1'.repeat(40) })
       expect(valueClass(wrapper)).toBe('text-heading-base')
       expect(wrapper.get(currency()).classes()).toContain('text-heading-base')
+    })
+
+    // 20 chars at 10px per 16px of font, minus tracking: 242px at 20px,
+    // 193.6px at 16px, 169.4px at 14px.
+    const TWENTY_CHARS = '0.123456789012345678'
+
+    it('steps past heading/base to 16px with extendedScale', () => {
+      rootWidth.value = 210
+      try {
+        const wrapper = mountInput({
+          modelValue: TWENTY_CHARS,
+          showCurrency: false,
+          extendedScale: true,
+        })
+        expect(wrapper.get(input()).classes()).toEqual(
+          expect.arrayContaining(['text-label-base', 'font-bold']),
+        )
+        expect(valueClass(wrapper)).toBeUndefined()
+      } finally {
+        rootWidth.value = 200
+      }
+    })
+
+    it('bottoms out at 14px with extendedScale', () => {
+      const wrapper = mountInput({
+        modelValue: TWENTY_CHARS,
+        showCurrency: false,
+        extendedScale: true,
+      })
+      expect(wrapper.get(input()).classes()).toEqual(
+        expect.arrayContaining(['text-label-sm', 'font-bold']),
+      )
+
+      const overflowing = mountInput({
+        modelValue: '1'.repeat(40),
+        extendedScale: true,
+      })
+      expect(overflowing.get(input()).classes()).toContain('text-label-sm')
+      expect(overflowing.get(currency()).classes()).toContain('text-label-sm')
+    })
+
+    it('keeps the heading sizes with extendedScale while the value fits', () => {
+      const wrapper = mountInput({ modelValue: '24', extendedScale: true })
+      expect(valueClass(wrapper)).toBe('text-heading-2xl')
     })
 
     it('never scales with autoScale off', () => {

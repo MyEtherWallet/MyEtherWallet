@@ -2,82 +2,58 @@
   <app-modal
     v-if="isWalletConnected && isLoadedChainsData"
     v-model="openDialog"
-    :title="
-      $t('common.deposit_title', {
-        chain: selectedChain?.nameLong || 'Ethereum',
-      })
-    "
-    class="min-h-[400px]"
+    :title="$t('common.deposit_title', { chain: chainName })"
+    :subtitle="$t('common.deposit_description', { chain: chainName })"
+    header-align="left"
   >
-    <template #header>
-      <div class="flex justify-start!">
-        <app-token-logo
-          v-if="selectedChain?.icon"
-          :url="selectedChain?.icon"
-          :symbol="selectedChain.currencyName"
-          width="w-12"
-          height="h-12"
-        ></app-token-logo>
-      </div>
-    </template>
-    <div v-if="walletAddress" class="px-8 pb-8 flex flex-col gap-2">
-      <h1 class="text-s-28 font-bold text-left leading-tight">
-        {{
-          $t('common.deposit_title', {
-            chain: selectedChain?.nameLong || 'Ethereum',
-          })
-        }}
-      </h1>
-      <p class="text-s-15 text-text-subtle leading-relaxed max-w-80">
-        {{
-          $t('common.deposit_description', {
-            chain: selectedChain?.nameLong || 'Ethereum',
-          })
-        }}
-      </p>
-      <div class="flex items-center justify-center my-6">
-        <div
-          class="rounded-30 p-8 shadow-button-elevated bg-white flex items-center justify-center"
-        >
-          <div
-            v-show="!isLoadingQRCode"
-            ref="qrCode"
-            class="qr-code-container"
-          ></div>
-          <!-- Loading QR Placeholder -->
-          <div
-            v-show="isLoadingQRCode"
-            class="h-[150px] w-[150px] animate-pulse bg-background-default-hover rounded-xl"
-          ></div>
-        </div>
-      </div>
-      <div class="flex items-center gap-4 mt-2">
-        <app-blockie
-          :address="walletAddress"
-          :size="12"
-          class="flex-none rounded-full"
+    <div
+      v-if="walletAddress"
+      class="flex flex-col items-center gap-6 px-4 pb-4 sm:px-6 sm:pb-6"
+    >
+      <!-- The QR draws on a transparent background, so it keeps a white tile in
+           every theme to stay scannable; only dark mode needs a quiet zone. -->
+      <div
+        data-test="deposit-qr"
+        class="relative size-50 bg-white dark:box-content dark:rounded-16 dark:p-3"
+      >
+        <div v-show="!isLoadingQRCode" ref="qrCode" class="qr-code-container" />
+        <app-skeleton
+          v-show="isLoadingQRCode"
+          shape="rectangle-rounded"
+          class="size-full"
         />
+        <!-- The chain mark covers well under the 25% of the code that its
+             error correction (level Q) can recover. -->
         <div
-          class="grow font-medium text-s-17 text-black break-all leading-tight tracking-sp-06"
+          v-if="selectedChain?.icon && !isLoadingQRCode"
+          class="absolute inset-0 m-auto flex size-12 items-center justify-center rounded-full bg-white"
         >
-          {{ walletAddress }}
-        </div>
-        <div class="flex items-center gap-1">
-          <!-- Copy -->
-          <app-btn-copy
-            :copy-value="walletAddress"
+          <app-avatar
+            type="network"
             size="l"
-            class="text-text-brand"
+            :url="selectedChain.icon"
+            :chain="selectedChain.name"
           />
-          <!-- Block Explorer Link -->
-          <a
+        </div>
+      </div>
+      <div class="flex w-full items-center gap-3">
+        <app-avatar
+          type="account"
+          size="m"
+          :address="walletAddress"
+          class="shrink-0"
+        />
+        <!-- Multi-address truncation, as long as one line fits; copy keeps the full value. -->
+        <app-content-group :title="shortAddress" class="min-w-0 flex-1" />
+        <!-- Naked Button Icons inherit the glyph color from here. -->
+        <div class="flex shrink-0 items-center gap-1 text-icon-brand">
+          <app-btn-copy :copy-value="walletAddress" size="m" icon-size="m" />
+          <app-btn-icon
             :href="getExplorerLink"
-            :aria-label="$t('view_in_block_explorer')"
-            target="_blank"
-            class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-background-brand-subtle transition-colors"
-          >
-            <AppIcon name="arrow-top-right-on-square" class="text-text-brand" />
-          </a>
+            :label="$t('view_in_block_explorer')"
+            icon="arrow-top-right-on-square"
+            size="m"
+          />
         </div>
       </div>
     </div>
@@ -87,20 +63,24 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import AppModal from '@/components/modal/AppModal.vue'
-import AppBlockie from '@/components/AppBlockie.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import { truncateAddress } from '@/utils/filters'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
 import { watch, computed } from 'vue'
 import { analytics, DepositEvent } from '@/analytics'
 
-import AppIcon from '@/components/icon/AppIcon.vue'
 const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()
 const { selectedChain, isLoaded: isLoadedChainsData } = storeToRefs(chainsStore)
+const chainName = computed(() => selectedChain.value?.nameLong || 'Ethereum')
 
 /** -------------------------------
  * Dialog
@@ -124,6 +104,15 @@ watch(
       analytics.trackDepositEvent(DepositEvent.SHOWN)
     }
   },
+)
+
+// The row leaves ~170px for the address on a phone and ~290px from sm (480px
+// modal), so show as many characters as fit on one line.
+const { isMobile } = useAppBreakpoints()
+const shortAddress = computed(() =>
+  isMobile.value
+    ? truncateAddress(walletAddress.value || '', 8, 6)
+    : truncateAddress(walletAddress.value || '', 12, 10),
 )
 
 const getExplorerLink = computed(() => {

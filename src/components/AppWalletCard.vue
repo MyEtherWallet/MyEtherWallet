@@ -241,8 +241,9 @@ const copyClick = async () => {
       throw new Error(t('common.error.no_wallet_address'))
     await navigator.clipboard.writeText(walletAddress.value)
     toastStore.addToastMessage({
-      text: `${t('common.copied_to_clipboard')}`,
-      hash: walletAddress.value,
+      type: ToastType.Success,
+      text: t('common.copied_to_clipboard'),
+      textSecondary: walletAddress.value,
     })
   } catch (err) {
     toastStore.addToastMessage({

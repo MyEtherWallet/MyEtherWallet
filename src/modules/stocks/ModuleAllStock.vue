@@ -273,10 +273,16 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
 }
 
 // Column keys are the API sort keys. The header cycles desc → asc → back to
-// the default market cap desc.
+// the default market cap desc. Market cap is L only: at M the four data
+// columns leave the name ~40px next to the Trade button.
 const columns = computed<TableColumn[]>(() => [
   { key: 'NAME', label: t('stocks.name'), sortable: true },
-  { key: 'MARKET_CAP', label: t('stocks.market_cap'), sortable: true },
+  {
+    key: 'MARKET_CAP',
+    label: t('stocks.market_cap'),
+    sortable: true,
+    largeOnly: true,
+  },
   {
     key: 'VOLUME_24H',
     label: t('stocks.twenty_four_h_volume'),

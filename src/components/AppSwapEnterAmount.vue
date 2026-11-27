@@ -4,6 +4,7 @@
       v-model="amount"
       :input-label="$t('common.amount')"
       :readonly="readonly"
+      extended-scale
       :error="showError"
       :loading="isLoading"
       :info-message="isFromView ? $t('common.enter_amount') : conversion"

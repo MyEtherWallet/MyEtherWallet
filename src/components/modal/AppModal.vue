@@ -53,16 +53,22 @@
             :class="{ 'justify-center': centeredHeader }"
           >
             <slot name="header">
-              <!-- px-12 keeps the title 8px clear of the 40px back/close
-                   buttons; a long title wraps instead of being cut off. -->
+              <!-- Centred: px-12 keeps the title 8px clear of the 40px
+                   back/close buttons. Left: 16 (64px) leaves a 24px gap to
+                   them. A long title wraps instead of being cut off. -->
               <AppContentGroup
                 :id="titleId"
                 :title="title ?? ''"
                 :description="subtitle"
                 size="l"
-                align="center"
+                :align="headerAlign"
                 wrap-title
-                class="w-full px-12"
+                class="w-full"
+                :class="
+                  headerAlign === 'left'
+                    ? ['pr-16', { 'pl-16': showBackButton }]
+                    : 'px-12'
+                "
               />
             </slot>
           </header>
@@ -119,7 +125,7 @@ let stackTop = 0
  * AppModal — the one base modal (design library, Figma component set
  * 2279:31532; M 2279:27719 from `sm`/768px up, S 2279:31533 below).
  *
- * Optional header (Content Group L, centred), back and close buttons, a
+ * Optional header (Content Group L, centred or `headerAlign="left"`), back and close buttons, a
  * default slot with no padding of its own, and an optional Button Group
  * footer from `buttons` (or the `#footer` slot). `#header` replaces the
  * default header for layouts the Content Group can't express; pass `title`
@@ -173,6 +179,8 @@ const props = withDefaults(
     title?: string
     subtitle?: string
     showHeader?: boolean
+    /** Default header alignment: centred (default) or left. */
+    headerAlign?: 'center' | 'left'
     centeredHeader?: boolean
     showBackButton?: boolean
     showCloseButton?: boolean
@@ -192,6 +200,7 @@ const props = withDefaults(
   }>(),
   {
     showHeader: true,
+    headerAlign: 'center',
     showBackButton: false,
     showCloseButton: true,
     closeOnBackdrop: true,

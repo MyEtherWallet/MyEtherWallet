@@ -60,6 +60,7 @@
             <router-view />
           </div>
           <AppFooter
+            transparent
             v-if="!isDevPlayground"
             v-bind="footerProps"
             :amplitude="analytics.amplitude"

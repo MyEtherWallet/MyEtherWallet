@@ -145,6 +145,9 @@
       :swap-info="swapInfo || undefined"
       :swap-gas-fee-quote="swapGasFeeQuote || undefined"
       :swap-fee-error="swapFeeError"
+      :expires-at="quoteExpiresAt ?? undefined"
+      :suppress-decline-tracking="quoteRefreshFailed"
+      @expired="refreshExpiredQuote"
     />
     <!--
       Fed from the snapshot taken when the user confirmed the offer, not from
@@ -210,6 +213,9 @@ const {
   bestOfferSelectionOpen,
   swapInitiatedOpen,
   txProceeding,
+  quoteExpiresAt,
+  quoteRefreshFailed,
+  refreshExpiredQuote,
   isSwapView,
   isCrossChain,
   parsedFromTokens,

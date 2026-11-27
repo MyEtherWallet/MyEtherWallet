@@ -34,9 +34,9 @@ const mountCard = (props: Record<string, unknown>) =>
       plugins: [i18n],
       stubs: {
         AppAvatar: {
-          props: ['type', 'url'],
+          props: ['type', 'url', 'fit'],
           template:
-            '<span class="avatar" :data-type="type" :data-url="url"><slot name="icon" /></span>',
+            '<span class="avatar" :data-type="type" :data-url="url" :data-fit="fit"><slot name="icon" /></span>',
         },
       },
     },
@@ -74,22 +74,15 @@ describe('WalletCard', () => {
     expect(w.get('.avatar').attributes('data-url')).toBe('rabby.svg')
   })
 
-  it('draws full-bleed round marks edge to edge instead of inset in an avatar', () => {
-    const w = mountCard({
-      wallet: {
-        id: 'ledger',
-        name: 'Ledger',
-        icon: 'ledger.svg',
-        type: ['hardware'],
-        roundIcon: true,
-      },
-    })
-    expect(w.find('.avatar').exists()).toBe(false)
-    const img = w.get('img')
-    expect(img.attributes('src')).toBe('ledger.svg')
-    expect(img.classes()).toEqual(
-      expect.arrayContaining(['size-8', 'rounded-full']),
-    )
+  it('fills the circle with every wallet mark so the grid stays uniform', () => {
+    for (const wallet of [
+      metaMask,
+      { id: 'ledger', name: 'Ledger', icon: 'ledger.svg', type: ['hardware'] },
+    ]) {
+      const avatar = mountCard({ wallet }).get('.avatar')
+      expect(avatar.attributes('data-type')).toBe('wallet')
+      expect(avatar.attributes('data-fit')).toBe('cover')
+    }
   })
 
   it('sets the wallet name in semibold', () => {

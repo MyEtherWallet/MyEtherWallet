@@ -13,6 +13,8 @@ const props = defineProps<{
   url?: string | null
   /** Optional fallback initials (e.g. the wallet name) when the url is missing. */
   name?: string
+  /** `cover` fills the circle edge to edge instead of insetting the mark. */
+  fit?: 'contain' | 'cover'
 }>()
 
 defineOptions({ inheritAttrs: false })
@@ -21,13 +23,15 @@ const fallbackTextClass = computed(() => AVATAR_FALLBACK_TEXT_CLASS[props.size])
 </script>
 
 <template>
-  <!-- Wallet marks are square; inset so the full logo sits inside the circle
-       (contained) instead of filling it and getting its corners clipped. -->
-  <div class="w-full h-full p-[15%] box-border">
+  <!-- Wallet marks are square; by default inset so the full logo sits inside the
+       circle (contained) instead of filling it and getting its corners clipped.
+       `cover` trades the corners for a uniform circular mark across wallets. -->
+  <div class="w-full h-full box-border" :class="{ 'p-[15%]': fit !== 'cover' }">
     <AvatarRemoteImage
       :url="url"
       :fallback-text="name"
       :fallback-text-class="fallbackTextClass"
+      :fit="fit"
     />
   </div>
 </template>

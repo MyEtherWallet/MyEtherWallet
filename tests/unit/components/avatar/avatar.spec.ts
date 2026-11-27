@@ -194,6 +194,18 @@ describe('AppAvatar', () => {
     expect(cover.findComponent(AvatarRemoteImage).props('fit')).toBe('cover')
   })
 
+  it('insets wallet marks by default and fills the circle with fit="cover"', () => {
+    const inset = mount(AppAvatar, { props: { type: 'wallet', url: 'w.svg' } })
+    expect(inset.find('.p-\\[15\\%\\]').exists()).toBe(true)
+    expect(inset.findComponent(AvatarRemoteImage).props('fit')).toBe(undefined)
+
+    const cover = mount(AppAvatar, {
+      props: { type: 'wallet', url: 'w.svg', fit: 'cover' },
+    })
+    expect(cover.find('.p-\\[15\\%\\]').exists()).toBe(false)
+    expect(cover.findComponent(AvatarRemoteImage).props('fit')).toBe('cover')
+  })
+
   it('mounts the child that matches `type`', () => {
     const initial = mount(AppAvatar, {
       props: { type: 'initial', initial: 'A' },

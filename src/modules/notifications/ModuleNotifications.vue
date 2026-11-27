@@ -178,6 +178,19 @@ const emptyText = computed<string | undefined>(() => {
 const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
 const toastStore = useToastStore()
+
+// Toast detail for a trade, swap or bridge: "0.1 ETH → 300 USDT", with each
+// side's network for a bridge ("0.1 ETH (Ethereum) → 0.1 ETH (Arbitrum)").
+type TradeSide = {
+  amount: Parameters<typeof formatFloatingPointValue>[0]
+  symbol: string
+  chain?: string
+}
+const tradeSummary = (from: TradeSide, to: TradeSide) => {
+  const side = ({ amount, symbol, chain }: TradeSide) =>
+    `${formatFloatingPointValue(amount).value} ${symbol}${chain ? ` (${chain})` : ''}`
+  return `${side(from)} → ${side(to)}`
+}
 const { walletAddress, wallet } = storeToRefs(walletStore)
 const { setTokens, setIsLoadingBalances } = walletStore
 const { selectedChain } = storeToRefs(useChainsStore())
@@ -518,7 +531,6 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
           ? {
               title: t('view_in_block_explorer'),
               url: getTradeExplorerLink(order.chainId, status.fills[0].txHash),
-              isButton: true,
             }
           : undefined,
       })
@@ -551,23 +563,11 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
           status.status === 'cancelled'
             ? t('notifications_module.toast_trade_cancelled')
             : t('notifications_module.toast_trade_expired'),
+        textSecondary: tradeSummary(
+          { amount: order.fromAmount, symbol: order.fromSymbol },
+          { amount: order.expectedToAmount, symbol: order.toSymbol },
+        ),
         duration: 10000,
-        tradeInfo: {
-          fromToken: order.fromSymbol,
-          fromtTokenIcon: order.fromTokenIcon || '',
-          fromTokenIsStock: stocksStore.isStock(
-            order.fromTokenAddress || '',
-            order.chainName,
-          ),
-          fromAmount: formatFloatingPointValue(order.fromAmount).value,
-          toToken: order.toSymbol,
-          toTokenIcon: order.toTokenIcon || '',
-          toTokenIsStock: stocksStore.isStock(
-            order.toTokenAddress || '',
-            order.chainName,
-          ),
-          toAmount: formatFloatingPointValue(order.expectedToAmount).value,
-        },
       })
     }
   }
@@ -873,23 +873,24 @@ const updateNotificationStatus = (
           newStatus === 'confirmed'
             ? t('notifications_module.toast_swap_successful')
             : t('notifications_module.toast_swap_failed'),
+        textSecondary: tradeSummary(
+          { amount: swap.fromAmount, symbol: swap.fromSymbol },
+          { amount: swap.toAmount, symbol: swap.toSymbol },
+        ),
         duration: 10000,
-        tradeInfo: {
-          fromToken: swap.fromSymbol,
-          fromtTokenIcon: swap.fromTokenIcon || '',
-          fromTokenIsStock: stocksStore.isStock(
-            swap.fromTokenAddress || '',
-            swap.fromChainName,
-          ),
-          fromAmount: formatFloatingPointValue(swap.fromAmount).value,
-          toToken: swap.toSymbol,
-          toTokenIcon: swap.toTokenIcon || '',
-          toTokenIsStock: stocksStore.isStock(
-            swap.toTokenAddress || '',
-            swap.fromChainName,
-          ),
-          toAmount: formatFloatingPointValue(swap.toAmount).value,
-        },
+        // A confirmed swap leads with the received asset, like a completed trade.
+        tradeStatus:
+          newStatus === 'confirmed'
+            ? {
+                kind: 'completed',
+                toTokenIcon: swap.toTokenIcon || '',
+                toSymbol: swap.toSymbol,
+                toTokenIsStock: stocksStore.isStock(
+                  swap.toTokenAddress || '',
+                  swap.fromChainName,
+                ),
+              }
+            : undefined,
       })
     }
   } else if (type === 'bridge') {
@@ -928,24 +929,31 @@ const updateNotificationStatus = (
           newStatus === 'confirmed'
             ? t('notifications_module.toast_bridge_successful')
             : t('notifications_module.toast_bridge_failed'),
-        textSecondary: `${bridge.fromChainName} → ${bridge.toChainName}`,
+        textSecondary: tradeSummary(
+          {
+            amount: bridge.fromAmount,
+            symbol: bridge.fromSymbol,
+            chain: bridge.fromChainName,
+          },
+          {
+            amount: bridge.toAmount,
+            symbol: bridge.toSymbol,
+            chain: bridge.toChainName,
+          },
+        ),
         duration: 10000,
-        tradeInfo: {
-          fromToken: bridge.fromSymbol,
-          fromtTokenIcon: bridge.fromTokenIcon || '',
-          fromTokenIsStock: stocksStore.isStock(
-            bridge.fromTokenAddress || '',
-            bridge.fromChainName,
-          ),
-          fromAmount: formatFloatingPointValue(bridge.fromAmount).value,
-          toToken: bridge.toSymbol,
-          toTokenIcon: bridge.toTokenIcon || '',
-          toTokenIsStock: stocksStore.isStock(
-            bridge.toTokenAddress || '',
-            bridge.toChainName,
-          ),
-          toAmount: formatFloatingPointValue(bridge.toAmount).value,
-        },
+        tradeStatus:
+          newStatus === 'confirmed'
+            ? {
+                kind: 'completed',
+                toTokenIcon: bridge.toTokenIcon || '',
+                toSymbol: bridge.toSymbol,
+                toTokenIsStock: stocksStore.isStock(
+                  bridge.toTokenAddress || '',
+                  bridge.toChainName,
+                ),
+              }
+            : undefined,
       })
     }
   }

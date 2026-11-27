@@ -66,7 +66,7 @@
     },
     "swap-offer": {
       "max-slippage": "最大滑点",
-      "minimum-received": "最少获得",
+      "offer-includes-fee": "报价含费用",
       "proceed": "确认兑换",
       "proceed-bridge": "确认跨链",
       "decline": "拒绝兑换",
@@ -83,7 +83,8 @@
       "best-value": "最优",
       "expand-breakdown": "展开明细",
       "close-breakdown": "收起明细",
-      "network-fee": "网络费"
+      "network-fee": "网络费",
+      "quote-refreshes-in": "报价将在 {time} 后刷新"
     },
     "offer": "报价"
   }

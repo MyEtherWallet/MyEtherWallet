@@ -35,6 +35,10 @@ import configs from '@/configs'
 
 const PARTNER = 'ondo-finance'
 
+// One toast slot for network switches: each switch's outcome (switched or
+// failed) replaces the previous one instead of stacking a toast per switch.
+const NETWORK_SWITCH_TOAST_ID = 'network-switch'
+
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
   const walletAddress: Ref<string | null> = ref(null)
@@ -268,8 +272,12 @@ export const useWalletStore = defineStore('walletStore', () => {
     const balanceBN = new BigNumber(balanceWei.value || '0')
     return balanceBN.gt(0)
   })
+  // Advances on every selection, so only the latest one may publish its result
+  // (a chain name can't tell Polygon → Arbitrum → Polygon apart).
+  let chainSelectionGeneration = 0
   // Watch for chain changes and call changeNetwork on the wallet for EVM chains
   watch(selectedChain, async (newChain, oldChain) => {
+    const generation = ++chainSelectionGeneration
     // MEW-1980: announce every global network switch. This watcher is the
     // single point all switch sources funnel through (header selector, Buy,
     // Sell, Swap, Trade). Guard on oldChain to skip the initial
@@ -282,6 +290,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     const showNetworkSwitchedToast = () => {
       if (!isNetworkSwitch || !newChain) return
       useToastStore().addToastMessage({
+        id: NETWORK_SWITCH_TOAST_ID,
         text: i18n.global.t('common.network_switched', {
           network: newChain.nameLong,
         }),
@@ -296,10 +305,13 @@ export const useWalletStore = defineStore('walletStore', () => {
         const networkChangeStatus = await (
           wallet.value as BaseEvmWallet
         ).changeNetwork(Number(newChain.chainID))
+        // A newer selection owns the network-switch toast; drop this stale result.
+        if (generation !== chainSelectionGeneration) return
         if (!networkChangeStatus) {
           // Wallet rejected the switch — show only the failure toast, never a
           // contradictory "switched" success toast alongside it.
           useToastStore().addToastMessage({
+            id: NETWORK_SWITCH_TOAST_ID,
             text: i18n.global.t('common.network_change_failed'),
             textSecondary: i18n.global.t(
               'common.network_change_failed_description',

@@ -98,6 +98,23 @@ describe('AppToast — design-library Toast (MEW-1975)', () => {
     )
   })
 
+  it('wraps a long title and description in full instead of ellipsising', () => {
+    const wrapper = mountToast({
+      title: 'Network switched to Arbitrum Nova (Mainnet)',
+      description: 'A long secondary line that has to wrap onto more lines',
+    })
+    expect(wrapper.get('[data-testid="cg-title"]').classes()).not.toContain(
+      'truncate',
+    )
+    expect(
+      wrapper.get('[data-testid="cg-description"]').classes(),
+    ).not.toContain('truncate')
+    // An unbroken string (a raw hex in an RPC error) breaks inside the toast.
+    expect(
+      wrapper.get('[data-testid="cg-title"]').element.closest('.break-words'),
+    ).not.toBeNull()
+  })
+
   it('shows the CTA only on the four Figma types and emits action', async () => {
     for (const type of TOAST_TYPES) {
       const wrapper = mountToast({ type, buttonLabel: 'Open' })

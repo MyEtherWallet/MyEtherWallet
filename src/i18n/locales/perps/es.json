@@ -355,7 +355,9 @@
       "submitting": "Enviando...",
       "submit": "Enviar",
       "saving": "Guardando...",
-      "save": "Guardar"
+      "save": "Guardar",
+      "decrease-leverage": "Reducir apalancamiento",
+      "increase-leverage": "Aumentar apalancamiento"
     },
     "close": {
       "title": "Confirmar cierre de {symbol} {direction}",

@@ -30,31 +30,32 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-border-default border-l-1',
         ]"
-        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-5 pt-4 pb-5 sm:pt-8 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
+        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-20 h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-5 pt-4 pb-5 sm:pt-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
-        <!-- z-10: some panels pull their header up with negative margins and
-             would otherwise cover the button's hit area -->
+        <!-- Top right at every width, like the dialog's close button. Mobile
+             (full-screen panel): its own row. From sm it floats on the module
+             title's line, so the title isn't pushed down by a whole button
+             row. z-10 keeps it above the module. -->
         <app-btn-icon-close
           :label="$t('common.close_side_menu')"
-          class="relative z-10 flex-none self-start sm:self-end"
+          class="relative z-10 flex-none self-end sm:absolute sm:top-6 sm:right-5"
           @close="closePanel"
         />
         <div class="flex-1 min-h-0">
           <transition name="fade" mode="out-in">
-            <ModuleTrade v-if="walletPanel === 'trade'" key="trade" />
-            <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
-            <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
-            <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
-            <ModulePerpsTrade
-              v-else-if="walletPanel === 'perps'"
-              key="perps-trade"
-            />
-            <ModulePurchase
-              v-else-if="walletPanel === 'purchase'"
-              key="purchase"
-            />
-            <div v-else key="coming-soon" class="mt-6 text-center font-medium">
-              {{ comingSoon }}
+            <!-- out-in animates this keyed element, never a module root: a module
+                 whose root isn't a single element (e.g. a root-level comment,
+                 kept in dev) would wedge the transition and blank the panel. -->
+            <div :key="walletPanel" class="h-full">
+              <ModuleTrade v-if="walletPanel === 'trade'" />
+              <ModuleSend v-else-if="walletPanel === 'send'" />
+              <ModuleSwap v-else-if="walletPanel === 'swap'" />
+              <ModuleSwap v-else-if="walletPanel === 'bridge'" />
+              <ModulePerpsTrade v-else-if="walletPanel === 'perps'" />
+              <ModulePurchase v-else-if="walletPanel === 'purchase'" />
+              <div v-else class="mt-6 text-center font-medium">
+                {{ comingSoon }}
+              </div>
             </div>
           </transition>
         </div>

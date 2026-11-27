@@ -1,9 +1,19 @@
 <template>
   <div
     ref="pillRef"
-    class="w-full flex items-center justify-between bg-white border-1 border-border-default rounded-full px-3 py-2"
+    class="relative w-full flex items-center justify-between bg-white border-1 border-border-default rounded-full px-3 py-2"
   >
-    <div class="relative flex items-center gap-1">
+    <!-- The whole pill toggles the popover. The popover holds a link and a close
+         button, so it can't live inside a <button>: this one covers the pill
+         underneath the (click-through) labels instead. -->
+    <button
+      type="button"
+      :aria-label="$t('trade.market_status.info_label')"
+      :aria-expanded="infoOpen"
+      class="absolute inset-0 rounded-full hoverNoBG"
+      @click="infoOpen = !infoOpen"
+    />
+    <div class="relative flex items-center gap-1 pointer-events-none">
       <p
         :class="[
           'text-s-12 font-semibold leading-[18px] tracking-[-0.24px]',
@@ -20,14 +30,10 @@
       </template>
       <!-- The popover is anchored to this wrapper so its arrow stays under the
            info icon regardless of how wide the translated status label is. -->
-      <span ref="popoverAnchorRef" class="relative flex">
-        <button
-          :aria-label="$t('trade.market_status.info_label')"
-          class="flex items-center justify-center w-5 h-5 rounded-[10px] hoverNoBG"
-          @click="infoOpen = !infoOpen"
-        >
+      <span class="relative flex">
+        <span class="flex items-center justify-center w-5 h-5">
           <AppIcon name="information-circle" size="xxs" />
-        </button>
+        </span>
         <trade-market-status-popover
           v-if="infoOpen"
           :status="status"
@@ -37,11 +43,14 @@
           :time-label="timeLabel"
           :session-ranges="sessionRanges"
           :boundary="pillRef"
+          class="pointer-events-auto"
           @close="infoOpen = false"
         />
       </span>
     </div>
-    <p class="text-s-12 text-text-subtle leading-[18px]">{{ untilText }}</p>
+    <p class="relative text-s-12 text-text-subtle leading-[18px] pointer-events-none">
+      {{ untilText }}
+    </p>
   </div>
 </template>
 
@@ -67,15 +76,13 @@ const props = defineProps<{
 
 const infoOpen = defineModel<boolean>('infoOpen', { default: false })
 
+// The pill holds both the toggle and the popover, so clicks on either don't
+// count as outside.
 const pillRef = ref<HTMLElement | null>(null)
-
-// Wrapper around the info button and the popover: clicks inside it (the toggle
-// button included) don't count as outside.
-const popoverAnchorRef = ref<HTMLElement | null>(null)
 
 // The popover otherwise only closes via its own X button and stays up while
 // the user interacts with the rest of the panel.
-onClickOutside(popoverAnchorRef, () => {
+onClickOutside(pillRef, () => {
   if (infoOpen.value) infoOpen.value = false
 })
 onKeyStroke('Escape', () => {
