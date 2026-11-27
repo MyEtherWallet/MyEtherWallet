@@ -95,7 +95,9 @@
             />
 
             <div class="pt-8">
-              <div class="flex flex-col gap-8">
+              <!-- The answers are words of the phrase and each question names
+                   a position, so the whole step stays out of session replay. -->
+              <div data-private class="flex flex-col gap-8">
                 <!-- First Sample -->
                 <div v-if="generatedVerifySamples.length">
                   <p

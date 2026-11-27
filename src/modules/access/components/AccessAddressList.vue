@@ -27,10 +27,13 @@
           </span>
         </div>
       </template>
+      <!-- `data-private`: the rows list every address of one phrase or device
+           side by side, a link that is not public. Kept out of session replay. -->
       <div
         v-for="entry in entries"
         :key="entry.index"
         data-testid="address-row"
+        data-private
         class="flex h-[68px] shrink-0 cursor-pointer items-center gap-3 rounded-12 px-4 py-3 transition-colors"
         :class="
           selected === entry.index

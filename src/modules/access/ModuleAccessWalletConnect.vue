@@ -11,7 +11,9 @@
             })
           }}
         </p>
-        <div class="relative aspect-square w-full max-w-[240px]">
+        <!-- `data-private`: the code is drawn as SVG, so a session replay would
+             hold the pairing link. -->
+        <div data-private class="relative aspect-square w-full max-w-[240px]">
           <template v-if="uri">
             <QrcodeVue
               :value="uri"

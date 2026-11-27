@@ -190,6 +190,13 @@ if (dsn && process.env.NODE_ENV === 'production') {
     integrations: [
       browserTracingIntegration({ router }),
       replayIntegration({
+        // Replays exist to explain errors and are kept for every user,
+        // whatever their tracking choice, so they hold no readable content.
+        // The first three are the SDK defaults, spelled out so an upgrade
+        // cannot loosen them; `block` leaves marked elements out altogether.
+        maskAllText: true,
+        maskAllInputs: true,
+        blockAllMedia: true,
         block: ['[data-private]'],
       }),
       vueIntegration({
@@ -208,9 +215,10 @@ if (dsn && process.env.NODE_ENV === 'production') {
       /^https?:\/\/www\.app\.beta\.myetherwallet\.com(?:\/|$)/,
       /^https?:\/\/app\.beta\.myetherwallet\.com(?:\/|$)/,
     ],
-    // Session Replay
-    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+    // Session Replay: only sessions in which an error is reported are kept.
+    // Ordinary sessions are never uploaded.
+    replaysSessionSampleRate: 0,
+    replaysOnErrorSampleRate: 1.0,
 
     enableLogs: true,
   })

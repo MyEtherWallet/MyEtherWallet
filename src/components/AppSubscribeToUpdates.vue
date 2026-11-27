@@ -3,8 +3,10 @@
     <p class="text-s-16 text-text-subtle mb-4">
       {{ $t('common.subscribe.cta') }}
     </p>
+    <!-- `data-private` keeps the address out of session replay. -->
     <app-input
       v-model="email"
+      data-private
       surface="alternative"
       :label="$t('common.subscribe.email_placeholder')"
       type="email"

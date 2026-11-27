@@ -116,6 +116,7 @@ import {
 import { WalletConfigType } from '@/modules/access/common/walletConfigs'
 import type { createInstance } from '@amplitude/analytics-browser'
 import { Identify } from '@amplitude/analytics-browser'
+import { shutdown as shutdownSessionReplay } from '@amplitude/session-replay-browser'
 
 export type AmplitudeAnalyticsOptions = {
   amplitude: ReturnType<typeof createInstance>
@@ -365,6 +366,10 @@ export class Analytics {
    */
   setTrackingConsent(consent: boolean): void {
     this.amplitude.setOptOut(!consent)
+    // Session replay reads the choice once, when it starts. Without this it
+    // would keep recording a user who just opted out until the page reloads.
+    // Opting back in takes effect on the next load, as it always has.
+    if (!consent) shutdownSessionReplay()
   }
 
   /**

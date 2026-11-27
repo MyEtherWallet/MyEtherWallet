@@ -89,11 +89,17 @@
     <!-- Error Messages OR Resolved Address -->
     <div :class="{ 'min-h-6': !filled }">
       <transition name="fade" mode="out-in">
+        <!-- A name from the address book is the user's own label for someone:
+             `data-private` keeps it out of session replay. The key makes a
+             new element for it, because the recorder only honours a mark
+             that is there when the element is first rendered. -->
         <AppInputFeedback
           v-if="
             (addressErrorMessages !== '' && !isPristine) ||
             resolvedAddress !== ''
           "
+          :key="showsNickName ? 'nickname' : 'message'"
+          :data-private="showsNickName ? '' : undefined"
           :type="addressErrorMessages && !isPristine ? 'error' : 'text'"
           :message="
             (!isPristine && addressErrorMessages) ||
@@ -213,6 +219,12 @@ const adrInput = defineModel<string>('adrInput', {
 const isAddressBookOpen = ref(false)
 
 const resolvedLabel = computed(() => props.label || t('common.enter_address'))
+
+/** The feedback line shows the address book name, not an error or an address. */
+const showsNickName = computed(
+  () =>
+    !(props.addressErrorMessages && !props.isPristine) && !!props.foundNickName,
+)
 
 const addressBlockie = computed(() => {
   const addressToCheck = adrInput.value || props.resolvedAddress

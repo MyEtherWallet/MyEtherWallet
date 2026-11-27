@@ -195,4 +195,23 @@ describe('ModuleAccessKeystore', () => {
       w.get('input[type="password"]').element.closest('[data-private]'),
     ).not.toBeNull()
   })
+
+  // A keystore file is named after its address and the day it was made. The
+  // name is shown after the upload, and it is also the file input's value,
+  // which a recording of the page captures when the file is picked.
+  it('keeps the file name out of session replays', async () => {
+    const w = mountIt()
+    expect(
+      w
+        .get('[data-testid="keystore-file-input"]')
+        .element.closest('[data-private]'),
+    ).not.toBeNull()
+    await upload(w, JSON.stringify(V3), 'UTC--2021-01-01--0xabc.json')
+    const name = w
+      .findAll('*')
+      .filter(el => el.element.children.length === 0)
+      .find(el => el.text().includes('UTC--2021-01-01--0xabc.json'))
+    expect(name).toBeDefined()
+    expect(name!.element.closest('[data-private]')).not.toBeNull()
+  })
 })

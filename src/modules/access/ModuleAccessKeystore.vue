@@ -61,9 +61,12 @@
             </span>
           </p>
         </div>
+        <!-- `data-private`: session replay records a file input's value, and
+             that value is the file's name. -->
         <input
           ref="fileInput"
           type="file"
+          data-private
           class="hidden"
           data-testid="keystore-file-input"
           @change="onFileChange"
@@ -81,8 +84,11 @@
 
     <!-- Step 2: unlock it -->
     <template v-else>
+      <!-- `data-private`: a keystore file is named after its address and the
+           day it was made by default. Kept out of session replay. -->
       <AccessCell
         truncate
+        data-private
         :title="fileInfo.name"
         :description="fileInfo.description"
       >

@@ -49,4 +49,31 @@ describe('AccessAddressList', () => {
     const avatar = rows[0].get('[data-testid="avatar"]').element
     expect(index.nextElementSibling).toBe(avatar)
   })
+
+  // The rows list every address of one phrase or device side by side. The
+  // full address also sits in the radio's aria-label, and attributes are
+  // recorded unless the element is left out altogether.
+  it('keeps every address row out of session replay', () => {
+    const w = mount(AccessAddressList, {
+      props: {
+        entries: ENTRIES,
+        isLoading: false,
+        balancesError: false,
+        modelValue: 0,
+      },
+      global: { plugins: [i18n] },
+    })
+    const withAddress = w
+      .findAll('*')
+      .filter(el =>
+        Object.values(el.attributes()).some(value => value.includes('0x')),
+      )
+    expect(withAddress.length).toBeGreaterThan(0)
+    for (const el of withAddress) {
+      expect(el.element.closest('[data-private]')).not.toBeNull()
+    }
+    for (const row of w.findAll('[data-testid="address-row"]')) {
+      expect(row.element.closest('[data-private]')).not.toBeNull()
+    }
+  })
 })

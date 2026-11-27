@@ -13,9 +13,12 @@
       <p>{{ addressEdit?.address }}</p>
     </div>
 
+    <!-- `data-private`: the name is the user's own label for someone and must
+         not reach session replay. -->
     <app-input
       ref="nameInput"
       v-model="name"
+      data-private
       surface="alternative"
       :label="$t('common.enter_name')"
       :error-message="nameErrorMessages"
