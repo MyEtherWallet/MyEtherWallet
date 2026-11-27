@@ -100,12 +100,15 @@ watchEffect(() => {
       </template>
     </AppAvatar>
 
-    <div class="flex min-w-0 flex-1 flex-col gap-3">
+    <div class="flex min-w-0 flex-1 flex-col gap-3 break-words">
+      <!-- wrap-title: toasts carry names that must read in full (e.g. the
+           network in "Network switched to …"); the toast grows with the text. -->
       <AppContentGroup
         :title="title"
         :description="description"
         size="m"
         tone="inverse"
+        wrap-title
       >
         <template
           v-if="type === 'transaction-completed'"

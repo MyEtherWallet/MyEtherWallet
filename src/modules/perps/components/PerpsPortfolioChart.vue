@@ -11,26 +11,26 @@
         :items="rangeOptions"
         size="small"
         :label="$t('common.chart_range')"
-        :full-width="isDesktopAndUp"
       />
 
       <div class="flex flex-wrap items-center gap-2">
-        <button
+        <AppChip
           v-for="s in seriesOptions"
           :key="s.key"
-          class="flex p items-center gap-1.5 rounded-full px-4 py-1.5 text-s-11 xs:text-s-12 font-medium transition-colors hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-          :class="
-            activeSeries.has(s.key) ? 'bg-background-brand-subtle ' : 'bg-white'
-          "
+          surface="alternative"
+          :label="s.label"
+          :selected="activeSeries.has(s.key)"
           @click="toggleSeries(s.key)"
         >
-          <span
-            class="inline-block size-4 rounded-full"
-            :style="{ backgroundColor: s.color }"
-          >
-          </span>
-          {{ s.label }}
-        </button>
+          <template #avatar>
+            <span class="flex size-6 items-center justify-center">
+              <span
+                class="size-4 rounded-full"
+                :style="{ backgroundColor: s.color }"
+              />
+            </span>
+          </template>
+        </AppChip>
       </div>
     </div>
     <div
@@ -59,15 +59,14 @@ import { computed, ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppSheet from '@/components/AppSheet.vue'
 import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
+import AppChip from '@components/chip/AppChip.vue'
 import {
   usePerpsPortfolioGraph,
   type GraphRange,
 } from '../composables/usePerpsPortfolioGraph'
 import HistoryChart from '@/modules/portfolio/components/history/HistoryChart.vue'
-import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
 const { t } = useI18n()
-const { isDesktopAndUp } = useAppBreakpoints()
 const { graphData, graphLoading, graphRange, setRange } =
   usePerpsPortfolioGraph()
 

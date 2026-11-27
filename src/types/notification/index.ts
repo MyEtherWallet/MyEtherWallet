@@ -8,7 +8,6 @@ export enum ToastType {
 export interface ToastLink {
   title: string
   url: string
-  isButton?: boolean
 }
 
 export interface Toast {
@@ -16,7 +15,6 @@ export interface Toast {
   type?: ToastType
   text: string
   textSecondary?: string
-  hash?: string
   link?: ToastLink
   duration?: number
   isInfinite?: boolean
@@ -25,15 +23,5 @@ export interface Toast {
     toTokenIcon?: string
     toSymbol?: string
     toTokenIsStock?: boolean
-  }
-  tradeInfo?: {
-    fromToken: string
-    fromtTokenIcon: string
-    fromTokenIsStock: boolean
-    fromAmount: string
-    toToken: string
-    toTokenIcon: string
-    toTokenIsStock: boolean
-    toAmount: string
   }
 }

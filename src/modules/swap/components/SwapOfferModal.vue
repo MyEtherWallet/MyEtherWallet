@@ -75,25 +75,46 @@
           >
             <div class="flex flex-col gap-4">
               <div class="flex items-center gap-3">
+                <!-- The label keeps its width so the amount gets the rest of the row. -->
                 <app-content-group
                   :title="t('swap.swap-offer.youre-paying')"
-                  class="flex-1"
+                  class="shrink-0"
                 />
                 <app-content-group
-                  :title="String(amount)"
+                  :title="payingAmount.value"
                   :description="`≈ ${currencySymbol}${fromAmountFiat}`"
                   align="right"
-                  class="flex-1"
+                  wrap-title
+                  class="min-w-0 flex-1"
                 >
                   <template #title>
-                    <span class="inline-flex gap-1">
-                      {{ amount }}
+                    <span
+                      class="inline-flex flex-wrap justify-end gap-x-1 text-label-sm sm:text-label-base"
+                    >
+                      <span data-testid="swap-paying-amount" class="break-all">
+                        {{ payingAmount.value }}
+                      </span>
                       <app-token-symbol
                         :symbol="fromToken?.symbol || 'UNKNOWN'"
                         :address="tokenAddress(fromToken, fromChain)"
-                        class="!text-label-base !font-semibold"
+                        class="!text-label-sm sm:!text-label-base !font-semibold"
                       />
                     </span>
+                  </template>
+                  <template v-if="payingAmount.tooltipText" #title-icon="{ size }">
+                    <app-tooltip :text="payingAmount.tooltipText">
+                      <span
+                        tabindex="0"
+                        :aria-label="payingAmount.tooltipText"
+                        class="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-brand"
+                      >
+                        <AppIcon
+                          name="information-circle"
+                          :size="size"
+                          class="cursor-pointer text-icon-default"
+                        />
+                      </span>
+                    </app-tooltip>
                   </template>
                 </app-content-group>
                 <app-token-logo
@@ -120,12 +141,14 @@
                   class="flex-1"
                 >
                   <template #title>
-                    <span class="inline-flex gap-1">
+                    <span
+                      class="inline-flex gap-1 text-label-sm sm:text-label-base"
+                    >
                       ≈ {{ toAmountFormatted.value }}
                       <app-token-symbol
                         :symbol="toToken?.symbol || 'UNKNOWN'"
                         :address="tokenAddress(toToken, toChain)"
-                        class="!text-label-base !font-semibold"
+                        class="!text-label-sm sm:!text-label-base !font-semibold"
                       />
                     </span>
                   </template>
@@ -134,11 +157,17 @@
                     #title-icon="{ size }"
                   >
                     <app-tooltip :text="toAmountFormatted.tooltipText">
-                      <AppIcon
-                        name="information-circle"
-                        :size="size"
-                        class="cursor-pointer text-icon-default"
-                      />
+                      <span
+                        tabindex="0"
+                        :aria-label="toAmountFormatted.tooltipText"
+                        class="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-brand"
+                      >
+                        <AppIcon
+                          name="information-circle"
+                          :size="size"
+                          class="cursor-pointer text-icon-default"
+                        />
+                      </span>
                     </app-tooltip>
                   </template>
                 </app-content-group>
@@ -173,21 +202,16 @@
             <expand-transition>
               <div v-if="isBreakdownOpen" class="flex flex-col gap-4 pt-4">
                 <app-divider variant="alternative" class="-my-1" />
-                <div v-if="minimumReceived" class="flex items-center gap-2">
+                <div v-if="feePercent" class="flex items-center gap-2">
                   <p class="flex-1 truncate text-text-base text-text-subtle">
-                    {{ t('swap.swap-offer.minimum-received') }}
+                    {{ t('swap.swap-offer.offer-includes-fee') }}
                   </p>
-                  <p class="text-label-base text-text-default">
-                    {{ minimumReceived }} {{ toToken?.symbol ?? '' }}
+                  <p
+                    data-testid="swap-offer-fee"
+                    class="text-label-base text-text-default"
+                  >
+                    {{ feePercent }}%
                   </p>
-                  <app-token-logo
-                    :url="toToken?.logoURI"
-                    :symbol="toToken?.symbol"
-                    :address="tokenAddress(toToken, toChain)"
-                    width="w-[18px]"
-                    height="h-[18px]"
-                    no-shadow
-                  />
                 </div>
                 <div class="flex items-center gap-2">
                   <p class="flex-1 truncate text-text-base text-text-subtle">
@@ -260,14 +284,31 @@
         :description="t('swap.price-impact-unknown')"
         class="w-full"
       />
-      <app-base-button
-        class="w-full"
-        @click="proceedWithSwap"
-        :is-loading="loadingModel"
-        :disabled="!canProceed"
-      >
-        {{ btnText }}
-      </app-base-button>
+      <div class="flex flex-col items-center gap-4">
+        <app-base-button
+          class="w-full"
+          @click="proceedWithSwap"
+          :is-loading="loadingModel"
+          :disabled="!canProceed"
+        >
+          {{ btnText }}
+        </app-base-button>
+        <i18n-t
+          v-if="expiresAt"
+          keypath="swap.swap-offer.quote-refreshes-in"
+          tag="p"
+          class="text-text-sm text-text-subtle"
+        >
+          <template #time>
+            <span
+              data-testid="swap-quote-countdown"
+              class="text-label-sm text-text-default"
+            >
+              {{ countdownLabel }}
+            </span>
+          </template>
+        </i18n-t>
+      </div>
     </div>
   </app-modal>
 </template>
@@ -292,6 +333,7 @@ import BN from 'bn.js'
 import { useI18n } from 'vue-i18n'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
+import { useCountdown } from '@/composables/useCountdown'
 import { analytics, SwapEvent, type SwapPayloadShared } from '@/analytics'
 import { useWalletStore } from '@/stores/walletStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -310,11 +352,11 @@ import {
   isPriceImpactTooHigh,
   quotePriceImpact,
 } from '@/modules/swap/swapPriceImpact'
-import oneInchLogo from '@/assets/images/swap/providers/oneinch.png'
-import paraswapLogo from '@/assets/images/swap/providers/paraswap.png'
-import zeroxLogo from '@/assets/images/swap/providers/zerox.png'
-import changellyLogo from '@/assets/images/swap/providers/changelly.png'
-import rangoLogo from '@/assets/images/swap/providers/rango.png'
+import oneInchLogo from '@/assets/images/swap/providers/oneinch.webp'
+import paraswapLogo from '@/assets/images/swap/providers/paraswap.webp'
+import zeroxLogo from '@/assets/images/swap/providers/zerox.webp'
+import changellyLogo from '@/assets/images/swap/providers/changelly.webp'
+import rangoLogo from '@/assets/images/swap/providers/rango.webp'
 import jupiterLogo from '@/assets/images/swap/providers/jupiter.png'
 import okxLogo from '@/assets/images/swap/providers/okx.png'
 const { t } = useI18n()
@@ -390,10 +432,19 @@ const props = defineProps({
   swapFeeError: {
     type: String,
   },
+  expiresAt: {
+    type: Number,
+  },
+  // The parent closed the modal because the expiry re-quote failed: not a
+  // user decline.
+  suppressDeclineTracking: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const showApproveMessage = ref(false)
-const emits = defineEmits(['update:proceedWithSwap'])
+const emits = defineEmits(['update:proceedWithSwap', 'expired'])
 
 const isBreakdownOpen = ref(false)
 
@@ -540,20 +591,54 @@ const toAmountFiat = computed(() => {
   return formatFiat(value.toString()).value
 })
 
+// The paid amount is what the user typed (or Max), so show it exactly: up to 20
+// characters fit the summary at 14px (mobile) / 16px (sm+). Longer values are
+// cut to 20 with an ellipsis and read in full from the tooltip.
+const PAYING_AMOUNT_MAX_CHARS = 20
+const payingAmount = computed<{ value: string; tooltipText?: string }>(() => {
+  const full = String(props.amount)
+  if (full.length <= PAYING_AMOUNT_MAX_CHARS) return { value: full }
+  return {
+    value: `${full.slice(0, PAYING_AMOUNT_MAX_CHARS - 1)}…`,
+    tooltipText: full,
+  }
+})
+
 const fromAmountFiat = computed(() => {
   const fromTokenPrice = fromToken.value?.price || '0'
   const value = BigNumber(props.amount || 0).multipliedBy(fromTokenPrice)
   return formatFiat(value.toString()).value
 })
 
-// What the swap still pays out at the full slippage tolerance.
-const minimumReceived = computed(() => {
-  const slippage = props.swapInfo?.slippage
-  if (!slippage || toAmount.value.isZero()) return ''
-  const min = toAmount.value.multipliedBy(
-    BigNumber(1).minus(BigNumber(slippage).dividedBy(100)),
-  )
-  return formatFloatingPointValue(min).value
+// The library computes the percent in floats (0.8750000000000001).
+const feePercent = computed(() => {
+  const fee = BigNumber(props.swapInfo?.fee ?? 0)
+  return fee.gt(0) ? fee.decimalPlaces(3).toString() : ''
+})
+
+const { remainingMs } = useCountdown(() =>
+  model.value ? props.expiresAt : null,
+)
+
+const countdownLabel = computed(() => {
+  const ms = remainingMs.value
+  if (ms === null) return ''
+  const totalSeconds = Math.ceil(ms / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+})
+
+const isQuoteExpired = computed(() => remainingMs.value === 0)
+
+// One re-quote per expiry, and never while the swap is being signed.
+let lastExpiredTimestamp: number | undefined
+watch([remainingMs, loadingModel], ([ms, loading]) => {
+  if (ms !== 0 || loading || !model.value) return
+  if (props.expiresAt === undefined) return
+  if (lastExpiredTimestamp === props.expiresAt) return
+  lastExpiredTimestamp = props.expiresAt
+  emits('expired')
 })
 
 const getAmountData = (amount: BN, decimals: number) => {
@@ -587,8 +672,9 @@ watch(
     const analyticsPayload = getAnalyticsPayload()
     if (model.value) {
       isBreakdownOpen.value = false
+      lastExpiredTimestamp = undefined
       analytics.trackSwapEvent(SwapEvent.OFFER_SHOWN, { ...analyticsPayload })
-    } else if (!isProceeding.value) {
+    } else if (!isProceeding.value && !props.suppressDeclineTracking) {
       analytics.trackSwapEvent(SwapEvent.OFFER_DECLINED, {
         ...analyticsPayload,
       })
@@ -604,6 +690,7 @@ watch(
 const canProceed = computed(
   () =>
     !priceImpactTooHigh.value &&
+    !isQuoteExpired.value &&
     !gasFeeError.value &&
     !!props.swapGasFeeQuote?.quoteId &&
     !!props.swapGasFeeQuote.fees?.[gasPriceType.value],

@@ -40,14 +40,23 @@ describe('TradeMarketStatusPill', () => {
     )
   })
 
-  it('toggles the info popover from the info button', async () => {
+  it('toggles the info popover from a single pill-wide button', async () => {
     const pill = mountPill()
+    // One control for the whole pill: the info icon is no longer its own button.
+    expect(pill.findAll('button')).toHaveLength(1)
+    const toggle = pill.find('button')
+    expect(toggle.classes()).toEqual(
+      expect.arrayContaining(['absolute', 'inset-0']),
+    )
+    expect(toggle.attributes('aria-expanded')).toBe('false')
     expect(pill.findComponent(TradeMarketStatusPopover).exists()).toBe(false)
 
-    await pill.find('button').trigger('click')
+    await toggle.trigger('click')
+    expect(toggle.attributes('aria-expanded')).toBe('true')
     expect(pill.findComponent(TradeMarketStatusPopover).exists()).toBe(true)
 
-    await pill.find('button').trigger('click')
+    await toggle.trigger('click')
+    expect(toggle.attributes('aria-expanded')).toBe('false')
     expect(pill.findComponent(TradeMarketStatusPopover).exists()).toBe(false)
   })
 

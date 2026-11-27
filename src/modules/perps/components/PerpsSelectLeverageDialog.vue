@@ -1,133 +1,105 @@
 <template>
-  <app-modal
-    v-model="isOpen"
-    :title="$t('perps.select-leverage.title', { symbol })"
-  >
+  <app-modal v-model="isOpen" :title="title" :buttons="buttons">
     <template #header>
-      <div class="flex items-center gap-2.5">
-        <app-token-logo
+      <!-- pr-12 keeps the title clear of the 40px close button. -->
+      <div class="flex min-w-0 flex-1 items-center gap-3 pr-12">
+        <app-avatar
+          type="perpsAsset"
+          size="m"
           :url="getLogoUrl(symbol)"
           :symbol="symbol"
-          width="w-8"
-          height="h-8"
         />
-        <span class="font-bold text-s-20">{{
-          $t('perps.select-leverage.title', { symbol })
-        }}</span>
+        <app-content-group :title="title" size="l" wrap-title class="flex-1" />
       </div>
     </template>
-    <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
+    <div class="flex flex-col gap-6 px-4 sm:px-6">
       <!-- Leverage Card -->
-      <div class="bg-background-brand-subtle rounded-[20px] p-5">
-        <!-- +/- Controls -->
-        <div class="flex items-center justify-center gap-6 mb-5">
-          <button
-            class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-background-alternative-hover transition-colors text-s-20"
-            :disabled="modelValue <= 1"
-            :class="
-              modelValue <= 1
-                ? '!bg-white/90'
-                : 'shadow-button shadow-button-elevated'
-            "
-            @click="$emit('update:modelValue', Math.max(1, modelValue - 1))"
-          >
-            <AppIcon
-              name="minus"
-              size="s"
-              variant="filled"
-              :class="{ '!opacity-30': modelValue <= 1 }"
-            />
-          </button>
-          <div class="relative min-w-[50px] flex items-center justify-center">
-            <input
-              :value="modelValue"
-              type="number"
-              min="1"
-              :max="maxLeverage"
-              step="1"
-              :aria-label="$t('perps.confirm.leverage')"
-              class="font-bold text-[40px] tracking-tight w-[50px] text-center bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
-              @change="
-                e => {
-                  const val = Math.round(
-                    Math.min(
-                      maxLeverage,
-                      Math.max(
-                        1,
-                        Number((e.target as HTMLInputElement).value) || 1,
+      <app-card surface="alternative">
+        <div class="flex flex-col gap-4 p-4">
+          <!-- +/- Controls -->
+          <div class="flex items-center justify-center gap-6">
+            <app-btn-icon
+              :label="$t('perps.select-leverage.decrease-leverage')"
+              :disabled="modelValue <= 1"
+              data-test="leverage-decrease"
+              @click="$emit('update:modelValue', Math.max(1, modelValue - 1))"
+            >
+              <app-icon name="minus" size="s" variant="filled" />
+            </app-btn-icon>
+            <div class="relative flex min-w-[50px] items-center justify-center">
+              <input
+                :value="modelValue"
+                type="number"
+                min="1"
+                :max="maxLeverage"
+                step="1"
+                :aria-label="$t('perps.confirm.leverage')"
+                class="w-[50px] appearance-none bg-transparent text-center text-heading-3xl text-text-default outline-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                @change="
+                  e => {
+                    const val = Math.round(
+                      Math.min(
+                        maxLeverage,
+                        Math.max(
+                          1,
+                          Number((e.target as HTMLInputElement).value) || 1,
+                        ),
                       ),
-                    ),
-                  )
-                  ;(e.target as HTMLInputElement).value = String(val)
-                  $emit('update:modelValue', val)
-                }
+                    )
+                    ;(e.target as HTMLInputElement).value = String(val)
+                    $emit('update:modelValue', val)
+                  }
+                "
+              />
+              <span class="text-heading-3xl text-text-default">&times;</span>
+            </div>
+            <app-btn-icon
+              :label="$t('perps.select-leverage.increase-leverage')"
+              :disabled="modelValue >= maxLeverage"
+              data-test="leverage-increase"
+              @click="
+                $emit(
+                  'update:modelValue',
+                  Math.min(maxLeverage, modelValue + 1),
+                )
               "
-            />
-            <span class="font-bold text-[40px] tracking-tight">&times;</span>
+            >
+              <app-icon name="plus" size="s" variant="filled" />
+            </app-btn-icon>
           </div>
-          <button
-            class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-background-alternative-hover transition-colors text-s-20"
-            :disabled="modelValue >= maxLeverage"
-            :class="
-              modelValue >= maxLeverage
-                ? '!bg-white/90'
-                : 'shadow-button shadow-button-elevated'
-            "
-            @click="
-              $emit('update:modelValue', Math.min(maxLeverage, modelValue + 1))
-            "
-          >
-            <AppIcon name="plus" size="s" variant="filled" />
-          </button>
-        </div>
 
-        <!-- Tick Labels -->
-        <div class="flex justify-between px-1">
-          <button
-            v-for="tick in tickValues"
-            :key="tick"
-            class="text-[11px] font-medium hoverNoBG rounded-full px-2 py-0.5"
-            :class="modelValue > tick ? 'text-text-subtle' : ''"
-            @click="$emit('update:modelValue', tick)"
-          >
-            {{ tick }}&times;
-          </button>
-        </div>
-
-        <!-- Slider -->
-        <div class="relative px-1">
-          <input
-            :value="modelValue"
-            type="range"
-            min="1"
+          <!-- Slider -->
+          <app-slider
+            :model-value="modelValue"
+            :min="1"
             :max="maxLeverage"
-            step="1"
-            :aria-label="$t('perps.confirm.leverage')"
-            class="w-full h-2 rounded-full appearance-none cursor-pointer leverage-slider"
-            :style="{
-              background: `linear-gradient(to right, var(--color-background-brand) 0%, var(--color-background-brand) ${sliderFillPct}%, var(--color-background-default-hover) ${sliderFillPct}%, var(--color-background-default-hover) 100%)`,
-            }"
-            @input="
-              $emit(
-                'update:modelValue',
-                Number(($event.target as HTMLInputElement).value),
-              )
-            "
+            :step="1"
+            :label="$t('perps.confirm.leverage')"
+            @update:model-value="$emit('update:modelValue', $event)"
           />
+
+          <!-- Tick presets: design-library Chips on the grey card (white
+               `default` fill), as under the trade form's slider. -->
+          <div class="flex gap-2">
+            <app-chip
+              v-for="tick in tickValues"
+              :key="tick"
+              :label="`${tick}×`"
+              class="min-w-0 flex-1"
+              @click="$emit('update:modelValue', tick)"
+            />
+          </div>
         </div>
-      </div>
+      </app-card>
 
       <!-- Description -->
-      <p
-        class="text-s-14 text-text-subtle leading-relaxed"
-        v-if="mode === 'create'"
-      >
+      <p v-if="mode === 'create'" class="text-text-sm text-text-subtle">
         {{ $t('perps.select-leverage.leverage-description') }}
-        <a href="#" class="text-text-brand font-medium hover:underline">{{
+        <a href="#" class="text-label-sm text-text-brand hover:underline">{{
           $t('perps.select-leverage.learn-more')
         }}</a>
       </p>
-      <AppBanner
+      <app-banner
         v-if="mode === 'add'"
         type="warning"
         :title="$t('perps.select-leverage.leverage-will-change-title')"
@@ -137,32 +109,29 @@
       />
 
       <!-- Leverage Error -->
-      <AppBanner
+      <app-banner
         v-if="leverageError"
         type="alert"
         :description="leverageError"
       />
-
-      <!-- Save Button -->
-      <button
-        class="w-full bg-background-brand text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
-        :disabled="isSaving"
-        @click="$emit('save')"
-      >
-        {{ buttonText }}
-      </button>
     </div>
   </app-modal>
 </template>
 
 <script setup lang="ts">
 import AppModal from '@/components/modal/AppModal.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import { getLogoUrl } from '../utils/market'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppCard from '@/components/card/AppCard.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
+import AppSlider from '@/components/slider/AppSlider.vue'
+import AppChip from '@/components/chip/AppChip.vue'
+import AppBanner from '@/components/banner/AppBanner.vue'
+import type { ModalButtons } from '@/components/modal/types'
+import { getLogoUrl } from '../utils/market'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppBanner from '@/components/banner/AppBanner.vue'
 
 const { t } = useI18n()
 
@@ -184,10 +153,14 @@ const isOpen = defineModel('isOpen', {
   required: true,
 })
 
-defineEmits<{
+const emit = defineEmits<{
   'update:modelValue': [value: number]
   save: []
 }>()
+
+const title = computed(() =>
+  t('perps.select-leverage.title', { symbol: props.symbol }),
+)
 
 const buttonText = computed(() => {
   if (props.mode === 'submit') {
@@ -200,6 +173,14 @@ const buttonText = computed(() => {
     : t('perps.select-leverage.save')
 })
 
+const buttons = computed<ModalButtons>(() => ({
+  primary: {
+    label: buttonText.value,
+    disabled: props.isSaving,
+    onClick: () => emit('save'),
+  },
+}))
+
 const tickValues = computed(() => {
   const max = Math.max(1, Math.floor(props.maxLeverage))
   if (max <= 1) return [1]
@@ -211,32 +192,4 @@ const tickValues = computed(() => {
   }
   return Array.from(ticks).sort((a, b) => a - b)
 })
-
-const sliderFillPct = computed(() => {
-  const max = Math.max(2, props.maxLeverage)
-  return ((props.modelValue - 1) / (max - 1)) * 100
-})
 </script>
-
-<style scoped>
-.leverage-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: var(--size-4);
-  height: var(--size-4);
-  border-radius: 50%;
-  background: var(--color-background-brand);
-  cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.leverage-slider::-moz-range-thumb {
-  width: var(--size-4);
-  height: var(--size-4);
-  border-radius: 50%;
-  background: var(--color-background-brand);
-  cursor: pointer;
-  border: 2px solid white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-</style>

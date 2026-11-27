@@ -1,23 +1,23 @@
 <template>
   <app-modal v-model="isOpen" :title="$t('perps.auto-close.title')">
-    <div class="px-3 sm:px-6 pb-6 pt-4 flex flex-col gap-4">
+    <div class="flex flex-col gap-4 px-4 sm:px-6">
       <!-- Asset & Price -->
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <app-token-logo
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex min-w-0 items-center gap-2">
+          <app-avatar
+            type="perpsAsset"
             :url="getLogoUrl(displaySymbol)"
             :symbol="displaySymbol"
-            width="w-7"
-            height="h-7"
+            class="shrink-0"
           />
-          <span class="font-bold text-s-16">{{ displaySymbol }}</span>
+          <app-content-group :title="displaySymbol" />
         </div>
-        <div class="text-right">
-          <span class="text-text-subtle text-s-14 mr-2">{{
+        <p class="shrink-0 text-right">
+          <span class="mr-2 text-text-sm text-text-subtle">{{
             $t('perps.auto-close.current-price')
           }}</span>
-          <span class="font-bold text-s-16">{{ formatUsd(currentPrice) }}</span>
-        </div>
+          <span class="text-label-base">{{ formatUsd(currentPrice) }}</span>
+        </p>
       </div>
 
       <!-- Take Profit -->
@@ -25,72 +25,72 @@
         <div
           v-if="hasTakeProfit"
           key="take-profit-input"
-          class="bg-background-brand-subtle rounded-20 px-4 py-3 sm:p-5"
+          class="flex flex-col gap-4 rounded-16 bg-background-default p-4"
         >
-          <div class="flex justify-between items-center pl-3">
-            <p class="text-s-12 sm:text-s-14 font-bold">
-              {{
+          <div class="flex items-center justify-between gap-2">
+            <app-content-group
+              :title="
                 $t('perps.auto-close.take-profit-reaches', {
                   symbol: displaySymbol,
                 })
-              }}
-            </p>
+              "
+              wrap-title
+              class="flex-1"
+            />
             <app-base-button
               type="link"
               size="small"
-              class="text-text-brand text-s-12 sm:text-s-14"
+              class="shrink-0"
               @click="removeTakeProfit"
             >
               {{ $t('perps.auto-close.remove') }}
             </app-base-button>
           </div>
-          <perps-amount
-            v-model:amount="takeProfitPrice"
-            :error="takeProfitError || ''"
-            :validate-input="() => {}"
-          >
-            <template #footer>
-              <div class="flex justify-start gap-2 mt-1">
-                <button
-                  v-for="pct in takeProfitPills"
-                  :key="pct"
-                  class="w-full px-2 sm:px-2.5 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                  :class="
-                    activeTpPill === pct
-                      ? '!bg-background-brand-subtle text-text-brand'
-                      : ''
-                  "
-                  @click="$emit('setTakeProfitPct', pct)"
-                >
-                  {{ isLong ? '+' : '-' }}{{ pct }}%
-                </button>
-              </div>
-            </template>
-          </perps-amount>
-          <transition name="fade" mode="out-in">
-            <AppInputFeedback
-              v-if="takeProfitError"
-              type="error"
-              :message="takeProfitError"
-              class="mt-1"
-            />
-          </transition>
-          <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
+          <div class="flex flex-col gap-1">
+            <perps-amount
+              v-model:amount="takeProfitPrice"
+              :error="takeProfitError || ''"
+              :validate-input="() => {}"
+            >
+              <template #footer>
+                <!-- Wraps instead of squeezing the labels on narrow screens. -->
+                <div class="mt-1 flex flex-wrap gap-2">
+                  <app-chip
+                    v-for="pct in takeProfitPills"
+                    :key="pct"
+                    surface="alternative"
+                    :label="`${isLong ? '+' : '-'}${pct}%`"
+                    :selected="activeTpPill === pct"
+                    class="flex-1"
+                    @click="$emit('setTakeProfitPct', pct)"
+                  />
+                </div>
+              </template>
+            </perps-amount>
+            <transition name="fade" mode="out-in">
+              <AppInputFeedback
+                v-if="takeProfitError"
+                type="error"
+                :message="takeProfitError"
+              />
+            </transition>
+          </div>
+          <p class="text-right text-text-sm">
             <span class="text-text-subtle">{{
               $t('perps.auto-close.projected-profit')
             }}</span>
             <span
               v-if="tempProjectedProfit !== null && takeProfitPrice !== null"
-              class="text-text-success ml-2 font-medium"
+              class="ml-2 text-label-sm text-text-success"
               >+{{ formatUsd(Math.abs(tempProjectedProfit)) }}</span
             >
-            <span v-else class="ml-2 font-medium"> - </span>
-          </div>
+            <span v-else class="ml-2 text-label-sm"> - </span>
+          </p>
         </div>
         <button
           v-else
           key="add-take-profit"
-          class="bg-background-default-hover font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-text-brand text hover:bg-background-brand-subtle transition-all duration-300 group"
+          class="bg-background-default-hover font-medium rounded-16 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-text-brand text hover:bg-background-brand-subtle transition-all duration-300 group"
           @click="setTempTakeProfitPrice"
         >
           <AppIcon
@@ -107,72 +107,71 @@
         <div
           v-if="hasStopLoss"
           key="stop-loss-input"
-          class="bg-background-brand-subtle rounded-20 px-4 py-3 sm:p-5"
+          class="flex flex-col gap-4 rounded-16 bg-background-default p-4"
         >
-          <div class="flex justify-between items-center pl-3">
-            <p class="text-s-12 sm:text-s-14 font-bold">
-              {{
+          <div class="flex items-center justify-between gap-2">
+            <app-content-group
+              :title="
                 $t('perps.auto-close.stop-loss-reaches', {
                   symbol: displaySymbol,
                 })
-              }}
-            </p>
+              "
+              wrap-title
+              class="flex-1"
+            />
             <app-base-button
               type="link"
               size="small"
-              class="text-text-brand text-s-12 sm:text-s-14"
+              class="shrink-0"
               @click="removeStopLoss"
             >
               {{ $t('perps.auto-close.remove') }}
             </app-base-button>
           </div>
-          <perps-amount
-            v-model:amount="stopLossPrice"
-            :error="stopLossError || ''"
-            :validate-input="() => {}"
-          >
-            <template #footer>
-              <div class="flex justify-start gap-2 mt-1">
-                <button
-                  v-for="pct in [1, 2, 3, 4, 5]"
-                  :key="pct"
-                  class="w-full px-2 sm:px-2.5 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                  :class="
-                    activeSlPill === pct
-                      ? '!bg-background-brand-subtle text-text-brand'
-                      : ''
-                  "
-                  @click="$emit('setStopLossPct', pct)"
-                >
-                  {{ isLong ? '-' : '+' }}{{ pct }}%
-                </button>
-              </div>
-            </template>
-          </perps-amount>
-          <transition name="fade" mode="out-in">
-            <AppInputFeedback
-              v-if="stopLossError"
-              type="error"
-              :message="stopLossError"
-              class="mt-1"
-            />
-          </transition>
-          <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
+          <div class="flex flex-col gap-1">
+            <perps-amount
+              v-model:amount="stopLossPrice"
+              :error="stopLossError || ''"
+              :validate-input="() => {}"
+            >
+              <template #footer>
+                <div class="mt-1 flex flex-wrap gap-2">
+                  <app-chip
+                    v-for="pct in [1, 2, 3, 4, 5]"
+                    :key="pct"
+                    surface="alternative"
+                    :label="`${isLong ? '-' : '+'}${pct}%`"
+                    :selected="activeSlPill === pct"
+                    class="flex-1"
+                    @click="$emit('setStopLossPct', pct)"
+                  />
+                </div>
+              </template>
+            </perps-amount>
+            <transition name="fade" mode="out-in">
+              <AppInputFeedback
+                v-if="stopLossError"
+                type="error"
+                :message="stopLossError"
+              />
+            </transition>
+          </div>
+          <p class="text-right text-text-sm">
             <span class="text-text-subtle">{{
               $t('perps.auto-close.projected-loss')
             }}</span>
             <span
               v-if="tempProjectedLoss !== null && stopLossPrice !== null"
-              class="text-text-error font-medium ml-2"
+              class="ml-2 text-label-sm text-text-error"
               >-{{ formatUsd(Math.abs(tempProjectedLoss)) }}</span
             >
-            <span v-else class="ml-2 font-medium"> - </span>
-          </div>
+            <span v-else class="ml-2 text-label-sm"> - </span>
+          </p>
         </div>
         <button
           v-else
           key="add-stop-loss"
-          class="bg-background-default-hover font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-text-brand text hover:bg-background-brand-subtle transition-all duration-300 group"
+          class="bg-background-default-hover font-medium rounded-16 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-text-brand text hover:bg-background-brand-subtle transition-all duration-300 group"
           @click="setTempStopLossPrice"
         >
           <AppIcon
@@ -183,12 +182,12 @@
           {{ $t('perps.auto-close.add-stop-loss') }}
         </button>
       </transition>
+    </div>
 
-      <!-- Actions -->
-      <div class="flex flex-col gap-1">
+    <template #footer>
+      <app-btn-group orientation="vertical" :has-padding="false">
         <app-base-button
           :disabled="!hasEdits || !!takeProfitError || !!stopLossError"
-          class="w-full"
           @click="$emit('confirm')"
         >
           {{ $t('perps.auto-close.save') }}
@@ -196,22 +195,23 @@
         <app-base-button
           type="tertiary"
           surface="alternative"
-          size="large"
-          class="mx-auto w-full"
           @click="isOpen = false"
         >
           {{ $t('perps.auto-close.cancel') }}
         </app-base-button>
-      </div>
-    </div>
+      </app-btn-group>
+    </template>
   </app-modal>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed, type PropType } from 'vue'
 import AppModal from '@/components/modal/AppModal.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppChip from '@/components/chip/AppChip.vue'
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
 import PerpsAmount from './PerpsAmount.vue'
 import { formatUsd } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'

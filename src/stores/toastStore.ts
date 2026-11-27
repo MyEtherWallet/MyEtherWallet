@@ -26,33 +26,15 @@ import type { Toast } from '@/types/notification/index'
  *   isInfinite: true,
  * })
  *
- * // with link option
+ * // with secondary text and a link, rendered as the toast's button (only the
+ * // success, warning, error and transaction-completed types show it)
  * toastStore.addToastMessage({
- *   text: 'This is a toast message',
- *   link: {
- *     title: 'Click here',
- *     url: 'https://www.google.com',
- *   },
- * })
- *
- * // with link option as a button (Note: button is blue)
- * toastStore.addToastMessage({
- *   text: 'This is a toast message',
- *   link: {
- *     title: 'Click here',
- *     url: 'https://www.google.com',
- *     isButton: true,
- *   },
- * })
- *
- * // with secondary text and link as a button
- * toastStore.addToastMessage({
+ *   type: ToastType.Success,
  *   text: 'This is a toast title',
- *   secondaryText: 'This is a secondary text',
+ *   textSecondary: 'This is a secondary text',
  *   link: {
  *     title: 'Click here',
  *     url: 'https://www.google.com',
- *     isButton: true,
  *   },
  * })
  *
@@ -85,18 +67,10 @@ export const useToastStore = defineStore('toastStore', () => {
     if (index >= 0) messages.value.splice(index, 1)
   }
 
-  const showRewardToast = ref(false)
-
-  const toggleRewardToast = (value: boolean) => {
-    showRewardToast.value = value
-  }
-
   return {
     messages,
     addToastMessage,
     removeToastMessage,
     removeToastById,
-    showRewardToast,
-    toggleRewardToast,
   }
 })

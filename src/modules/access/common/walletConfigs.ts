@@ -90,8 +90,6 @@ export type WalletConfig = {
   isDefault?: boolean
   isWC?: boolean
   isOfficial?: boolean
-  /** The icon is already a full-bleed circle; draw it edge to edge, not inset. */
-  roundIcon?: boolean
   walletViewType?: WalletView
   downloadUrls?: downloadUrls
   canSupport?: (chain?: Chain) => boolean
@@ -137,7 +135,6 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     id: 'ledger',
     name: 'Ledger',
     icon: LedgerLogo,
-    roundIcon: true,
     type: [WalletConfigType.HARDWARE],
     canSupport: ledgerSupportNetwork,
     walletViewType: 'ledger',
@@ -146,7 +143,6 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     id: 'trezor',
     name: 'Trezor',
     icon: TrezorLogo,
-    roundIcon: true,
     type: [WalletConfigType.HARDWARE],
     canSupport: trezorSupportNetwork,
     walletViewType: 'trezor',
@@ -156,7 +152,6 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Keystore',
     nameKey: 'access_wallet.wallet_name.keystore',
     icon: KeystoreLogo,
-    roundIcon: true,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'keystore',
     canSupport: keystoreSupportNetwork,
@@ -166,7 +161,6 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Recovery (mnemonic) Phrase',
     nameKey: 'access_wallet.wallet_name.mnemonic',
     icon: MnemonicLogo,
-    roundIcon: true,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'mnemonic',
     canSupport: () => true,
@@ -176,7 +170,6 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Private Key',
     nameKey: 'access_wallet.wallet_name.private_key',
     icon: PrivateKeyLogo,
-    roundIcon: true,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'private_key',
     canSupport: privateKeySupportNetwork,
