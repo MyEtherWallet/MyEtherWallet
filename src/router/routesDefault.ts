@@ -1,4 +1,5 @@
 import {
+  ROUTES_AUTH,
   ROUTES_MAIN,
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
@@ -75,6 +76,12 @@ const DefaultRoutes = <RouteNameCollection>[
               path: 'cell',
               name: 'DevCell',
               component: () => import('@/views/ViewCellShowcase.vue'),
+              meta: { noAuth: true, noWalletFlow: true },
+            },
+            {
+              path: 'code-input',
+              name: 'DevCodeInput',
+              component: () => import('@/views/ViewCodeInputShowcase.vue'),
               meta: { noAuth: true, noWalletFlow: true },
             },
             {
@@ -475,6 +482,13 @@ const DefaultRoutes = <RouteNameCollection>[
         ...TOKEN_INFO_ROUTE,
       },
     ],
+  },
+  {
+    // Privy's redirect target after a Google login; the view moves on at once.
+    path: ROUTES_AUTH.CALLBACK.PATH,
+    name: ROUTES_AUTH.CALLBACK.NAME,
+    component: () => import('@/views/ViewAuthCallback.vue'),
+    meta: { noAuth: true, noWalletFlow: true },
   },
   {
     path: '/:pathMatch(.*)*',

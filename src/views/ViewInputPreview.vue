@@ -1,3 +1,73 @@
+<template>
+  <div class="p-6 md:p-10 space-y-12">
+    <header>
+      <h1 class="text-s-28 font-semibold">AppInput — design library</h1>
+      <p class="text-s-14 text-text-muted mt-1">
+        Tab into a field to see the Focus ring (red when errored). Clicking in
+        or typing is the Active state: caret only, no ring. Blurred errored
+        fields keep their normal line and show the feedback row.
+      </p>
+    </header>
+
+    <section
+      v-for="surface in surfaces"
+      :key="surface"
+      :class="[
+        'p-6 rounded-20 space-y-8',
+        surface === 'alternative'
+          ? 'bg-background-default border border-dashed border-border-default'
+          : 'bg-white border border-border-default',
+      ]"
+    >
+      <h2 class="text-s-20 font-semibold capitalize">
+        surface = {{ surface }}
+        <span class="text-s-13 font-normal text-text-muted">
+          ({{
+            surface === 'alternative'
+              ? 'white + border — dialogs today, also for grey backgrounds'
+              : 'grey fill — for white surfaces'
+          }})
+        </span>
+      </h2>
+
+      <div v-for="size in sizes" :key="size" class="space-y-4">
+        <h3 class="text-s-15 text-text-muted capitalize">size = {{ size }}</h3>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-6 gap-y-5"
+        >
+          <div v-for="v in variants" :key="v.key">
+            <p class="text-s-12 text-text-muted mb-1">{{ v.caption }}</p>
+            <AppInput
+              v-model="models[`${surface}-${size}-${v.key}`]"
+              :size="size"
+              :surface="surface"
+              label="Recipient"
+              placeholder="Address or ENS"
+              v-bind="v.props"
+            >
+              <template v-if="v.leading" #leading>
+                <AppIcon
+                  name="user-circle"
+                  variant="filled"
+                  class="w-full h-full text-text-placeholder"
+                />
+              </template>
+              <template v-if="v.trailing" #trailing>
+                <AppBtnIcon
+                  label="Paste"
+                  class="size-[26px]! text-icon-default"
+                >
+                  <AppIcon name="clipboard" size="s" />
+                </AppBtnIcon>
+              </template>
+            </AppInput>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
 <script setup lang="ts">
 // Component preview for AppInput (Text area and Searchbar have their own pages).
 // Reachable at /dev/input via the design-library shell (registered in routesDefault.ts).
@@ -72,73 +142,3 @@ for (const surface of surfaces)
   for (const size of sizes)
     for (const v of variants) models[`${surface}-${size}-${v.key}`] = v.value
 </script>
-
-<template>
-  <div class="p-6 md:p-10 space-y-12">
-    <header>
-      <h1 class="text-s-28 font-semibold">AppInput — design library</h1>
-      <p class="text-s-14 text-text-muted mt-1">
-        Tab into a field to see the Focus ring (red when errored). Clicking in
-        or typing is the Active state: caret only, no ring. Blurred errored
-        fields keep their normal line and show the feedback row.
-      </p>
-    </header>
-
-    <section
-      v-for="surface in surfaces"
-      :key="surface"
-      :class="[
-        'p-6 rounded-20 space-y-8',
-        surface === 'alternative'
-          ? 'bg-background-default border border-dashed border-border-default'
-          : 'bg-white border border-border-default',
-      ]"
-    >
-      <h2 class="text-s-20 font-semibold capitalize">
-        surface = {{ surface }}
-        <span class="text-s-13 font-normal text-text-muted">
-          ({{
-            surface === 'alternative'
-              ? 'white + border — dialogs today, also for grey backgrounds'
-              : 'grey fill — for white surfaces'
-          }})
-        </span>
-      </h2>
-
-      <div v-for="size in sizes" :key="size" class="space-y-4">
-        <h3 class="text-s-15 text-text-muted capitalize">size = {{ size }}</h3>
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-x-6 gap-y-5"
-        >
-          <div v-for="v in variants" :key="v.key">
-            <p class="text-s-12 text-text-muted mb-1">{{ v.caption }}</p>
-            <AppInput
-              v-model="models[`${surface}-${size}-${v.key}`]"
-              :size="size"
-              :surface="surface"
-              label="Recipient"
-              placeholder="Address or ENS"
-              v-bind="v.props"
-            >
-              <template v-if="v.leading" #leading>
-                <AppIcon
-                  name="user-circle"
-                  variant="filled"
-                  class="w-full h-full text-text-placeholder"
-                />
-              </template>
-              <template v-if="v.trailing" #trailing>
-                <AppBtnIcon
-                  label="Paste"
-                  class="size-[26px]! text-icon-default"
-                >
-                  <AppIcon name="clipboard" size="s" />
-                </AppBtnIcon>
-              </template>
-            </AppInput>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-</template>

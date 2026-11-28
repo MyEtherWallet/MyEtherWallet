@@ -1,3 +1,69 @@
+<template>
+  <div
+    v-if="visible"
+    role="cell"
+    :class="[
+      'flex h-11 min-w-0 flex-col justify-center',
+      size === 's' ? 'items-end text-right' : 'items-start',
+    ]"
+  >
+    <template v-if="loading">
+      <div
+        v-if="value !== undefined || (!hasChange && !series)"
+        class="py-[5px]"
+      >
+        <AppSkeleton class="h-3 w-16" />
+      </div>
+      <div v-if="hasChange" class="py-[3px]">
+        <AppSkeleton class="h-3 w-12" />
+      </div>
+      <AppSkeleton v-if="series" class="h-4 w-14" />
+    </template>
+    <slot v-else>
+      <p
+        v-if="value !== undefined"
+        :class="[
+          'max-w-full truncate text-label-base',
+          VALUE_TONE_CLASS[tone ?? 'neutral'],
+        ]"
+      >
+        {{ value }}
+      </p>
+      <p
+        v-if="hasChange"
+        data-test="table-cell-trend"
+        :class="[
+          'flex items-center whitespace-nowrap text-label-xs',
+          TREND_CLASS[trend],
+        ]"
+      >
+        {{ formatChange(change ?? 0) }}
+        <AppIcon
+          v-if="trend !== 'neutral'"
+          :name="trend === 'up' ? 'arrow-small-up' : 'arrow-small-down'"
+          size="xxs"
+        />
+      </p>
+      <svg
+        v-if="series"
+        data-test="table-cell-sparkline"
+        :viewBox="`0 0 ${SPARK_W} ${SPARK_H}`"
+        :class="['h-4 w-14', TREND_CLASS[trend]]"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          :d="path"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          vector-effect="non-scaling-stroke"
+        />
+      </svg>
+    </slot>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -104,69 +170,3 @@ const path = computed(() => {
   }, '')
 })
 </script>
-
-<template>
-  <div
-    v-if="visible"
-    role="cell"
-    :class="[
-      'flex h-11 min-w-0 flex-col justify-center',
-      size === 's' ? 'items-end text-right' : 'items-start',
-    ]"
-  >
-    <template v-if="loading">
-      <div
-        v-if="value !== undefined || (!hasChange && !series)"
-        class="py-[5px]"
-      >
-        <AppSkeleton class="h-3 w-16" />
-      </div>
-      <div v-if="hasChange" class="py-[3px]">
-        <AppSkeleton class="h-3 w-12" />
-      </div>
-      <AppSkeleton v-if="series" class="h-4 w-14" />
-    </template>
-    <slot v-else>
-      <p
-        v-if="value !== undefined"
-        :class="[
-          'max-w-full truncate text-label-base',
-          VALUE_TONE_CLASS[tone ?? 'neutral'],
-        ]"
-      >
-        {{ value }}
-      </p>
-      <p
-        v-if="hasChange"
-        data-test="table-cell-trend"
-        :class="[
-          'flex items-center whitespace-nowrap text-label-xs',
-          TREND_CLASS[trend],
-        ]"
-      >
-        {{ formatChange(change ?? 0) }}
-        <AppIcon
-          v-if="trend !== 'neutral'"
-          :name="trend === 'up' ? 'arrow-small-up' : 'arrow-small-down'"
-          size="xxs"
-        />
-      </p>
-      <svg
-        v-if="series"
-        data-test="table-cell-sparkline"
-        :viewBox="`0 0 ${SPARK_W} ${SPARK_H}`"
-        :class="['h-4 w-14', TREND_CLASS[trend]]"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          :d="path"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          vector-effect="non-scaling-stroke"
-        />
-      </svg>
-    </slot>
-  </div>
-</template>

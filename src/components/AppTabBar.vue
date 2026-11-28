@@ -1,13 +1,3 @@
-<script setup lang="ts">
-/**
- * Underline-style tab bar (design-library "TabBar"): left-aligned text tabs
- * over a full-width divider; the active tab is bold with a dark underline.
- * Index-based v-model; the consumer renders the panel content itself.
- */
-defineProps<{ modelValue: number; tabs: string[] }>()
-defineEmits<{ 'update:modelValue': [index: number] }>()
-</script>
-
 <template>
   <div role="tablist" class="flex gap-6 border-b border-border-default">
     <button
@@ -33,3 +23,13 @@ defineEmits<{ 'update:modelValue': [index: number] }>()
     </button>
   </div>
 </template>
+
+<script setup lang="ts">
+/**
+ * Underline-style tab bar (design-library "TabBar"): left-aligned text tabs
+ * over a full-width divider; the active tab is bold with a dark underline.
+ * Index-based v-model; the consumer renders the panel content itself.
+ */
+defineProps<{ modelValue: number; tabs: string[] }>()
+defineEmits<{ 'update:modelValue': [index: number] }>()
+</script>

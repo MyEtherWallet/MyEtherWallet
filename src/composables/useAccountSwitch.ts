@@ -11,7 +11,8 @@ import {
   type PersistedEntry,
 } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { Chain, ChainType } from '@/mew_api/types'
-import type { WalletType } from '@/providers/types'
+import { WalletType } from '@/providers/types'
+import { useAuthStore } from '@/stores/authStore'
 
 export function useAccountSwitch() {
   const walletStore = useWalletStore()
@@ -27,6 +28,10 @@ export function useAccountSwitch() {
     if (chainsStore.selectedChain?.type === account.chainType) return
     const target = chainForType(account.chainType)
     if (!target) return
+    // The wallet store answers a change of network type by falling back to
+    // the address it remembers for that type. Without this that is whichever
+    // account was last active there, and it lands after the one picked here.
+    walletStore.rememberActiveAddress(account.chainType, account.address)
     globalStore.setSelectedNetwork(target.name)
     toastStore.addToastMessage({
       text: 'Network switched',
@@ -89,6 +94,13 @@ export function useAccountSwitch() {
   }
 
   const deleteAccount = async (account: SavedAccount): Promise<void> => {
+    // Deleting a Privy address also ends its login, as disconnecting it does.
+    // Best effort: the address is deleted even if Privy cannot be reached.
+    if (account.providerType === WalletType.PRIVY) {
+      await useAuthStore()
+        .endLoginFor(account.address)
+        .catch(() => undefined)
+    }
     const wasActive = account.id === watchOnlyStore.activeId
     watchOnlyStore.removeWallet(account.address, { type: account.chainType } as Chain)
     if (!wasActive) {

@@ -1,3 +1,16 @@
+<template>
+  <div
+    class="relative w-[27px] h-[18px] rounded-[3px] border border-border-default bg-white overflow-hidden flex items-center justify-center"
+  >
+    <img
+      :src="mark.src"
+      :alt="mark.label"
+      class="object-contain"
+      :style="{ width: `${mark.w}px`, height: `${mark.h}px` }"
+    />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import applePay from '@/assets/icons/payment/apple-pay.png'
@@ -33,16 +46,3 @@ const MARKS: Record<
 
 const mark = computed(() => MARKS[props.method])
 </script>
-
-<template>
-  <div
-    class="relative w-[27px] h-[18px] rounded-[3px] border border-border-default bg-white overflow-hidden flex items-center justify-center"
-  >
-    <img
-      :src="mark.src"
-      :alt="mark.label"
-      class="object-contain"
-      :style="{ width: `${mark.w}px`, height: `${mark.h}px` }"
-    />
-  </div>
-</template>

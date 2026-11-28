@@ -1,27 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Radio Button design-library component (MEW-2400), reachable
-// at /dev/radio via the design-library shell — see routesDefault.ts. Mirrors the
-// Figma Selected × State grid (node 3822:42489). Hover and focus are CSS, so the
-// live grid shows them when you hover a radio or Tab into a group; the forced
-// row paints those two states statically for side-by-side comparison.
-import { ref } from 'vue'
-import AppRadio from '@/components/radio/AppRadio.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
-
-// Grid samples are pinned: they ignore clicks so each cell keeps showing its
-// Figma variant.
-const pin = () => {}
-
-const FEES = [
-  { value: 'economy', label: 'Economy' },
-  { value: 'regular', label: 'Regular' },
-  { value: 'fast', label: 'Fast (unavailable)', disabled: true },
-]
-const fee = ref('regular')
-
-const plan = ref('monthly')
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -118,3 +94,27 @@ const plan = ref('monthly')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Radio Button design-library component (MEW-2400), reachable
+// at /dev/radio via the design-library shell — see routesDefault.ts. Mirrors the
+// Figma Selected × State grid (node 3822:42489). Hover and focus are CSS, so the
+// live grid shows them when you hover a radio or Tab into a group; the forced
+// row paints those two states statically for side-by-side comparison.
+import { ref } from 'vue'
+import AppRadio from '@/components/radio/AppRadio.vue'
+import AppIcon from '@/components/icon/AppIcon.vue'
+
+// Grid samples are pinned: they ignore clicks so each cell keeps showing its
+// Figma variant.
+const pin = () => {}
+
+const FEES = [
+  { value: 'economy', label: 'Economy' },
+  { value: 'regular', label: 'Regular' },
+  { value: 'fast', label: 'Fast (unavailable)', disabled: true },
+]
+const fee = ref('regular')
+
+const plan = ref('monthly')
+</script>

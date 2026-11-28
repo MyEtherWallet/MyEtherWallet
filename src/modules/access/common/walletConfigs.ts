@@ -108,9 +108,7 @@ const ledgerSupportNetwork = (chain?: Chain): boolean => {
 const trezorSupportNetwork = (chain?: Chain): boolean => {
   if (!chain) return false
   const convertedNetworkName = chainToEnum[chain.name as string]
-  return new HWWallet().isNetworkSupported(
-    convertedNetworkName as NetworkNames,
-  )
+  return new HWWallet().isNetworkSupported(convertedNetworkName as NetworkNames)
 }
 
 const keystoreSupportNetwork = (chain?: Chain): boolean => {

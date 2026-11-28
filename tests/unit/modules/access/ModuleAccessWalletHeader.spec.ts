@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { reactive, ref } from 'vue'
+import { nextTick, reactive, ref } from 'vue'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 
@@ -10,6 +10,9 @@ vi.mock('@/modules/access/components/NetworkChips.vue', () =>
 vi.mock('@/modules/access/components/WalletTabs.vue', () => stub('WalletTabs'))
 vi.mock('@/modules/access/components/AccessSignUp.vue', () =>
   stub('AccessSignUp'),
+)
+vi.mock('@/modules/access/components/privy/PrivyFlow.vue', () =>
+  stub('PrivyFlow'),
 )
 vi.mock('@/modules/access/components/AccessDownloadMobile.vue', () =>
   stub('AccessDownloadMobile'),
@@ -30,7 +33,7 @@ vi.mock('@/components/AppNeedHelp.vue', () => stub('AppNeedHelp'))
 vi.mock('@/components/modal/AppModal.vue', () => ({
   default: {
     name: 'AppModal',
-    props: ['modelValue', 'title', 'showBackButton'],
+    props: ['modelValue', 'title', 'showBackButton', 'persistent', 'ariaLabel'],
     emits: ['update:modelValue', 'back', 'close'],
     template: `<div>
       <button v-if="showBackButton" aria-label="common.back" @click="$emit('back')" />
@@ -48,6 +51,17 @@ vi.mock('pinia', async orig => ({
   storeToRefs: (store: unknown) => store,
 }))
 
+// The login flow's shared state, driven directly by these tests.
+const flow = {
+  state: ref('entry'),
+  backTarget: ref<'entry' | null>(null),
+  isPersistent: ref(false),
+  back: vi.fn(),
+  cancel: vi.fn(),
+}
+vi.mock('@/modules/access/composables/usePrivyOnboarding', () => ({
+  usePrivyOnboarding: () => flow,
+}))
 const currentView = ref('default')
 const isOpenAccessDialog = ref(true)
 const accessStep = ref(1)
@@ -96,7 +110,6 @@ vi.mock('@/stores/globalStore', () => ({
   useGlobalStore: () => ({ setSelectedNetwork: vi.fn() }),
 }))
 
-const { default: configs } = await import('@/configs')
 const { default: ModuleAccessWallet } =
   await import('@/modules/access/ModuleAccessWallet.vue')
 const i18n = createI18n({
@@ -122,7 +135,11 @@ const mountAt = (view: string, step = 1) => {
   return wrapper
 }
 beforeEach(() => {
-  configs.SHOW_SOCIAL_LOGIN = true
+  flow.state.value = 'entry'
+  flow.backTarget.value = null
+  flow.isPersistent.value = false
+  flow.back.mockClear()
+  flow.cancel.mockClear()
 })
 afterEach(() => wrapper?.unmount())
 
@@ -130,10 +147,13 @@ const back = (w: VueWrapper) => w.find('button[aria-label="common.back"]')
 const title = (w: VueWrapper) => w.get('h1').text()
 
 describe('ModuleAccessWallet header', () => {
-  it('hides back on the wallet chooser and shows the Connect wallet title', () => {
+  it('goes back from the wallet chooser to Log in/Sign Up, whose title it shares', async () => {
     const w = mountAt('default')
-    expect(back(w).exists()).toBe(false)
-    expect(title(w)).toBe('connect_wallet')
+    expect(title(w)).toBe('access_wallet.social.title')
+
+    await back(w).trigger('click')
+
+    expect(setCurrentView).toHaveBeenCalledWith('sign_up')
   })
 
   it('caps the chooser under the title so only the wallet grid scrolls', () => {
@@ -162,11 +182,77 @@ describe('ModuleAccessWallet header', () => {
     ).toBe(false)
   })
 
-  it('goes back from sign-up to the chooser', async () => {
+  it('has no back arrow on Log in/Sign Up: it is the first screen', () => {
+    expect(back(mountAt('sign_up')).exists()).toBe(false)
+  })
+
+  it('titles the sign-up view "Log in/Sign Up" on its entry screen', () => {
     const w = mountAt('sign_up')
-    expect(title(w)).toBe('connect_wallet')
+
+    expect(title(w)).toBe('access_wallet.social.title')
+    expect(w.findComponent({ name: 'PrivyFlow' }).exists()).toBe(true)
+  })
+
+  it('shows no title on the later login screens', () => {
+    flow.state.value = 'google.verifying'
+
+    expect(title(mountAt('sign_up'))).toBe('')
+  })
+
+  it('returns from the code screen to the entry screen with the back arrow', async () => {
+    flow.state.value = 'email.code'
+    flow.backTarget.value = 'entry'
+    const w = mountAt('sign_up')
+
     await back(w).trigger('click')
-    expect(setCurrentView).toHaveBeenCalledWith('default')
+
+    expect(flow.back).toHaveBeenCalledTimes(1)
+    expect(setCurrentView).not.toHaveBeenCalled()
+  })
+
+  it('hides the back arrow on login screens that have nowhere to go back to', () => {
+    flow.state.value = 'google.verifying'
+    flow.backTarget.value = null
+
+    expect(back(mountAt('sign_up')).exists()).toBe(false)
+  })
+
+  it('cannot be closed while the wallet is being set up', () => {
+    flow.state.value = 'wallet.setup'
+    flow.isPersistent.value = true
+
+    const w = mountAt('sign_up')
+
+    expect(w.findComponent({ name: 'AppModal' }).props('persistent')).toBe(true)
+  })
+
+  it('cancels the login flow when the sign-up view is closed', async () => {
+    const w = mountAt('sign_up')
+
+    await w.get('button[aria-label="common.close"]').trigger('click')
+
+    expect(flow.cancel).toHaveBeenCalledTimes(1)
+  })
+
+  it('cancels the login flow when the dialog is closed from outside the modal', async () => {
+    flow.state.value = 'email.code'
+    mountAt('sign_up')
+
+    // Browser Back or a link elsewhere closes it through the store.
+    isOpenAccessDialog.value = false
+    await nextTick()
+
+    expect(flow.cancel).toHaveBeenCalledTimes(1)
+  })
+
+  it('names the dialog for screen readers on login screens that have no title', () => {
+    flow.state.value = 'google.verifying'
+
+    const w = mountAt('sign_up')
+
+    expect(w.findComponent({ name: 'AppModal' }).props('ariaLabel')).toBe(
+      'access_wallet.social.title',
+    )
   })
 
   it('goes back from the download screen to sign-up', async () => {
@@ -176,25 +262,61 @@ describe('ModuleAccessWallet header', () => {
     expect(setCurrentView).toHaveBeenCalledWith('sign_up')
   })
 
-  it('swaps the Sign Up row for the download cards while social login is off', () => {
-    const signUp = (w: VueWrapper) => w.find('[data-testid="sign-up-cta"]')
-    const downloads = (w: VueWrapper) =>
-      w.findComponent({ name: 'AccessDownloadWallets' })
-    let w = mountAt('default')
-    expect(signUp(w).exists()).toBe(true)
-    expect(downloads(w).exists()).toBe(false)
-    w.unmount()
-    configs.SHOW_SOCIAL_LOGIN = false
-    w = mountAt('default')
-    expect(signUp(w).exists()).toBe(false)
-    expect(downloads(w).exists()).toBe(true)
+  it('goes back from the download screen to the chooser when it was opened there', async () => {
+    const w = mountAt('default')
+    currentView.value = 'download_mobile'
+    await nextTick()
+
+    await back(w).trigger('click')
+
+    expect(setCurrentView).toHaveBeenLastCalledWith('default')
   })
 
-  it('goes back from the download screen to the chooser while social login is off', async () => {
-    configs.SHOW_SOCIAL_LOGIN = false
-    const w = mountAt('download_mobile')
-    await back(w).trigger('click')
-    expect(setCurrentView).toHaveBeenCalledWith('default')
+  it('offers Sign Up under the wallet list, with the wallets to create folded away', () => {
+    const w = mountAt('default')
+
+    expect(w.find('[data-testid="sign-up-cta"]').exists()).toBe(true)
+    expect(w.findComponent({ name: 'AccessDownloadWallets' }).exists()).toBe(
+      false,
+    )
+  })
+
+  it('unfolds the wallets to create when the + is pressed', async () => {
+    const w = mountAt('default')
+
+    await w.get('[data-testid="create-wallet-toggle"]').trigger('click')
+
+    expect(w.findComponent({ name: 'AccessDownloadWallets' }).exists()).toBe(
+      true,
+    )
+  })
+
+  it('keeps them unfolded across a trip to the download screen', async () => {
+    const w = mountAt('default')
+    await w.get('[data-testid="create-wallet-toggle"]').trigger('click')
+
+    currentView.value = 'download_mobile'
+    await nextTick()
+    currentView.value = 'default'
+    await nextTick()
+
+    expect(w.findComponent({ name: 'AccessDownloadWallets' }).exists()).toBe(
+      true,
+    )
+  })
+
+  it('folds them again once the dialog has been closed', async () => {
+    const w = mountAt('default')
+    await w.get('[data-testid="create-wallet-toggle"]').trigger('click')
+
+    isOpenAccessDialog.value = false
+    await nextTick()
+    isOpenAccessDialog.value = true
+    await nextTick()
+
+    expect(w.findComponent({ name: 'AccessDownloadWallets' }).exists()).toBe(
+      false,
+    )
   })
 
   it('closes like the backdrop does, without resetting the add-account intent', async () => {
@@ -221,12 +343,27 @@ describe('ModuleAccessWallet header', () => {
   })
 
   it('goes back to step 1 inside an advanced flow before leaving it', async () => {
-    const w = mountAt('keystore', 2)
+    const w = mountAt('default')
+    currentView.value = 'keystore'
+    accessStep.value = 2
+    await nextTick()
+
     await back(w).trigger('click')
     expect(accessStep.value).toBe(1)
     expect(setCurrentView).not.toHaveBeenCalled()
     await back(w).trigger('click')
+    // It was opened from the chooser, so that is where Back leads.
     expect(setCurrentView).toHaveBeenCalledWith('default')
+  })
+
+  it('goes back from a step to Log in/Sign Up when its wallet row opened it', async () => {
+    const w = mountAt('sign_up')
+    currentView.value = 'private_key'
+    await nextTick()
+
+    await back(w).trigger('click')
+
+    expect(setCurrentView).toHaveBeenLastCalledWith('sign_up')
   })
 
   it('remembers the picked network in the URL', async () => {

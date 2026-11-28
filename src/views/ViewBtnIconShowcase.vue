@@ -1,25 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Button Icon design-library component (MEW-2397), reachable at
-// /dev/btn-icon via the design-library shell — see routesDefault.ts. Compare
-// against Figma 82:15271 (Style × State) and 1519:7534 (sizes). Hover, pressed
-// and focus are native CSS: hover a button, press it, or Tab to it. Disabled is
-// shown statically.
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import {
-  BTN_ICON_SIZE,
-  BTN_ICON_VARIANT_CLASS,
-  type BtnIconSize,
-  type BtnIconVariant,
-} from '@/components/btnIconTypes'
-
-const VARIANTS = Object.keys(BTN_ICON_VARIANT_CLASS) as BtnIconVariant[]
-const SIZES = Object.keys(BTN_ICON_SIZE) as BtnIconSize[]
-// Contrast styles are for dark surfaces only, so each panel shows just the
-// styles built for it.
-const CONTRAST = VARIANTS.filter(v => v.endsWith('contrast'))
-const LIGHT = VARIANTS.filter(v => !CONTRAST.includes(v))
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -110,3 +88,25 @@ const LIGHT = VARIANTS.filter(v => !CONTRAST.includes(v))
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Button Icon design-library component (MEW-2397), reachable at
+// /dev/btn-icon via the design-library shell — see routesDefault.ts. Compare
+// against Figma 82:15271 (Style × State) and 1519:7534 (sizes). Hover, pressed
+// and focus are native CSS: hover a button, press it, or Tab to it. Disabled is
+// shown statically.
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import {
+  BTN_ICON_SIZE,
+  BTN_ICON_VARIANT_CLASS,
+  type BtnIconSize,
+  type BtnIconVariant,
+} from '@/components/btnIconTypes'
+
+const VARIANTS = Object.keys(BTN_ICON_VARIANT_CLASS) as BtnIconVariant[]
+const SIZES = Object.keys(BTN_ICON_SIZE) as BtnIconSize[]
+// Contrast styles are for dark surfaces only, so each panel shows just the
+// styles built for it.
+const CONTRAST = VARIANTS.filter(v => v.endsWith('contrast'))
+const LIGHT = VARIANTS.filter(v => !CONTRAST.includes(v))
+</script>

@@ -1,30 +1,3 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import AppRewardsCard from '@/components/AppRewardsCard.vue'
-import RwaTradeInfoModal from '@/modules/rwa_rewards/RwaTradeInfoModal.vue'
-import { useHomeOffers, type HomeOffer } from '../composables/useHomeOffers'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import { useHoldingsStore } from '@/stores/holdingsStore'
-import peggyAstronaut from '@/assets/images/home/offers/peggy-astronaut.svg'
-
-const { t } = useI18n()
-const { offers } = useHomeOffers()
-const walletMenu = useWalletMenuStore()
-const holdingsStore = useHoldingsStore()
-
-// Reuse the Portfolio "Rewards & offers" popups: the trade offer opens the
-// "Trade and get 5 USDC" learn-more modal (Portfolio's trade card), the hold
-// offer opens the holdings rewards modal (Portfolio's hold card, store-driven
-// and mounted app-wide). Buy keeps its wallet side-panel.
-const isTradeInfoOpen = ref(false)
-const onOfferClick = (offer: HomeOffer) => {
-  if (offer.id === 'trade') isTradeInfoOpen.value = true
-  else if (offer.id === 'hold') holdingsStore.openModal()
-  else walletMenu.openPanel(offer.panel)
-}
-</script>
-
 <template>
   <!-- Container-query layout so the cards reflow on the AVAILABLE width (which
        shrinks when the wallet side panel opens): stacked on mobile, then all
@@ -55,3 +28,30 @@ const onOfferClick = (offer: HomeOffer) => {
   </div>
   <RwaTradeInfoModal v-if="isTradeInfoOpen" v-model:is-open="isTradeInfoOpen" />
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import AppRewardsCard from '@/components/AppRewardsCard.vue'
+import RwaTradeInfoModal from '@/modules/rwa_rewards/RwaTradeInfoModal.vue'
+import { useHomeOffers, type HomeOffer } from '../composables/useHomeOffers'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useHoldingsStore } from '@/stores/holdingsStore'
+import peggyAstronaut from '@/assets/images/home/offers/peggy-astronaut.svg'
+
+const { t } = useI18n()
+const { offers } = useHomeOffers()
+const walletMenu = useWalletMenuStore()
+const holdingsStore = useHoldingsStore()
+
+// Reuse the Portfolio "Rewards & offers" popups: the trade offer opens the
+// "Trade and get 5 USDC" learn-more modal (Portfolio's trade card), the hold
+// offer opens the holdings rewards modal (Portfolio's hold card, store-driven
+// and mounted app-wide). Buy keeps its wallet side-panel.
+const isTradeInfoOpen = ref(false)
+const onOfferClick = (offer: HomeOffer) => {
+  if (offer.id === 'trade') isTradeInfoOpen.value = true
+  else if (offer.id === 'hold') holdingsStore.openModal()
+  else walletMenu.openPanel(offer.panel)
+}
+</script>

@@ -46,77 +46,21 @@
       <div class="flex shrink-0 items-center gap-2 sm:gap-4">
         <slot name="search" />
         <slot v-if="walletSaved" name="wallet" />
-        <template v-else>
-          <!-- max-[550px]:hidden, not hidden: the button's own inline-flex beats it -->
-          <AppBaseButton
-            type="secondary"
-            surface="alternative"
-            size="medium"
-            class="max-[550px]:hidden"
-            @click="emit('create-wallet')"
-          >
-            <span class="xl:max-2xl:hidden">{{
-              t('common.create_wallet')
-            }}</span>
-            <span class="hidden xl:max-2xl:inline">
-              {{ t('common.create_wallet_short') }}
-            </span>
-          </AppBaseButton>
-          <AppBaseButton
-            size="medium"
-            class="max-[550px]:hidden"
-            @click="emit('connect-wallet')"
-          >
-            <span class="xl:max-2xl:hidden">{{ t('connect_wallet') }}</span>
-            <span class="hidden xl:max-2xl:inline">
-              {{ t('common.connect_wallet_short') }}
-            </span>
-          </AppBaseButton>
-          <!-- Below 550: Connect opens a menu with both CTAs -->
-          <AppPopUpMenu
-            :placeholder="t('connect_wallet')"
-            location="right"
-            teleport
-            menu-radius-class="rounded-16"
-            class="min-[550px]:hidden"
-          >
-            <template #menu-button="{ toggleMenu }">
-              <AppBaseButton
-                size="medium"
-                aria-haspopup="menu"
-                data-testid="navbar-wallet-menu"
-                @click="toggleMenu"
-              >
-                {{ t('common.connect_wallet_short') }}
-                <template #trailing>
-                  <AppIcon name="chevron-down" variant="filled" size="xs" />
-                </template>
-              </AppBaseButton>
-            </template>
-            <template #menu-content="{ toggleMenu }">
-              <AppBtnGroup
-                orientation="vertical"
-                data-testid="navbar-wallet-menu-ctas"
-                class="w-60"
-              >
-                <AppBaseButton
-                  type="secondary"
-                  surface="alternative"
-                  size="medium"
-                  @click="onMenuSelect('create-wallet', toggleMenu)"
-                >
-                  {{ t('common.create_wallet') }}
-                </AppBaseButton>
-                <AppBaseButton
-                  size="medium"
-                  @click="onMenuSelect('connect-wallet', toggleMenu)"
-                >
-                  {{ t('connect_wallet') }}
-                </AppBaseButton>
-              </AppBtnGroup>
-            </template>
-          </AppPopUpMenu>
-        </template>
+        <AppBaseButton
+          v-else
+          size="medium"
+          data-testid="navbar-log-in"
+          @click="emit('log-in')"
+        >
+          <!-- Below 450 the wording is the short one: a long translation
+               (Spanish) would crush the logo and the hamburger. -->
+          <span class="max-[450px]:hidden">
+            {{ t('access_wallet.social.title') }}
+          </span>
+          <span class="min-[450px]:hidden">
+            {{ t('access_wallet.social.title_short') }}
+          </span>
+        </AppBaseButton>
         <div v-if="$slots.actions" class="flex items-center gap-2">
           <slot name="actions" />
         </div>
@@ -128,30 +72,29 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppIcon from '@/components/icon/AppIcon.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
 
 /**
  * Navbar (design library, Figma 1078:1485). Responsive app bar: desktop
- * (≥ xl/1280) shows the logo wordmark, the links and the Create + Connect CTAs;
- * compact (< 1280) swaps in the hamburger and the logo mark. Content spans
- * the full window width at every size, like the previous header (Figma caps
- * it at 1440; product kept full width, MEW-2463).
+ * (≥ xl/1280) shows the logo wordmark and the links; compact (< 1280) swaps in
+ * the hamburger and the logo mark. Content spans the full window width at
+ * every size, like the previous header (Figma caps it at 1440; product kept
+ * full width, MEW-2463).
+ *
+ * Without a saved wallet the wallet area is one "Log in/Sign Up" button at
+ * every width (Figma Onboarding 1963:156148). It replaced the separate Create
+ * and Connect buttons: logging in covers both. Below 450 it uses the short
+ * label, which a translation shortens only if its full one doesn't fit there.
  *
  * The navbar owns layout only. Links, search, the saved-wallet trigger and the
  * notifications/settings actions come in through slots, because each of those
  * ships its own popup today. `#links` takes AppNavLinks; `#wallet` takes the
- * AppAddressSelector trigger. The hamburger and the CTAs only emit; the
+ * AppAddressSelector trigger. The hamburger and the button only emit; the
  * layout owns what they open.
- *
- * Between 1280 and 1440 the full row doesn't fit, so the CTAs drop "wallet".
- * Below 550 both give way to one "Connect" that opens a menu with the two CTAs.
  */
 defineProps<{
-  /** Wallet saved? (Figma axis): true renders `#wallet`, false the CTAs. */
+  /** Wallet saved? (Figma axis): true renders `#wallet`, false the button. */
   walletSaved: boolean
   /** Hamburger state, mirrored to aria-expanded. */
   menuOpen?: boolean
@@ -161,18 +104,8 @@ defineProps<{
 
 const emit = defineEmits<{
   'toggle-menu': []
-  'create-wallet': []
-  'connect-wallet': []
+  'log-in': []
 }>()
 
 const { t } = useI18n()
-
-const onMenuSelect = (
-  event: 'create-wallet' | 'connect-wallet',
-  close: () => void,
-): void => {
-  close()
-  if (event === 'create-wallet') emit('create-wallet')
-  else emit('connect-wallet')
-}
 </script>

@@ -1,151 +1,3 @@
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useI18n } from 'vue-i18n'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTooltip from '@/components/tooltip/AppTooltip.vue'
-import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
-import AppTable from '@/components/table/AppTable.vue'
-import AppTableRow from '@/components/table/AppTableRow.vue'
-import AppTableCell from '@/components/table/AppTableCell.vue'
-import { type TableColumn, TOKEN_LOGO_SIZE } from '@/components/table/types'
-import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
-import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
-import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
-import { stockBaseSymbol } from '@/utils/tokenDisplayName'
-
-import AppIcon from '@/components/icon/AppIcon.vue'
-// Rows are owned by HomeHero (so it can fall back to the banner when there are
-// none to show); this component renders + handles per-row actions, search,
-// category filter, "Show more" and manual drag-reordering.
-const props = defineProps<{ rows: WatchlistRow[] }>()
-
-const { t } = useI18n()
-
-const isAddOpen = ref(false)
-const query = ref('')
-const category = ref<'all' | 'stocks' | 'crypto'>('all')
-const isCategoryOpen = ref(false)
-const expanded = ref(false)
-const INITIAL_COUNT = 5
-
-const CATEGORIES = [
-  { value: 'all', labelKey: 'homePage.hero.watchlist.table.allCategories' },
-  { value: 'stocks', labelKey: 'homePage.hero.watchlist.addModal.tabs.stocks' },
-  { value: 'crypto', labelKey: 'homePage.hero.watchlist.addModal.tabs.crypto' },
-] as const
-
-// Price is the one column kept at size S (it carries the 24h change there).
-const columns = computed<TableColumn[]>(() => [
-  { key: 'token', label: t('homePage.hero.watchlist.table.columns.token') },
-  {
-    key: 'marketCap',
-    label: t('homePage.hero.watchlist.table.columns.marketCap'),
-  },
-  { key: 'volume', label: t('homePage.hero.watchlist.table.columns.volume') },
-  {
-    key: 'change',
-    label: t('homePage.hero.watchlist.table.columns.change24h'),
-  },
-  {
-    key: 'price',
-    label: t('homePage.hero.watchlist.table.columns.price'),
-    primary: true,
-  },
-])
-
-const watchlistStore = useWatchlistStore()
-const walletMenu = useWalletMenuStore()
-const { openSwapForToken, openBridgeForToken } = useNewListingSwap()
-
-// The add modal only offers crypto + stocks, so once both buckets hit the limit
-// there's nothing left to add — hide the "Add asset" button.
-const { watchListedTokens, watchListedStocks } = storeToRefs(watchlistStore)
-const isWatchlistFull = computed(
-  () =>
-    watchListedTokens.value.length >= WATCHLIST_MAX &&
-    watchListedStocks.value.length >= WATCHLIST_MAX,
-)
-
-const matchesCategory = (r: WatchlistRow) =>
-  category.value === 'all' ||
-  (category.value === 'crypto' && r.removeType === 'crypto') ||
-  (category.value === 'stocks' && r.removeType === 'stock')
-
-const filteredRows = computed(() => {
-  const q = query.value.trim().toLowerCase()
-  return props.rows.filter(
-    r =>
-      matchesCategory(r) &&
-      (!q ||
-        r.symbol.toLowerCase().includes(q) ||
-        r.name.toLowerCase().includes(q)),
-  )
-})
-
-const displayRows = computed(() =>
-  expanded.value
-    ? filteredRows.value
-    : filteredRows.value.slice(0, INITIAL_COUNT),
-)
-const hiddenCount = computed(() => filteredRows.value.length - INITIAL_COUNT)
-const hasMore = computed(() => !expanded.value && hiddenCount.value > 0)
-
-// Drag only makes sense on the full, unfiltered list.
-const dragDisabled = computed(
-  () => !!query.value.trim() || category.value !== 'all',
-)
-
-// AppTable reports indices within the shown rows: persist a full key order
-// (shown order first, then the rows currently hidden below the fold).
-const reorder = ({ from, to }: { from: number; to: number }) => {
-  const shown = displayRows.value.map(r => r.key)
-  shown.splice(to, 0, ...shown.splice(from, 1))
-  const rest = props.rows.map(r => r.key).filter(k => !shown.includes(k))
-  watchlistStore.setWatchlistOrder([...shown, ...rest])
-}
-
-// Crypto trades via Swap or Bridge (whichever the info drawer would open for
-// this token — swap on the current chain, bridge otherwise), stocks via Trade
-// (Figma). The action opens the wallet side panel in place; it must not
-// navigate away from the home page.
-const actionKey = (row: WatchlistRow) => {
-  if (row.removeType !== 'crypto') return 'homePage.hero.watchlist.table.trade'
-  return row.cta === 'bridge'
-    ? 'homePage.hero.watchlist.table.bridge'
-    : 'homePage.hero.watchlist.table.swap'
-}
-
-const setCategory = (value: 'all' | 'stocks' | 'crypto') => {
-  category.value = value
-  isCategoryOpen.value = false
-}
-
-const remove = (row: WatchlistRow) => {
-  watchlistStore.setWatchlistItem(row.removeId, row.removeType === 'stock')
-}
-
-const actionCall = (row: WatchlistRow) => {
-  if (row.removeType === 'crypto') {
-    // Prime + open the same panel the info drawer would (swap on the current
-    // chain, bridge off it) so the side panel isn't left empty.
-    if (row.cta === 'bridge') {
-      openBridgeForToken(row.symbol, row.name, row.nativeChains, row.chains)
-    } else {
-      openSwapForToken(row.symbol, row.name, row.chains, row.nativeChains)
-    }
-    return
-  }
-  walletMenu.setSelectedTradeTokenSymbol(row.tradeSymbol)
-  walletMenu.openPanel('trade')
-}
-</script>
-
 <template>
   <AppTableWrapper
     v-model:search="query"
@@ -344,3 +196,151 @@ const actionCall = (row: WatchlistRow) => {
     <AddToWatchlistDialog v-if="isAddOpen" v-model:is-open="isAddOpen" />
   </AppTableWrapper>
 </template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTooltip from '@/components/tooltip/AppTooltip.vue'
+import AppTableWrapper from '@/components/table/AppTableWrapper.vue'
+import AppTable from '@/components/table/AppTable.vue'
+import AppTableRow from '@/components/table/AppTableRow.vue'
+import AppTableCell from '@/components/table/AppTableCell.vue'
+import { type TableColumn, TOKEN_LOGO_SIZE } from '@/components/table/types'
+import AddToWatchlistDialog from './AddToWatchlistDialog.vue'
+import { useWatchlistStore, WATCHLIST_MAX } from '@/stores/watchlistTableStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useNewListingSwap } from '@/modules/home/composables/useNewListingSwap'
+import type { WatchlistRow } from '@/modules/home/composables/useWatchlistRows'
+import { stockBaseSymbol } from '@/utils/tokenDisplayName'
+
+import AppIcon from '@/components/icon/AppIcon.vue'
+// Rows are owned by HomeHero (so it can fall back to the banner when there are
+// none to show); this component renders + handles per-row actions, search,
+// category filter, "Show more" and manual drag-reordering.
+const props = defineProps<{ rows: WatchlistRow[] }>()
+
+const { t } = useI18n()
+
+const isAddOpen = ref(false)
+const query = ref('')
+const category = ref<'all' | 'stocks' | 'crypto'>('all')
+const isCategoryOpen = ref(false)
+const expanded = ref(false)
+const INITIAL_COUNT = 5
+
+const CATEGORIES = [
+  { value: 'all', labelKey: 'homePage.hero.watchlist.table.allCategories' },
+  { value: 'stocks', labelKey: 'homePage.hero.watchlist.addModal.tabs.stocks' },
+  { value: 'crypto', labelKey: 'homePage.hero.watchlist.addModal.tabs.crypto' },
+] as const
+
+// Price is the one column kept at size S (it carries the 24h change there).
+const columns = computed<TableColumn[]>(() => [
+  { key: 'token', label: t('homePage.hero.watchlist.table.columns.token') },
+  {
+    key: 'marketCap',
+    label: t('homePage.hero.watchlist.table.columns.marketCap'),
+  },
+  { key: 'volume', label: t('homePage.hero.watchlist.table.columns.volume') },
+  {
+    key: 'change',
+    label: t('homePage.hero.watchlist.table.columns.change24h'),
+  },
+  {
+    key: 'price',
+    label: t('homePage.hero.watchlist.table.columns.price'),
+    primary: true,
+  },
+])
+
+const watchlistStore = useWatchlistStore()
+const walletMenu = useWalletMenuStore()
+const { openSwapForToken, openBridgeForToken } = useNewListingSwap()
+
+// The add modal only offers crypto + stocks, so once both buckets hit the limit
+// there's nothing left to add — hide the "Add asset" button.
+const { watchListedTokens, watchListedStocks } = storeToRefs(watchlistStore)
+const isWatchlistFull = computed(
+  () =>
+    watchListedTokens.value.length >= WATCHLIST_MAX &&
+    watchListedStocks.value.length >= WATCHLIST_MAX,
+)
+
+const matchesCategory = (r: WatchlistRow) =>
+  category.value === 'all' ||
+  (category.value === 'crypto' && r.removeType === 'crypto') ||
+  (category.value === 'stocks' && r.removeType === 'stock')
+
+const filteredRows = computed(() => {
+  const q = query.value.trim().toLowerCase()
+  return props.rows.filter(
+    r =>
+      matchesCategory(r) &&
+      (!q ||
+        r.symbol.toLowerCase().includes(q) ||
+        r.name.toLowerCase().includes(q)),
+  )
+})
+
+const displayRows = computed(() =>
+  expanded.value
+    ? filteredRows.value
+    : filteredRows.value.slice(0, INITIAL_COUNT),
+)
+const hiddenCount = computed(() => filteredRows.value.length - INITIAL_COUNT)
+const hasMore = computed(() => !expanded.value && hiddenCount.value > 0)
+
+// Drag only makes sense on the full, unfiltered list.
+const dragDisabled = computed(
+  () => !!query.value.trim() || category.value !== 'all',
+)
+
+// AppTable reports indices within the shown rows: persist a full key order
+// (shown order first, then the rows currently hidden below the fold).
+const reorder = ({ from, to }: { from: number; to: number }) => {
+  const shown = displayRows.value.map(r => r.key)
+  shown.splice(to, 0, ...shown.splice(from, 1))
+  const rest = props.rows.map(r => r.key).filter(k => !shown.includes(k))
+  watchlistStore.setWatchlistOrder([...shown, ...rest])
+}
+
+// Crypto trades via Swap or Bridge (whichever the info drawer would open for
+// this token — swap on the current chain, bridge otherwise), stocks via Trade
+// (Figma). The action opens the wallet side panel in place; it must not
+// navigate away from the home page.
+const actionKey = (row: WatchlistRow) => {
+  if (row.removeType !== 'crypto') return 'homePage.hero.watchlist.table.trade'
+  return row.cta === 'bridge'
+    ? 'homePage.hero.watchlist.table.bridge'
+    : 'homePage.hero.watchlist.table.swap'
+}
+
+const setCategory = (value: 'all' | 'stocks' | 'crypto') => {
+  category.value = value
+  isCategoryOpen.value = false
+}
+
+const remove = (row: WatchlistRow) => {
+  watchlistStore.setWatchlistItem(row.removeId, row.removeType === 'stock')
+}
+
+const actionCall = (row: WatchlistRow) => {
+  if (row.removeType === 'crypto') {
+    // Prime + open the same panel the info drawer would (swap on the current
+    // chain, bridge off it) so the side panel isn't left empty.
+    if (row.cta === 'bridge') {
+      openBridgeForToken(row.symbol, row.name, row.nativeChains, row.chains)
+    } else {
+      openSwapForToken(row.symbol, row.name, row.chains, row.nativeChains)
+    }
+    return
+  }
+  walletMenu.setSelectedTradeTokenSymbol(row.tradeSymbol)
+  walletMenu.openPanel('trade')
+}
+</script>

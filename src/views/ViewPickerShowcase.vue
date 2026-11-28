@@ -1,37 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Picker design-library component (MEW-2231), reachable at
-// /dev/picker via the design-library shell — see routesDefault.ts. Lets us
-// eyeball the Style × Size matrix, avatar on/off, the L-only description and the
-// disabled state against Figma. Hover and focus are native — hover a row or Tab
-// to it to see those states.
-import { ref } from 'vue'
-import AppPicker from '@/components/picker/AppPicker.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import AppModal from '@/components/modal/AppModal.vue'
-import type { PickerSize, PickerSurface } from '@/components/picker/types'
-
-// Live sample: the picker only emits the click; the page owns the modal and
-// mirrors its open state back through `expanded` (aria-expanded).
-const isDialogOpen = ref(false)
-
-const SIZES: PickerSize[] = ['l', 'm', 's']
-
-// Each style fills the opposite of the surface it sits on, so preview each on the
-// surface it's designed for or the fill would be invisible (white on white).
-const STYLES: { surface: PickerSurface; label: string; page: string }[] = [
-  {
-    surface: 'default',
-    label: 'Style: default — fills white, sits on a default (grey) surface',
-    page: 'bg-background-default',
-  },
-  {
-    surface: 'alternative',
-    label: 'Style: alternative — fills grey, sits on a white surface',
-    page: 'bg-white',
-  },
-]
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -132,3 +98,37 @@ const STYLES: { surface: PickerSurface; label: string; page: string }[] = [
     </AppModal>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Picker design-library component (MEW-2231), reachable at
+// /dev/picker via the design-library shell — see routesDefault.ts. Lets us
+// eyeball the Style × Size matrix, avatar on/off, the L-only description and the
+// disabled state against Figma. Hover and focus are native — hover a row or Tab
+// to it to see those states.
+import { ref } from 'vue'
+import AppPicker from '@/components/picker/AppPicker.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+import type { PickerSize, PickerSurface } from '@/components/picker/types'
+
+// Live sample: the picker only emits the click; the page owns the modal and
+// mirrors its open state back through `expanded` (aria-expanded).
+const isDialogOpen = ref(false)
+
+const SIZES: PickerSize[] = ['l', 'm', 's']
+
+// Each style fills the opposite of the surface it sits on, so preview each on the
+// surface it's designed for or the fill would be invisible (white on white).
+const STYLES: { surface: PickerSurface; label: string; page: string }[] = [
+  {
+    surface: 'default',
+    label: 'Style: default — fills white, sits on a default (grey) surface',
+    page: 'bg-background-default',
+  },
+  {
+    surface: 'alternative',
+    label: 'Style: alternative — fills grey, sits on a white surface',
+    page: 'bg-white',
+  },
+]
+</script>

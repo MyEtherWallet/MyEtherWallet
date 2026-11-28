@@ -1,36 +1,3 @@
-<script setup lang="ts">
-import { computed, type Component } from 'vue'
-import type { RouteLocationRaw } from 'vue-router'
-import gradientPurple from '@/assets/images/home/offers/gradient-purple.png'
-import gradientBlue from '@/assets/images/home/offers/gradient-blue.png'
-import gradientGreen from '@/assets/images/home/offers/gradient-green.png'
-
-import AppIcon from '@/components/icon/AppIcon.vue'
-const props = withDefaults(
-  defineProps<{
-    title: string
-    highlight?: string
-    category?: string
-    icon?: Component
-    gradient?: 'purple' | 'blue' | 'green'
-    to?: RouteLocationRaw
-  }>(),
-  { gradient: 'purple' },
-)
-
-// Colored gradient background image per card variant.
-const GRADIENT_SRC: Record<'purple' | 'blue' | 'green', string> = {
-  purple: gradientPurple,
-  blue: gradientBlue,
-  green: gradientGreen,
-}
-const gradientSrc = computed(() => GRADIENT_SRC[props.gradient])
-
-// Renders as a link when `to` is set, otherwise a real button so consumers
-// can wire a click action (e.g. open a side-drawer module) accessibly.
-const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
-</script>
-
 <template>
   <component
     :is="tag"
@@ -85,3 +52,36 @@ const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
     </div>
   </component>
 </template>
+
+<script setup lang="ts">
+import { computed, type Component } from 'vue'
+import type { RouteLocationRaw } from 'vue-router'
+import gradientPurple from '@/assets/images/home/offers/gradient-purple.png'
+import gradientBlue from '@/assets/images/home/offers/gradient-blue.png'
+import gradientGreen from '@/assets/images/home/offers/gradient-green.png'
+
+import AppIcon from '@/components/icon/AppIcon.vue'
+const props = withDefaults(
+  defineProps<{
+    title: string
+    highlight?: string
+    category?: string
+    icon?: Component
+    gradient?: 'purple' | 'blue' | 'green'
+    to?: RouteLocationRaw
+  }>(),
+  { gradient: 'purple' },
+)
+
+// Colored gradient background image per card variant.
+const GRADIENT_SRC: Record<'purple' | 'blue' | 'green', string> = {
+  purple: gradientPurple,
+  blue: gradientBlue,
+  green: gradientGreen,
+}
+const gradientSrc = computed(() => GRADIENT_SRC[props.gradient])
+
+// Renders as a link when `to` is set, otherwise a real button so consumers
+// can wire a click action (e.g. open a side-drawer module) accessibly.
+const tag = computed(() => (props.to ? 'RouterLink' : 'button'))
+</script>

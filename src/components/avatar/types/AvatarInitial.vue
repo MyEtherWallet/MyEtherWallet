@@ -1,3 +1,12 @@
+<template>
+  <div
+    class="w-full h-full flex items-center justify-center bg-background-brand-subtle text-text-default leading-none uppercase"
+    :class="fontClass"
+  >
+    {{ char }}
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { AvatarSize } from '../types'
@@ -24,12 +33,3 @@ const fontClass = computed(() => FONT[props.size])
 // emoji) isn't split into a lone surrogate half.
 const char = computed(() => Array.from(props.initial ?? '')[0] ?? '')
 </script>
-
-<template>
-  <div
-    class="w-full h-full flex items-center justify-center bg-background-brand-subtle text-text-default leading-none uppercase"
-    :class="fontClass"
-  >
-    {{ char }}
-  </div>
-</template>

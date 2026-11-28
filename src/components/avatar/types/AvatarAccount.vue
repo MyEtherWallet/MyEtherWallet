@@ -1,3 +1,12 @@
+<template>
+  <img
+    v-if="address"
+    :src="blockie"
+    class="w-full h-full rounded-full"
+    alt=""
+  />
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import Blockies from '@/utils/blockies'
@@ -29,12 +38,3 @@ const blockie = computed(() =>
     : '',
 )
 </script>
-
-<template>
-  <img
-    v-if="address"
-    :src="blockie"
-    class="w-full h-full rounded-full"
-    alt=""
-  />
-</template>

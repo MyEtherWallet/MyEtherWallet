@@ -58,7 +58,8 @@
       "protected_by": "安全保障：",
       "download_official": "下载 MEW 官方钱包",
       "ios_android": "iOS 和 Android",
-      "browser_extension": "浏览器扩展"
+      "browser_extension": "浏览器扩展",
+      "create_options": "可创建的钱包"
     },
     "download_mobile": {
       "title": "下载 MEW Mobile 应用",
@@ -110,6 +111,63 @@
     "help_footer": {
       "need_help": "需要帮助？",
       "go_to_help_center": "前往帮助中心"
+    },
+    "social": {
+      "title": "登录/注册",
+      "title_short": "登录/注册",
+      "terms": "登录即表示我同意{terms}和{privacy}",
+      "terms_link": "条款",
+      "privacy_link": "隐私政策",
+      "wallets_label": "使用钱包连接",
+      "other_methods": "其他钱包方式",
+      "google": {
+        "verifying_title": "正在验证与 Google 的连接",
+        "verifying_description": "请稍候片刻…",
+        "connected_title": "已连接到 Google",
+        "connected_description": "一切就绪！"
+      },
+      "code": {
+        "title": "输入确认码",
+        "description": "请查看 {email} 中来自 Privy 的确认码",
+        "incorrect": "确认码不正确，请重试。",
+        "too_many": "尝试次数过多，请重新获取确认码",
+        "no_email": "没有收到邮件？",
+        "resend": "重新发送确认码",
+        "resend_in": "{seconds} 秒后可重新发送",
+        "success": "成功！"
+      },
+      "wallet_setup": {
+        "title": "正在设置你的钱包…",
+        "description": "正在为你设置钱包。它是存放你在 MEW 上交易资产的安全之处。"
+      },
+      "account_ready": {
+        "title": "你的账户已就绪",
+        "description": "选择完成方式。获取新功能、产品动态和优惠活动的更新。",
+        "create_only": "仅创建账户",
+        "get_updates": "获取更新"
+      },
+      "existing": {
+        "title": "以 {email} 继续？",
+        "title_no_email": "继续使用你的账户？",
+        "description": "你在此标签页中仍处于登录状态。",
+        "continue": "继续",
+        "different": "使用其他账户"
+      },
+      "error": {
+        "google_title": "无法连接到 Google",
+        "timeout_title": "耗时比预期更长",
+        "wallet_title": "无法设置你的钱包",
+        "storage_title": "请启用 Cookie/存储以登录",
+        "generic_title": "出了点问题",
+        "description": "请重试，或改用钱包继续。",
+        "try_again": "重试",
+        "use_wallet": "使用钱包继续",
+        "send_code": "无法向该地址发送确认码",
+        "rate_limited": "尝试次数过多，请一分钟后再试"
+      },
+      "toast": {
+        "logged_in": "你已登录"
+      }
     }
   },
   "access_wallet_keystore": {

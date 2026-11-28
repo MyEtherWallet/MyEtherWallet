@@ -1,62 +1,3 @@
-<script setup lang="ts">
-// Preview for the design-library Text Area (MEW-2442) at /dev/text-area.
-// Figma component set 3094:65088: each style on the surface it is meant for,
-// then the boolean props and the Verify Message example (3427:280). Hover a
-// field for Hover; Tab in for Focus; click and type for Active.
-import { reactive, ref } from 'vue'
-import AppTextArea from '@components/text_area/AppTextArea.vue'
-import AppInput from '@components/AppInput.vue'
-import AppBaseButton from '@components/AppBaseButton.vue'
-import { INPUT_SURFACES } from '@components/inputSizes'
-
-const PAGE = {
-  default: 'bg-background-alternative',
-  alternative: 'bg-background-default',
-} as const
-
-const VARIANTS = [
-  { key: 'empty', caption: 'Filled=false', props: {}, value: '' },
-  { key: 'filled', caption: 'Filled=true', props: {}, value: 'User input' },
-  {
-    key: 'empty-error',
-    caption: 'Filled=false, Error=true',
-    props: { errorMessage: 'Error message' },
-    value: '',
-  },
-  {
-    key: 'filled-error',
-    caption: 'Filled=true, Error=true',
-    props: { errorMessage: 'Error message' },
-    value: 'User input',
-  },
-  {
-    key: 'empty-disabled',
-    caption: 'Disabled, Filled=false',
-    props: { disabled: true },
-    value: '',
-  },
-  {
-    key: 'filled-disabled',
-    caption: 'Disabled, Filled=true',
-    props: { disabled: true },
-    value: 'User input',
-  },
-]
-
-const models = reactive<Record<string, string>>({})
-for (const surface of INPUT_SURFACES)
-  for (const v of VARIANTS) models[`${surface}-${v.key}`] = v.value
-
-const withMessage = ref('')
-const withLabel = ref('Hello MEW')
-const withAction = ref('0x9a2f…signature')
-const lastAction = ref('')
-
-const verifyMessage = ref('')
-const verifyAddress = ref('')
-const verifySignature = ref('')
-</script>
-
 <template>
   <div class="mx-auto flex max-w-5xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -160,3 +101,62 @@ const verifySignature = ref('')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the design-library Text Area (MEW-2442) at /dev/text-area.
+// Figma component set 3094:65088: each style on the surface it is meant for,
+// then the boolean props and the Verify Message example (3427:280). Hover a
+// field for Hover; Tab in for Focus; click and type for Active.
+import { reactive, ref } from 'vue'
+import AppTextArea from '@components/text_area/AppTextArea.vue'
+import AppInput from '@components/AppInput.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import { INPUT_SURFACES } from '@components/inputSizes'
+
+const PAGE = {
+  default: 'bg-background-alternative',
+  alternative: 'bg-background-default',
+} as const
+
+const VARIANTS = [
+  { key: 'empty', caption: 'Filled=false', props: {}, value: '' },
+  { key: 'filled', caption: 'Filled=true', props: {}, value: 'User input' },
+  {
+    key: 'empty-error',
+    caption: 'Filled=false, Error=true',
+    props: { errorMessage: 'Error message' },
+    value: '',
+  },
+  {
+    key: 'filled-error',
+    caption: 'Filled=true, Error=true',
+    props: { errorMessage: 'Error message' },
+    value: 'User input',
+  },
+  {
+    key: 'empty-disabled',
+    caption: 'Disabled, Filled=false',
+    props: { disabled: true },
+    value: '',
+  },
+  {
+    key: 'filled-disabled',
+    caption: 'Disabled, Filled=true',
+    props: { disabled: true },
+    value: 'User input',
+  },
+]
+
+const models = reactive<Record<string, string>>({})
+for (const surface of INPUT_SURFACES)
+  for (const v of VARIANTS) models[`${surface}-${v.key}`] = v.value
+
+const withMessage = ref('')
+const withLabel = ref('Hello MEW')
+const withAction = ref('0x9a2f…signature')
+const lastAction = ref('')
+
+const verifyMessage = ref('')
+const verifyAddress = ref('')
+const verifySignature = ref('')
+</script>

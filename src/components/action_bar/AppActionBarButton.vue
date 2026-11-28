@@ -1,3 +1,24 @@
+<template>
+  <button
+    type="button"
+    :disabled="disabled"
+    :aria-label="ariaLabel ?? label"
+    :aria-pressed="label ? active : undefined"
+    class="flex h-18 w-14 sm:w-18 flex-col items-center justify-center gap-2 rounded-16 transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-border-brand disabled:pointer-events-none disabled:opacity-40"
+    :class="
+      active ? 'bg-background-brand-subtle' : 'hover:bg-background-default'
+    "
+  >
+    <AppIcon :name="icon" variant="filled" class="text-icon-brand" />
+    <span
+      v-if="label"
+      class="line-clamp-2 w-full break-words text-center text-overline text-text-default"
+    >
+      {{ label }}
+    </span>
+  </button>
+</template>
+
 <script setup lang="ts">
 import { warn } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -34,24 +55,3 @@ if (!props.label && !props.ariaLabel) {
   warn('AppActionBarButton: an icon-only button needs an ariaLabel.')
 }
 </script>
-
-<template>
-  <button
-    type="button"
-    :disabled="disabled"
-    :aria-label="ariaLabel ?? label"
-    :aria-pressed="label ? active : undefined"
-    class="flex h-18 w-14 sm:w-18 flex-col items-center justify-center gap-2 rounded-16 transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-border-brand disabled:pointer-events-none disabled:opacity-40"
-    :class="
-      active ? 'bg-background-brand-subtle' : 'hover:bg-background-default'
-    "
-  >
-    <AppIcon :name="icon" variant="filled" class="text-icon-brand" />
-    <span
-      v-if="label"
-      class="line-clamp-2 w-full break-words text-center text-overline text-text-default"
-    >
-      {{ label }}
-    </span>
-  </button>
-</template>

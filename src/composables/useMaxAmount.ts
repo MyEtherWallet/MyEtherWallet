@@ -2,7 +2,7 @@ import { ref, watch, nextTick } from 'vue'
 import { formatUnits } from 'viem'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { WalletType } from '@/providers/types'
+import { isInAppSigner } from '@/utils/walletUtils'
 
 export interface UseMaxAmountOptions {
   getBalance: () => bigint
@@ -48,19 +48,12 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
   const isFreshMaxClick = ref(false)
   const selectedPercentage = ref(100)
 
-  const isInternalWallet = (): boolean => {
-    const walletType = wallet.value?.getWalletType()
-    return (
-      walletType === WalletType.PRIVATE_KEY ||
-      walletType === WalletType.MNEMONIC
-    )
-  }
-
   // MEW-2612: MAX on a token sends its whole balance, so any wallet can use it.
   // On the native token it holds back our fee estimate, which only holds for
-  // wallets that sign here (private key, keystore, mnemonic): an external
-  // wallet can change the gas outside the app.
-  const canUseMax = (): boolean => !isNativeToken() || isInternalWallet()
+  // wallets that sign here (private key, keystore, mnemonic, Privy): an
+  // external wallet can change the gas outside the app.
+  const canUseMax = (): boolean =>
+    !isNativeToken() || isInAppSigner(wallet.value)
 
   // `Math.trunc(Math.min(100, Math.max(0, NaN)))` is NaN, and `BigInt(NaN)`
   // throws — so non-finite input has to be rejected before either use.

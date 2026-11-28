@@ -104,7 +104,15 @@ export const initAnalytics = async (): Promise<void> => {
     debugMode: configs.BUILD_MODE !== 'production',
     sampleRate: 0.8,
     privacyConfig: {
-      maskSelector: ['[data-private]'],
+      // Anything marked `data-private` is left out of recordings altogether:
+      // a placeholder box, no text and no attributes. Masking is not enough
+      // for a recovery phrase, it keeps the length of every word.
+      blockSelector: ['[data-private]'],
+      // Fallback should the settings the recorder fetches ever replace the
+      // rule above: mask the text instead. Written differently on purpose.
+      // The recorder keeps one rule per selector string, and "mask" would
+      // replace "block" if both used the same one.
+      maskSelector: ['*[data-private]'],
       defaultMaskLevel: 'light',
     },
   })

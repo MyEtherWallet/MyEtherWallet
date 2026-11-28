@@ -1,3 +1,43 @@
+<template>
+  <RouterLink
+    v-if="to"
+    v-slot="{ href, navigate, isActive, isExactActive }"
+    :to="to"
+    custom
+  >
+    <a
+      v-bind="$attrs"
+      data-testid="nav-link"
+      :href="href"
+      :class="linkClass(exact ? isExactActive : isActive)"
+      :aria-current="isExactActive ? 'page' : undefined"
+      :aria-haspopup="dropdown ? 'menu' : undefined"
+      :aria-expanded="dropdown ? expanded : undefined"
+      @click="navigate"
+    >
+      <span class="px-1"
+        ><slot>{{ label }}</slot></span
+      >
+      <AppIcon v-if="dropdown" name="chevron-down" variant="filled" size="s" />
+    </a>
+  </RouterLink>
+
+  <button
+    v-else
+    v-bind="$attrs"
+    type="button"
+    data-testid="nav-link"
+    :class="linkClass(false)"
+    :aria-haspopup="dropdown ? 'menu' : undefined"
+    :aria-expanded="dropdown ? expanded : undefined"
+  >
+    <span class="px-1"
+      ><slot>{{ label }}</slot></span
+    >
+    <AppIcon v-if="dropdown" name="chevron-down" variant="filled" size="s" />
+  </button>
+</template>
+
 <script setup lang="ts">
 import { RouterLink, type RouteLocationRaw } from 'vue-router'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -50,43 +90,3 @@ const linkClass = (routeActive: boolean) => [
   isSelected(routeActive) ? NAV_LINK_CLASS.selected : NAV_LINK_CLASS.rest,
 ]
 </script>
-
-<template>
-  <RouterLink
-    v-if="to"
-    v-slot="{ href, navigate, isActive, isExactActive }"
-    :to="to"
-    custom
-  >
-    <a
-      v-bind="$attrs"
-      data-testid="nav-link"
-      :href="href"
-      :class="linkClass(exact ? isExactActive : isActive)"
-      :aria-current="isExactActive ? 'page' : undefined"
-      :aria-haspopup="dropdown ? 'menu' : undefined"
-      :aria-expanded="dropdown ? expanded : undefined"
-      @click="navigate"
-    >
-      <span class="px-1"
-        ><slot>{{ label }}</slot></span
-      >
-      <AppIcon v-if="dropdown" name="chevron-down" variant="filled" size="s" />
-    </a>
-  </RouterLink>
-
-  <button
-    v-else
-    v-bind="$attrs"
-    type="button"
-    data-testid="nav-link"
-    :class="linkClass(false)"
-    :aria-haspopup="dropdown ? 'menu' : undefined"
-    :aria-expanded="dropdown ? expanded : undefined"
-  >
-    <span class="px-1"
-      ><slot>{{ label }}</slot></span
-    >
-    <AppIcon v-if="dropdown" name="chevron-down" variant="filled" size="s" />
-  </button>
-</template>

@@ -1,3 +1,65 @@
+<template>
+  <div
+    data-testid="cg-root"
+    class="flex flex-col min-w-0"
+    :class="[alignClass, { 'gap-1': size === 'l' }]"
+  >
+    <!-- Loading: 12px bars (4px radius) in rows as tall as the text lines. The
+         rows are flex so a bar never sits in a line box, which would take the
+         inherited line-height and stretch the row. -->
+    <template v-if="loading">
+      <div class="flex" :class="[rowJustifyClass, skeletonRowClass(inverted)]">
+        <AppSkeleton class="h-3 w-[35px]" />
+      </div>
+      <div
+        v-if="hasDescription"
+        class="flex"
+        :class="[rowJustifyClass, skeletonRowClass(!inverted)]"
+      >
+        <AppSkeleton class="h-3 w-[79px]" />
+      </div>
+    </template>
+
+    <template v-else>
+      <div class="flex items-center gap-1 min-w-0" :class="rowJustifyClass">
+        <span
+          data-testid="cg-title"
+          class="min-w-0"
+          :class="[titleClass, { truncate: !wrapTitle }]"
+        >
+          <slot name="title">{{ title }}</slot>
+        </span>
+        <span
+          v-if="slots['title-icon']"
+          class="flex shrink-0 items-center gap-1"
+        >
+          <slot name="title-icon" :size="SLOT_SIZE" />
+        </span>
+      </div>
+
+      <div
+        v-if="hasDescription"
+        class="flex items-center gap-1 min-w-0"
+        :class="rowJustifyClass"
+      >
+        <span
+          data-testid="cg-description"
+          class="min-w-0"
+          :class="descriptionClass"
+        >
+          <slot name="description">{{ description }}</slot>
+        </span>
+        <span
+          v-if="slots['description-icon']"
+          class="flex shrink-0 items-center gap-1"
+        >
+          <slot name="description-icon" :size="SLOT_SIZE" />
+        </span>
+      </div>
+    </template>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
 import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
@@ -108,65 +170,3 @@ const descriptionClass = computed(() => [
   props.noWrap ? 'truncate' : '',
 ])
 </script>
-
-<template>
-  <div
-    data-testid="cg-root"
-    class="flex flex-col min-w-0"
-    :class="[alignClass, { 'gap-1': size === 'l' }]"
-  >
-    <!-- Loading: 12px bars (4px radius) in rows as tall as the text lines. The
-         rows are flex so a bar never sits in a line box, which would take the
-         inherited line-height and stretch the row. -->
-    <template v-if="loading">
-      <div class="flex" :class="[rowJustifyClass, skeletonRowClass(inverted)]">
-        <AppSkeleton class="h-3 w-[35px]" />
-      </div>
-      <div
-        v-if="hasDescription"
-        class="flex"
-        :class="[rowJustifyClass, skeletonRowClass(!inverted)]"
-      >
-        <AppSkeleton class="h-3 w-[79px]" />
-      </div>
-    </template>
-
-    <template v-else>
-      <div class="flex items-center gap-1 min-w-0" :class="rowJustifyClass">
-        <span
-          data-testid="cg-title"
-          class="min-w-0"
-          :class="[titleClass, { truncate: !wrapTitle }]"
-        >
-          <slot name="title">{{ title }}</slot>
-        </span>
-        <span
-          v-if="slots['title-icon']"
-          class="flex shrink-0 items-center gap-1"
-        >
-          <slot name="title-icon" :size="SLOT_SIZE" />
-        </span>
-      </div>
-
-      <div
-        v-if="hasDescription"
-        class="flex items-center gap-1 min-w-0"
-        :class="rowJustifyClass"
-      >
-        <span
-          data-testid="cg-description"
-          class="min-w-0"
-          :class="descriptionClass"
-        >
-          <slot name="description">{{ description }}</slot>
-        </span>
-        <span
-          v-if="slots['description-icon']"
-          class="flex shrink-0 items-center gap-1"
-        >
-          <slot name="description-icon" :size="SLOT_SIZE" />
-        </span>
-      </div>
-    </template>
-  </div>
-</template>

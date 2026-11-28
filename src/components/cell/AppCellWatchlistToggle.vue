@@ -1,3 +1,21 @@
+<template>
+  <AppBtnIcon
+    :size="size"
+    icon="star"
+    :icon-variant="modelValue ? 'filled' : 'stroke'"
+    :class="modelValue ? 'text-icon-brand' : 'text-icon-default'"
+    :label="
+      modelValue
+        ? t('common.remove_from_watchlist')
+        : t('common.add_to_watchlist')
+    "
+    :aria-pressed="modelValue"
+    :disabled="loading"
+    @click="toggle"
+    @keydown.enter.space.stop
+  />
+</template>
+
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
@@ -26,21 +44,3 @@ const toggle = (e: MouseEvent) => {
   emit('update:modelValue', !props.modelValue)
 }
 </script>
-
-<template>
-  <AppBtnIcon
-    :size="size"
-    icon="star"
-    :icon-variant="modelValue ? 'filled' : 'stroke'"
-    :class="modelValue ? 'text-icon-brand' : 'text-icon-default'"
-    :label="
-      modelValue
-        ? t('common.remove_from_watchlist')
-        : t('common.add_to_watchlist')
-    "
-    :aria-pressed="modelValue"
-    :disabled="loading"
-    @click="toggle"
-    @keydown.enter.space.stop
-  />
-</template>

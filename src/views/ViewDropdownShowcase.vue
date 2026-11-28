@@ -1,75 +1,3 @@
-<script setup lang="ts">
-// Preview for the Dropdown design-library component (MEW-2468) at
-// /dev/dropdown. Figma: MEW Web App — Design Library › Dropdown (2555:12846) —
-// Size × Style × State, plus live single-select, action-menu and flip demos.
-import { computed, ref } from 'vue'
-import AppDropdown from '@components/dropdown/AppDropdown.vue'
-import AppCell from '@components/cell/AppCell.vue'
-import AppAvatar from '@components/avatar/AppAvatar.vue'
-import AppDivider from '@components/divider/AppDivider.vue'
-import AppIcon from '@components/icon/AppIcon.vue'
-import AppTag from '@components/tag/AppTag.vue'
-import type { DropdownSize, DropdownSurface } from '@components/dropdown/types'
-// Dev-only sample logos, as in the Avatar preview.
-import sampleWallet from '@/assets/images/access/ledger.webp'
-import sampleCrypto from '@/assets/icons/avatar_samples/crypto.svg'
-
-const SIZES: { size: DropdownSize; title: string }[] = [
-  { size: 'm', title: 'Title' },
-  { size: 's', title: 'Label' },
-]
-
-const SURFACES: { surface: DropdownSurface; label: string; page: string }[] = [
-  {
-    surface: 'default',
-    label: 'on default — white field on the grey page',
-    page: 'bg-background-default',
-  },
-  {
-    surface: 'alternative',
-    label: 'on alternative — grey field on a white card',
-    page: 'bg-background-alternative',
-  },
-]
-
-// Open has its own section at the top: always open (controlled, never closed)
-// and with room below, so it doesn't flip over the grids.
-const STATES = [
-  { label: 'Default', props: {} },
-  { label: 'Hover / Pressed (interact)', props: {} },
-  { label: 'Focus (tab into it)', props: {} },
-  { label: 'Disabled', props: { disabled: true } },
-] as const
-
-const keepOpen = () => {}
-
-const NETWORKS = [
-  'Ethereum',
-  'Arbitrum',
-  'Avalanche',
-  'Base',
-  'BNB Chain',
-  'Optimism',
-  'Polygon',
-  'Scroll',
-  'Sonic',
-  'Unichain',
-  'zkSync',
-  'Linea',
-]
-
-const network = ref('Ethereum')
-const query = ref('')
-const shownNetworks = computed(() =>
-  NETWORKS.filter(name =>
-    name.toLowerCase().includes(query.value.trim().toLowerCase()),
-  ),
-)
-
-const ACTIONS = ['Copy address', 'View on explorer', 'Rename', 'Remove']
-const lastAction = ref('none')
-</script>
-
 <template>
   <div class="mx-auto flex max-w-6xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -250,3 +178,75 @@ const lastAction = ref('none')
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Dropdown design-library component (MEW-2468) at
+// /dev/dropdown. Figma: MEW Web App — Design Library › Dropdown (2555:12846) —
+// Size × Style × State, plus live single-select, action-menu and flip demos.
+import { computed, ref } from 'vue'
+import AppDropdown from '@components/dropdown/AppDropdown.vue'
+import AppCell from '@components/cell/AppCell.vue'
+import AppAvatar from '@components/avatar/AppAvatar.vue'
+import AppDivider from '@components/divider/AppDivider.vue'
+import AppIcon from '@components/icon/AppIcon.vue'
+import AppTag from '@components/tag/AppTag.vue'
+import type { DropdownSize, DropdownSurface } from '@components/dropdown/types'
+// Dev-only sample logos, as in the Avatar preview.
+import sampleWallet from '@/assets/images/access/ledger.webp'
+import sampleCrypto from '@/assets/icons/avatar_samples/crypto.svg'
+
+const SIZES: { size: DropdownSize; title: string }[] = [
+  { size: 'm', title: 'Title' },
+  { size: 's', title: 'Label' },
+]
+
+const SURFACES: { surface: DropdownSurface; label: string; page: string }[] = [
+  {
+    surface: 'default',
+    label: 'on default — white field on the grey page',
+    page: 'bg-background-default',
+  },
+  {
+    surface: 'alternative',
+    label: 'on alternative — grey field on a white card',
+    page: 'bg-background-alternative',
+  },
+]
+
+// Open has its own section at the top: always open (controlled, never closed)
+// and with room below, so it doesn't flip over the grids.
+const STATES = [
+  { label: 'Default', props: {} },
+  { label: 'Hover / Pressed (interact)', props: {} },
+  { label: 'Focus (tab into it)', props: {} },
+  { label: 'Disabled', props: { disabled: true } },
+] as const
+
+const keepOpen = () => {}
+
+const NETWORKS = [
+  'Ethereum',
+  'Arbitrum',
+  'Avalanche',
+  'Base',
+  'BNB Chain',
+  'Optimism',
+  'Polygon',
+  'Scroll',
+  'Sonic',
+  'Unichain',
+  'zkSync',
+  'Linea',
+]
+
+const network = ref('Ethereum')
+const query = ref('')
+const shownNetworks = computed(() =>
+  NETWORKS.filter(name =>
+    name.toLowerCase().includes(query.value.trim().toLowerCase()),
+  ),
+)
+
+const ACTIONS = ['Copy address', 'View on explorer', 'Rename', 'Remove']
+const lastAction = ref('none')
+</script>

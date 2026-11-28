@@ -1,3 +1,25 @@
+<template>
+  <div class="relative">
+    <AppTabBar v-model="activeTabIndex" :tabs="tabLabels" />
+    <div class="relative mt-6">
+      <AppSlideGroup ref="slideGroup" :total-items="tabSectors.length" edge-nav>
+        <template
+          v-for="(s, index) in tabSectors"
+          :key="s.id"
+          #[`item-${index}`]
+        >
+          <AppIndustrySectorTile
+            :label="t(s.labelKey)"
+            :color="s.color"
+            :icon="s.icon"
+            :to="sectorLink(s)"
+          />
+        </template>
+      </AppSlideGroup>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, ref, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -28,25 +50,3 @@ const tabSectors = computed(() =>
   ),
 )
 </script>
-
-<template>
-  <div class="relative">
-    <AppTabBar v-model="activeTabIndex" :tabs="tabLabels" />
-    <div class="relative mt-6">
-      <AppSlideGroup ref="slideGroup" :total-items="tabSectors.length" edge-nav>
-        <template
-          v-for="(s, index) in tabSectors"
-          :key="s.id"
-          #[`item-${index}`]
-        >
-          <AppIndustrySectorTile
-            :label="t(s.labelKey)"
-            :color="s.color"
-            :icon="s.icon"
-            :to="sectorLink(s)"
-          />
-        </template>
-      </AppSlideGroup>
-    </div>
-  </div>
-</template>

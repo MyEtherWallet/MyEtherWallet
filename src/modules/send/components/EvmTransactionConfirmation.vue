@@ -125,6 +125,7 @@ import { WalletType } from '@/providers/types'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import { useI18n } from 'vue-i18n'
 import {
+  isInAppSigner,
   isSignableWallet,
   isUserRejectionError,
   getLocalizedWalletError,
@@ -222,10 +223,8 @@ const confirmTransaction = async () => {
     if (!wallet.value) {
       return
     }
-    showApproveMessage.value = !(
-      wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
-      wallet.value?.getWalletType() === WalletType.MNEMONIC
-    )
+    // A wallet that signs in the app has nothing outside it to approve on.
+    showApproveMessage.value = !isInAppSigner(wallet.value)
     signing.value = true
     // This is done because the modal needs to be shown and the user needs to actually
     // consent to signing the transaction

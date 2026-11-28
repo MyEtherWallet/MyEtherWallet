@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 const walletStore = {
   activeId: 'EVM:0xactive',
   setWallet: vi.fn(),
+  rememberActiveAddress: vi.fn(),
   disconnectWallet: vi.fn(),
   walletAddress: '0xactive',
   isWatchOnly: false,
@@ -32,6 +33,8 @@ vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => chainsStore }))
 vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => accessStore }))
 vi.mock('@/stores/globalStore', () => ({ useGlobalStore: () => globalStore }))
 vi.mock('@/stores/toastStore', () => ({ useToastStore: () => toastStore }))
+const authStore = { endLoginFor: vi.fn(async () => undefined) }
+vi.mock('@/stores/authStore', () => ({ useAuthStore: () => authStore }))
 vi.mock('@/modules/access/common/walletConfigs', () => ({ walletConfigs: {} }))
 vi.mock('@/providers/common/watchOnlyWallet', () => ({
   default: class { constructor(public a: string) {} },
@@ -80,6 +83,26 @@ describe('useAccountSwitch', () => {
     expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
   })
 
+  it('makes an account on another network type the remembered one for that type, before the network follows', async () => {
+    await useAccountSwitch().switchTo(
+      acc({ id: 'BITCOIN:bc1q', address: 'bc1q', chainType: 'BITCOIN' as any }),
+    )
+
+    expect(walletStore.rememberActiveAddress).toHaveBeenCalledWith('BITCOIN', 'bc1q')
+    // The network change is what triggers the wallet store's fallback.
+    expect(
+      walletStore.rememberActiveAddress.mock.invocationCallOrder[0],
+    ).toBeLessThan(globalStore.setSelectedNetwork.mock.invocationCallOrder[0])
+    expect(globalStore.setSelectedNetwork).toHaveBeenCalledWith('BTC')
+  })
+
+  it('leaves the remembered address alone for an account on the network type already selected', async () => {
+    await useAccountSwitch().switchTo(acc())
+
+    expect(walletStore.rememberActiveAddress).not.toHaveBeenCalled()
+    expect(globalStore.setSelectedNetwork).not.toHaveBeenCalled()
+  })
+
   it('deleteAccount removes and promotes the next entry as a read-only view when active', async () => {
     watchOnly.watchOnlyAddresses = {
       EVM: [{ address: '0xother', walletName: 'W', chain: { type: 'EVM', name: 'ETH' }, type: 'EVM', walletType: 'INJECTED', addressName: 'Address 3' }],
@@ -88,6 +111,29 @@ describe('useAccountSwitch', () => {
     await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xactive', address: '0xactive' }))
     expect(watchOnly.removeWallet).toHaveBeenCalledWith('0xactive', expect.objectContaining({ type: 'EVM' }))
     expect(walletStore.setWallet).toHaveBeenCalledTimes(1)
+  })
+
+  it('deleteAccount ends the Privy login of a deleted Privy address before removing it', async () => {
+    const order: string[] = []
+    authStore.endLoginFor.mockImplementationOnce(async () => {
+      order.push('end-login')
+    })
+    watchOnly.removeWallet.mockImplementationOnce(() => order.push('remove'))
+
+    await useAccountSwitch().deleteAccount({
+      ...acc({ id: 'EVM:0xprivy', address: '0xprivy' }),
+      providerType: 'PRIVY',
+    } as SavedAccount)
+
+    expect(authStore.endLoginFor).toHaveBeenCalledWith('0xprivy')
+    expect(order).toEqual(['end-login', 'remove'])
+  })
+
+  it('deleteAccount leaves Privy alone when another kind of address is deleted', async () => {
+
+    await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xother', address: '0xother' }))
+
+    expect(authStore.endLoginFor).not.toHaveBeenCalled()
   })
 
   it('deleteAccount disconnects when nothing remains', async () => {

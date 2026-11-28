@@ -1,3 +1,26 @@
+<template>
+  <span
+    v-if="isLabelled"
+    role="img"
+    :aria-label="label"
+    class="inline-flex shrink-0"
+  >
+    <component
+      :is="component"
+      :class="sizeClass"
+      aria-hidden="true"
+      focusable="false"
+    />
+  </span>
+  <component
+    :is="component"
+    v-else
+    :class="sizeClass"
+    aria-hidden="true"
+    focusable="false"
+  />
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import {
@@ -51,26 +74,3 @@ const component = computed(
 const sizeClass = computed(() => ICON_SIZE_CLASS[props.size])
 const isLabelled = computed(() => !!props.label)
 </script>
-
-<template>
-  <span
-    v-if="isLabelled"
-    role="img"
-    :aria-label="label"
-    class="inline-flex shrink-0"
-  >
-    <component
-      :is="component"
-      :class="sizeClass"
-      aria-hidden="true"
-      focusable="false"
-    />
-  </span>
-  <component
-    :is="component"
-    v-else
-    :class="sizeClass"
-    aria-hidden="true"
-    focusable="false"
-  />
-</template>

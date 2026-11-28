@@ -133,6 +133,74 @@ describe('AppAddressSelector — design-library Address selector (MEW-2462)', ()
     expect(hasEye(watchOnly)).toBe(true)
   })
 
+  it('shows only the login email for a Google / email account', () => {
+    const wrapper = mountSelector({ email: 'ada@example.com', name: 'Privy' })
+    const email = wrapper.get('[data-test="address-selector-email"]')
+    expect(email.text()).toBe('ada@example.com')
+    // Figma: the email stands alone, without balance, name or connected dot.
+    expect(wrapper.text()).not.toContain('$130.23')
+    expect(wrapper.text()).not.toContain('Privy')
+    expect(
+      wrapper.find('[data-test="address-selector-connected"]').exists(),
+    ).toBe(false)
+    expect(wrapper.findComponent(AppAvatar).props('address')).toBe(ADDRESS)
+  })
+
+  it('keeps the email out of session replay: marked private, and in no attribute', () => {
+    const address =
+      'a.very.long.name.for.an.inbox@a-long-company-domain.example'
+    const wrapper = mountSelector({ email: address })
+    const email = wrapper.get('[data-test="address-selector-email"]')
+    // The mark covers the text. Attributes are recorded whatever the mark
+    // says, so the email may not be in a title, an aria-label or any other.
+    expect(email.attributes('data-private')).toBeDefined()
+    const pill = button(wrapper).element
+    for (const el of [pill, ...pill.querySelectorAll('*')]) {
+      for (const attribute of Array.from(el.attributes)) {
+        expect(attribute.value).not.toContain(address)
+        expect(attribute.value).not.toContain('a.very.long.name')
+      }
+    }
+  })
+
+  it('still names the pill for screen readers by the email and the connection', () => {
+    const wrapper = mountSelector({ email: 'ada@example.com' })
+    const pill = button(wrapper)
+    // Named by the elements that hold the text, not by copying it.
+    expect(pill.attributes('aria-label')).toBeUndefined()
+    const name = pill
+      .attributes('aria-labelledby')!
+      .split(' ')
+      .map(id => wrapper.get(`#${id}`).text())
+    expect(name).toEqual(['ada@example.com', 'Connected'])
+  })
+
+  it('falls back to its usual name when there is an email but no address to show it for', () => {
+    const pill = button(
+      mountSelector({ email: 'ada@example.com', address: '' }),
+    )
+    expect(pill.attributes('aria-labelledby')).toBeUndefined()
+    expect(pill.attributes('aria-label')).toBe('No address')
+  })
+
+  it('keeps a long email from stretching the navbar', () => {
+    const email = mountSelector({
+      email: 'a.very.long.name.for.an.inbox@a-long-company-domain.example',
+    }).get('[data-test="address-selector-email"]')
+    expect(email.classes()).toContain('truncate')
+    expect(email.classes().some(c => c.startsWith('max-w-'))).toBe(true)
+  })
+
+  it('shows the email even while balances load', () => {
+    const wrapper = mountSelector({ email: 'ada@example.com', loading: true })
+    expect(wrapper.get('[data-test="address-selector-email"]').text()).toBe(
+      'ada@example.com',
+    )
+    expect(
+      wrapper.find('[data-test="address-selector-loading"]').exists(),
+    ).toBe(false)
+  })
+
   it('flips the chevron, drops the hover fill and reports aria-expanded while open', () => {
     const closed = button(mountSelector())
     expect(closed.attributes('aria-expanded')).toBe('false')

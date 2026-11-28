@@ -1,62 +1,3 @@
-<script setup lang="ts">
-// Preview for the Accordion design-library component (MEW-2465) at
-// /dev/accordion. Figma: MEW Web App — Design Library › ↳ Acordion, set
-// 2387:27248 — Style × Open × State, each style on the surface it is meant for,
-// then a real body, groups and a live loading toggle.
-import { ref } from 'vue'
-import AppAccordion from '@components/accordion/AppAccordion.vue'
-import AppAccordionGroup from '@components/accordion/AppAccordionGroup.vue'
-import AppAvatar from '@components/avatar/AppAvatar.vue'
-import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
-import AppBaseButton from '@components/AppBaseButton.vue'
-import AppCell from '@components/cell/AppCell.vue'
-import AppDivider from '@components/divider/AppDivider.vue'
-import type {
-  CellRightAccessory,
-  CellSurface,
-} from '@components/cell/cellSizes'
-
-const BALANCE: CellRightAccessory = {
-  kind: 'balance',
-  primary: '$1,230',
-  secondary: '1,230 USDC',
-}
-
-const SURFACES: { surface: CellSurface; label: string; page: string }[] = [
-  {
-    surface: 'default',
-    label: 'Style: Default — white accordion on the grey page',
-    page: 'bg-background-default',
-  },
-  {
-    surface: 'alternative',
-    label: 'Style: Alternative — grey accordion on a white card',
-    page: 'bg-background-alternative',
-  },
-]
-
-const STATES = [
-  { label: 'Default', props: {} },
-  { label: 'Hover / Pressed (interact)', props: {} },
-  { label: 'Focus (tab into it)', props: {} },
-  { label: 'Disabled', props: { disabled: true } },
-  { label: 'Loading', props: { loading: true } },
-] as const
-
-const OPEN_STATES = [
-  { label: 'Open: False', open: false },
-  { label: 'Open: True', open: true },
-] as const
-
-const GROUP_ITEMS = ['Ethereum', 'Bitcoin', 'Solana'] as const
-
-const toggles = ref(0)
-const liveOpen = ref(true)
-const liveLoading = ref(true)
-const singleOpen = ref<string | null>('Ethereum')
-const multipleOpen = ref<string[]>(['Ethereum'])
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -241,3 +182,62 @@ const multipleOpen = ref<string[]>(['Ethereum'])
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Accordion design-library component (MEW-2465) at
+// /dev/accordion. Figma: MEW Web App — Design Library › ↳ Acordion, set
+// 2387:27248 — Style × Open × State, each style on the surface it is meant for,
+// then a real body, groups and a live loading toggle.
+import { ref } from 'vue'
+import AppAccordion from '@components/accordion/AppAccordion.vue'
+import AppAccordionGroup from '@components/accordion/AppAccordionGroup.vue'
+import AppAvatar from '@components/avatar/AppAvatar.vue'
+import AppAvatarBadge from '@components/avatar/AppAvatarBadge.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppCell from '@components/cell/AppCell.vue'
+import AppDivider from '@components/divider/AppDivider.vue'
+import type {
+  CellRightAccessory,
+  CellSurface,
+} from '@components/cell/cellSizes'
+
+const BALANCE: CellRightAccessory = {
+  kind: 'balance',
+  primary: '$1,230',
+  secondary: '1,230 USDC',
+}
+
+const SURFACES: { surface: CellSurface; label: string; page: string }[] = [
+  {
+    surface: 'default',
+    label: 'Style: Default — white accordion on the grey page',
+    page: 'bg-background-default',
+  },
+  {
+    surface: 'alternative',
+    label: 'Style: Alternative — grey accordion on a white card',
+    page: 'bg-background-alternative',
+  },
+]
+
+const STATES = [
+  { label: 'Default', props: {} },
+  { label: 'Hover / Pressed (interact)', props: {} },
+  { label: 'Focus (tab into it)', props: {} },
+  { label: 'Disabled', props: { disabled: true } },
+  { label: 'Loading', props: { loading: true } },
+] as const
+
+const OPEN_STATES = [
+  { label: 'Open: False', open: false },
+  { label: 'Open: True', open: true },
+] as const
+
+const GROUP_ITEMS = ['Ethereum', 'Bitcoin', 'Solana'] as const
+
+const toggles = ref(0)
+const liveOpen = ref(true)
+const liveLoading = ref(true)
+const singleOpen = ref<string | null>('Ethereum')
+const multipleOpen = ref<string[]>(['Ethereum'])
+</script>

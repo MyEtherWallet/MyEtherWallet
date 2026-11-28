@@ -1,23 +1,3 @@
-<script setup lang="ts">
-/**
- * Spinner (Figma: MEW Web App — Design Library › Spinner, node 474:1124).
- * A 20% track with a quarter arc; the four Figma frames are its rotation.
- *
- * @example
- * <AppSpinner :size="20" color="inverted" />
- */
-import { useI18n } from 'vue-i18n'
-import { SPINNER_COLOR_CLASS, type AppSpinnerProps } from './types'
-
-withDefaults(defineProps<AppSpinnerProps>(), {
-  size: 32,
-  color: 'default',
-  label: undefined,
-})
-
-const { t } = useI18n()
-</script>
-
 <template>
   <svg
     :width="size"
@@ -46,6 +26,26 @@ const { t } = useI18n()
     />
   </svg>
 </template>
+
+<script setup lang="ts">
+/**
+ * Spinner (Figma: MEW Web App — Design Library › Spinner, node 474:1124).
+ * A 20% track with a quarter arc; the four Figma frames are its rotation.
+ *
+ * @example
+ * <AppSpinner :size="20" color="inverted" />
+ */
+import { useI18n } from 'vue-i18n'
+import { SPINNER_COLOR_CLASS, type AppSpinnerProps } from './types'
+
+withDefaults(defineProps<AppSpinnerProps>(), {
+  size: 32,
+  color: 'default',
+  label: undefined,
+})
+
+const { t } = useI18n()
+</script>
 
 <style scoped>
 @media (prefers-reduced-motion: reduce) {

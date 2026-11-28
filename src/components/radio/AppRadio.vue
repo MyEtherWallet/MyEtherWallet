@@ -1,3 +1,50 @@
+<template>
+  <label
+    :for="inputId"
+    :class="[
+      'group/radio inline-flex items-start gap-2',
+      disabled ? 'cursor-default' : 'cursor-pointer',
+      $attrs.class,
+    ]"
+    :style="$attrs.style as StyleValue"
+  >
+    <input
+      :id="inputId"
+      v-bind="{ ...$attrs, class: undefined, style: undefined }"
+      type="radio"
+      class="peer sr-only"
+      :name="name"
+      :value="value"
+      :checked="checked"
+      :disabled="disabled"
+      @change="model = value"
+    />
+    <span
+      data-testid="radio-circle"
+      aria-hidden="true"
+      :class="[
+        'flex size-5 shrink-0 items-center justify-center rounded-full border transition-shadow duration-150',
+        'peer-focus-visible:ring-0 peer-focus-visible:outline-4 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-border-focus',
+        circleClass,
+      ]"
+    >
+      <AppIcon
+        v-if="checked"
+        name="check"
+        size="xxs"
+        class="size-3! text-icon-inverted"
+      />
+    </span>
+    <span
+      v-if="label || $slots.default"
+      class="text-text-sm"
+      :class="disabled ? 'text-text-disabled' : 'text-text-default'"
+    >
+      <slot>{{ label }}</slot>
+    </span>
+  </label>
+</template>
+
 <script setup lang="ts" generic="T extends RadioValue">
 import { computed, useId, type StyleValue } from 'vue'
 import AppIcon from '@/components/icon/AppIcon.vue'
@@ -52,50 +99,3 @@ const circleClass = computed(() => {
     : 'bg-background-formfield border-border-strong group-hover/radio:ring-4 group-hover/radio:ring-background-default-hover'
 })
 </script>
-
-<template>
-  <label
-    :for="inputId"
-    :class="[
-      'group/radio inline-flex items-start gap-2',
-      disabled ? 'cursor-default' : 'cursor-pointer',
-      $attrs.class,
-    ]"
-    :style="$attrs.style as StyleValue"
-  >
-    <input
-      :id="inputId"
-      v-bind="{ ...$attrs, class: undefined, style: undefined }"
-      type="radio"
-      class="peer sr-only"
-      :name="name"
-      :value="value"
-      :checked="checked"
-      :disabled="disabled"
-      @change="model = value"
-    />
-    <span
-      data-testid="radio-circle"
-      aria-hidden="true"
-      :class="[
-        'flex size-5 shrink-0 items-center justify-center rounded-full border transition-shadow duration-150',
-        'peer-focus-visible:ring-0 peer-focus-visible:outline-4 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-border-focus',
-        circleClass,
-      ]"
-    >
-      <AppIcon
-        v-if="checked"
-        name="check"
-        size="xxs"
-        class="size-3! text-icon-inverted"
-      />
-    </span>
-    <span
-      v-if="label || $slots.default"
-      class="text-text-sm"
-      :class="disabled ? 'text-text-disabled' : 'text-text-default'"
-    >
-      <slot>{{ label }}</slot>
-    </span>
-  </label>
-</template>

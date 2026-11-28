@@ -1,48 +1,3 @@
-<script setup lang="ts">
-import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
-import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
-import { CARD_SURFACE_BG_CLASS, type CardSurface } from './types'
-
-/**
- * Card (design library, Figma 2276:5773). Self-contained block for asset or
- * promo cards outside a list: an optional header (32px Avatar + Content Group +
- * a trailing action such as an AppBtnIcon), consumer content in the default
- * slot, and an optional Button Group. Width fills the parent and height hugs
- * the content; the default slot renders straight into the column with no
- * padding of its own, so the consumer lays it out.
- *
- * `interactive` adds a transparent <button> stretched over the card (the
- * AppNewsCard pattern) instead of making the root a button: the header action
- * and the buttons sit above it, so they stay real, separate buttons rather than
- * nesting inside one. Hover, pressed and focus are native states of that
- * button; only `selected` and `loading` are props. Leave `selected` unbound for
- * cards that aren't toggles so aria-pressed isn't exposed.
- */
-withDefaults(
-  defineProps<{
-    title?: string
-    description?: string
-    surface?: CardSurface
-    interactive?: boolean
-    selected?: boolean
-    loading?: boolean
-    /** Not a Figma state: blocks and dims an interactive card (e.g. a limit is hit). */
-    disabled?: boolean
-    /** Accessible name for the hit button when there's no title. */
-    label?: string
-  }>(),
-  {
-    surface: 'default',
-    selected: undefined,
-  },
-)
-
-const emit = defineEmits<{ click: [] }>()
-
-const AVATAR_SIZE = 'm' as const // 32px
-</script>
-
 <template>
   <div
     data-testid="card"
@@ -107,3 +62,48 @@ const AVATAR_SIZE = 'm' as const // 32px
     ></button>
   </div>
 </template>
+
+<script setup lang="ts">
+import AppContentGroup from '@/components/content_group/AppContentGroup.vue'
+import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSkeleton from '@/components/skeleton/AppSkeleton.vue'
+import { CARD_SURFACE_BG_CLASS, type CardSurface } from './types'
+
+/**
+ * Card (design library, Figma 2276:5773). Self-contained block for asset or
+ * promo cards outside a list: an optional header (32px Avatar + Content Group +
+ * a trailing action such as an AppBtnIcon), consumer content in the default
+ * slot, and an optional Button Group. Width fills the parent and height hugs
+ * the content; the default slot renders straight into the column with no
+ * padding of its own, so the consumer lays it out.
+ *
+ * `interactive` adds a transparent <button> stretched over the card (the
+ * AppNewsCard pattern) instead of making the root a button: the header action
+ * and the buttons sit above it, so they stay real, separate buttons rather than
+ * nesting inside one. Hover, pressed and focus are native states of that
+ * button; only `selected` and `loading` are props. Leave `selected` unbound for
+ * cards that aren't toggles so aria-pressed isn't exposed.
+ */
+withDefaults(
+  defineProps<{
+    title?: string
+    description?: string
+    surface?: CardSurface
+    interactive?: boolean
+    selected?: boolean
+    loading?: boolean
+    /** Not a Figma state: blocks and dims an interactive card (e.g. a limit is hit). */
+    disabled?: boolean
+    /** Accessible name for the hit button when there's no title. */
+    label?: string
+  }>(),
+  {
+    surface: 'default',
+    selected: undefined,
+  },
+)
+
+const emit = defineEmits<{ click: [] }>()
+
+const AVATAR_SIZE = 'm' as const // 32px
+</script>

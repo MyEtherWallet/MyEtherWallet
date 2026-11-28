@@ -64,3 +64,6 @@ chrome-extension
 node_modules
 
 /local-cli
+# Playwright
+test-results/
+playwright-report/

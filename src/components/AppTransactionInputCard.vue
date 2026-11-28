@@ -1,3 +1,81 @@
+<template>
+  <div
+    class="flex flex-col gap-6 w-full p-4 rounded-16 bg-background-default"
+    data-testid="transaction-input-card"
+  >
+    <p v-if="title" class="text-text-sm text-text-subtle">{{ title }}</p>
+
+    <div class="flex flex-col gap-1">
+      <!-- 12px above the amount, like the Bridge network picker in Figma -->
+      <div v-if="$slots.header" class="mb-2">
+        <slot name="header" />
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <AppInputNaked
+          v-model="model"
+          :label="inputLabel"
+          :show-currency="false"
+          :error="error"
+          :disabled="disabled"
+          :readonly="readonly || undefined"
+          :max-decimals="maxDecimals"
+          :aria-describedby="hasInfoRow ? infoId : undefined"
+          class="flex-1 min-w-0"
+          @focus="emit('focus', $event)"
+          @blur="emit('blur', $event)"
+        />
+        <div class="shrink-0">
+          <slot name="picker" />
+        </div>
+      </div>
+
+      <div
+        v-if="hasInfoRow"
+        class="grid grid-cols-[minmax(0,max-content)_minmax(0,max-content)] items-center justify-between gap-2 h-5 text-text-sm"
+        :aria-busy="loading || undefined"
+      >
+        <!-- Each side keeps its width; when both don't fit, the longer one
+             truncates first (the tracks grow evenly up to their content) -->
+        <div
+          :id="infoId"
+          :class="['min-w-0 truncate', infoColorClass]"
+          data-testid="transaction-input-card-info"
+        >
+          <AppSpinner v-if="loading" :size="20" />
+          <template v-else>{{ infoText }}</template>
+        </div>
+        <p
+          v-if="balance"
+          :class="[
+            'min-w-0 truncate',
+            balanceError ? 'text-text-error' : 'text-text-subtle',
+          ]"
+          data-testid="transaction-input-card-balance"
+        >
+          {{ balance }}
+        </p>
+      </div>
+      <slot name="feedback" />
+    </div>
+
+    <div
+      v-if="quickActions.length || $slots.actions"
+      class="flex items-center gap-2"
+    >
+      <slot name="actions">
+        <AppChip
+          v-for="action in quickActions"
+          :key="action.key"
+          :label="action.label"
+          :disabled="disabled || action.disabled"
+          class="flex-1 min-w-0"
+          @click="emit('quick-action', action.key)"
+        />
+      </slot>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import AppInputNaked from '@components/input_naked/AppInputNaked.vue'
 import AppChip from '@components/chip/AppChip.vue'
@@ -84,81 +162,3 @@ const infoColorClass = computed(() => {
   return props.error ? 'text-text-error' : 'text-text-subtle'
 })
 </script>
-
-<template>
-  <div
-    class="flex flex-col gap-6 w-full p-4 rounded-16 bg-background-default"
-    data-testid="transaction-input-card"
-  >
-    <p v-if="title" class="text-text-sm text-text-subtle">{{ title }}</p>
-
-    <div class="flex flex-col gap-1">
-      <!-- 12px above the amount, like the Bridge network picker in Figma -->
-      <div v-if="$slots.header" class="mb-2">
-        <slot name="header" />
-      </div>
-      <div class="flex items-center justify-between gap-2">
-        <AppInputNaked
-          v-model="model"
-          :label="inputLabel"
-          :show-currency="false"
-          :error="error"
-          :disabled="disabled"
-          :readonly="readonly || undefined"
-          :max-decimals="maxDecimals"
-          :aria-describedby="hasInfoRow ? infoId : undefined"
-          class="flex-1 min-w-0"
-          @focus="emit('focus', $event)"
-          @blur="emit('blur', $event)"
-        />
-        <div class="shrink-0">
-          <slot name="picker" />
-        </div>
-      </div>
-
-      <div
-        v-if="hasInfoRow"
-        class="grid grid-cols-[minmax(0,max-content)_minmax(0,max-content)] items-center justify-between gap-2 h-5 text-text-sm"
-        :aria-busy="loading || undefined"
-      >
-        <!-- Each side keeps its width; when both don't fit, the longer one
-             truncates first (the tracks grow evenly up to their content) -->
-        <div
-          :id="infoId"
-          :class="['min-w-0 truncate', infoColorClass]"
-          data-testid="transaction-input-card-info"
-        >
-          <AppSpinner v-if="loading" :size="20" />
-          <template v-else>{{ infoText }}</template>
-        </div>
-        <p
-          v-if="balance"
-          :class="[
-            'min-w-0 truncate',
-            balanceError ? 'text-text-error' : 'text-text-subtle',
-          ]"
-          data-testid="transaction-input-card-balance"
-        >
-          {{ balance }}
-        </p>
-      </div>
-      <slot name="feedback" />
-    </div>
-
-    <div
-      v-if="quickActions.length || $slots.actions"
-      class="flex items-center gap-2"
-    >
-      <slot name="actions">
-        <AppChip
-          v-for="action in quickActions"
-          :key="action.key"
-          :label="action.label"
-          :disabled="disabled || action.disabled"
-          class="flex-1 min-w-0"
-          @click="emit('quick-action', action.key)"
-        />
-      </slot>
-    </div>
-  </div>
-</template>

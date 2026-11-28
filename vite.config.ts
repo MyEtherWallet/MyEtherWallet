@@ -107,6 +107,14 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
+      // Two pages: the app, and the wallet export page (Privy's React SDK),
+      // which the app opens in its own tab from Settings.
+      input: {
+        main: fileURLToPath(new URL('./index.html', import.meta.url)),
+        walletExport: fileURLToPath(
+          new URL('./wallet-export.html', import.meta.url),
+        ),
+      },
       onwarn(warning, warn) {
         if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
           return

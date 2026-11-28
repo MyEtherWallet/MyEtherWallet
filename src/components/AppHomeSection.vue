@@ -1,7 +1,3 @@
-<script setup lang="ts">
-defineProps<{ title?: string; subtitle?: string }>()
-</script>
-
 <template>
   <section class="relative px-3 pb-8 pt-3 xs:px-5 xs:pt-6">
     <header v-if="title" class="mb-8 flex items-start justify-between gap-4">
@@ -22,3 +18,7 @@ defineProps<{ title?: string; subtitle?: string }>()
     <slot />
   </section>
 </template>
+
+<script setup lang="ts">
+defineProps<{ title?: string; subtitle?: string }>()
+</script>

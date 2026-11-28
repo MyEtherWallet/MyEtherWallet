@@ -1,59 +1,3 @@
-<script setup lang="ts">
-// Gallery for the Modal design-library component (MEW-1967), reachable at
-// /dev/modal via the design-library shell — see routesDefault.ts. Figma
-// component set 2279:31532: M (2279:27719) from 768px up, S (2279:31533)
-// below, so resize the window to see S. The playground toggles the four Figma
-// booleans; the presets cover the behaviour that isn't in Figma.
-import { ref } from 'vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppToggle from '@/components/AppToggle.vue'
-import AppModal from '@/components/modal/AppModal.vue'
-
-const showHeader = ref(true)
-const showBackButton = ref(true)
-const showCloseButton = ref(true)
-const showButtonGroup = ref(true)
-const showSubtitle = ref(true)
-const lastEvent = ref('—')
-
-const FLAGS = [
-  { label: 'showHeader', model: showHeader },
-  { label: 'subtitle', model: showSubtitle },
-  { label: 'showBackButton', model: showBackButton },
-  { label: 'showCloseButton', model: showCloseButton },
-  { label: 'showButtonGroup', model: showButtonGroup },
-]
-
-const PRESETS = [
-  'Playground',
-  'Three buttons',
-  '#footer override',
-  'Long content',
-  'Persistent',
-  'Stacked',
-  'Custom #header',
-  'Wide (class override)',
-] as const
-type Preset = (typeof PRESETS)[number]
-
-const open = ref<Preset | null>(null)
-const stackedOpen = ref(false)
-
-const show = (preset: Preset) => (open.value = preset)
-const model = (preset: Preset) => ({
-  modelValue: open.value === preset,
-  'onUpdate:modelValue': (v: boolean) => (open.value = v ? preset : null),
-})
-const twoButtons = (
-  done: () => void = () => {
-    open.value = null
-  },
-) => ({
-  primary: { label: 'Confirm', onClick: done },
-  secondary: { label: 'Cancel', onClick: done },
-})
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -210,3 +154,59 @@ const twoButtons = (
     </AppModal>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the Modal design-library component (MEW-1967), reachable at
+// /dev/modal via the design-library shell — see routesDefault.ts. Figma
+// component set 2279:31532: M (2279:27719) from 768px up, S (2279:31533)
+// below, so resize the window to see S. The playground toggles the four Figma
+// booleans; the presets cover the behaviour that isn't in Figma.
+import { ref } from 'vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppToggle from '@/components/AppToggle.vue'
+import AppModal from '@/components/modal/AppModal.vue'
+
+const showHeader = ref(true)
+const showBackButton = ref(true)
+const showCloseButton = ref(true)
+const showButtonGroup = ref(true)
+const showSubtitle = ref(true)
+const lastEvent = ref('—')
+
+const FLAGS = [
+  { label: 'showHeader', model: showHeader },
+  { label: 'subtitle', model: showSubtitle },
+  { label: 'showBackButton', model: showBackButton },
+  { label: 'showCloseButton', model: showCloseButton },
+  { label: 'showButtonGroup', model: showButtonGroup },
+]
+
+const PRESETS = [
+  'Playground',
+  'Three buttons',
+  '#footer override',
+  'Long content',
+  'Persistent',
+  'Stacked',
+  'Custom #header',
+  'Wide (class override)',
+] as const
+type Preset = (typeof PRESETS)[number]
+
+const open = ref<Preset | null>(null)
+const stackedOpen = ref(false)
+
+const show = (preset: Preset) => (open.value = preset)
+const model = (preset: Preset) => ({
+  modelValue: open.value === preset,
+  'onUpdate:modelValue': (v: boolean) => (open.value = v ? preset : null),
+})
+const twoButtons = (
+  done: () => void = () => {
+    open.value = null
+  },
+) => ({
+  primary: { label: 'Confirm', onClick: done },
+  secondary: { label: 'Cancel', onClick: done },
+})
+</script>

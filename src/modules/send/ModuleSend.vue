@@ -62,7 +62,7 @@
       <app-base-button
         v-else
         :disabled="!validSend"
-        :is-loading="isLoadingFees"
+        :is-loading="isLoadingFees || isPreparingTx"
         class="w-full"
         @click="handleSubmit"
       >
@@ -129,12 +129,16 @@ import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.
 import SendInitiatedModal from './components/SendInitiatedModal.vue'
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
-import { WalletType } from '@/providers/types'
 import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
-import { getLocalizedWalletError } from '@/utils/walletUtils'
+import {
+  getLocalizedWalletError,
+  holdsKeyInApp,
+  isInAppSigner,
+} from '@/utils/walletUtils'
+import { matchesReviewedTransfer } from '@/providers/ethereum/utils'
 import { formatUnits } from 'viem'
 import { safeParseUnits } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
@@ -658,8 +662,10 @@ const isPreparingTx = ref(false)
 let latestTxBuildId = 0
 
 /**
- * Builds the transaction for the selected fee; private key and mnemonic
- * wallets sign it here too, the rest sign on confirm. Resolves false when
+ * Builds the transaction for the selected fee; wallets that hold their key in
+ * the app (private key, mnemonic) sign it here too, the rest sign on confirm.
+ * That includes a Privy wallet: its signature is a request to Privy, and it
+ * is made only once the user has seen the review. Resolves false when
  * signing failed (already reported) and null when a newer build took over.
  */
 const buildSignedTx = async (quoteId: string): Promise<boolean | null> => {
@@ -679,10 +685,34 @@ const buildSignedTx = async (quoteId: string): Promise<boolean | null> => {
       throw e
     }
     let serialized = signableTx.serialized as string
-    if (
-      wallet.value.getWalletType() === WalletType.PRIVATE_KEY ||
-      wallet.value.getWalletType() === WalletType.MNEMONIC
-    ) {
+    // A wallet that signs inside the app shows no screen of its own: before
+    // it signs, here or on confirm, the transaction the API built must be
+    // the transfer this form describes.
+    if (isEvmChain.value && isInAppSigner(wallet.value)) {
+      const reviewed = gasFeeTxEstimate.value
+      const isReviewedTransfer =
+        reviewed !== undefined &&
+        'to' in reviewed &&
+        reviewed.to !== null &&
+        matchesReviewedTransfer(
+          serialized as HexPrefixedString,
+          String(selectedChain.value?.chainID ?? ''),
+          { to: reviewed.to, value: reviewed.value, data: reviewed.data },
+        )
+      if (!isReviewedTransfer) {
+        if (isStale()) return null
+        analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
+          token: tokenSelected.value?.symbol,
+          errorMsg: 'Transaction does not match the reviewed transfer',
+        })
+        toastStore.addToastMessage({
+          type: ToastType.Error,
+          text: t('send.toast.tx_mismatch'),
+        })
+        return false
+      }
+    }
+    if (holdsKeyInApp(wallet.value)) {
       if (!wallet.value.SignTransaction) {
         console.error('SignTransaction not implemented')
         return false
@@ -716,13 +746,76 @@ const buildSignedTx = async (quoteId: string): Promise<boolean | null> => {
   }
 }
 
+/** Everything the review shows about the transfer, as one comparable value. */
+const reviewedForm = (): string =>
+  JSON.stringify([
+    walletAddress.value,
+    toAddress.value,
+    tokenSelectedContract.value,
+    String(amount.value),
+    selectedChain.value?.chainID,
+  ])
+
+// Native MAX sends balance minus fee, and the panel takes that fee from the
+// quote, so a new quote can move the amount again. Re-quote until it holds.
+const MAX_REQUOTES = 3
+
+/**
+ * One try at building the transaction and opening the review over it.
+ *
+ * The review shows the form as it is when it opens, so it may only open over
+ * a transaction built from that same form. Building takes a quote and the
+ * unsigned transaction, and the form can change meanwhile. Resolves
+ * `'amount-moved'` when the quote itself moved a native MAX amount, which
+ * calls for another try with the amount it moved to.
+ */
+const openReview = async (): Promise<'done' | 'amount-moved'> => {
+  const submitted = reviewedForm()
+  // Typing an amount gives MAX up, so this is asked again after every wait:
+  // a form that changed with MAX still on was moved by a fee, and any other
+  // change is the user editing, who submits again when done.
+  const isNativeMaxNow = (): boolean =>
+    isMaxSelected.value && isNativeTokenSelected.value
+  const isNativeMax = isNativeMaxNow()
+  const latestGasFees = await getGasFeeQuotes()
+  if (!wallet.value || !latestGasFees) return 'done'
+  if (isNativeMax) {
+    // Not put back over an amount typed while the quote was on its way.
+    if (!isNativeMaxNow()) return 'done'
+    // Have this quote's fee move the amount now, not under the open review.
+    // This comes before the fee error is read: a fee that outgrew the amount
+    // reads as "not enough balance" until MAX has taken it off.
+    await nextTick()
+    await applyMaxAmount()
+    if (reviewedForm() !== submitted) {
+      return isNativeMaxNow() ? 'amount-moved' : 'done'
+    }
+  }
+  // Still set for an amount MAX did not move, or with no MAX at all.
+  if (gasFeeError.value) return 'done'
+  const built = await buildSignedTx(latestGasFees.quoteId)
+  if (!built) return 'done'
+  if (reviewedForm() !== submitted) {
+    signedTx.value = ''
+    return isNativeMax && isNativeMaxNow() ? 'amount-moved' : 'done'
+  }
+  openTxModal.value = true
+  return 'done'
+}
+
 const handleSubmit = async () => {
   analytics.trackSendEvent(SendEvent.CLICK_SEND, {
     token: tokenSelected.value?.symbol,
   })
-  const latestGasFees = await getGasFeeQuotes()
-  if (!wallet.value || !latestGasFees || gasFeeError.value) return
-  if (await buildSignedTx(latestGasFees.quoteId)) openTxModal.value = true
+  for (let tries = 0; tries < MAX_REQUOTES; tries++) {
+    if ((await openReview()) === 'done') return
+  }
+  // The amount moved with every quote. Say so: a button that does nothing
+  // tells the user nothing.
+  toastStore.addToastMessage({
+    type: ToastType.Error,
+    text: t('send.toast.max_amount_changed'),
+  })
 }
 
 // A fee picked on the review changes the tx, so rebuild (and re-sign) it
@@ -734,9 +827,6 @@ let reviewSession = 0
 watch(openTxModal, open => {
   if (open) reviewSession++
 })
-// Native MAX sends balance minus fee, and the panel takes that fee from the
-// quote, so a new quote can move the amount again. Re-quote until it holds.
-const MAX_REQUOTES = 3
 watch(selectedFee, async () => {
   if (!openTxModal.value || !gasFees.value?.quoteId) return
   const change = ++latestFeeChange

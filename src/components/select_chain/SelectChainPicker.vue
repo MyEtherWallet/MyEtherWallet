@@ -1,15 +1,3 @@
-<script setup lang="ts">
-/**
- * SelectChainForApp rendered as the design-library Picker pill (size S).
- * Every attribute and listener (passed-chains, can-store, preselected-chain,
- * @update:selected-chain…) falls through to SelectChainForApp, which keeps the
- * dialog and the chain logic.
- */
-import AppPicker from '@/components/picker/AppPicker.vue'
-import AppAvatar from '@/components/avatar/AppAvatar.vue'
-import SelectChainForApp from './SelectChainForApp.vue'
-</script>
-
 <template>
   <SelectChainForApp>
     <template #network-button="{ openNetworkDialog, selectedChain }">
@@ -27,3 +15,15 @@ import SelectChainForApp from './SelectChainForApp.vue'
     </template>
   </SelectChainForApp>
 </template>
+
+<script setup lang="ts">
+/**
+ * SelectChainForApp rendered as the design-library Picker pill (size S).
+ * Every attribute and listener (passed-chains, can-store, preselected-chain,
+ * @update:selected-chain…) falls through to SelectChainForApp, which keeps the
+ * dialog and the chain logic.
+ */
+import AppPicker from '@/components/picker/AppPicker.vue'
+import AppAvatar from '@/components/avatar/AppAvatar.vue'
+import SelectChainForApp from './SelectChainForApp.vue'
+</script>

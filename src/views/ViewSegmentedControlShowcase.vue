@@ -1,65 +1,3 @@
-<script setup lang="ts">
-// Gallery for the SegmentedControl design-library component (MEW-1968), reachable
-// at /dev/segmented-control via the design-library shell — see routesDefault.ts.
-// Compare against Figma SegmentedControl (274:2749) and Segment / _Base
-// (274:2783). Hover is native; the Hover row forces it with the bound colour so
-// the default-size quirk (same grey as the track) is visible for design.
-import { computed, ref } from 'vue'
-import AppAvatar from '@components/avatar/AppAvatar.vue'
-import AppSegment from '@components/segmented_control/AppSegment.vue'
-import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
-import {
-  SEGMENT_SIZE,
-  type SegmentItem,
-  type SegmentSize,
-} from '@components/segmented_control/types'
-
-const SIZES: SegmentSize[] = ['default', 'small']
-
-// Hover bg as bound in Figma, minus the `hover:` prefix, to force the state.
-const forcedHover = (size: SegmentSize) =>
-  SEGMENT_SIZE[size].hover.replace('hover:', '')
-
-const FIGMA_ITEMS: SegmentItem[] = [
-  { value: 'a', label: 'Segment', trailingIcon: 'chevron-down' },
-  { value: 'b', label: 'Segment', trailingIcon: 'chevron-down' },
-  { value: 'c', label: 'Segment', trailingIcon: 'chevron-down' },
-]
-const PLAIN_ITEMS: SegmentItem[] = [
-  { value: 'a', label: 'All' },
-  { value: 'b', label: 'Stocks' },
-  { value: 'c', label: 'Crypto' },
-]
-const figmaSelected = ref({ default: 'a', small: 'a' })
-const plainSelected = ref({ default: 'b', small: 'b' })
-
-const RANGES = [
-  { value: '1d', label: '1D' },
-  { value: '1w', label: '1W' },
-  { value: '1m', label: '1M' },
-  { value: '1y', label: '1Y' },
-] as const
-type RangeId = (typeof RANGES)[number]['value']
-const range = ref<RangeId>('1w')
-const rangePanel = computed(
-  () => RANGES.find(r => r.value === range.value)?.label,
-)
-
-const TABS = [
-  { value: 'orders', label: 'Orders' },
-  { value: 'fills', label: 'Fills' },
-]
-const tab = ref('orders')
-const COUNTS: Record<string, number> = { orders: 3, fills: 12 }
-
-const category = ref('all')
-const CATEGORIES = [
-  { value: 'all', label: 'All' },
-  { value: 'trades', label: 'Trades' },
-  { value: 'swaps', label: 'Swaps' },
-]
-</script>
-
 <template>
   <div class="p-8 flex flex-col gap-12 max-w-4xl mx-auto">
     <header class="flex flex-col gap-1">
@@ -184,3 +122,65 @@ const CATEGORIES = [
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Gallery for the SegmentedControl design-library component (MEW-1968), reachable
+// at /dev/segmented-control via the design-library shell — see routesDefault.ts.
+// Compare against Figma SegmentedControl (274:2749) and Segment / _Base
+// (274:2783). Hover is native; the Hover row forces it with the bound colour so
+// the default-size quirk (same grey as the track) is visible for design.
+import { computed, ref } from 'vue'
+import AppAvatar from '@components/avatar/AppAvatar.vue'
+import AppSegment from '@components/segmented_control/AppSegment.vue'
+import AppSegmentedControl from '@components/segmented_control/AppSegmentedControl.vue'
+import {
+  SEGMENT_SIZE,
+  type SegmentItem,
+  type SegmentSize,
+} from '@components/segmented_control/types'
+
+const SIZES: SegmentSize[] = ['default', 'small']
+
+// Hover bg as bound in Figma, minus the `hover:` prefix, to force the state.
+const forcedHover = (size: SegmentSize) =>
+  SEGMENT_SIZE[size].hover.replace('hover:', '')
+
+const FIGMA_ITEMS: SegmentItem[] = [
+  { value: 'a', label: 'Segment', trailingIcon: 'chevron-down' },
+  { value: 'b', label: 'Segment', trailingIcon: 'chevron-down' },
+  { value: 'c', label: 'Segment', trailingIcon: 'chevron-down' },
+]
+const PLAIN_ITEMS: SegmentItem[] = [
+  { value: 'a', label: 'All' },
+  { value: 'b', label: 'Stocks' },
+  { value: 'c', label: 'Crypto' },
+]
+const figmaSelected = ref({ default: 'a', small: 'a' })
+const plainSelected = ref({ default: 'b', small: 'b' })
+
+const RANGES = [
+  { value: '1d', label: '1D' },
+  { value: '1w', label: '1W' },
+  { value: '1m', label: '1M' },
+  { value: '1y', label: '1Y' },
+] as const
+type RangeId = (typeof RANGES)[number]['value']
+const range = ref<RangeId>('1w')
+const rangePanel = computed(
+  () => RANGES.find(r => r.value === range.value)?.label,
+)
+
+const TABS = [
+  { value: 'orders', label: 'Orders' },
+  { value: 'fills', label: 'Fills' },
+]
+const tab = ref('orders')
+const COUNTS: Record<string, number> = { orders: 3, fills: 12 }
+
+const category = ref('all')
+const CATEGORIES = [
+  { value: 'all', label: 'All' },
+  { value: 'trades', label: 'Trades' },
+  { value: 'swaps', label: 'Swaps' },
+]
+</script>

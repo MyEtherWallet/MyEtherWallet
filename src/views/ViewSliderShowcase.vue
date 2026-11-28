@@ -1,14 +1,3 @@
-<script setup lang="ts">
-// Preview for the Slider design-library component (MEW-2405) at /dev/slider.
-// Matches Figma node 4059:4392; Tab to a slider to see the focus ring.
-import { ref } from 'vue'
-import AppSlider from '@/components/slider/AppSlider.vue'
-
-const FIGMA_STOPS = [0, 25, 50, 75, 100]
-const stops = ref([...FIGMA_STOPS])
-const continuous = ref(40)
-</script>
-
 <template>
   <div class="mx-auto flex max-w-4xl flex-col gap-12 p-8">
     <header class="flex flex-col gap-1">
@@ -60,3 +49,14 @@ const continuous = ref(40)
     </section>
   </div>
 </template>
+
+<script setup lang="ts">
+// Preview for the Slider design-library component (MEW-2405) at /dev/slider.
+// Matches Figma node 4059:4392; Tab to a slider to see the focus ring.
+import { ref } from 'vue'
+import AppSlider from '@/components/slider/AppSlider.vue'
+
+const FIGMA_STOPS = [0, 25, 50, 75, 100]
+const stops = ref([...FIGMA_STOPS])
+const continuous = ref(40)
+</script>

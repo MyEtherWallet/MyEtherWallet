@@ -1,3 +1,45 @@
+<template>
+  <div data-test="home-hero" class="flex flex-col gap-6">
+    <!-- Trade & hold campaign: state-driven, dismissible per state. -->
+    <RwaHomeBanner />
+    <HeroBanner v-if="SHOW_HERO_TRADE_BANNER" />
+    <!-- Container-query layout so the Hero reflows on the AVAILABLE width (which
+         shrinks when the wallet side panel opens), not the viewport:
+         - wide: 3 columns (balance 2fr + the two trending 1fr each),
+         - medium (side panel open / smaller screens): balance full-width on top,
+           the two trending side-by-side in a row below,
+         - narrow: fully stacked. -->
+    <div class="@container">
+      <!-- Reflows on the AVAILABLE width: stacked → balance-top + 2 trending
+           (2 cols) at ~624 → all three in one line at ~1024. Threshold kept low
+           (1024) so the 3-column layout still fits once the side panel shrinks
+           the container (2fr balance ≈ 512px + two 1fr trending ≈ 256px each). -->
+      <div
+        class="grid grid-cols-1 gap-6 @min-[624px]:grid-cols-2 @min-[1024px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]"
+      >
+        <HeroPortfolioCard
+          class="@min-[624px]:col-span-2 @min-[1024px]:col-span-1"
+        />
+        <HeroTrendingCard
+          :title="t('homePage.hero.trendingStocks')"
+          :see-all-to="{ name: ROUTES_MAIN.STOCKS.NAME }"
+          :items="stockItems"
+          :is-loading="isLoadingOverview"
+        />
+        <HeroTrendingCard
+          :title="t('homePage.hero.trendingCrypto')"
+          :see-all-to="{ name: ROUTES_MAIN.CRYPTO.NAME }"
+          :items="cryptoItems"
+          :is-loading="isLoadingCrypto"
+        />
+      </div>
+    </div>
+    <HeroWatchlistBanner v-if="!showWatchlistTable" @add="isAddOpen = true" />
+    <HomeWatchlistTable v-else :rows="watchlistRows" />
+    <AddToWatchlistDialog v-if="isAddOpen" v-model:is-open="isAddOpen" />
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -105,45 +147,3 @@ const cryptoItems = computed<TrendingRowItem[]>(() =>
 
 onMounted(fetchTrending)
 </script>
-
-<template>
-  <div data-test="home-hero" class="flex flex-col gap-6">
-    <!-- Trade & hold campaign: state-driven, dismissible per state. -->
-    <RwaHomeBanner />
-    <HeroBanner v-if="SHOW_HERO_TRADE_BANNER" />
-    <!-- Container-query layout so the Hero reflows on the AVAILABLE width (which
-         shrinks when the wallet side panel opens), not the viewport:
-         - wide: 3 columns (balance 2fr + the two trending 1fr each),
-         - medium (side panel open / smaller screens): balance full-width on top,
-           the two trending side-by-side in a row below,
-         - narrow: fully stacked. -->
-    <div class="@container">
-      <!-- Reflows on the AVAILABLE width: stacked → balance-top + 2 trending
-           (2 cols) at ~624 → all three in one line at ~1024. Threshold kept low
-           (1024) so the 3-column layout still fits once the side panel shrinks
-           the container (2fr balance ≈ 512px + two 1fr trending ≈ 256px each). -->
-      <div
-        class="grid grid-cols-1 gap-6 @min-[624px]:grid-cols-2 @min-[1024px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]"
-      >
-        <HeroPortfolioCard
-          class="@min-[624px]:col-span-2 @min-[1024px]:col-span-1"
-        />
-        <HeroTrendingCard
-          :title="t('homePage.hero.trendingStocks')"
-          :see-all-to="{ name: ROUTES_MAIN.STOCKS.NAME }"
-          :items="stockItems"
-          :is-loading="isLoadingOverview"
-        />
-        <HeroTrendingCard
-          :title="t('homePage.hero.trendingCrypto')"
-          :see-all-to="{ name: ROUTES_MAIN.CRYPTO.NAME }"
-          :items="cryptoItems"
-          :is-loading="isLoadingCrypto"
-        />
-      </div>
-    </div>
-    <HeroWatchlistBanner v-if="!showWatchlistTable" @add="isAddOpen = true" />
-    <HomeWatchlistTable v-else :rows="watchlistRows" />
-    <AddToWatchlistDialog v-if="isAddOpen" v-model:is-open="isAddOpen" />
-  </div>
-</template>

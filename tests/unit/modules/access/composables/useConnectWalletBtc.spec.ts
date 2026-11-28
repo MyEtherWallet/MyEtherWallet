@@ -74,9 +74,8 @@ vi.mock('@/providers/bitcoin/unisatInjectedWallet', () => ({
   },
 }))
 
-const { useConnectWallet } = await import(
-  '@/modules/access/composables/useConnectWallet'
-)
+const { useConnectWallet } =
+  await import('@/modules/access/composables/useConnectWallet')
 import { useAccessStore } from '@/stores/accessStore'
 import { useToastStore } from '@/stores/toastStore'
 import { captureException } from '@sentry/vue'

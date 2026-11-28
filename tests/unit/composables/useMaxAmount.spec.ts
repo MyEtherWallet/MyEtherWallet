@@ -46,6 +46,8 @@ describe('useMaxAmount canUseMax (MEW-2612)', () => {
     // Keystore unlocks into a private key wallet.
     expect(canUseMax(WalletType.PRIVATE_KEY, true)).toBe(true)
     expect(canUseMax(WalletType.MNEMONIC, true)).toBe(true)
+    // Privy signs exactly the transaction built here, with no outside step.
+    expect(canUseMax(WalletType.PRIVY, true)).toBe(true)
     // The rest can change the gas outside the app, so our fee estimate is off.
     for (const type of [
       WalletType.WAGMI,

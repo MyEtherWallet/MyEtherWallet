@@ -134,4 +134,8 @@ describe('savedAccountsLogic', () => {
     expect(deriveKind('WATCH_ONLY_ADDRESS')).toBe('watchOnly')
     expect(deriveKind('')).toBe('watchOnly')
   })
+
+  it('deriveKind treats a Privy login as a wallet that can be reconnected', () => {
+    expect(deriveKind('PRIVY')).toBe('signing')
+  })
 })

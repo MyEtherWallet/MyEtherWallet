@@ -58,7 +58,8 @@
       "protected_by": "Protegido por",
       "download_official": "Descarga las wallets oficiales de MEW",
       "ios_android": "iOS y Android",
-      "browser_extension": "Extensión de navegador"
+      "browser_extension": "Extensión de navegador",
+      "create_options": "Billeteras que puedes crear"
     },
     "download_mobile": {
       "title": "Descarga la app MEW Mobile",
@@ -110,6 +111,63 @@
     "help_footer": {
       "need_help": "¿Necesitas ayuda?",
       "go_to_help_center": "Ir al Centro de ayuda"
+    },
+    "social": {
+      "title": "Iniciar sesión/Registrarse",
+      "title_short": "Acceder",
+      "terms": "Al iniciar sesión acepto los {terms} y la {privacy}",
+      "terms_link": "Términos",
+      "privacy_link": "Política de privacidad",
+      "wallets_label": "Conectar con una billetera",
+      "other_methods": "Otros métodos de billetera",
+      "google": {
+        "verifying_title": "Verificando la conexión con Google",
+        "verifying_description": "Solo unos instantes más…",
+        "connected_title": "Conectado con Google",
+        "connected_description": "¡Todo listo!"
+      },
+      "code": {
+        "title": "Introduce el código de confirmación",
+        "description": "Revisa {email} para ver el código de Privy",
+        "incorrect": "Código incorrecto. Inténtalo de nuevo.",
+        "too_many": "Demasiados intentos, solicita un código nuevo",
+        "no_email": "¿No recibiste el correo?",
+        "resend": "Reenviar código",
+        "resend_in": "Reenviar código en {seconds} s",
+        "success": "¡Listo!"
+      },
+      "wallet_setup": {
+        "title": "Configurando tu billetera…",
+        "description": "Estamos configurando tu billetera. Es un lugar seguro para los activos que operas en MEW."
+      },
+      "account_ready": {
+        "title": "Tu cuenta está lista",
+        "description": "Elige cómo quieres terminar. Recibe novedades sobre funciones, productos y promociones.",
+        "create_only": "Solo crear la cuenta",
+        "get_updates": "Recibir novedades"
+      },
+      "existing": {
+        "title": "¿Continuar como {email}?",
+        "title_no_email": "¿Continuar con tu cuenta?",
+        "description": "Tu sesión sigue abierta en esta pestaña.",
+        "continue": "Continuar",
+        "different": "Usar otra cuenta"
+      },
+      "error": {
+        "google_title": "No se pudo conectar con Google",
+        "timeout_title": "Está tardando más de lo esperado",
+        "wallet_title": "No pudimos configurar tu billetera",
+        "storage_title": "Activa las cookies o el almacenamiento para iniciar sesión",
+        "generic_title": "Algo salió mal",
+        "description": "Inténtalo de nuevo o continúa con una billetera.",
+        "try_again": "Reintentar",
+        "use_wallet": "Continuar con una billetera",
+        "send_code": "No pudimos enviar un código a esta dirección",
+        "rate_limited": "Demasiados intentos, vuelve a intentarlo en un minuto"
+      },
+      "toast": {
+        "logged_in": "Has iniciado sesión"
+      }
     }
   },
   "access_wallet_keystore": {

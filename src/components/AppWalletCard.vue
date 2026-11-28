@@ -177,9 +177,10 @@ import { useImageContrastTextColor } from '@/composables/useImageContrastTextCol
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
+import { useAuthStore } from '@/stores/authStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
-import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import { addressStepFor } from '@/modules/access/common/accessViews'
 import { ToastType } from '@/types/notification'
 import {
   analytics,
@@ -307,7 +308,7 @@ const getExplorerLink = computed(() => {
  -------------------------------*/
 
 const accessStore = useAccessStore()
-const { setCurrentView, openAccessDialog } = accessStore
+const { openAccessDialog } = accessStore
 
 const openAccess = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
@@ -323,13 +324,26 @@ const disconnectWallet = () => {
 }
 
 const deleteWallet = async () => {
+  // The address and network on the card as the user asks. The steps below
+  // wait, and the wallet can be another one by then: ending a Privy login
+  // leaves the wallet watch-only, on another saved address when this one was
+  // never saved (a full list).
+  const address = walletAddress.value
+  const chain = selectedChain.value!
+  // Deleting a Privy address also ends its login, as disconnecting it does.
+  // Best effort: the address is deleted even if Privy cannot be reached.
+  if (address && wallet.value?.getWalletType() === WalletType.PRIVY) {
+    await useAuthStore()
+      .endLoginFor(address)
+      .catch(() => undefined)
+  }
   const recentAddressStore = useWatchOnlyStore()
-  recentAddressStore.removeWallet(
-    walletAddress.value as string,
-    selectedChain.value!,
-  )
+  recentAddressStore.removeWallet(address as string, chain)
   await usePerpsAuth().logout()
-  disconnectWallet()
+  // Only the wallet that was deleted is disconnected.
+  if (walletAddress.value?.toLowerCase() === address?.toLowerCase()) {
+    disconnectWallet()
+  }
   emit('close')
 }
 
@@ -343,33 +357,22 @@ const canSwitchAddress = computed(() => {
     !!type &&
     type !== WalletType.PRIVATE_KEY &&
     type !== WalletType.INJECTED &&
-    type !== WalletType.WAGMI
+    type !== WalletType.WAGMI &&
+    // A Privy login has one embedded wallet: nothing to switch to.
+    type !== WalletType.PRIVY
   )
 })
 
 const switchAddress = () => {
   analytics.trackSelectNewAddressEvent(SelectNewAddressEvent)
-
-  // Map wallet types to their corresponding WALLET_VIEWS index
-  const currentWalletType = wallet.value?.getWalletType()
-  const viewIndexByType: Partial<Record<WalletType, number>> = {
-    [WalletType.LEDGER]: 1,
-    [WalletType.TREZOR]: 2,
-    [WalletType.MNEMONIC]: 4,
-  }
-
-  const index =
-    currentWalletType !== undefined &&
-    viewIndexByType[currentWalletType] !== undefined
-      ? (viewIndexByType[currentWalletType] as number)
-      : 0
-
-  setCurrentView(ACCESS_WALLET_VIEWS[index])
   emit('close')
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
     source: 'WalletCard_SwitchAddress',
   })
-  openAccessDialog()
+  // Straight to the wallet's own step, where its addresses are listed.
+  const step = addressStepFor(wallet.value?.getWalletType())
+  if (step) accessStore.openAccessDialogOn(step)
+  else openAccessDialog()
 }
 </script>
 <style scoped>

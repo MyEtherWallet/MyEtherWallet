@@ -2,15 +2,42 @@ import type { WalletInterface } from '@/providers/common/walletInterface'
 import { WalletType } from '@/providers/types'
 import i18n from '@/i18n'
 
-export const isSignableWallet = (wallet: WalletInterface) => {
+type TypedWallet = Pick<WalletInterface, 'getWalletType'>
+
+/**
+ * Wallets that sign a transaction for MEW to broadcast, as opposed to the
+ * ones that broadcast it themselves (injected, WalletConnect).
+ */
+export const isSignableWallet = (wallet: TypedWallet) => {
   const type = wallet.getWalletType()
   return (
     type === WalletType.LEDGER ||
     type === WalletType.TREZOR ||
     type === WalletType.PRIVATE_KEY ||
-    type === WalletType.MNEMONIC
+    type === WalletType.MNEMONIC ||
+    type === WalletType.PRIVY
   )
 }
+
+/**
+ * Wallets whose key is in this page: private key (a keystore file unlocks
+ * into one) and mnemonic. Signing with them is instant and costs nothing, so
+ * the send flow signs as soon as the review is built.
+ */
+export const holdsKeyInApp = (wallet: TypedWallet | null | undefined) => {
+  const type = wallet?.getWalletType()
+  return type === WalletType.PRIVATE_KEY || type === WalletType.MNEMONIC
+}
+
+/**
+ * Wallets that sign with no step outside the app: the ones that hold their
+ * key here, and the Privy embedded wallet, which signs on Privy's servers
+ * with no prompt of its own. The user approves nothing elsewhere, so nothing
+ * outside the app can change what was built here, and the app's own review
+ * is the only consent.
+ */
+export const isInAppSigner = (wallet: TypedWallet | null | undefined) =>
+  holdsKeyInApp(wallet) || wallet?.getWalletType() === WalletType.PRIVY
 
 /**
  * Whether the current browser can safely initiate a Trezor connection.
@@ -109,6 +136,16 @@ export const getLocalizedWalletError = (
   }
   if (isDeviceInterfaceBusyError(raw)) {
     return t('common.error.ledger_device_busy')
+  }
+  // The Privy wallet's errors are already sentences for the user. A caller
+  // that lowercased one before looking it up gets it back as written.
+  for (const key of [
+    'common.error.login_expired',
+    'common.error.signature_not_verified',
+    'common.error.passkey_check_failed',
+  ]) {
+    const sentence = t(key)
+    if (message === sentence.toLowerCase()) return sentence
   }
   return undefined
 }

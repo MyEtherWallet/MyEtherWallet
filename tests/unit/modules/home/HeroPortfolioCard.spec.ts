@@ -137,15 +137,20 @@ describe('HeroPortfolioCard (MEW-2094)', () => {
     }
   })
 
-  it('renders the not-connected state with create/connect CTAs', async () => {
+  it('gives a visitor one button, Log in/Sign Up, which opens the login popup', async () => {
     const w = mountCard()
     expect(w.find('[data-test="hero-portfolio-notconnected"]').exists()).toBe(
       true,
     )
-    await w.get('[data-test="hero-create"]').trigger('click')
-    expect(openCreateDialog).toHaveBeenCalled()
-    await w.get('[data-test="hero-connect"]').trigger('click')
-    expect(openAccessDialog).toHaveBeenCalled()
+
+    const buttons = w.get('[data-test="hero-portfolio-card"]').findAll('button')
+    expect(buttons).toHaveLength(1)
+    // The header's button says the same.
+    expect(buttons[0].text()).toBe('access_wallet.social.title')
+
+    await w.get('[data-test="hero-log-in"]').trigger('click')
+    expect(openAccessDialog).toHaveBeenCalledTimes(1)
+    expect(openCreateDialog).not.toHaveBeenCalled()
   })
 
   it('renders skeletons while balances are loading', () => {
