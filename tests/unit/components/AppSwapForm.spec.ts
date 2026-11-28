@@ -84,6 +84,19 @@ describe('AppSwapForm', () => {
     ])
   })
 
+  it('disables every chip when there is no balance to size from', () => {
+    const buttons = mountForm({
+      showQuickActions: true,
+      showBalance: false,
+    }).findAll(chips)
+    expect(buttons.map(b => b.attributes('disabled') !== undefined)).toEqual([
+      true,
+      true,
+      true,
+      true,
+    ])
+  })
+
   it('hides the quick actions unless asked', () => {
     expect(mountForm().findAll(chips)).toHaveLength(0)
   })

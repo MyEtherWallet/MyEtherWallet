@@ -227,7 +227,8 @@ const quickActions = computed(() =>
     ? [25, 50, 75, 100].map(pct => ({
         key: pct,
         label: pct === 100 ? t('common.max').toUpperCase() : `${pct}%`,
-        disabled: pct === 100 && props.maxDisabled,
+        // No balance shown (no wallet) = nothing to size the % from.
+        disabled: !props.showBalance || (pct === 100 && props.maxDisabled),
       }))
     : [],
 )

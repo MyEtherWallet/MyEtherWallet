@@ -1,4 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { parse } from 'vue/compiler-sfc'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { nextTick } from 'vue'
@@ -205,5 +208,23 @@ describe('LayoutWallet action bar wiring', () => {
     expect(w.findComponent(MarketingTooltip).props('anchor')).toBe(
       w.get('[data-action-id="trade"]').element,
     )
+  })
+})
+
+// The panels swap inside <transition mode="out-in">. Dev keeps template
+// comments, so a root-level comment makes a fragment root: its leave never
+// finishes and every panel opened after it stays blank (MEW-2699 smoke).
+describe('LayoutWallet panel modules', () => {
+  it.each([
+    'trade/ModuleTrade.vue',
+    'send/ModuleSend.vue',
+    'swap/ModuleSwap.vue',
+    'perps/ModulePerpsTrade.vue',
+    'purchase/ModulePurchase.vue',
+  ])('%s has a single element root', file => {
+    const { descriptor } = parse(
+      readFileSync(resolve(__dirname, '../../../../src/modules', file), 'utf8'),
+    )
+    expect(descriptor.template?.ast?.children.map(n => n.type)).toEqual([1])
   })
 })

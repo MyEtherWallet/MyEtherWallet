@@ -1,8 +1,9 @@
 <template>
-  <!-- pb-5 lives here, not only on the panel: the panel's own bottom padding
-       is lost once this form is taller than the panel and scrolls, which
-       left the CTA flush with the bottom edge. -->
   <div class="flex flex-col pb-5 sm:px-1 sm:pt-2">
+    <!-- pb-5 lives here, not only on the panel: the panel's own bottom padding
+         is lost once this form is taller than the panel and scrolls, which
+         left the CTA flush with the bottom edge. Keep this comment inside the
+         root: LayoutWallet's out-in transition stalls on a fragment root. -->
     <perps-signing-prompt
       :show="showSigningPrompt"
       :message="signingMessage"
@@ -327,6 +328,7 @@
                   v-for="pct in [10, 25, 50, 75, 100]"
                   :key="pct"
                   :label="`${pct}%`"
+                  :disabled="!isWalletConnected"
                   class="min-w-0 flex-1"
                   @click="setPercentage(pct)"
                 />

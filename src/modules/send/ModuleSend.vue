@@ -15,14 +15,10 @@
           :validate-input="checkAmountForError"
           :is-pristine="isPristine"
         >
-          <template
-            v-if="
-              isWalletConnected && !isWatchOnly && tokenSelected && canUseMax()
-            "
-            #footer
-          >
+          <template v-if="tokenSelected && canUseMax()" #footer>
             <app-chip
               :label="$t('common.max')"
+              :disabled="!isWalletConnected"
               class="ml-auto uppercase"
               @click="setMaxAmount()"
             />

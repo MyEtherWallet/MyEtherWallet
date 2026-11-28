@@ -6,6 +6,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 const h = vi.hoisted(() => ({
   wallet: null as unknown as { value: unknown },
   walletAddress: null as unknown as { value: string | null },
+  isWatchOnly: null as unknown as { value: boolean },
 }))
 
 const SIGNER = '0x1111111111111111111111111111111111111111'
@@ -16,6 +17,7 @@ vi.mock('@/stores/walletStore', async () => {
   const { ref, computed } = await import('vue')
   h.wallet = ref(null)
   h.walletAddress = ref(null)
+  h.isWatchOnly = ref(false)
   return {
     MAIN_TOKEN_CONTRACT: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     useWalletStore: () => ({
@@ -26,7 +28,7 @@ vi.mock('@/stores/walletStore', async () => {
       ),
       isLoadingBalances: ref(false),
       balanceWei: ref('10000000000000000000'),
-      isWatchOnly: ref(false),
+      isWatchOnly: h.isWatchOnly,
       hasChainBalance: ref(true),
       getTokenBalance: (contract: string) => ({
         contract,
@@ -126,7 +128,7 @@ const AppEnterAmount = {
   name: 'AppEnterAmount',
   props: ['amount'],
   emits: ['update:amount'],
-  template: '<div />',
+  template: '<div><slot name="footer" /></div>',
 }
 const AppSelectTxFee = {
   name: 'AppSelectTxFee',
@@ -150,6 +152,11 @@ const stubs = {
   AppNeedHelp: { template: '<div />' },
   EvmTransactionConfirmation: { template: '<div />' },
   SendInitiatedModal: { template: '<div />' },
+  AppChip: {
+    props: ['label', 'disabled'],
+    template:
+      '<button data-testid="max" :disabled="disabled">{{ label }}</button>',
+  },
 }
 
 const makeWallet = () => ({
@@ -221,5 +228,34 @@ describe('ModuleSend quote request', () => {
     await flushPromises()
 
     expect(fee.props('txRequestBody')).toMatchObject({ address: OTHER })
+  })
+})
+
+// MEW-2699: MAX shows whenever canUseMax allows it, and stays disabled until a
+// wallet (watch-only included) gives it a balance to size from.
+describe('ModuleSend MAX chip', () => {
+  beforeEach(() => {
+    h.wallet.value = null
+    h.walletAddress.value = null
+    h.isWatchOnly.value = false
+  })
+
+  const maxDisabled = async () => {
+    const w = mount(ModuleSend, {
+      global: { stubs, mocks: { $t: (k: string) => k } },
+    })
+    await flushPromises()
+    return w.get('[data-testid="max"]').attributes('disabled') !== undefined
+  }
+
+  it('is enabled for a watch-only wallet', async () => {
+    h.wallet.value = makeWallet()
+    h.walletAddress.value = SIGNER
+    h.isWatchOnly.value = true
+    expect(await maxDisabled()).toBe(false)
+  })
+
+  it('is visible but disabled with no wallet connected', async () => {
+    expect(await maxDisabled()).toBe(true)
   })
 })
