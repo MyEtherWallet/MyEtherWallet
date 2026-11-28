@@ -6,9 +6,11 @@ import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { reportModuleError } from '@/utils/reportModuleError'
+import { isBelowOipMinimum } from '../common/oipRules'
 import type { TradeForm } from './useTradeForm'
 
-type FromAmountErrorCode = '' | 'invalid' | 'decimals' | 'minimum' | 'balance'
+type FromAmountErrorCode =
+  '' | 'invalid' | 'decimals' | 'minimum' | 'oip_minimum' | 'balance'
 
 const NO_ERROR = { code: '' as const, message: '' }
 
@@ -18,6 +20,10 @@ interface UseTradeValidationOptions {
   isMarketOpen: ComputedRef<boolean>
   isSelectedAssetTradeable: ComputedRef<boolean>
   supportedNetwork: ComputedRef<boolean>
+  /** OIP rules, all optional: left out, the trade is treated as non-OIP. */
+  isOipTrade?: ComputedRef<boolean>
+  isFromTokenStable?: ComputedRef<boolean>
+  isOipPairAllowed?: ComputedRef<boolean>
 }
 
 export function useTradeValidation(options: UseTradeValidationOptions) {
@@ -27,6 +33,9 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     isMarketOpen,
     isSelectedAssetTradeable,
     supportedNetwork,
+    isOipTrade,
+    isFromTokenStable,
+    isOipPairAllowed,
   } = options
   const {
     fromTokenSelected,
@@ -59,6 +68,17 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
 
     return { baseBalance, decimals }
   }
+
+  const isBelowOipFloor = computed(() => {
+    if (!isOipTrade?.value || !fromTokenSelected.value) return false
+    return isBelowOipMinimum({
+      amount: fromAmount.value,
+      price: fromTokenSelected.value.price,
+      isStableFrom: isFromTokenStable?.value ?? false,
+    })
+  })
+
+  const isOipPairRefused = computed(() => isOipPairAllowed?.value === false)
 
   // Check if amount has pre-quote errors (excludes balance check)
   const hasPreQuoteError = computed(() => {
@@ -93,7 +113,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       }
     }
 
-    return false
+    return isBelowOipFloor.value || isOipPairRefused.value
   })
 
   // Computed error for from amount with balance validation
@@ -109,7 +129,9 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     ) {
       return NO_ERROR
     }
-    if (isBelowMinimum.value) {
+    // Under the OIP floor, the provider's generic rejection steps aside so the
+    // OIP copy below can name the actual minimum.
+    if (isBelowMinimum.value && !isBelowOipFloor.value) {
       return {
         code: 'minimum',
         message: t('trade.error.minimum_not_reached'),
@@ -139,6 +161,10 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
           excessDecimals,
         ),
       }
+    }
+
+    if (isBelowOipFloor.value) {
+      return { code: 'oip_minimum', message: t('trade.error.oip_minimum') }
     }
 
     // Minimum $0.95 value check
@@ -191,6 +217,10 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     () => fromAmountErrorDetail.value.code === 'decimals',
   )
 
+  const isOipMinimumError = computed(
+    () => fromAmountErrorDetail.value.code === 'oip_minimum',
+  )
+
   // Check if trade button should be disabled
   const isTradeDisabled = computed(
     () =>
@@ -206,7 +236,8 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       ) ||
       isLoadingQuote.value ||
       isSameTokenSelected.value ||
-      isPairUnavailable.value,
+      isPairUnavailable.value ||
+      isOipPairRefused.value,
   )
 
   const isSameTokenSelected = computed(() => {
@@ -222,6 +253,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     fromAmountError,
     isInsufficientBalanceError,
     isDecimalsError,
+    isOipMinimumError,
     isTradeDisabled,
     isSameTokenSelected,
   }

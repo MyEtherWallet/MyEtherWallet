@@ -99,6 +99,7 @@
       "deposit-not-confirmed": "El depósito aún no se ha confirmado en la cadena. Inténtalo de nuevo cuando se haya minado.",
       "not_enough_balance": "Saldo insuficiente",
       "minimum_not_reached": "Mínimo no alcanzado",
+      "oip_minimum": "El mínimo para operar OIP es de $10",
       "remove_decimals": "Elimina {count} decimal | Elimina {count} decimales"
     },
     "market_status": {
