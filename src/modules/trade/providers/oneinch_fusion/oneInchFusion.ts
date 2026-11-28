@@ -47,7 +47,8 @@ import type {
   GetWebTokenInfo,
 } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
-import { isSignableWallet } from '@/utils/walletUtils'
+import { AbandonedSignError } from '@/utils/signSession'
+import { sendFromWallet } from '@/utils/walletSend'
 import {
   isExpectedTradeError,
   REPORTABLE_CLIENT_STATUSES,
@@ -134,6 +135,12 @@ class OneInchFusion {
   private publicClient: PublicClient
   private chain: Chain
   private wallet: WalletInterface
+  /**
+   * True once the caller closed the modal this action belongs to (MEW-2694).
+   * Read after every wallet signature: one that arrives late is never
+   * broadcast or handed to the relayer.
+   */
+  private isAbandoned: () => boolean
 
   public static getSupportedChainNames() {
     return SUPPORTED_CHAINS.map(sc => sc.chainName)
@@ -179,15 +186,24 @@ class OneInchFusion {
     return results
   }
 
-  constructor(wallet: WalletInterface, chainId: number) {
+  constructor(
+    wallet: WalletInterface,
+    chainId: number,
+    options: { isAbandoned?: () => boolean } = {},
+  ) {
     const chainConfig = SUPPORTED_CHAINS.find(c => c.chainId === chainId)
     if (!chainConfig)
       throw new Error(i18n.global.t('trade.error.fusion-network-not-supported'))
     this.wallet = wallet
+    this.isAbandoned = options.isAbandoned ?? (() => false)
     this.publicClient = createPublicClient({
       transport: webSocket(chainConfig.node),
     })
-    this.web3Provider = new Web3ProviderConnector(wallet, this.publicClient)
+    this.web3Provider = new Web3ProviderConnector(
+      wallet,
+      this.publicClient,
+      this.isAbandoned,
+    )
     this.chain = chainConfig.chain
     this.httpConnector = new IsolatedAxiosConnector()
 
@@ -371,6 +387,7 @@ class OneInchFusion {
     } catch (e: unknown) {
       // Already carries everything the caller needs; do not flatten it.
       if (e instanceof NativeOrderUnsubmittedError) throw e
+      if (e instanceof AbandonedSignError) throw e
       // user rejection (EIP-1193 4001) and 1inch 4xx (expired quote / illiquid
       // pair / invalid order) — so the caller (confirmTrade) can surface them
       // to the user while skipping Sentry capture. The previous catch re-threw
@@ -418,7 +435,15 @@ class OneInchFusion {
     return false
   }
 
-  async setApproval(fromAddress: string, tokenAddress: string) {
+  /**
+   * `onSent` fires once the approval is broadcast, i.e. the wallet prompt is
+   * over and only the wait for it to mine is left.
+   */
+  async setApproval(
+    fromAddress: string,
+    tokenAddress: string,
+    onSent?: () => void,
+  ) {
     const hash = await this.signAndSend(fromAddress, {
       to: tokenAddress,
       data: encodeFunctionData({
@@ -432,6 +457,7 @@ class OneInchFusion {
         ],
       }),
     })
+    onSent?.()
     return this.publicClient
       .waitForTransactionReceipt({ hash: hash as `0x${string}` })
       .then(res => {
@@ -550,19 +576,13 @@ class OneInchFusion {
     const serialized = serializeTransaction(
       tx as Parameters<typeof serializeTransaction>[0],
     )
-    if (isSignableWallet(this.wallet)) {
-      if (!this.wallet.SignTransaction) {
-        throw new Error('The connected wallet cannot sign transactions')
-      }
-      const signedTx = await this.wallet.SignTransaction(serialized)
-      return this.publicClient.sendRawTransaction({
-        serializedTransaction: signedTx.signed,
-      })
-    }
-    if (!this.wallet.SendTransaction) {
-      throw new Error('The connected wallet cannot send transactions')
-    }
-    return this.wallet.SendTransaction(serialized)
+    return sendFromWallet(this.wallet, serialized, {
+      isAbandoned: this.isAbandoned,
+      broadcast: signedTx =>
+        this.publicClient.sendRawTransaction({
+          serializedTransaction: signedTx,
+        }),
+    })
   }
 }
 

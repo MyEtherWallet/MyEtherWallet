@@ -1,11 +1,12 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { reactive } from 'vue'
 import { parseUnits } from 'viem'
 import type { ProviderQuoteResponse } from '@enkryptcom/swap'
 
+const walletState = vi.hoisted(() => ({ wallet: null as unknown }))
 vi.mock('@/stores/walletStore', () => ({
-  useWalletStore: () => reactive({ wallet: null }),
+  useWalletStore: () => reactive(walletState),
 }))
 vi.mock('@/stores/globalStore', () => ({
   useGlobalStore: () => reactive({ gasPriceType: 'REGULAR' }),
@@ -31,6 +32,7 @@ vi.mock('pinia', async importOriginal => {
 })
 
 import SwapOfferModal from '@/modules/swap/components/SwapOfferModal.vue'
+import { WalletType } from '@/providers/types'
 
 const USDT = { address: '0xusdt', symbol: 'USDT', decimals: 6, price: 1 }
 const ETH = { address: '0xeee', symbol: 'ETH', decimals: 18, price: 2000 }
@@ -102,5 +104,23 @@ describe('SwapOfferModal price impact (MEW-2648)', () => {
     expect(wrapper.text()).toContain('swap.price-impact-unknown')
     expect(wrapper.text()).not.toContain('swap.price-impact-too-high')
     expect(proceedButton(wrapper).attributes('disabled')).toBeUndefined()
+  })
+})
+
+describe('SwapOfferModal closed while the wallet is pending (MEW-2694)', () => {
+  afterEach(() => {
+    walletState.wallet = null
+  })
+
+  it('clears the approve-on-device message on close', async () => {
+    walletState.wallet = { getWalletType: () => WalletType.LEDGER }
+    const wrapper = mountWith(fair)
+
+    await proceedButton(wrapper).trigger('click')
+    expect(wrapper.text()).toContain('swap.swap-offer.approve-tx-on-device')
+
+    await wrapper.setProps({ swapOfferOpen: false })
+    await wrapper.setProps({ swapOfferOpen: true })
+    expect(wrapper.text()).not.toContain('swap.swap-offer.approve-tx-on-device')
   })
 })

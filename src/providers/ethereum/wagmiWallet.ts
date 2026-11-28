@@ -5,15 +5,26 @@ import { hexToBytes } from '@ethereumjs/util'
 import type { Config, Connector } from '@wagmi/core'
 import BaseEvmWallet from './baseEvmWallet'
 import { Hardfork } from '@ethereumjs/common'
-import { sendTransaction, signMessage, signTypedData } from '@wagmi/core'
+import {
+  sendTransaction,
+  signMessage,
+  signTransaction,
+  signTypedData,
+} from '@wagmi/core'
 import { fromHex } from 'viem'
 import { type SendTransactionParameters } from '@wagmi/core'
+import type { PostSignedTransaction } from '../common/types'
+import { isUnsupportedMethodError } from '@/utils/walletUtils'
 import type { EIP712TypedData } from '@1inch/limit-order-sdk'
+
+const SIGN_ONLY_METHOD = 'eth_signTransaction'
 
 class WagmiWallet extends BaseEvmWallet {
   connector: Connector
   address: HexPrefixedString
   config: Config
+  // Set once the wallet turns the sign-only call down, so it is asked once.
+  private signOnlyRefused = false
   constructor(connector: Connector, chainId: string, config: Config) {
     super(chainId)
 
@@ -98,6 +109,51 @@ class WagmiWallet extends BaseEvmWallet {
         type: 'legacy' as const,
       }
     }
+  }
+
+  /**
+   * Whether the wallet can sign a transaction and hand it back instead of
+   * sending it itself. Only a WalletConnect session says so, in the methods
+   * the wallet approved; an extension gives no way to ask, so it reads as no.
+   */
+  async canSignWithoutSending(): Promise<boolean> {
+    if (this.signOnlyRefused) return false
+    try {
+      const provider = (await this.connector.getProvider()) as
+        | { session?: { namespaces?: Record<string, { methods?: string[] }> } }
+        | undefined
+      const methods = provider?.session?.namespaces?.eip155?.methods
+      return !!methods?.includes(SIGN_ONLY_METHOD)
+    } catch {
+      return false
+    }
+  }
+
+  /** Signs without sending. Only for a wallet that `canSignWithoutSending`. */
+  override async SignTransaction(
+    serializedTx: HexPrefixedString,
+  ): Promise<PostSignedTransaction> {
+    const parseTx = this.parseSerializedTx(serializedTx)
+    const from = await this.getAddress()
+    let answer: unknown
+    try {
+      answer = await signTransaction(this.config, {
+        connector: this.connector,
+        account: from,
+        ...parseTx,
+      } as Parameters<typeof signTransaction>[1])
+    } catch (e) {
+      if (isUnsupportedMethodError(e)) this.signOnlyRefused = true
+      throw e
+    }
+    // The raw signed transaction; some wallets wrap it as `{ raw, tx }`.
+    const signed =
+      typeof answer === 'string' ? answer : (answer as { raw?: unknown })?.raw
+    if (typeof signed !== 'string' || !signed.startsWith('0x')) {
+      this.signOnlyRefused = true
+      throw new Error('The wallet did not return a signed transaction')
+    }
+    return { signed: signed as HexPrefixedString }
   }
 
   override async SendTransaction(

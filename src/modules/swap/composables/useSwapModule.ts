@@ -1,4 +1,12 @@
-import { ref, computed, watch, nextTick, type Ref, type ComputedRef } from 'vue'
+import {
+  ref,
+  computed,
+  watch,
+  nextTick,
+  onScopeDispose,
+  type Ref,
+  type ComputedRef,
+} from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
@@ -89,13 +97,14 @@ import {
 import { ToastType } from '@/types/notification'
 import configs from '@/configs'
 import {
-  isSignableWallet,
   isUserRejectionError,
   isInsufficientFundsError,
 } from '@/utils/walletUtils'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { hydrateTokenBalances } from '@/utils/tokenBalance'
 import { reportModuleError } from '@/utils/reportModuleError'
+import { createSignSession } from '@/utils/signSession'
+import { signForSend, signsWithoutSending } from '@/utils/walletSend'
 interface SwapModuleBindings {
   supportedNetwork: Ref<boolean>
   swapLoaded: Ref<boolean>
@@ -557,7 +566,21 @@ export function useSwapModule(): SwapModuleBindings {
   }
   // --- Swap Logic & Transactions ---
 
-  const handleBitcoinTransaction = async (quoteId: string) => {
+  // Closing the offer modal while the wallet is still waiting abandons that
+  // swap: a reply that lands later prompts no further tx and opens nothing
+  // (MEW-2694). The modal resets its own loading state on close.
+  const swapSession = createSignSession()
+  watch(bestOfferSelectionOpen, open => {
+    if (!open) swapSession.abandon()
+  })
+  // Leaving the swap view abandons it the same way (the modal unmounts
+  // without emitting a close).
+  onScopeDispose(swapSession.abandon)
+
+  const handleBitcoinTransaction = async (
+    quoteId: string,
+    isAbandoned: () => boolean,
+  ) => {
     const txCtx = wallet.value
     if (!txCtx) return
 
@@ -565,6 +588,7 @@ export function useSwapModule(): SwapModuleBindings {
       priority: gasPriceType.value as GasPriceType,
       quoteId: quoteId,
     })
+    if (isAbandoned()) return
 
     const isHardware =
       txCtx.getWalletType() !== WalletType.WAGMI &&
@@ -576,13 +600,17 @@ export function useSwapModule(): SwapModuleBindings {
       const signedTx = await txCtx.SignTransaction?.(
         signableTx.serialized as HexPrefixedString,
       )
+      if (isAbandoned()) return
       return txCtx.broadcastTransaction(
         signedTx?.signed as unknown as HexPrefixedString,
       )
     }
   }
 
-  const handleEvmTransaction = async (quoteId: string) => {
+  const handleEvmTransaction = async (
+    quoteId: string,
+    isAbandoned: () => boolean,
+  ) => {
     const txCtx = wallet.value
     if (!txCtx) return
 
@@ -596,17 +624,25 @@ export function useSwapModule(): SwapModuleBindings {
     let lastTxPromise
 
     for (const [index, tx] of txs.serialized.entries()) {
+      // An approval signed after the user closed the offer must not prompt
+      // the swap itself.
+      if (isAbandoned()) return
       const isLast = index === txs.serialized.length - 1
       if (!tx) continue
 
-      if (!isSignableWallet(txCtx)) {
+      const signOnly = await signsWithoutSending(txCtx)
+      // Closed while the wallet's capability was looked up.
+      if (isAbandoned()) return
+      if (!signOnly) {
         const broadcast = await txCtx.SendTransaction?.(tx as HexPrefixedString)
         if (isLast) lastTxPromise = broadcast
       } else {
-        const signedTx = await txCtx.SignTransaction?.(tx as HexPrefixedString)
-        const broadcast = txCtx.broadcastTransaction(
-          signedTx?.signed as unknown as HexPrefixedString,
-        )
+        // The wallet hands the signature back, so a signature for a closed
+        // offer stops here instead of being sent.
+        const send = await signForSend(txCtx, tx as HexPrefixedString, {
+          isAbandoned,
+        })
+        const broadcast = send()
         if (isLast) {
           // The caller awaits this one and surfaces its hash.
           lastTxPromise = broadcast
@@ -629,6 +665,7 @@ export function useSwapModule(): SwapModuleBindings {
   }
 
   const proceedWithSwap = async (quoteId: string) => {
+    const isAbandoned = swapSession.start()
     txProceeding.value = true
     generalError.value = ''
     const analyticsPayload = getAnalyticsShared()
@@ -653,13 +690,18 @@ export function useSwapModule(): SwapModuleBindings {
       if (isBitcoinChain.value) {
         txPromise = handleBitcoinTransaction(
           quoteId,
+          isAbandoned,
         ) as unknown as Promise<string>
       } else {
-        txPromise = handleEvmTransaction(quoteId) as unknown as Promise<string>
+        txPromise = handleEvmTransaction(
+          quoteId,
+          isAbandoned,
+        ) as unknown as Promise<string>
       }
 
       if (txPromise) {
         const hash = await txPromise
+        if (isAbandoned()) return
         txHash.value = hash as HexPrefixedString
         // Set before the modal opens so its open-watcher sees the full set.
         initiatedSwap.value = {
@@ -683,6 +725,7 @@ export function useSwapModule(): SwapModuleBindings {
         })
       }
     } catch (e: unknown) {
+      if (isAbandoned()) return
       const errorMessage = getErrorMessage(e, t('swap.toast.tx-sign-failed'))
       // Lowercased only for the substring checks below — the original casing is
       // what reaches the user, Sentry and analytics.
@@ -749,7 +792,7 @@ export function useSwapModule(): SwapModuleBindings {
         })
       }
     } finally {
-      txProceeding.value = false
+      if (!isAbandoned()) txProceeding.value = false
     }
   }
 

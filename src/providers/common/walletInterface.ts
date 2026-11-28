@@ -24,6 +24,12 @@ export interface WalletInterface {
   SignTransaction?: (
     serializedTx: HexPrefixedString,
   ) => Promise<PostSignedTransaction>
+  /**
+   * For a wallet that normally signs and broadcasts in one step: whether it
+   * can instead sign and hand the transaction back (`SignTransaction`), so MEW
+   * broadcasts it. See `signForSend`.
+   */
+  canSignWithoutSending?: () => Promise<boolean>
   SendTransaction?: (
     serializedTx: HexPrefixedString,
   ) => Promise<HexPrefixedString> // Transaction hash
