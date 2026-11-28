@@ -1,8 +1,7 @@
 import { computed, type Ref, type ComputedRef } from 'vue'
 import { parseUnits } from 'viem'
 import BigNumber from 'bignumber.js'
-import type { NewTokenInfo } from '@/stores/swapStore'
-import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { useWalletStore } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { reportModuleError } from '@/utils/reportModuleError'
@@ -39,26 +38,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
   } = form
 
   const { t } = useI18n()
-  const walletStore = useWalletStore()
-
-  // Helper to get token balance parameters
-  const getTokenBalanceParams = (token: NewTokenInfo) => {
-    // Case-insensitive: a checksummed native sentinel from the swap list must
-    // still resolve to the base-network balance.
-    const isMainToken =
-      token.address?.toLowerCase() === MAIN_TOKEN_CONTRACT.toLowerCase()
-    const balance = token.balance || '0'
-
-    const baseNetworkBalance = parseUnits(
-      walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
-      18,
-    )
-
-    const decimals = token.decimals || 18
-    const baseBalance = isMainToken ? baseNetworkBalance : BigInt(balance)
-
-    return { baseBalance, decimals }
-  }
+  const { getTokenBalance } = useWalletStore()
 
   // Check if amount has pre-quote errors (excludes balance check)
   const hasPreQuoteError = computed(() => {
@@ -153,13 +133,17 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       }
     }
 
-    // Balance check (only when wallet is connected)
+    // Balance check (only when wallet is connected). Reads the wallet store,
+    // like the card's balance and the % buttons: the selected token is a
+    // frozen snapshot that can lag behind it (MEW-2690).
     if (isWalletConnected.value) {
       try {
-        const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
+        const balanceWei = BigInt(
+          getTokenBalance(fromTokenSelected.value.address)?.balanceWei || '0',
+        )
         const baseAmount = parseUnits(amountBN.toFixed(decimals), decimals)
 
-        if (tokenParams.baseBalance < baseAmount) {
+        if (balanceWei < baseAmount) {
           return {
             code: 'balance',
             message: t('trade.error.not_enough_balance'),

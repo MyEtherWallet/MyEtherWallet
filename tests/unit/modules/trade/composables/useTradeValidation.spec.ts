@@ -12,6 +12,7 @@ vi.mock('vue-i18n', async importOriginal => ({
 }))
 
 import { useTradeValidation } from '@/modules/trade/composables/useTradeValidation'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 
 const USDC = {
   symbol: 'USDC',
@@ -22,11 +23,14 @@ const USDC = {
   logoURI: '',
 }
 
-const makeValidation = (fromAmount: string) => {
+const makeValidation = (
+  fromAmount: string,
+  { isWalletConnected = false, fromToken = USDC } = {},
+) => {
   const isBelowMinimum = ref(false)
   const generalError = ref('')
   const form = {
-    fromTokenSelected: ref({ ...USDC }),
+    fromTokenSelected: ref({ ...fromToken }),
     toTokenSelected: ref({ ...USDC, address: '0x2' }),
     fromAmount: ref(fromAmount),
     toAmount: ref('1'),
@@ -37,7 +41,7 @@ const makeValidation = (fromAmount: string) => {
   } as never
   const validation = useTradeValidation({
     form,
-    isWalletConnected: ref(false),
+    isWalletConnected: ref(isWalletConnected),
     isMarketOpen: computed(() => true),
     isSelectedAssetTradeable: computed(() => true),
     supportedNetwork: computed(() => true),
@@ -74,5 +78,45 @@ describe('useTradeValidation minimum errors', () => {
     isBelowMinimum.value = true
 
     expect(isInsufficientBalanceError.value).toBe(false)
+  })
+})
+
+describe('useTradeValidation balance check', () => {
+  beforeEach(async () => {
+    setActivePinia(createPinia())
+    // Live wallet balances, what the card and % buttons read
+    await useWalletStore().setTokens([
+      { contract: USDC.address, balance: '4478202', decimals: 6 },
+      { contract: MAIN_TOKEN_CONTRACT, balance: '2000000000000000000' },
+    ] as never)
+  })
+
+  const balanceError = (amount: string, fromToken: typeof USDC) =>
+    makeValidation(amount, { isWalletConnected: true, fromToken })
+      .fromAmountError.value
+
+  it('validates against the live wallet balance, not the token snapshot', () => {
+    // MEW-2690: the selected token is a frozen snapshot that can keep an
+    // older, lower balance (1.5 USDC) after the wallet balance goes up
+    const staleUsdc = { ...USDC, balance: '1500000' }
+
+    // 50% and MAX from the ticket video
+    expect(balanceError('2.239101', staleUsdc)).toBe('')
+    expect(balanceError('4.478202', staleUsdc)).toBe('')
+    expect(balanceError('4.478203', staleUsdc)).toBe(
+      'trade.error.not_enough_balance',
+    )
+  })
+
+  it('reads the native balance for a checksummed sentinel', () => {
+    const eth = {
+      ...USDC,
+      address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      decimals: 18,
+      balance: '0',
+    }
+
+    expect(balanceError('1.5', eth)).toBe('')
+    expect(balanceError('2.1', eth)).toBe('trade.error.not_enough_balance')
   })
 })
